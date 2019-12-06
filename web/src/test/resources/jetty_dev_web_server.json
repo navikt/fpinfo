@@ -1,0 +1,39 @@
+{
+  "schemas": [
+    {
+      "datasource": "defaultDS",
+      "defaultSchema": "fpsak",
+      "schema": "${flyway.placeholders.fpinfo.fpsak.schema.navn}",
+      "url": "jdbc:oracle:thin:@localhost:1521:XE",
+      "default": false,
+      "migrationScriptsClasspathRoot": "classpath:/db/migration/defaultDS",
+      "migrateClean": false
+    },
+    {
+      "datasource": "vl_dba",
+      "schema": "vl_dba",
+      "url": "jdbc:oracle:thin:@localhost:1521:XE",
+      "migrationScriptsFilesystemRoot": "migreringer/src/test/resources/db/migration/",
+      "migrateClean": true
+    },
+    {
+      "datasource": "fpinfoSchema",
+      "defaultSchema": "fpinfo_schema",
+      "schema": "${flyway.placeholders.fpinfoschema.schema.navn}",
+      "url": "jdbc:oracle:thin:@localhost:1521:XE",
+      "default": false,
+      "migrationScriptsFilesystemRoot": "migreringer/src/main/resources/db/migration/",
+      "migrateClean": true
+    },
+    {
+      "datasource": "defaultDS",
+      "defaultSchema": "fpinfo",
+      "schema": "${flyway.placeholders.fpinfo.schema.navn}",
+      "url": "jdbc:oracle:thin:@localhost:1521:XE",
+      "default": true,
+      "effective_schema": "${flyway.placeholders.fpinfoschema.schema.navn}",
+      "migrationScriptsFilesystemRoot": "migreringer/src/main/resources/db/migration/",
+      "migrateClean": true
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+image: "repo.adeo.no:5443/fpinfo"
+team: teamforeldrepenger
+replicas:
+  min: 3
+  max: 3
+  cpuThresholdPercentage: 80
+port: 8080
+healthcheck:
+  liveness:
+    path: /fpinfo/internal/isAlive
+    initialDelay: 30
+  readiness:
+    path: /fpinfo/internal/isReady
+    initialDelay: 30
+preStopHookPath: /fpinfo/internal/preStop
+resources:
+  limits:
+    cpu: 1000m
+    memory: "1024Mi"
+  requests:
+    cpu: 200m
+    memory: "256Mi"
+ingress:
+  enabled: true
+fasitResources:
+  used:
+  - alias: appdynamics
+    resourceType: ApplicationProperties
+  - alias: defaultDS
+    resourceType: datasource
+  - alias: fpinfoSchema
+    resourceType: datasource
+  - alias: securityTokenService
+    resourceType: baseUrl
+  - alias: srvfpinfo
+    resourceType: credential
+    propertyMap:
+      username: SYSTEMBRUKER_USERNAME
+      password: SYSTEMBRUKER_PASSWORD
+  - alias: abac.pdp.endpoint
+    resourceType: restservice
+  - alias: fpinfo-oidc
+    resourceType: OpenIdConnect
+    propertyMap:
+      agentName: oidc_OpenAM.agentName
+      password: oidc_OpenAM.password
+      hostUrl: oidc_OpenAM.hostUrl
+      issuerUrl: oidc_OpenAM.issuerUrl
+      jwksUrl: oidc_OpenAM.jwksUrl
+  - alias: security-token-service-issuer
+    resourceType: baseUrl
+    propertyMap:
+      url: oidc_sts.issuer.url
+  - alias: security-token-service-jwks
+    resourceType: restservice
+    propertyMap:
+      url: oidc_sts.jwks.url
+      
+  - alias: loadbalancer:fpinfo
+    resourceType: loadbalancerconfig
+    propertyMap:
+      url: LOADBALANCER_FQDN
+  - alias: "oidc_aad_b2c"
+    resourceType: OpenIdConnect
+  - alias: s3-bucket-fpinfo
+    resourceType: credential
+    propertyMap:
+      username: AWS_ACCESS_KEY_ID
+      password: AWS_SECRET_ACCESS_KEY
+  - alias: s3-bucket-link
+    resourceType: baseUrl
+    propertyMap:
+      url: BUCKET_URL
+  exposed:
+  - alias: fp.statusinformasjon
+    resourceType: restservice
+    path: /fpinfo/api/dokumentforsendelse/status

@@ -1,0 +1,55 @@
+
+== info.feed.FeedPollerFeil
+
+[options="header", cols="5h,5,5,20,15,15,20,15"]
+|===
+|Feilkode|Level|Type|Feilmelding|Løsningsforslag|Parametre|Cause|Java-metode
+|FP-602051|ERROR|TekniskFeil|Kan ikke utlede nextUrl|||Exception|kanIkkeUtledeNextUrl
+|===
+
+
+== info.felles.InfoHendelserFeil
+
+[options="header", cols="5h,5,5,20,15,15,20,15"]
+|===
+|Feilkode|Level|Type|Feilmelding|Løsningsforslag|Parametre|Cause|Java-metode
+|FP-730005|ERROR|TekniskFeil|Kan ikke konverte feed-content. sekvensnummer=%s||arg0: long||kanIkkeKonvertereFeedContent
+|FP-846675|WARN|TekniskFeil|Ukjent Hendelse Type <%s>||arg0: String||ukjentHendelseType
+|FP-690327|WARN|TekniskFeil|Prosessering av preconditions for %s mangler %s. TaskId: %s||arg0: String, arg1: String, arg2: Long||prosesstaskPreconditionManglerProperty
+|FP-309345|ERROR|TekniskFeil|Kan ikke konverte payload til melding. type=%s, sekvensnummer=%s||arg0: String, arg1: long||kanIkkeKonvertereUkjentMeldingtype
+|===
+
+
+== info.web.app.exceptions.FeltValideringFeil
+
+[options="header", cols="5h,5,5,20,15,15,20,15"]
+|===
+|Feilkode|Level|Type|Feilmelding|Løsningsforslag|Parametre|Cause|Java-metode
+|FP-328673|WARN|FunksjonellFeil|Det oppstod en valideringsfeil på felt %s. Vennligst kontroller at alle feltverdier er korrekte.|Kontroller at alle feltverdier er korrekte|arg0: List||feltverdiKanIkkeValideres
+|===
+
+
+== info.web.app.selftest.SelftestFeil
+
+[options="header", cols="5h,5,5,20,15,15,20,15"]
+|===
+|Feilkode|Level|Type|Feilmelding|Løsningsforslag|Parametre|Cause|Java-metode
+|FP-287026|WARN|TekniskFeil|Dupliserte selftest navn %s||arg0: String||dupliserteSelftestNavn
+|984256|WARN|TekniskFeil|Selftest ERROR: %s. Endpoint: %s. Responstid: %s. Feilmelding: %s.||arg0: String, arg1: String, arg2: String, arg3: String||ikkeKritiskSelftestFeilet
+|FP-932415|ERROR|TekniskFeil|Selftest ERROR: %s. Endpoint: %s. Responstid: %s. Feilmelding: %s.||arg0: String, arg1: String, arg2: String, arg3: String||kritiskSelftestFeilet
+|FP-409676|ERROR|TekniskFeil|Uventet feil|||IOException|uventetSelftestFeil
+|FP-635121|ERROR|TekniskFeil|Klarte ikke å lese build time properties fil|||IOException|klarteIkkeÅLeseBuildTimePropertiesFil
+|===
+
+
+== info.web.app.startupinfo.OppstartFeil
+
+[options="header", cols="5h,5,5,20,15,15,20,15"]
+|===
+|Feilkode|Level|Type|Feilmelding|Løsningsforslag|Parametre|Cause|Java-metode
+|FP-753407|ERROR|TekniskFeil|Uventet exception ved oppstart|||Exception|uventetExceptionVedOppstart
+|FP-753409|INFO|TekniskFeil|Selftest %s: %s. Endpoint: %s. Responstid: %s. Feilmelding: %s.||arg0: String, arg1: String, arg2: String, arg3: String, arg4: String||selftestStatus
+|===
+
+
+

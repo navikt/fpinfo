@@ -1,0 +1,148 @@
+
+[[_paths]]
+== Resources
+
+[[_nais_resource]]
+=== Nais
+
+<<<
+
+[[_isalive]]
+==== GET /isAlive
+
+===== Responses
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP Code|Description|Schema
+|**default**|successful operation|No Content
+|===
+
+
+===== Produces
+
+* `text/plain`
+
+
+===== Example HTTP request
+
+====== Request path
+----
+/isAlive
+----
+
+
+<<<
+
+[[_isready]]
+==== GET /isReady
+
+===== Responses
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP Code|Description|Schema
+|**default**|successful operation|No Content
+|===
+
+
+===== Produces
+
+* `text/plain`
+
+
+===== Example HTTP request
+
+====== Request path
+----
+/isReady
+----
+
+
+<<<
+
+[[_prestop]]
+==== GET /preStop
+
+===== Responses
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP Code|Description|Schema
+|**default**|successful operation|No Content
+|===
+
+
+===== Produces
+
+* `text/plain`
+
+
+===== Example HTTP request
+
+====== Request path
+----
+/preStop
+----
+
+
+[[_selftest_resource]]
+=== Selftest
+
+<<<
+
+[[_doselftest]]
+==== GET /selftest
+
+===== Parameters
+
+[options="header", cols=".^2,.^3,.^4"]
+|===
+|Type|Name|Schema
+|**Header**|**Content-Type** +
+__optional__|string
+|**Query**|**json** +
+__optional__|boolean
+|===
+
+
+===== Responses
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP Code|Description|Schema
+|**default**|successful operation|No Content
+|===
+
+
+===== Produces
+
+* `text/html`
+* `application/json`
+
+
+===== Example HTTP request
+
+====== Request path
+----
+/selftest
+----
+
+
+====== Request header
+[source,json]
+----
+"string"
+----
+
+
+====== Request query
+[source,json]
+----
+{
+  "json" : true
+}
+----
+
+
+
