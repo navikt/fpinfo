@@ -14,6 +14,7 @@ import no.nav.abac.common.xacml.CommonAttributter;
 import no.nav.abac.foreldrepenger.xacml.ForeldrepengerAttributter;
 import no.nav.foreldrepenger.info.abac.UtvidetAbacAttributtType;
 import no.nav.foreldrepenger.info.pip.PipRepository;
+import no.nav.foreldrepenger.info.web.app.exceptions.IngenUttaksplanFunnetException;
 import no.nav.vedtak.sikkerhet.abac.AbacAttributtSamling;
 import no.nav.vedtak.sikkerhet.abac.PdpKlient;
 import no.nav.vedtak.sikkerhet.abac.PdpRequest;
@@ -44,11 +45,14 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
 
         if (attributter.getVerdier(UtvidetAbacAttributtType.ANNEN_PART).size() == 1) {
             Optional<String> sakAnnenPart = pipRepository.finnSakenTilAnnenForelder(attributter.getAktørIder(), attributter.getVerdier(UtvidetAbacAttributtType.ANNEN_PART));
-            if(sakAnnenPart.isPresent()) {
+            if (sakAnnenPart.isPresent()) {
                 String saksnummerAnnenForelder = sakAnnenPart.get();
                 pdpRequest.put(CommonAttributter.RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, new HashSet<>(pipRepository.hentAktørIdForSaksnummer(Collections.singleton(saksnummerAnnenForelder))));
                 pdpRequest.put(ForeldrepengerAttributter.RESOURCE_FORELDREPENGER_ANNEN_PART, pipRepository.hentAnnenPartForSaksnummer(saksnummerAnnenForelder).orElse(null));
                 pdpRequest.put(ForeldrepengerAttributter.RESOURCE_FORELDREPENGER_ALENEOMSORG, pipRepository.hentOppgittAleneomsorgForSaksnummer(saksnummerAnnenForelder).orElse(null));
+            } else {
+                // quick fix for å stoppe abackall som gir unødvendig deny
+                throw new IngenUttaksplanFunnetException("Finner ingen relevant sak");
             }
         } else {
             pdpRequest.put(CommonAttributter.RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, utledAktørIdeer(attributter));

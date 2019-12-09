@@ -37,6 +37,8 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
             return handleValideringsfeil((ValideringsfeilException) cause);
         } else if (cause instanceof TomtResultatException) {
             return handleTomtResultatFeil((TomtResultatException) cause);
+        } else if (cause instanceof IngenUttaksplanFunnetException) {
+            return tomtResultat();
         }
 
         loggTilApplikasjonslogg(cause);
@@ -50,6 +52,7 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
     }
 
     private Response handleTomtResultatFeil(TomtResultatException tomtResultatException) {
+
         return Response
                 .status(Response.Status.NOT_FOUND)
                 .entity(new FeilDto(FeilType.TOMT_RESULTAT_FEIL, tomtResultatException.getMessage()))
@@ -75,6 +78,10 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
         } else {
             return serverError(callId, feil);
         }
+    }
+
+    private Response tomtResultat() {
+        return Response.ok().build();
     }
 
     private Response serverError(String callId, Feil feil) {
