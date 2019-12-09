@@ -100,10 +100,10 @@
                         <version>${flyway.version}</version>
                     </dependency>
                     <dependency>
-                        <groupId>com.oracle</groupId>
-                        <artifactId>ojdbc8</artifactId>
-                        <version>${ojdbc.version}</version>
-                    </dependency>
+                <groupId>com.oracle.ojdbc</groupId>
+                <artifactId>ojdbc8</artifactId>
+                <version>19.3.0.0</version>
+            </dependency>
                 </dependencies>
                 <configuration>
                     <driver>oracle.jdbc.driver.OracleDriver</driver>
