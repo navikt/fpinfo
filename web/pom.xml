@@ -1,5 +1,7 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -10,7 +12,6 @@
 
     <artifactId>web</artifactId>
     <packaging>jar</packaging>
-    <version>${revision}${sha1}${changelist}</version>
     <name>fpinfo :: Web :: Jetty server</name>
 
     <properties>
@@ -103,8 +104,9 @@
             <artifactId>flyway-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.oracle</groupId>
+            <groupId>com.oracle.ojdbc</groupId>
             <artifactId>ojdbc8</artifactId>
+            <version>19.3.0.0</version>
         </dependency>
 
         <!-- For Status side -->
@@ -266,11 +268,6 @@
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-jaxrs</artifactId>
-        </dependency>
-
         <!-- Må gjenta her for å få riktig scope (kolliderer ellers med dependencyManagement -->
         <dependency>
             <groupId>junit</groupId>
@@ -296,7 +293,6 @@
         <dependency>
             <groupId>no.nav.foreldrepenger.info</groupId>
             <artifactId>migreringer</artifactId>
-            <version>${project.version}</version>
             <type>test-jar</type>
         </dependency>
     </dependencies>
