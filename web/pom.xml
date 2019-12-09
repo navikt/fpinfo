@@ -46,11 +46,20 @@
     </dependencyManagement>
 
     <dependencies>
-    
-     <dependency>
-                <groupId>io.swagger.core.v3</groupId>
-                <artifactId>swagger-annotations</artifactId>
-            </dependency>
+
+       <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-jaxrs2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>swagger-ui</artifactId>
+            <version>3.24.3</version>
+        </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.info</groupId>
             <artifactId>migreringer</artifactId>

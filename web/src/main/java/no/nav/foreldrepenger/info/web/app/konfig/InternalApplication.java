@@ -1,14 +1,20 @@
 package no.nav.foreldrepenger.info.web.app.konfig;
 
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-import io.swagger.jaxrs.config.BeanConfig;
+import io.swagger.v3.oas.integration.GenericOpenApiContextBuilder;
+import io.swagger.v3.oas.integration.OpenApiConfigurationException;
+import io.swagger.v3.oas.integration.SwaggerConfiguration;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.servers.Server;
 import no.nav.foreldrepenger.info.web.app.tjenester.NaisRestTjeneste;
 import no.nav.foreldrepenger.info.web.app.tjenester.SelftestRestTjeneste;
-import no.nav.vedtak.isso.config.ServerInfo;
 
 @ApplicationPath(InternalApplication.API_URL)
 public class InternalApplication extends Application {
@@ -16,23 +22,35 @@ public class InternalApplication extends Application {
     public static final String API_URL = "/internal";
 
     public InternalApplication() {
-        BeanConfig beanConfig = new BeanConfig();
-        beanConfig.setVersion("1.0");
-        if (ServerInfo.instance().isUsingTLS()) {
-            beanConfig.setSchemes(new String[]{"https"});
-        } else {
-            beanConfig.setSchemes(new String[]{"http"});
+        OpenAPI oas = new OpenAPI();
+        Info info = new Info()
+                .title("Vedtaksløsningen - Info")
+                .version("1.0")
+                .description("REST grensesnitt for Vedtaksløsningen.");
+
+        oas.info(info)
+                .addServersItem(new Server()
+                        .url("/fpinfo" + API_URL));
+        SwaggerConfiguration oasConfig = new SwaggerConfiguration()
+                .openAPI(oas)
+                .prettyPrint(true)
+                .scannerClass("io.swagger.v3.jaxrs2.integration.JaxrsAnnotationScanner")
+                .resourcePackages(Stream.of("no.nav")
+                        .collect(Collectors.toSet()));
+
+        try {
+            new GenericOpenApiContextBuilder<>()
+                    .openApiConfiguration(oasConfig)
+                    .buildContext(true)
+                    .read();
+        } catch (OpenApiConfigurationException e) {
+            throw new RuntimeException(e.getMessage(), e);
         }
-        beanConfig.setBasePath("/fpabakus/" + API_URL);
-        beanConfig.setResourcePackage("no.nav");
-        beanConfig.setTitle("Vedtaksløsningen - Abakus");
-        beanConfig.setDescription("REST grensesnitt for Vedtaksløsningen.");
-        beanConfig.setScan(true);
+
     }
 
     @Override
     public Set<Class<?>> getClasses() {
-
         return Set.of(NaisRestTjeneste.class, SelftestRestTjeneste.class);
     }
 
