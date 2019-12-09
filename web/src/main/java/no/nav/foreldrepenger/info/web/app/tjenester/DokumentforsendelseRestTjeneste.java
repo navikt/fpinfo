@@ -19,11 +19,11 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import no.nav.foreldrepenger.info.tjenester.DokumentforsendelseTjeneste;
 import no.nav.foreldrepenger.info.tjenester.dto.AktørAnnenPartDto;
 import no.nav.foreldrepenger.info.tjenester.dto.AktørIdDto;
@@ -37,11 +37,9 @@ import no.nav.foreldrepenger.info.tjenester.dto.SøknadXmlDto;
 import no.nav.foreldrepenger.info.tjenester.dto.SøknadsGrunnlagDto;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 
-
 @Path(DOKUMENTFORSENDELSE_PATH)
 @Produces(MediaType.APPLICATION_JSON)
 @RequestScoped
-@Api(tags = {"dokumentforsendelse"})
 public class DokumentforsendelseRestTjeneste {
 
     public static final String DOKUMENTFORSENDELSE_PATH = "/dokumentforsendelse";
@@ -61,11 +59,11 @@ public class DokumentforsendelseRestTjeneste {
     @GET
     @Path("/behandling")
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
-    @ApiOperation(value = "Url for å hente Behandling", notes = "Returnerer Behandling")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Returnerer Status", response = BehandlingDto.class)})
-    public BehandlingDto hentBehandling(@NotNull @QueryParam("behandlingId") @ApiParam("behandlingId") @Valid BehandlingIdDto behandlingIdDto) {
-        String linkPathVedtak = API_PATH + "/vedtak?behandlingId=";
+    @Operation(description = "Url for å hente Behandling", summary = "Returnerer Behandling", responses = {
+            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = BehandlingDto.class)), responseCode = "200", description = "Returnerer søknad XML")
+    })
+    public BehandlingDto hentBehandling(
+            @NotNull @QueryParam("behandlingId") @Parameter(name = "behandlingId") @Valid BehandlingIdDto behandlingIdDto) {
         String linkPathSøknad = API_PATH + "/soknad?behandlingId=";
         return dokumentForsendelseTjenester.hentBehandling(behandlingIdDto, linkPathSøknad);
     }
@@ -74,29 +72,26 @@ public class DokumentforsendelseRestTjeneste {
     @Path("/status")
     @Produces(MediaType.APPLICATION_JSON)
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
-    @ApiOperation(value = "Søker om status på prossesseringen av et mottatt dokument",
-            notes = "status på prossesseringen av et mottatt dokument")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    code = 200,
-                    message = "Status og Periode",
-                    response = ForsendelseStatusDataDTO.class
-            ),
-            @ApiResponse(code = 404, message = "Forsendelse ikke funnet")
-    })
-    public Response getStatusInformasjon(@NotNull @QueryParam("forsendelseId") @ApiParam("forsendelseId") @Valid ForsendelseIdDto forsendelseIdDto) {
-        Optional<ForsendelseStatusDataDTO> dto = dokumentForsendelseTjenester.hentStatusInformasjon(forsendelseIdDto);
-        return dto.map(forsendelseStatusDataDTO -> Response.ok(forsendelseStatusDataDTO).build()).orElseGet(() -> Response.status(Response.Status.NOT_FOUND).build());
-    }
+    @Operation(description = "Søker om status på prossesseringen av et mottatt dokument", summary = "status på prossesseringen av et mottatt dokument", responses = {
+            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = ForsendelseStatusDataDTO.class)), responseCode = "200", description = "Status og Periode"),
+            @ApiResponse(responseCode = "404", description = "Forsendelse ikke funnet")
 
+    })
+    public Response getStatusInformasjon(
+            @NotNull @QueryParam("forsendelseId") @Parameter(name = "forsendelseId") @Valid ForsendelseIdDto forsendelseIdDto) {
+        Optional<ForsendelseStatusDataDTO> dto = dokumentForsendelseTjenester.hentStatusInformasjon(forsendelseIdDto);
+        return dto.map(forsendelseStatusDataDTO -> Response.ok(forsendelseStatusDataDTO).build())
+                .orElseGet(() -> Response.status(Response.Status.NOT_FOUND).build());
+    }
 
     @GET
     @Path("/sak")
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
-    @ApiOperation(value = "Url for å hente sak status informasjon som er relevant til aktør", notes = ("Returnerer Sak Status Informasjon"))
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Returnerer Sak Status Informasjon", response = SakStatusDto.class)})
-    public List<SakStatusDto> hentSakStatus(@NotNull @QueryParam("aktorId") @ApiParam("aktorId") @Valid AktørIdDto aktørIdDto) {
+    @Operation(description = "Url for å hente sak status informasjon som er relevant til aktør", summary = ("Returnerer Sak Status Informasjon"), responses = {
+            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SakStatusDto.class)), responseCode = "200", description = "Returnerer Sak Status Informasjon")
+    })
+    public List<SakStatusDto> hentSakStatus(
+            @NotNull @QueryParam("aktorId") @Parameter(name = "aktorId") @Valid AktørIdDto aktørIdDto) {
         String linkPathBehandling = API_PATH + "/behandling?behandlingId=";
         String linkPathUttaksplan = API_PATH + "/uttaksplan?saksnummer=";
         return dokumentForsendelseTjenester.hentSakStatus(aktørIdDto, linkPathBehandling, linkPathUttaksplan);
@@ -105,35 +100,35 @@ public class DokumentforsendelseRestTjeneste {
     @GET
     @Path("/soknad")
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
-    @ApiOperation(value = "Url for å hente søknad XML og journalpostId", notes = "Returnerer søknad XML og Journalpost ID")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Returnerer søknad XML", response = SøknadXmlDto.class)
+    @Operation(description = "Url for å hente søknad XML og journalpostId", summary = "Returnerer søknad XML og Journalpost ID", responses = {
+            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SøknadXmlDto.class)), responseCode = "200", description = "Returnerer søknad XML")
     })
-    public SøknadXmlDto hentSøknadXml(@NotNull @QueryParam("behandlingId") @ApiParam("behandlingId") @Valid BehandlingIdDto behandlingIdDto) {
+    public SøknadXmlDto hentSøknadXml(
+            @NotNull @QueryParam("behandlingId") @Parameter(name = "behandlingId") @Valid BehandlingIdDto behandlingIdDto) {
         return dokumentForsendelseTjenester.hentSøknadXml(behandlingIdDto);
     }
 
     @GET
     @Path("/uttaksplan")
     @BeskyttetRessurs(action = READ, ressurs = UTTAKSPLAN)
-    @ApiOperation(value = "Url for å hente søknadsgrunnlag og felles uttaksplan", notes = "Returnerer grunnlagsinfo og liste av uttaksperioder for begge parter")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "TODO", response = SøknadsGrunnlagDto.class)
+    @Operation(description = "Url for å hente søknadsgrunnlag og felles uttaksplan", summary = "Returnerer grunnlagsinfo og liste av uttaksperioder for begge parter", responses = {
+            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SøknadsGrunnlagDto.class)), responseCode = "200", description = "Returnerer søknad XML")
     })
-    public SøknadsGrunnlagDto hentSøknadsgrunnlag(@NotNull @QueryParam("saksnummer") @ApiParam("saksnummer") @Valid SaksnummerDto saksnummerDto) {
+    public SøknadsGrunnlagDto hentSøknadsgrunnlag(
+            @NotNull @QueryParam("saksnummer") @Parameter(name = "saksnummer") @Valid SaksnummerDto saksnummerDto) {
         return dokumentForsendelseTjenester.hentSøknadsgrunnlag(saksnummerDto, false);
     }
 
     @GET
     @Path("/annenforelderplan")
     @BeskyttetRessurs(action = READ, ressurs = UTTAKSPLAN)
-    @ApiOperation(value = "Url for å hente søknadsgrunnlag og felles uttaksplan", notes = "Returnerer grunnlagsinfo og liste av uttaksperioder for annen part")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "TODO", response = SøknadsGrunnlagDto.class)
+    @Operation(description = "Url for å hente søknadsgrunnlag og felles uttaksplan", summary = "Returnerer grunnlagsinfo og liste av uttaksperioder for begge parter", responses = {
+            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SøknadsGrunnlagDto.class)), responseCode = "200", description = "Returnerer søknad XML")
     })
+
     public SøknadsGrunnlagDto hentGrunnlagForAnnenPart(
-            @NotNull @QueryParam("aktorIdBruker") @ApiParam("aktorId") @Valid AktørIdDto aktørIdBrukerDto,
-            @NotNull @QueryParam("aktorIdAnnenPart") @ApiParam("aktorId") @Valid AktørAnnenPartDto aktørAnnenPartDto) {
+            @NotNull @QueryParam("aktorIdBruker") @Parameter(name = "aktorId") @Valid AktørIdDto aktørIdBrukerDto,
+            @NotNull @QueryParam("aktorIdAnnenPart") @Parameter(name = "aktorId") @Valid AktørAnnenPartDto aktørAnnenPartDto) {
         return dokumentForsendelseTjenester.hentSøknadAnnenPart(aktørIdBrukerDto, aktørAnnenPartDto);
     }
 }

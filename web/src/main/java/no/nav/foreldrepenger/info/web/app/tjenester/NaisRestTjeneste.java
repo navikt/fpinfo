@@ -9,10 +9,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import io.swagger.annotations.Api;
 import no.nav.foreldrepenger.info.web.app.selftest.SelftestService;
 
-@Api(tags = {"nais"})
 @Path("/")
 @Produces(TEXT_PLAIN)
 @RequestScoped
