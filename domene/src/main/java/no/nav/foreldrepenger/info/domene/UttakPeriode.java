@@ -9,12 +9,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Immutable;
+
 import no.nav.foreldrepenger.info.domene.converters.StringToGraderingAvslagÅrsakConverter;
 import no.nav.foreldrepenger.info.domene.converters.StringToMorsAktivitetConverter;
 import no.nav.foreldrepenger.info.felles.datatyper.GraderingAvslagÅrsak;
 import no.nav.foreldrepenger.info.felles.datatyper.MorsAktivitet;
-import org.hibernate.annotations.Immutable;
-
 import no.nav.vedtak.felles.jpa.converters.BooleanToStringConverter;
 
 @Entity(name = "UttakPeriode")

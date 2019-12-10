@@ -13,17 +13,17 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.info.domene.Saksnummer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.sf.ehcache.util.concurrent.ConcurrentHashMap;
 import no.nav.foreldrepenger.info.domene.Aksjonspunkt;
 import no.nav.foreldrepenger.info.domene.Behandling;
+import no.nav.foreldrepenger.info.domene.FagsakRelasjon;
 import no.nav.foreldrepenger.info.domene.MottattDokument;
 import no.nav.foreldrepenger.info.domene.SakStatus;
+import no.nav.foreldrepenger.info.domene.Saksnummer;
 import no.nav.foreldrepenger.info.domene.UttakPeriode;
-import no.nav.foreldrepenger.info.domene.FagsakRelasjon;
 import no.nav.foreldrepenger.info.felles.datatyper.BehandlingResultatType;
 import no.nav.foreldrepenger.info.felles.datatyper.BehandlingStatus;
 import no.nav.foreldrepenger.info.repository.DokumentForsendelseRepository;

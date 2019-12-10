@@ -8,8 +8,8 @@ import javax.annotation.Priority;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
 
-import no.nav.abac.common.xacml.CommonAttributter;
-import no.nav.abac.foreldrepenger.xacml.ForeldrepengerAttributter;
+import no.nav.foreldrepenger.info.abac.ForeldrepengerAttributter;
+import no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter;
 import no.nav.vedtak.sikkerhet.abac.PdpRequest;
 import no.nav.vedtak.sikkerhet.pdp.XacmlRequestBuilderTjeneste;
 import no.nav.vedtak.sikkerhet.pdp.xacml.XacmlAttributeSet;
@@ -29,10 +29,13 @@ public class XacmlRequestBuilderTjenesteImpl implements XacmlRequestBuilderTjene
         XacmlRequestBuilder xacmlBuilder = new XacmlRequestBuilder();
 
         XacmlAttributeSet actionAttributeSet = new XacmlAttributeSet();
-        actionAttributeSet.addAttribute(CommonAttributter.XACML_1_0_ACTION_ACTION_ID, pdpRequest.getString(CommonAttributter.XACML_1_0_ACTION_ACTION_ID));
+        actionAttributeSet.addAttribute(NavAbacCommonAttributter.XACML10_ACTION_ACTION_ID,
+                pdpRequest.getString(NavAbacCommonAttributter.XACML10_ACTION_ACTION_ID));
         xacmlBuilder.addActionAttributeSet(actionAttributeSet);
 
-        List<Tuple<String, String>> identer = hentIdenter(pdpRequest, CommonAttributter.RESOURCE_FELLES_PERSON_FNR, CommonAttributter.RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE);
+        List<Tuple<String, String>> identer = hentIdenter(pdpRequest,
+                NavAbacCommonAttributter.RESOURCE_FELLES_PERSON_FNR,
+                NavAbacCommonAttributter.RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE);
 
         if (identer.isEmpty()) {
             populerResources(xacmlBuilder, pdpRequest, null);
@@ -45,16 +48,21 @@ public class XacmlRequestBuilderTjenesteImpl implements XacmlRequestBuilderTjene
         return xacmlBuilder;
     }
 
-    private void populerResources(XacmlRequestBuilder xacmlBuilder, PdpRequest pdpRequest, Tuple<String, String> ident) {
+    private void populerResources(XacmlRequestBuilder xacmlBuilder, PdpRequest pdpRequest,
+            Tuple<String, String> ident) {
         xacmlBuilder.addResourceAttributeSet(byggRessursAttributter(pdpRequest, ident));
     }
 
     private XacmlAttributeSet byggRessursAttributter(PdpRequest pdpRequest, Tuple<String, String> ident) {
         XacmlAttributeSet resourceAttributeSet = new XacmlAttributeSet();
-        resourceAttributeSet.addAttribute(CommonAttributter.RESOURCE_FELLES_DOMENE, pdpRequest.getString(CommonAttributter.RESOURCE_FELLES_DOMENE));
-        resourceAttributeSet.addAttribute(CommonAttributter.RESOURCE_FELLES_RESOURCE_TYPE, pdpRequest.getString(CommonAttributter.RESOURCE_FELLES_RESOURCE_TYPE));
-        setOptionalValueinAttributeSet(resourceAttributeSet, pdpRequest, ForeldrepengerAttributter.RESOURCE_FORELDREPENGER_ANNEN_PART);
-        setOptionalValueinAttributeSet(resourceAttributeSet, pdpRequest, ForeldrepengerAttributter.RESOURCE_FORELDREPENGER_ALENEOMSORG);
+        resourceAttributeSet.addAttribute(NavAbacCommonAttributter.RESOURCE_FELLES_DOMENE,
+                pdpRequest.getString(NavAbacCommonAttributter.RESOURCE_FELLES_DOMENE));
+        resourceAttributeSet.addAttribute(NavAbacCommonAttributter.RESOURCE_FELLES_RESOURCE_TYPE,
+                pdpRequest.getString(NavAbacCommonAttributter.RESOURCE_FELLES_RESOURCE_TYPE));
+        setOptionalValueinAttributeSet(resourceAttributeSet, pdpRequest,
+                ForeldrepengerAttributter.RESOURCE_FORELDREPENGER_ANNEN_PART);
+        setOptionalValueinAttributeSet(resourceAttributeSet, pdpRequest,
+                ForeldrepengerAttributter.RESOURCE_FORELDREPENGER_ALENEOMSORG);
 
         if (ident != null) {
             resourceAttributeSet.addAttribute(ident.getElement1(), ident.getElement2());
@@ -63,14 +71,16 @@ public class XacmlRequestBuilderTjenesteImpl implements XacmlRequestBuilderTjene
         return resourceAttributeSet;
     }
 
-    private void setOptionalValueinAttributeSet(XacmlAttributeSet resourceAttributeSet, PdpRequest pdpRequest, String key) {
+    private void setOptionalValueinAttributeSet(XacmlAttributeSet resourceAttributeSet, PdpRequest pdpRequest,
+            String key) {
         pdpRequest.getOptional(key).ifPresent(s -> resourceAttributeSet.addAttribute(key, s));
     }
 
     private List<Tuple<String, String>> hentIdenter(PdpRequest pdpRequest, String... identNøkler) {
         List<Tuple<String, String>> identer = new ArrayList<>();
         for (String key : identNøkler) {
-            identer.addAll(pdpRequest.getListOfString(key).stream().map(it -> new Tuple<>(key, it)).collect(Collectors.toList()));
+            identer.addAll(pdpRequest.getListOfString(key).stream().map(it -> new Tuple<>(key, it))
+                    .collect(Collectors.toList()));
         }
         return identer;
     }

@@ -13,20 +13,21 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.hibernate.CacheMode;
+import org.hibernate.jpa.QueryHints;
+import org.hibernate.jpa.TypedParameterValue;
+import org.hibernate.type.StringType;
+
 import no.nav.foreldrepenger.info.domene.Behandling;
+import no.nav.foreldrepenger.info.domene.FagsakRelasjon;
 import no.nav.foreldrepenger.info.domene.MottattDokument;
 import no.nav.foreldrepenger.info.domene.SakStatus;
 import no.nav.foreldrepenger.info.domene.Saksnummer;
 import no.nav.foreldrepenger.info.domene.SøknadsGrunnlag;
 import no.nav.foreldrepenger.info.domene.UttakPeriode;
-import no.nav.foreldrepenger.info.domene.FagsakRelasjon;
 import no.nav.foreldrepenger.info.felles.datatyper.DokumentTypeId;
 import no.nav.foreldrepenger.info.felles.datatyper.FagsakYtelseType;
 import no.nav.vedtak.felles.jpa.VLPersistenceUnit;
-import org.hibernate.CacheMode;
-import org.hibernate.jpa.QueryHints;
-import org.hibernate.jpa.TypedParameterValue;
-import org.hibernate.type.StringType;
 
 @ApplicationScoped
 public class DokumentForsendelseRepositoryImpl implements DokumentForsendelseRepository {

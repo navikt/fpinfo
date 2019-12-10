@@ -10,6 +10,7 @@ import no.nav.foreldrepenger.info.domene.SakStatus;
 import no.nav.foreldrepenger.info.felles.rest.ResourceLink;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
+import no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType;
 
 public class SakStatusDto implements AbacDto {
 
@@ -88,6 +89,6 @@ public class SakStatusDto implements AbacDto {
 
     @Override
     public AbacDataAttributter abacAttributter() {
-        return AbacDataAttributter.opprett().leggTilAktørId(aktørId);
+        return AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.AKTØR_ID, aktørId);
     }
 }

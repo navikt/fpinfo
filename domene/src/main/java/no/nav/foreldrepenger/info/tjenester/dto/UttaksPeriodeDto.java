@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import no.nav.foreldrepenger.info.domene.UttakPeriode;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
+import no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType;
 
 public class UttaksPeriodeDto implements AbacDto {
 
@@ -46,7 +47,6 @@ public class UttaksPeriodeDto implements AbacDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String arbeidsgiverOrgnr;
 
-
     public String getPeriodeResultatType() {
         return periodeResultatType;
     }
@@ -71,7 +71,7 @@ public class UttaksPeriodeDto implements AbacDto {
         dto.manueltBehandlet = uttakPeriode.getManueltBehandlet();
         dto.samtidigUttak = uttakPeriode.getSamtidigUttak();
         dto.samtidigUttaksprosent = uttakPeriode.getSamtidigUttaksprosent();
-        if (!uttakPeriode.getSamtidigUttak()) { //frontend vil ikke ha detaljer om gradering ved samtidigUttak
+        if (!uttakPeriode.getSamtidigUttak()) { // frontend vil ikke ha detaljer om gradering ved samtidigUttak
             dto.graderingInnvilget = uttakPeriode.getGraderingInnvilget();
             dto.arbeidstidprosent = uttakPeriode.getArbeidstidprosent();
             dto.graderingAvslagAarsak = uttakPeriode.getGraderingAvslagAarsak();
@@ -171,6 +171,6 @@ public class UttaksPeriodeDto implements AbacDto {
 
     @Override
     public AbacDataAttributter abacAttributter() {
-        return AbacDataAttributter.opprett().leggTilSaksnummer(saksnummer);
+        return AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.SAKSNUMMER, saksnummer);
     }
 }

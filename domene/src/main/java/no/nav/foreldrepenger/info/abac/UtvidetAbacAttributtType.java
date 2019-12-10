@@ -4,6 +4,7 @@ import no.nav.vedtak.sikkerhet.abac.AbacAttributtType;
 
 public enum UtvidetAbacAttributtType implements AbacAttributtType {
 
+    DOKUMENTFORSENDELSE_ID,
     ANNEN_PART,
     OPPGITT_ALENEOMSORG;
 
@@ -35,16 +36,17 @@ public enum UtvidetAbacAttributtType implements AbacAttributtType {
         this.valider = valider;
     }
 
-    public String getSporingsloggEksternKode() {
-        return this.sporingsloggEksternKode;
-    }
-
     public boolean getMaskerOutput() {
         return this.maskerOutput;
     }
 
     public boolean getValider() {
         return this.valider;
+    }
+
+    @Override
+    public String getSporingsloggKode() {
+        return sporingsloggEksternKode;
     }
 
 }

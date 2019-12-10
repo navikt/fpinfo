@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
+import no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ForsendelseStatusDataDTO implements AbacDto {
@@ -12,12 +13,12 @@ public class ForsendelseStatusDataDTO implements AbacDto {
     /**
      * Joark journalpostid.
      */
-    private Long journalpostId;//TODO HUMLE: endre til String
+    private Long journalpostId;// TODO HUMLE: endre til String
 
     /**
      * GSAK Saksnummer. (samme som Fagsak#saksnummer).
      */
-    private Long saksnummer;//TODO HUMLE: endre til String
+    private Long saksnummer;// TODO HUMLE: endre til String
 
     public ForsendelseStatusDataDTO(ForsendelseStatus forsendelseStatus) {
         this.forsendelseStatus = forsendelseStatus;
@@ -49,6 +50,6 @@ public class ForsendelseStatusDataDTO implements AbacDto {
 
     @Override
     public AbacDataAttributter abacAttributter() {
-        return AbacDataAttributter.opprett().leggTilSaksnummer(String.valueOf(saksnummer));
+        return AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.SAKSNUMMER, String.valueOf(saksnummer));
     }
 }

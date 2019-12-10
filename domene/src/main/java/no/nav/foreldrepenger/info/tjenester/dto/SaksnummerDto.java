@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.info.tjenester.dto;
 
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -8,6 +7,7 @@ import javax.validation.constraints.Size;
 
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
+import no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType;
 
 public class SaksnummerDto implements AbacDto {
 
@@ -22,11 +22,10 @@ public class SaksnummerDto implements AbacDto {
 
     @Override
     public AbacDataAttributter abacAttributter() {
-        return AbacDataAttributter.opprett().leggTilSaksnummer(saksnummer);
+        return AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.SAKSNUMMER, String.valueOf(saksnummer));
     }
 
     public String getSaksnummer() {
         return saksnummer;
     }
 }
-

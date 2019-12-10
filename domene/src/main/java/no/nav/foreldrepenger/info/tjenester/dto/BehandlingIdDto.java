@@ -7,6 +7,7 @@ import javax.validation.constraints.Size;
 
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
+import no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType;
 
 public class BehandlingIdDto implements AbacDto {
 
@@ -21,7 +22,7 @@ public class BehandlingIdDto implements AbacDto {
 
     @Override
     public AbacDataAttributter abacAttributter() {
-        return AbacDataAttributter.opprett().leggTilBehandlingsId(getBehandlingId());
+        return AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.BEHANDLING_ID, behandlingId);
     }
 
     public Long getBehandlingId() {

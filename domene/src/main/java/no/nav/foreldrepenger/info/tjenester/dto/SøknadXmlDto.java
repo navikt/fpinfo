@@ -8,6 +8,7 @@ import no.nav.vedtak.feil.deklarasjon.DeklarerteFeil;
 import no.nav.vedtak.feil.deklarasjon.TekniskFeil;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
+import no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType;
 
 public class SøknadXmlDto implements AbacDto {
 
@@ -45,14 +46,16 @@ public class SøknadXmlDto implements AbacDto {
         }
         SøknadXmlDto dto = new SøknadXmlDto();
         dto.xml = dokument1.getSøknadXml() != null ? dokument1.getSøknadXml() : dokument2.getSøknadXml();
-        dto.journalpostId = dokument1.getJournalpostId() != null ? dokument1.getJournalpostId() : dokument2.getJournalpostId();
-        dto.behandlingId = dokument1.getBehandlingId() != null ? dokument1.getBehandlingId() : dokument2.getBehandlingId();
+        dto.journalpostId = dokument1.getJournalpostId() != null ? dokument1.getJournalpostId()
+                : dokument2.getJournalpostId();
+        dto.behandlingId = dokument1.getBehandlingId() != null ? dokument1.getBehandlingId()
+                : dokument2.getBehandlingId();
         return dto;
     }
 
     @Override
     public AbacDataAttributter abacAttributter() {
-        return AbacDataAttributter.opprett().leggTilBehandlingsId(behandlingId);
+        return AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.BEHANDLING_ID, behandlingId);
     }
 
     public static class Builder {

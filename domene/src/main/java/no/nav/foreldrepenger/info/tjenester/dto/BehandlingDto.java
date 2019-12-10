@@ -9,6 +9,7 @@ import no.nav.foreldrepenger.info.felles.datatyper.BehandlingTema;
 import no.nav.foreldrepenger.info.felles.rest.ResourceLink;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
+import no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType;
 
 public class BehandlingDto implements AbacDto {
 
@@ -101,6 +102,6 @@ public class BehandlingDto implements AbacDto {
 
     @Override
     public AbacDataAttributter abacAttributter() {
-        return AbacDataAttributter.opprett().leggTilBehandlingsId(behandlingId);
+        return AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.BEHANDLING_ID, behandlingId);
     }
 }

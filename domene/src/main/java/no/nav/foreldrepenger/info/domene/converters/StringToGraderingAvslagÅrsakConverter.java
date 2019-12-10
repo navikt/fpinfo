@@ -1,10 +1,11 @@
 package no.nav.foreldrepenger.info.domene.converters;
 
-import no.nav.foreldrepenger.info.felles.datatyper.GraderingAvslagÅrsak;
+import java.util.Optional;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
-import java.util.Optional;
+
+import no.nav.foreldrepenger.info.felles.datatyper.GraderingAvslagÅrsak;
 
 @Converter
 public class StringToGraderingAvslagÅrsakConverter implements AttributeConverter<GraderingAvslagÅrsak, String> {

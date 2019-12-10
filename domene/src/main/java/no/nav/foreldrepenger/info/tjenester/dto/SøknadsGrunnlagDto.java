@@ -11,6 +11,7 @@ import no.nav.foreldrepenger.info.domene.SøknadsGrunnlag;
 import no.nav.foreldrepenger.info.felles.datatyper.FamilieHendelseType;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
+import no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType;
 
 public class SøknadsGrunnlagDto implements AbacDto {
 
@@ -21,7 +22,6 @@ public class SøknadsGrunnlagDto implements AbacDto {
 
     @JsonIgnore
     private String annenPartFraSak;
-
 
     private String familieHendelseType;
     private LocalDate familieHendelseDato;
@@ -156,8 +156,9 @@ public class SøknadsGrunnlagDto implements AbacDto {
 
     @Override
     public AbacDataAttributter abacAttributter() {
+
         AbacDataAttributter abacDataAttributter = AbacDataAttributter.opprett()
-                .leggTilSaksnummer(saksnummer)
+                .leggTil(StandardAbacAttributtType.SAKSNUMMER, saksnummer)
                 .leggTil(UtvidetAbacAttributtType.OPPGITT_ALENEOMSORG, morErAleneOmOmsorg);
         if (annenPartFraSak != null) {
             abacDataAttributter.leggTil(UtvidetAbacAttributtType.ANNEN_PART, annenPartFraSak);

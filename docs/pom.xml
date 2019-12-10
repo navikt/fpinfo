@@ -11,16 +11,11 @@
         <version>${revision}${sha1}${changelist}</version>
     </parent>
 
-    <properties>
-        <java.version>10</java.version>
-    </properties>
-
     <artifactId>docs</artifactId>
     <name>fpinfo :: Docs</name>
     <packaging>jar</packaging>
 
     <dependencies>
-
         <dependency>
             <groupId>com.oracle.ojdbc</groupId>
             <artifactId>ojdbc8</artifactId>
