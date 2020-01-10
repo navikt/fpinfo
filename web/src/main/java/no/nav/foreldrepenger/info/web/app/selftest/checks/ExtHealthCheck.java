@@ -5,7 +5,7 @@ import com.codahale.metrics.health.HealthCheck;
 /**
  * HealthCheck utvidet til å produsere resultater med ekstra info som kreves av Auras selftest.
  */
-public abstract class ExtHealthCheck extends HealthCheck implements SelftestHealthCheck {
+public abstract class ExtHealthCheck extends HealthCheck {
 
     public static final String DETAIL_DESCRIPTION = "description";
     public static final String DETAIL_ENDPOINT = "endpoint";

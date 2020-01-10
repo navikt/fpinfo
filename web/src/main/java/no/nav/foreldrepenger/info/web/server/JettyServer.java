@@ -94,7 +94,7 @@ public class JettyServer {
      * @see SecurityFilter#getSwaggerHash()
      */
     protected void konfigurerSwaggerHash() {
-        System.setProperty(SecurityFilter.SWAGGER_HASH_KEY, "sha256-FIHfVvvH6UAyyRR9oayZ1aB3ccaCyZeVcOJ5WUXyOAc=");
+        System.setProperty(SecurityFilter.SWAGGER_HASH_KEY, "sha256-E2MuDn7TjNl6T+nRqM4DMP4tBI4qnU9dc7+hiOBbAMU=");
     }
 
     protected void migrerDatabaseScript() {
@@ -145,8 +145,8 @@ public class JettyServer {
 
     protected Resource createResourceCollection() {
         return new ResourceCollection(
-                Resource.newClassPathResource("/web")
-        );
+                Resource.newClassPathResource("META-INF/resources/webjars/"),
+                Resource.newClassPathResource("/web"));
     }
 
     private void hacksForManglendeStøttePåNAIS() {
