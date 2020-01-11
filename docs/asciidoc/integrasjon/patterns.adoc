@@ -21,20 +21,9 @@ I Vedtaksløsningen er integrasjonen mot ØkonomiOppdrag async request/response.
 === ØkonomioppdragAsyncJmsProducer
 Sender melding til Økonomioppdrag
 
-|===
-|kø-alias|jndi|TypeMelding
-
-|fpsak_okonomi_oppdrag_send|jms/QueueFpsakOkonomiOppdragSend|TextMelding: http://maven.adeo.no/nexus/service/local/repositories/m2internal/content/no/nav/foreldrepenger/kontrakter/okonomistotte-v1/1.5.1/okonomistotte-v1-1.5.1-jaxb.jar[okonomistotte-v1]
-|===
 
 === ØkonomioppdragAsyncJmsConsumer
 Lytter etter og behandler kvitteringsmeldinger fra Økonomioppdrag
-
-|===
-|kø-alias|jndi|TypeMelding
-
-|fpsak_okonomi_oppdrag_mottak|jms/QueueFpsakOkonomiOppdragMotta|TextMelding: http://maven.adeo.no/nexus/service/local/repositories/m2internal/content/no/nav/foreldrepenger/kontrakter/okonomistotte-v1/1.5.1/okonomistotte-v1-1.5.1-jaxb.jar[okonomistotte-v1]
-|===
 
 == synk request/response
 En requestor kommuniserer synkront mot en tjeneste og forventer en response tilbake. Hvis tjenesten kommuniserer med andre tjenester, så gjøres også dette synkront.

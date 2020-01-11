@@ -10,6 +10,7 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 import io.swagger.v3.jaxrs2.SwaggerSerializers;
+import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 import io.swagger.v3.oas.integration.GenericOpenApiContextBuilder;
 import io.swagger.v3.oas.integration.OpenApiConfigurationException;
 import io.swagger.v3.oas.integration.SwaggerConfiguration;
@@ -60,6 +61,7 @@ public class ApplicationConfig extends Application {
         Set<Class<?>> classes = new HashSet<>();
         classes.add(DokumentforsendelseRestTjeneste.class);
         classes.add(SwaggerSerializers.class);
+        classes.add(OpenApiResource.class);
         classes.add(ConstraintViolationMapper.class);
         classes.add(JsonMappingExceptionMapper.class);
         classes.add(JsonParseExceptionMapper.class);

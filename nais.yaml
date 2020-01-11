@@ -5,14 +5,17 @@ replicas:
   max: 3
   cpuThresholdPercentage: 80
 port: 8080
+prometheus:
+  enabled: true
+  path: /fpinfo/internal/metrics/prometheus
 healthcheck:
   liveness:
-    path: /fpinfo/internal/isAlive
+    path: /fpinfo/internal/health/isAlive
     initialDelay: 30
   readiness:
-    path: /fpinfo/internal/isReady
+    path: /fpinfo/internal/health/isReady
     initialDelay: 30
-preStopHookPath: /fpinfo/internal/preStop
+preStopHookPath: /fpinfo/internal/health/preStop
 resources:
   limits:
     cpu: 1000m
