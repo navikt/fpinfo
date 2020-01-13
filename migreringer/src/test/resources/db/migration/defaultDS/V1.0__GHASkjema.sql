@@ -838,9 +838,7 @@ create table ${fpinfo.fpsak.schema.navn}.UTTAK_RESULTAT
    ID NUMBER(19) not null
       constraint PK_UTTAK_RESULTAT
          primary key,
-   BEHANDLING_RESULTAT_ID NUMBER(19) not null
-      constraint FK_UTTAK_RESULTAT_1
-         references ${fpinfo.fpsak.schema.navn}.BEHANDLING_RESULTAT,
+   BEHANDLING_RESULTAT_ID NUMBER(19) not NULL,
    OPPRINNELIG_PERIODER_ID NUMBER(19)
       constraint FK_UTTAK_RESULTAT_2
          references ${fpinfo.fpsak.schema.navn}.UTTAK_RESULTAT_PERIODER,
