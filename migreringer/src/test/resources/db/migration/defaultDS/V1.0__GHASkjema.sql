@@ -708,7 +708,7 @@ create index ${fpinfo.fpsak.schema.navn}.IDX_YF_FORDELING_PERIODE_3
    on ${fpinfo.fpsak.schema.navn}.YF_FORDELING_PERIODE (AARSAK_TYPE);
 
 create index ${fpinfo.fpsak.schema.navn}.IDX_YF_FORDELING_PERIODE_4
-   on ${fpinfo.fpsak.schema.navn}.YF_FORDELING_PERIODE (FORDELING_ID):
+   on ${fpinfo.fpsak.schema.navn}.YF_FORDELING_PERIODE (FORDELING_ID);
 
 create index ${fpinfo.fpsak.schema.navn}.IDX_YF_FORDELING_PERIODE_6
    on ${fpinfo.fpsak.schema.navn}.YF_FORDELING_PERIODE (VURDERING_TYPE);
