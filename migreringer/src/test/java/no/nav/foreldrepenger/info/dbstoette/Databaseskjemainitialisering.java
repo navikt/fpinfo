@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -14,6 +15,7 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import no.nav.vedtak.util.env.Environment;
 
 /**
  * Initielt skjemaoppsett + migrering av unittest-skjemaer
@@ -24,12 +26,15 @@ public final class Databaseskjemainitialisering {
     private static final String TMP_DIR = "java.io.tmpdir";
     private static final String SEMAPHORE_FIL_PREFIX = "no.nav.vedtak.felles.behandlingsprosess";
     private static final String SEMAPHORE_FIL_SUFFIX = "no.nav.vedtak.felles.behandlingsprosess";
-
+    private static final Environment ENV = Environment.current();
     private static final Pattern placeholderPattern = Pattern.compile("\\$\\{(.*)\\}");
 
     public static void main(String[] args) {
-        if (System.getProperty("skipTests") != null || System.getProperty("maven.test.skip") != null) {
-            log.info("Maven-property 'skipTests' eller 'maven.test.skip' er satt. Hopper over migrering av unittest-skjema");
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Oslo"));
+
+        if (ENV.getProperty("skipTests") != null || ENV.getProperty("maven.test.skip") != null) {
+            log.info(
+                    "Maven-property 'skipTests' eller 'maven.test.skip' er satt. Hopper over migrering av unittest-skjema");
         } else {
             migrerUnittestSkjemaer();
         }
@@ -46,8 +51,9 @@ public final class Databaseskjemainitialisering {
             LokalDatabaseStøtte.kjørMigreringFor(skjemaer.get());
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
-        } catch (RuntimeException e){
-            log.warn("\n\n Kunne ikke starte inkrementell oppdatering av databasen. Det finnes trolig endringer i allerede kjørte script.\nKjører full migrering...");
+        } catch (RuntimeException e) {
+            log.warn(
+                    "\n\n Kunne ikke starte inkrementell oppdatering av databasen. Det finnes trolig endringer i allerede kjørte script.\nKjører full migrering...");
             try {
                 settOppSkjemaer(skjemaer);
                 LokalDatabaseStøtte.kjørFullMigreringFor(skjemaer.get());
@@ -67,7 +73,6 @@ public final class Databaseskjemainitialisering {
             log.info("Kjører på jenkins");
         }
     }
-
 
     public static void kjørMigreringHvisNødvendig() {
         if (!Databaseskjemainitialisering.isJenkins() && !Databaseskjemainitialisering.erMigreringKjørt()) {
