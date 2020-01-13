@@ -205,12 +205,8 @@ create table ${fpinfo.fpsak.schema.navn}.BEHANDLING_RESULTAT
    ID NUMBER(19) not null
       constraint PK_BEHANDLING_RESULTAT
          primary key,
-   BEHANDLING_ID NUMBER(19) not null
-      constraint FK_BEHANDLING_RESULTAT_3
-         references ${fpinfo.fpsak.schema.navn}.BEHANDLING,
-   INNGANGSVILKAR_RESULTAT_ID NUMBER(19)
-      constraint FK_BEHANDLING_RESULTAT_1
-         references ${fpinfo.fpsak.schema.navn}.VILKAR_RESULTAT,
+   BEHANDLING_ID NUMBER(19) not NULL,
+   INNGANGSVILKAR_RESULTAT_ID NUMBER(19),
    BEREGNING_RESULTAT_ID NUMBER(19),
    VERSJON NUMBER(19) default 0 not null,
    OPPRETTET_AV VARCHAR2(20 char) default 'VL' not null,
