@@ -211,9 +211,7 @@ create table ${fpinfo.fpsak.schema.navn}.BEHANDLING_RESULTAT
    INNGANGSVILKAR_RESULTAT_ID NUMBER(19)
       constraint FK_BEHANDLING_RESULTAT_1
          references ${fpinfo.fpsak.schema.navn}.VILKAR_RESULTAT,
-   BEREGNING_RESULTAT_ID NUMBER(19)
-      constraint FK_BEHANDLING_RESULTAT_2
-         references ${fpinfo.fpsak.schema.navn}.BR_LEGACY_ES_BEREGNING_RES,
+   BEREGNING_RESULTAT_ID NUMBER(19),
    VERSJON NUMBER(19) default 0 not null,
    OPPRETTET_AV VARCHAR2(20 char) default 'VL' not null,
    OPPRETTET_TID TIMESTAMP(3) default systimestamp not null,
@@ -438,9 +436,7 @@ create index ${fpinfo.fpsak.schema.navn}.IDX_BEHANDLING_ARSAK_7
 
 create table ${fpinfo.fpsak.schema.navn}.KODELISTE
 (
-   KODEVERK VARCHAR2(100 char) not null
-      constraint FK_KODELISTE_01
-         references ${fpinfo.fpsak.schema.navn}.KODEVERK,
+   KODEVERK VARCHAR2(100 char) not NULL,
    KODE VARCHAR2(100 char) not null,
    OFFISIELL_KODE VARCHAR2(1000 char),
    BESKRIVELSE VARCHAR2(4000 char),
@@ -752,24 +748,14 @@ create table ${fpinfo.fpsak.schema.navn}.GR_YTELSES_FORDELING
    OVERSTYRT_FORDELING_ID NUMBER
       constraint FK_GR_YTELSES_FORDELING_7
          references ${fpinfo.fpsak.schema.navn}.YF_FORDELING,
-   UTENOMSORG_ID NUMBER
-      constraint FK_YF_DOKUMENTASJON_PERIODE_9
-         references ${fpinfo.fpsak.schema.navn}.YF_DOKUMENTASJON_PERIODER,
-   ALENEOMSORG_ID NUMBER
-      constraint FK_YF_DOKUMENTASJON_PERIODE_10
-         references ${fpinfo.fpsak.schema.navn}.YF_DOKUMENTASJON_PERIODER,
-   UTTAK_DOKUMENTASJON_ID NUMBER
-      constraint FK_YF_DOKUMENTASJON_PERIODE_11
-         references ${fpinfo.fpsak.schema.navn}.YF_DOKUMENTASJON_PERIODER,
-   YF_AVKLART_DATO_ID NUMBER(19)
-      constraint FK_GR_YTELSES_FORDELING_9
-         references ${fpinfo.fpsak.schema.navn}.YF_AVKLART_DATO,
+   UTENOMSORG_ID NUMBER,
+   ALENEOMSORG_ID NUMBER,
+   UTTAK_DOKUMENTASJON_ID NUMBER,
+   YF_AVKLART_DATO_ID NUMBER(19),
    AKTIV VARCHAR2(1 char) default 'J' not null
       constraint CHK_AKTIV1
          check (aktiv IN ('J', 'N')),
-   ANNEN_FORELDER_HAR_RETT_ID NUMBER
-      constraint FK_YF_DOKUMENTASJON_PERIODE_12
-         references ${fpinfo.fpsak.schema.navn}.YF_DOKUMENTASJON_PERIODER,
+   ANNEN_FORELDER_HAR_RETT_ID NUMBER,
    JUSTERT_FORDELING_ID NUMBER(19)
       constraint FK_GR_YTELSES_FORDELING_10
          references ${fpinfo.fpsak.schema.navn}.YF_FORDELING
@@ -815,9 +801,7 @@ create table ${fpinfo.fpsak.schema.navn}.YF_DOKUMENTASJON_PERIODE
    ID NUMBER(19) not null
       constraint PK_YF_DOKUMENTASJON_PERIODE
          primary key,
-   PERIODER_ID NUMBER(19) not null
-      constraint FK_YF_DOKUMENTASJON_PERIODE_1
-         references ${fpinfo.fpsak.schema.navn}.YF_DOKUMENTASJON_PERIODER,
+   PERIODER_ID NUMBER(19) not NULL,
    FOM DATE not null,
    TOM DATE not null,
    DOKUMENTASJON_TYPE VARCHAR2(100 char) not null,
