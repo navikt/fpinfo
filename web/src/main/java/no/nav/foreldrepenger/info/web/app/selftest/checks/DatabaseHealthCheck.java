@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TimeZone;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.naming.InitialContext;
@@ -43,6 +44,7 @@ public class DatabaseHealthCheck extends ExtHealthCheck {
     private String endpoint = null; // ukjent frem til første gangs test
 
     public DatabaseHealthCheck() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Oslo"));
         this.jndiName = JDBC_DEFAULT_DS;
     }
 
@@ -94,14 +96,15 @@ public class DatabaseHealthCheck extends ExtHealthCheck {
             for (String sqlQuery : SQL_QUERIES) {
                 runningQuery = sqlQuery;
                 try (Statement statement = connection.createStatement()) {
-                    if (!statement.execute(sqlQuery)) { //NOSONAR
+                    if (!statement.execute(sqlQuery)) { // NOSONAR
                         String message = "SQL-spørring '" + sqlQuery + "' feilet";
                         results.add(opprettInternalResult(message, new SQLException(message)));
                     }
                 }
             }
         } catch (SQLException e) {
-            String error = "Feil ved kjøring av selftest mot db for query (" + runningQuery + ") mot " + JDBC_DEFAULT_DS;
+            String error = "Feil ved kjøring av selftest mot db for query (" + runningQuery + ") mot "
+                    + JDBC_DEFAULT_DS;
             LOGGER.error(error, e);
             results.add(opprettInternalResult(error, e));
         }
@@ -126,7 +129,7 @@ public class DatabaseHealthCheck extends ExtHealthCheck {
                 }
                 result = url;
             }
-        } catch (SQLException e) { //NOSONAR
+        } catch (SQLException e) { // NOSONAR
             // ikke fatalt
         }
         return result;
