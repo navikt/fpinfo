@@ -189,7 +189,7 @@ create table ${fpinfo.fpsak.schema.navn}.SO_SOEKNAD
    ER_ENDRINGSSOEKNAD VARCHAR2(1 char) default 'N' not null,
    BRUKER_ROLLE VARCHAR2(100 char) default '-' not null,
    SPRAK_KODE VARCHAR2(100 char) default 'NB' not null
-)
+);
 
 create index ${fpinfo.fpsak.schema.navn}.IDX_SOEKNAD_10
    on ${fpinfo.fpsak.schema.navn}.SO_SOEKNAD (FAR_SOEKER_TYPE);
