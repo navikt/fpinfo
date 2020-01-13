@@ -15,6 +15,8 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import no.nav.vedtak.util.env.Environment;
+
 /**
  * Initielt skjemaoppsett + migrering av unittest-skjemaer
  */
@@ -24,12 +26,13 @@ public final class Databaseskjemainitialisering {
     private static final String TMP_DIR = "java.io.tmpdir";
     private static final String SEMAPHORE_FIL_PREFIX = "no.nav.vedtak.felles.behandlingsprosess";
     private static final String SEMAPHORE_FIL_SUFFIX = "no.nav.vedtak.felles.behandlingsprosess";
-
+    private static final Environment ENV = Environment.current();
     private static final Pattern placeholderPattern = Pattern.compile("\\$\\{(.*)\\}");
 
     public static void main(String[] args) {
         TimeZone.setDefault(TimeZone.getTimeZone("Europe/Oslo"));
-        if (System.getProperty("skipTests") != null || System.getProperty("maven.test.skip") != null) {
+
+        if (ENV.getProperty("skipTests") != null || ENV.getProperty("maven.test.skip") != null) {
             log.info(
                     "Maven-property 'skipTests' eller 'maven.test.skip' er satt. Hopper over migrering av unittest-skjema");
         } else {
