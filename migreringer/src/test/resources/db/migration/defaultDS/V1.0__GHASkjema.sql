@@ -44,21 +44,6 @@ create table ${fpinfo.fpsak.schema.navn}.FAGSAK
    TIL_INFOTRYGD VARCHAR2(1 char) default 'N' not null
 );
 
-CREATE TABLE ${fpinfo.fpsak.schema.navn}.STOENADSKONTOBEREGNING (
-  ID                        NUMBER(19, 0)                                       NOT NULL,
-  FAGSAK_RELASJON_ID        NUMBER(19, 0)                                       NOT NULL,
-  BEHANDLING_ID             NUMBER(19, 0)                                       NOT NULL,
-  REGEL_INPUT               CLOB                                                NOT NULL,
-  REGEL_EVALUERING          CLOB                                                NOT NULL,
-  OPPRETTET_AV              VARCHAR2(20 CHAR) DEFAULT 'VL'                      NOT NULL,
-  OPPRETTET_TID             TIMESTAMP(3)      DEFAULT systimestamp              NOT NULL,
-  ENDRET_AV                 VARCHAR2(20 CHAR),
-  ENDRET_TID                TIMESTAMP(3),
-  CONSTRAINT PK_STOENADSKONTOBEREGNING PRIMARY KEY (ID),
-  CONSTRAINT FK_STOENADSKONTOBEREGNING_1 FOREIGN KEY (FAGSAK_RELASJON_ID) REFERENCES  ${fpinfo.fpsak.schema.navn}.FAGSAK_RELASJON(ID),
-  CONSTRAINT FK_STOENADSKONTOBEREGNING_2 FOREIGN KEY (BEHANDLING_ID) REFERENCES  ${fpinfo.fpsak.schema.navn}.BEHANDLING(ID)
-);
-
 create table ${fpinfo.fpsak.schema.navn}.FAGSAK_RELASJON
 (
    ID NUMBER(19) not null
@@ -75,49 +60,16 @@ create table ${fpinfo.fpsak.schema.navn}.FAGSAK_RELASJON
    FAGSAK_TO_ID NUMBER(19)
       constraint FK_FAGSAK_RELASJON_2
          references ${fpinfo.fpsak.schema.navn}.FAGSAK,
-   KONTO_BEREGNING_ID NUMBER(19)
-      constraint FK_FAGSAK_RELASJON_3
-         references ${fpinfo.fpsak.schema.navn}.STOENADSKONTOBEREGNING,
+   KONTO_BEREGNING_ID NUMBER(19),
    AKTIV VARCHAR2(1 char) default 'J' not null
       constraint CHK_AKTIV12
          check (aktiv IN ('J', 'N')),
    DEKNINGSGRAD NUMBER(3) default 100 not null,
-   OVERSTYRT_KONTO_BEREGNING_ID NUMBER(19)
-      constraint FK_FAGSAK_RELASJON_4
-         references ${fpinfo.fpsak.schema.navn}.STOENADSKONTOBEREGNING,
+   OVERSTYRT_KONTO_BEREGNING_ID NUMBER(19),
    OVERSTYRT_DEKNINGSGRAD NUMBER(3),
    AVSLUTTNINGSDATO DATE
 );
 
-create index ${fpinfo.fpsak.schema.navn}.IDX_FAGSAK_RELASJON_1
-   on ${fpinfo.fpsak.schema.navn}.FAGSAK_RELASJON (FAGSAK_EN_ID);
-
-create index ${fpinfo.fpsak.schema.navn}.IDX_FAGSAK_RELASJON_2
-   on ${fpinfo.fpsak.schema.navn}.FAGSAK_RELASJON (FAGSAK_TO_ID);
-
-create index ${fpinfo.fpsak.schema.navn}.IDX_FAGSAK_RELASJON_3
-   on ${fpinfo.fpsak.schema.navn}.FAGSAK_RELASJON (KONTO_BEREGNING_ID);
-
-create index ${fpinfo.fpsak.schema.navn}.IDX_FAGSAK_RELASJON_4
-   on ${fpinfo.fpsak.schema.navn}.FAGSAK_RELASJON (OVERSTYRT_KONTO_BEREGNING_ID);
-
-create index ${fpinfo.fpsak.schema.navn}.IDX_FAGSAK_RELASJON_5
-   on ${fpinfo.fpsak.schema.navn}.FAGSAK_RELASJON (AVSLUTTNINGSDATO);
-
-create index ${fpinfo.fpsak.schema.navn}.IDX_FAGSAK_1
-   on ${fpinfo.fpsak.schema.navn}.FAGSAK (FAGSAK_STATUS);
-
-create index ${fpinfo.fpsak.schema.navn}.IDX_FAGSAK_2
-   on ${fpinfo.fpsak.schema.navn}.FAGSAK (BRUKER_ROLLE);
-
-create index ${fpinfo.fpsak.schema.navn}.IDX_FAGSAK_3
-   on ${fpinfo.fpsak.schema.navn}.FAGSAK (BRUKER_ID);
-
-create index ${fpinfo.fpsak.schema.navn}.IDX_FAGSAK_7
-   on ${fpinfo.fpsak.schema.navn}.FAGSAK (YTELSE_TYPE);
-
-create unique index ${fpinfo.fpsak.schema.navn}.UIDX_FAGSAK_1
-   on ${fpinfo.fpsak.schema.navn}.FAGSAK (SAKSNUMMER);
 
 create table ${fpinfo.fpsak.schema.navn}.BEHANDLING
 (
@@ -151,6 +103,53 @@ create table ${fpinfo.fpsak.schema.navn}.BEHANDLING
    UUID RAW(16),
    MIGRERT_KILDE VARCHAR2(100 char) default '-' not null
 );
+
+CREATE TABLE ${fpinfo.fpsak.schema.navn}.STOENADSKONTOBEREGNING (
+  ID                        NUMBER(19, 0)                                       NOT NULL,
+  FAGSAK_RELASJON_ID        NUMBER(19, 0)                                       NOT NULL,
+  BEHANDLING_ID             NUMBER(19, 0)                                       NOT NULL,
+  REGEL_INPUT               CLOB                                                NOT NULL,
+  REGEL_EVALUERING          CLOB                                                NOT NULL,
+  OPPRETTET_AV              VARCHAR2(20 CHAR) DEFAULT 'VL'                      NOT NULL,
+  OPPRETTET_TID             TIMESTAMP(3)      DEFAULT systimestamp              NOT NULL,
+  ENDRET_AV                 VARCHAR2(20 CHAR),
+  ENDRET_TID                TIMESTAMP(3),
+  CONSTRAINT PK_STOENADSKONTOBEREGNING PRIMARY KEY (ID),
+  CONSTRAINT FK_STOENADSKONTOBEREGNING_2 FOREIGN KEY (BEHANDLING_ID) REFERENCES  ${fpinfo.fpsak.schema.navn}.BEHANDLING(ID)
+);
+
+
+create index ${fpinfo.fpsak.schema.navn}.IDX_FAGSAK_RELASJON_1
+   on ${fpinfo.fpsak.schema.navn}.FAGSAK_RELASJON (FAGSAK_EN_ID);
+
+create index ${fpinfo.fpsak.schema.navn}.IDX_FAGSAK_RELASJON_2
+   on ${fpinfo.fpsak.schema.navn}.FAGSAK_RELASJON (FAGSAK_TO_ID);
+
+create index ${fpinfo.fpsak.schema.navn}.IDX_FAGSAK_RELASJON_3
+   on ${fpinfo.fpsak.schema.navn}.FAGSAK_RELASJON (KONTO_BEREGNING_ID);
+
+create index ${fpinfo.fpsak.schema.navn}.IDX_FAGSAK_RELASJON_4
+   on ${fpinfo.fpsak.schema.navn}.FAGSAK_RELASJON (OVERSTYRT_KONTO_BEREGNING_ID);
+
+create index ${fpinfo.fpsak.schema.navn}.IDX_FAGSAK_RELASJON_5
+   on ${fpinfo.fpsak.schema.navn}.FAGSAK_RELASJON (AVSLUTTNINGSDATO);
+
+create index ${fpinfo.fpsak.schema.navn}.IDX_FAGSAK_1
+   on ${fpinfo.fpsak.schema.navn}.FAGSAK (FAGSAK_STATUS);
+
+create index ${fpinfo.fpsak.schema.navn}.IDX_FAGSAK_2
+   on ${fpinfo.fpsak.schema.navn}.FAGSAK (BRUKER_ROLLE);
+
+create index ${fpinfo.fpsak.schema.navn}.IDX_FAGSAK_3
+   on ${fpinfo.fpsak.schema.navn}.FAGSAK (BRUKER_ID);
+
+create index ${fpinfo.fpsak.schema.navn}.IDX_FAGSAK_7
+   on ${fpinfo.fpsak.schema.navn}.FAGSAK (YTELSE_TYPE);
+
+create unique index ${fpinfo.fpsak.schema.navn}.UIDX_FAGSAK_1
+   on ${fpinfo.fpsak.schema.navn}.FAGSAK (SAKSNUMMER);
+
+
 
 create index ${fpinfo.fpsak.schema.navn}.IDX_BEHANDLING_1
    on ${fpinfo.fpsak.schema.navn}.BEHANDLING (FAGSAK_ID);
