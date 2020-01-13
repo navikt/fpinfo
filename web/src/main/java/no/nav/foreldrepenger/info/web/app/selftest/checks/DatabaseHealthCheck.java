@@ -31,6 +31,7 @@ public class DatabaseHealthCheck extends ExtHealthCheck {
     private static final Set<String> SQL_QUERIES = new HashSet<>();
 
     static {
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Oslo"));
         SQL_QUERIES.add("select count(1) from AKSJONSPUNKT");
         SQL_QUERIES.add("select count(1) from SAK_STATUS");
         SQL_QUERIES.add("select count(1) from MOTTATT_DOKUMENT");
@@ -44,7 +45,6 @@ public class DatabaseHealthCheck extends ExtHealthCheck {
     private String endpoint = null; // ukjent frem til første gangs test
 
     public DatabaseHealthCheck() {
-        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Oslo"));
         this.jndiName = JDBC_DEFAULT_DS;
     }
 
