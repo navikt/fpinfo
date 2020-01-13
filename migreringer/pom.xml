@@ -23,19 +23,9 @@
             <groupId>com.oracle.ojdbc</groupId>
             <artifactId>ojdbc8</artifactId>
         </dependency>
-        <!-- 
-        <dependency>
-            <groupId>no.nav.foreldrepenger</groupId>
-            <artifactId>migreringer</artifactId>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.codehaus.woodstox</groupId>
-                    <artifactId>woodstox-core-asl</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-       -->
+        <!-- <dependency> <groupId>no.nav.foreldrepenger</groupId> <artifactId>migreringer</artifactId> 
+            <scope>test</scope> <exclusions> <exclusion> <groupId>org.codehaus.woodstox</groupId> 
+            <artifactId>woodstox-core-asl</artifactId> </exclusion> </exclusions> </dependency> -->
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
@@ -61,6 +51,24 @@
                     <artifactId>markdown_to_asciidoc</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.5.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>5.5.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.felles</groupId>
+            <artifactId>felles-testutilities</artifactId>
         </dependency>
     </dependencies>
 
