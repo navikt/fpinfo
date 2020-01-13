@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.info.tjenester.dto;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
-import no.nav.foreldrepenger.info.abac.UtvidetAbacAttributtType;
+import no.nav.foreldrepenger.info.abac.AppAbacAttributtType;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
 
@@ -29,6 +29,6 @@ public class AktørAnnenPartDto implements AbacDto {
 
     @Override
     public AbacDataAttributter abacAttributter() {
-        return AbacDataAttributter.opprett().leggTil(UtvidetAbacAttributtType.ANNEN_PART, annenPartAktørId);
+        return AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.ANNEN_PART, annenPartAktørId);
     }
 }

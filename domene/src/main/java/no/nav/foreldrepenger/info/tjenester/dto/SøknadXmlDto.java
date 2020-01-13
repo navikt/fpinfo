@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.info.tjenester.dto;
 
+import no.nav.foreldrepenger.info.abac.AppAbacAttributtType;
 import no.nav.foreldrepenger.info.domene.MottattDokument;
 import no.nav.vedtak.feil.Feil;
 import no.nav.vedtak.feil.FeilFactory;
@@ -52,7 +53,7 @@ public class SøknadXmlDto implements AbacDto {
 
     @Override
     public AbacDataAttributter abacAttributter() {
-        return AbacDataAttributter.opprett().leggTilBehandlingsId(behandlingId);
+        return AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.BEHANDLING_ID, behandlingId);
     }
 
     public static class Builder {

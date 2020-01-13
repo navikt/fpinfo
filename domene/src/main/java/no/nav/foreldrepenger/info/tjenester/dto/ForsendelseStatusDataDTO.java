@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.info.tjenester.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import no.nav.foreldrepenger.info.abac.AppAbacAttributtType;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
 
@@ -49,6 +50,6 @@ public class ForsendelseStatusDataDTO implements AbacDto {
 
     @Override
     public AbacDataAttributter abacAttributter() {
-        return AbacDataAttributter.opprett().leggTilSaksnummer(String.valueOf(saksnummer));
+        return AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.SAKSNUMMER, String.valueOf(saksnummer));
     }
 }

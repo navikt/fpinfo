@@ -13,7 +13,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Immutable;
 
 import no.nav.foreldrepenger.info.felles.datatyper.BehandlingResultatType;
-import no.nav.vedtak.felles.jpa.BaseEntitet;
 
 @Entity(name = "Behandling")
 @Table(name = "BEHANDLING")

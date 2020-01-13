@@ -22,12 +22,6 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.oracle.ojdbc</groupId>
-            <artifactId>ojdbc8</artifactId>
-            <version>19.3.0.0</version>
-        </dependency>
-
-        <dependency>
             <groupId>io.github.swagger2markup</groupId>
             <artifactId>markup-document-builder</artifactId>
         </dependency>
@@ -49,6 +43,12 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.felles</groupId>
+            <artifactId>felles-testutilities</artifactId>
+            <scope>test</scope>
+        </dependency>
+
 
         <dependency>
             <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>

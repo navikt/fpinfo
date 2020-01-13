@@ -22,7 +22,7 @@
         <dependency>
             <groupId>com.oracle.ojdbc</groupId>
             <artifactId>ojdbc8</artifactId>
-            <version>19.3.0.0</version>
+            <version>${ojdbc.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger</groupId>
@@ -111,7 +111,7 @@
                     <dependency>
                         <groupId>com.oracle.ojdbc</groupId>
                         <artifactId>ojdbc8</artifactId>
-                        <version>19.3.0.0</version>
+                        <version>${ojdbc.version}</version>
                     </dependency>
                 </dependencies>
                 <configuration>
@@ -156,6 +156,7 @@
                     <cleanupDaemonThreads>false</cleanupDaemonThreads>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
