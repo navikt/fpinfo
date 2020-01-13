@@ -44,6 +44,20 @@ create table ${fpinfo.fpsak.schema.navn}.FAGSAK
    TIL_INFOTRYGD VARCHAR2(1 char) default 'N' not null
 );
 
+CREATE TABLE ${fpinfo.fpsak.schema.navn}.STOENADSKONTOBEREGNING (
+  ID                        NUMBER(19, 0)                                       NOT NULL,
+  FAGSAK_RELASJON_ID        NUMBER(19, 0)                                       NOT NULL,
+  BEHANDLING_ID             NUMBER(19, 0)                                       NOT NULL,
+  REGEL_INPUT               CLOB                                                NOT NULL,
+  REGEL_EVALUERING          CLOB                                                NOT NULL,
+  OPPRETTET_AV              VARCHAR2(20 CHAR) DEFAULT 'VL'                      NOT NULL,
+  OPPRETTET_TID             TIMESTAMP(3)      DEFAULT systimestamp              NOT NULL,
+  ENDRET_AV                 VARCHAR2(20 CHAR),
+  ENDRET_TID                TIMESTAMP(3),
+  CONSTRAINT PK_STOENADSKONTOBEREGNING PRIMARY KEY (ID),
+  CONSTRAINT FK_STOENADSKONTOBEREGNING_1 FOREIGN KEY (FAGSAK_RELASJON_ID) REFERENCES  ${fpinfo.fpsak.schema.navn}.FAGSAK_RELASJON(ID),
+  CONSTRAINT FK_STOENADSKONTOBEREGNING_2 FOREIGN KEY (BEHANDLING_ID) REFERENCES  ${fpinfo.fpsak.schema.navn}.BEHANDLING(ID)
+);
 
 create table ${fpinfo.fpsak.schema.navn}.FAGSAK_RELASJON
 (
@@ -154,20 +168,7 @@ create unique index ${fpinfo.fpsak.schema.navn}.UIDX_BEHANDLING_03
    
    
 
- CREATE TABLE ${fpinfo.fpsak.schema.navn}.STOENADSKONTOBEREGNING (
-  ID                        NUMBER(19, 0)                                       NOT NULL,
-  FAGSAK_RELASJON_ID        NUMBER(19, 0)                                       NOT NULL,
-  BEHANDLING_ID             NUMBER(19, 0)                                       NOT NULL,
-  REGEL_INPUT               CLOB                                                NOT NULL,
-  REGEL_EVALUERING          CLOB                                                NOT NULL,
-  OPPRETTET_AV              VARCHAR2(20 CHAR) DEFAULT 'VL'                      NOT NULL,
-  OPPRETTET_TID             TIMESTAMP(3)      DEFAULT systimestamp              NOT NULL,
-  ENDRET_AV                 VARCHAR2(20 CHAR),
-  ENDRET_TID                TIMESTAMP(3),
-  CONSTRAINT PK_STOENADSKONTOBEREGNING PRIMARY KEY (ID),
-  CONSTRAINT FK_STOENADSKONTOBEREGNING_1 FOREIGN KEY (FAGSAK_RELASJON_ID) REFERENCES  ${fpinfo.fpsak.schema.navn}.FAGSAK_RELASJON(ID),
-  CONSTRAINT FK_STOENADSKONTOBEREGNING_2 FOREIGN KEY (BEHANDLING_ID) REFERENCES  ${fpinfo.fpsak.schema.navn}.BEHANDLING(ID)
-);
+ 
    
 
 create table ${fpinfo.fpsak.schema.navn}.SO_SOEKNAD
