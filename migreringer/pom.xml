@@ -22,8 +22,8 @@
         <dependency>
             <groupId>com.oracle.ojdbc</groupId>
             <artifactId>ojdbc8</artifactId>
-            <version>${ojdbc.version}</version>
         </dependency>
+        <!-- 
         <dependency>
             <groupId>no.nav.foreldrepenger</groupId>
             <artifactId>migreringer</artifactId>
@@ -35,7 +35,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
+       -->
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>

@@ -320,6 +320,7 @@
             <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- 
         <dependency>
             <groupId>no.nav.foreldrepenger</groupId>
             <artifactId>migreringer</artifactId>
@@ -331,6 +332,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+         -->
         <dependency>
             <groupId>no.nav.foreldrepenger.info</groupId>
             <artifactId>migreringer</artifactId>
