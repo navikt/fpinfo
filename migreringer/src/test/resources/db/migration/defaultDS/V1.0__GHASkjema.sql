@@ -1,3 +1,7 @@
+
+
+
+
 create table ${fpinfo.fpsak.schema.navn}.BRUKER
 (
    ID NUMBER(19) not null
@@ -147,8 +151,26 @@ create index ${fpinfo.fpsak.schema.navn}.IDX_BEHANDLING_6
 
 create unique index ${fpinfo.fpsak.schema.navn}.UIDX_BEHANDLING_03
    on ${fpinfo.fpsak.schema.navn}.BEHANDLING (UUID);
+   
+   
 
-   create table ${fpinfo.fpsak.schema.navn}.SO_SOEKNAD
+ CREATE TABLE ${fpinfo.fpsak.schema.navn}.STOENADSKONTOBEREGNING (
+  ID                        NUMBER(19, 0)                                       NOT NULL,
+  FAGSAK_RELASJON_ID        NUMBER(19, 0)                                       NOT NULL,
+  BEHANDLING_ID             NUMBER(19, 0)                                       NOT NULL,
+  REGEL_INPUT               CLOB                                                NOT NULL,
+  REGEL_EVALUERING          CLOB                                                NOT NULL,
+  OPPRETTET_AV              VARCHAR2(20 CHAR) DEFAULT 'VL'                      NOT NULL,
+  OPPRETTET_TID             TIMESTAMP(3)      DEFAULT systimestamp              NOT NULL,
+  ENDRET_AV                 VARCHAR2(20 CHAR),
+  ENDRET_TID                TIMESTAMP(3),
+  CONSTRAINT PK_STOENADSKONTOBEREGNING PRIMARY KEY (ID),
+  CONSTRAINT FK_STOENADSKONTOBEREGNING_1 FOREIGN KEY (FAGSAK_RELASJON_ID) REFERENCES  ${fpinfo.fpsak.schema.navn}.FAGSAK_RELASJON(ID),
+  CONSTRAINT FK_STOENADSKONTOBEREGNING_2 FOREIGN KEY (BEHANDLING_ID) REFERENCES  ${fpinfo.fpsak.schema.navn}.BEHANDLING(ID)
+);
+   
+
+create table ${fpinfo.fpsak.schema.navn}.SO_SOEKNAD
 (
    ID NUMBER(19) not null
       constraint PK_SOEKNAD
@@ -168,52 +190,15 @@ create unique index ${fpinfo.fpsak.schema.navn}.UIDX_BEHANDLING_03
    BRUKER_ROLLE VARCHAR2(100 char) default '-' not null,
    SPRAK_KODE VARCHAR2(100 char) default 'NB' not null
 )
-/
-
-comment on table ${fpinfo.fpsak.schema.navn}.SO_SOEKNAD is 'Søknad om foreldrepenger'
-/
-
-comment on column ${fpinfo.fpsak.schema.navn}.SO_SOEKNAD.ID is 'Primary Key'
-/
-
-comment on column ${fpinfo.fpsak.schema.navn}.SO_SOEKNAD.SOEKNADSDATO is 'Søknadsdato'
-/
-
-comment on column ${fpinfo.fpsak.schema.navn}.SO_SOEKNAD.TILLEGGSOPPLYSNINGER is 'Tilleggsopplysninger'
-/
-
-comment on column ${fpinfo.fpsak.schema.navn}.SO_SOEKNAD.FAR_SOEKER_TYPE is 'FK:FAR_SOEKER_TYPE'
-/
-
-comment on column ${fpinfo.fpsak.schema.navn}.SO_SOEKNAD.ELEKTRONISK_REGISTRERT is 'Elektronisk registrert søknad'
-/
-
-comment on column ${fpinfo.fpsak.schema.navn}.SO_SOEKNAD.MOTTATT_DATO is 'Mottatt dato'
-/
-
-comment on column ${fpinfo.fpsak.schema.navn}.SO_SOEKNAD.BEGRUNNELSE_FOR_SEN_INNSENDING is 'Begrunnelse for sen innsending'
-/
-
-comment on column ${fpinfo.fpsak.schema.navn}.SO_SOEKNAD.ER_ENDRINGSSOEKNAD is 'Er endringssøknad'
-/
-
-comment on column ${fpinfo.fpsak.schema.navn}.SO_SOEKNAD.BRUKER_ROLLE is 'FK:RELASJONSROLLE_TYPE'
-/
-
-comment on column ${fpinfo.fpsak.schema.navn}.SO_SOEKNAD.SPRAK_KODE is 'Kode for hvilket språk søker sender søknad på'
-/
 
 create index ${fpinfo.fpsak.schema.navn}.IDX_SOEKNAD_10
-   on ${fpinfo.fpsak.schema.navn}.SO_SOEKNAD (FAR_SOEKER_TYPE)
-/
+   on ${fpinfo.fpsak.schema.navn}.SO_SOEKNAD (FAR_SOEKER_TYPE);
 
 create index ${fpinfo.fpsak.schema.navn}.IDX_SOEKNAD_11
-   on ${fpinfo.fpsak.schema.navn}.SO_SOEKNAD (BRUKER_ROLLE)
-/
+   on ${fpinfo.fpsak.schema.navn}.SO_SOEKNAD (BRUKER_ROLLE);
 
 create index ${fpinfo.fpsak.schema.navn}.IDX_SOEKNAD_12
-   on ${fpinfo.fpsak.schema.navn}.SO_SOEKNAD (SPRAK_KODE)
-/
+   on ${fpinfo.fpsak.schema.navn}.SO_SOEKNAD (SPRAK_KODE);
 
 create table ${fpinfo.fpsak.schema.navn}.BEHANDLING_RESULTAT
 (
