@@ -6,12 +6,16 @@ on:
       - master
 
 env:
+  APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
   ORACLE_INIT: initdb.sql
   ORACLE_ARGS:  -d -p 1521:1521 --name oracle-xe -e ORACLE_DISABLE_ASYNCH_IO=true
   ORACLE_IMAGE: wnameless/oracle-xe-11g-r2
   ORACLE_SID: XE
   ORACLE_HOME: /u01/app/oracle/product/11.2.0/xe
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  CLUSTER: dev-fss
+  NAMESPACE: t4
+  IMAGE_BASE: docker.pkg.github.com/${{ github.repository }}/fpinfo
          
 jobs:
   build:
