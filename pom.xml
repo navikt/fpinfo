@@ -60,12 +60,14 @@
 
     <dependencyManagement>
         <dependencies>
+        <!--
             <dependency>
                 <groupId>no.nav.foreldrepenger</groupId>
                 <artifactId>migreringer</artifactId>
                 <version>3.1.0_20191204190710_39bf6cc</version>
+                <scope>test</scope>
             </dependency>
-
+            -->
             <dependency>
                 <groupId>no.nav.foreldrepenger.info</groupId>
                 <artifactId>domene</artifactId>
