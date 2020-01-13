@@ -9,28 +9,16 @@ create table ${fpinfo.fpsak.schema.navn}.BRUKER
    ENDRET_AV VARCHAR2(20 char),
    ENDRET_TID TIMESTAMP(3),
    SPRAK_KODE VARCHAR2(100 char) default 'NB' not null,
-   AKTOER_ID VARCHAR2(50 char)
+   AKTOER_ID VARCHAR2(50 char);
 )
-/
 
-comment on table ${fpinfo.fpsak.schema.navn}.BRUKER is 'Bruker som saken gjelder.'
-/
-
-comment on column ${fpinfo.fpsak.schema.navn}.BRUKER.ID is 'Primary Key'
-/
-
-comment on column ${fpinfo.fpsak.schema.navn}.BRUKER.SPRAK_KODE is 'FK:SPRAAK_KODE Fremmednøkkel til kodeverkstabellen som viser språk som er støttet og viser til brukerens foretrukne språk'
-/
-
-comment on column ${fpinfo.fpsak.schema.navn}.BRUKER.AKTOER_ID is 'Aktørid utstedt av Nav Aktørregister for en Bruker (eks. Søker)'
-/
 
 create index ${fpinfo.fpsak.schema.navn}.IDX_BRUKER_6
-   on ${fpinfo.fpsak.schema.navn}.BRUKER (SPRAK_KODE)
+   on ${fpinfo.fpsak.schema.navn}.BRUKER (SPRAK_KODE);
 /
 
 create unique index ${fpinfo.fpsak.schema.navn}.UIDX_BRUKER_1
-   on ${fpinfo.fpsak.schema.navn}.BRUKER (AKTOER_ID)
+   on ${fpinfo.fpsak.schema.navn}.BRUKER (AKTOER_ID);
 /
 
 create table ${fpinfo.fpsak.schema.navn}.FAGSAK
