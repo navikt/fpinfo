@@ -7,8 +7,6 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Immutable;
 
-import no.nav.vedtak.felles.jpa.BaseEntitet;
-
 
 @Entity(name = "Aksjonspunkt")
 @Table(name = "AKSJONSPUNKT")

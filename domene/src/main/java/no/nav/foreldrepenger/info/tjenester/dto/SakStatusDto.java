@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import no.nav.foreldrepenger.info.abac.AppAbacAttributtType;
 import no.nav.foreldrepenger.info.domene.SakStatus;
 import no.nav.foreldrepenger.info.felles.rest.ResourceLink;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
@@ -88,6 +89,6 @@ public class SakStatusDto implements AbacDto {
 
     @Override
     public AbacDataAttributter abacAttributter() {
-        return AbacDataAttributter.opprett().leggTilAktørId(aktørId);
+        return AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.AKTØR_ID, aktørId);
     }
 }

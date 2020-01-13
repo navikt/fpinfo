@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import no.nav.foreldrepenger.info.abac.UtvidetAbacAttributtType;
+import no.nav.foreldrepenger.info.abac.AppAbacAttributtType;
 import no.nav.foreldrepenger.info.domene.Saksnummer;
 import no.nav.foreldrepenger.info.domene.SøknadsGrunnlag;
 import no.nav.foreldrepenger.info.felles.datatyper.FamilieHendelseType;
@@ -157,10 +157,10 @@ public class SøknadsGrunnlagDto implements AbacDto {
     @Override
     public AbacDataAttributter abacAttributter() {
         AbacDataAttributter abacDataAttributter = AbacDataAttributter.opprett()
-                .leggTilSaksnummer(saksnummer)
-                .leggTil(UtvidetAbacAttributtType.OPPGITT_ALENEOMSORG, morErAleneOmOmsorg);
+                .leggTil(AppAbacAttributtType.SAKSNUMMER, saksnummer)
+                .leggTil(AppAbacAttributtType.OPPGITT_ALENEOMSORG, morErAleneOmOmsorg);
         if (annenPartFraSak != null) {
-            abacDataAttributter.leggTil(UtvidetAbacAttributtType.ANNEN_PART, annenPartFraSak);
+            abacDataAttributter.leggTil(AppAbacAttributtType.ANNEN_PART, annenPartFraSak);
         }
         return abacDataAttributter;
     }
