@@ -141,8 +141,8 @@
                 </executions>
                 <configuration>
                     <includes>
-                        <include>**/*.sql</include>
-                        <include>**/*.SQL</include>
+                        <include>src/main/resources/**/*.sql</include>
+                        <include>src/main/resources/**/*.SQL</include>
                     </includes>
                 </configuration>
             </plugin>

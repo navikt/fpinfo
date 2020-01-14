@@ -22,7 +22,7 @@ import no.nav.vedtak.util.env.Environment;
  */
 public final class Databaseskjemainitialisering {
 
-    private static final Logger log = LoggerFactory.getLogger(Databaseskjemainitialisering.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Databaseskjemainitialisering.class);
     private static final String TMP_DIR = "java.io.tmpdir";
     private static final String SEMAPHORE_FIL_PREFIX = "no.nav.vedtak.felles.behandlingsprosess";
     private static final String SEMAPHORE_FIL_SUFFIX = "no.nav.vedtak.felles.behandlingsprosess";
@@ -33,7 +33,7 @@ public final class Databaseskjemainitialisering {
         TimeZone.setDefault(TimeZone.getTimeZone("Europe/Oslo"));
 
         if (ENV.getProperty("skipTests") != null || ENV.getProperty("maven.test.skip") != null) {
-            log.info(
+            LOG.info(
                     "Maven-property 'skipTests' eller 'maven.test.skip' er satt. Hopper over migrering av unittest-skjema");
         } else {
             migrerUnittestSkjemaer();
@@ -52,7 +52,7 @@ public final class Databaseskjemainitialisering {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (RuntimeException e) {
-            log.warn(
+            LOG.warn(
                     "\n\n Kunne ikke starte inkrementell oppdatering av databasen. Det finnes trolig endringer i allerede kjørte script.\nKjører full migrering...");
             try {
                 settOppSkjemaer(skjemaer);
@@ -70,17 +70,17 @@ public final class Databaseskjemainitialisering {
                 e.printStackTrace();
             }
         } else {
-            log.info("Kjører på jenkins");
+            LOG.info("Kjører på jenkins");
         }
     }
 
     public static void kjørMigreringHvisNødvendig() {
         if (!Databaseskjemainitialisering.isJenkins() && !Databaseskjemainitialisering.erMigreringKjørt()) {
-            log.info("Kjører migrering på nytt");
+            LOG.info("Kjører migrering på nytt");
             Databaseskjemainitialisering.migrerUnittestSkjemaer();
         } else {
             if (!Databaseskjemainitialisering.isJenkins()) {
-                log.info("Migrering var kjørt nylig (under 10 min siden), så skipper den.");
+                LOG.info("Migrering var kjørt nylig (under 10 min siden), så skipper den.");
             }
             try {
                 settSchemaPlaceholder(DatasourceConfiguration.UNIT_TEST.getRaw());
@@ -100,14 +100,14 @@ public final class Databaseskjemainitialisering {
     private static boolean erMigreringKjørt() {
         File[] list = getSemaphorer();
         if (list.length == 0) {
-            log.info("Migrering er ikke kjørt");
+            LOG.info("Migrering er ikke kjørt");
             return false;
         }
 
         try {
             BasicFileAttributes attr = Files.readAttributes(list[0].toPath(), BasicFileAttributes.class);
             if (attr.creationTime().toInstant().isBefore(Instant.now().minusSeconds(300))) {
-                log.info("Migrering ble kjørt for mer enn 5 minutter siden");
+                LOG.info("Migrering ble kjørt for mer enn 5 minutter siden");
                 Files.deleteIfExists(list[0].toPath());
                 return false;
             }
