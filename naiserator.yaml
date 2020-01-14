@@ -44,12 +44,8 @@ spec:
 
     - kvPath: {{oraclecredskv}}
       mountPath: /var/run/secrets/nais.io/defaultDS
-    - kvPath: {{oracleconfigkv}}
-      mountPath: /var/run/secrets/nais.io/defaultDSconfig 
     - kvPath: {{oraclefpinfocredsskv}}
       mountPath: /var/run/secrets/nais.io/fpinfoSchema
-    - kvPath: {{oraclefpinfoconfigkv}}
-      mountPath: /var/run/secrets/nais.io/fpinfoSchemaDSconfig 
       
     - kvPath: {{serviceuserkv}}
       mountPath: /var/run/secrets/nais.io/srvfpinfo
