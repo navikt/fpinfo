@@ -7,7 +7,7 @@
     "namespace": "t4",
     "ingresses": [
         "https://fpinfo.nais.preprod.local",
-        "https://fpinfo-t4.nais.preprod.local/fpinfo"
+        "https://fpinfo-t4.nais.preprod.local"
     ],
     "env": {
         "ABAC_PDP_ENDPOINT_URL" : "https://wasapp-t4.adeo.no/asm-pdp/authorize",
