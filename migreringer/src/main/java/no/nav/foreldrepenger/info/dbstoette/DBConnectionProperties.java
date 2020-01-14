@@ -15,10 +15,10 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 
 /**
- * TODO(Humle): Skriv tester
- * Enkel representasjon av properties for migrering av skjema med flyway.
- * Tilhørende json ser ca slik ut:
+ * TODO(Humle): Skriv tester Enkel representasjon av properties for migrering av
+ * skjema med flyway. Tilhørende json ser ca slik ut:
  * <p>
+ * 
  * <pre>
  * {
  *  "datasource" : "vl_dba",
@@ -27,17 +27,21 @@ import javax.json.JsonReader;
  *  "migrationScriptsClasspathRoot": "database/migration/foreldrepenger",
  *  "migrateClean": true
  * }
- *  </pre>
+ * </pre>
  * </p>
  * <p>
  * testdataClasspathRoot: pathen til java-klasser for testdata<br>
- * migrationScriptsFilesystemRoot: filsystemsti hvor migreringsfilene for angitt skjema ligger<br>
- * migrationScriptsClasspathRoot: classpath sti hvor migreringsfilene for angitt skjema ligger<br>
- * defaultDataSource: får JDNI-oppslag som 'java/defaultDS' hvis satt til true (default false)<br>
+ * migrationScriptsFilesystemRoot: filsystemsti hvor migreringsfilene for angitt
+ * skjema ligger<br>
+ * migrationScriptsClasspathRoot: classpath sti hvor migreringsfilene for angitt
+ * skjema ligger<br>
+ * defaultDataSource: får JDNI-oppslag som 'java/defaultDS' hvis satt til true
+ * (default false)<br>
  * migrateClean: fullmigrering av skjema (default false)<br>
  * </p>
  * <p>
- * Kan også inneholde placeholdere som leses inn via <code>System.getProperties()</code>
+ * Kan også inneholde placeholdere som leses inn via
+ * <code>System.getProperties()</code>
  * </p>
  */
 public final class DBConnectionProperties {
@@ -46,8 +50,8 @@ public final class DBConnectionProperties {
     private String schema;
 
     /**
-     * Hvis alle tabeller/views ligger i et annet skjema enn skjema som brukes av EntityManager.
-     * Default er effectiveSchema og schema det samme
+     * Hvis alle tabeller/views ligger i et annet skjema enn skjema som brukes av
+     * EntityManager. Default er effectiveSchema og schema det samme
      */
     private String effectiveSchema;
     private String defaultSchema;
@@ -231,6 +235,16 @@ public final class DBConnectionProperties {
         return versjonstabell;
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "[datasource=" + datasource + ", schema=" + schema + ", effectiveSchema="
+                + effectiveSchema + ", defaultSchema=" + defaultSchema + ", url=" + url + ", user=" + user
+                + ", testdataClasspathRoot=" + testdataClasspathRoot + ", migrationScriptsFilesystemRoot="
+                + migrationScriptsFilesystemRoot + ", migrationScriptsClasspathRoot=" + migrationScriptsClasspathRoot
+                + ", versjonstabell=" + versjonstabell + ", defaultDataSource=" + defaultDataSource + ", sqlLoggable="
+                + sqlLoggable + ", migrateClean=" + migrateClean + "]";
+    }
+
     public boolean isDefaultDataSource() {
         return defaultDataSource;
     }
@@ -246,7 +260,6 @@ public final class DBConnectionProperties {
     public String getDefaultSchema() {
         return defaultSchema;
     }
-
 
     public String getEffectiveSchema() {
         return effectiveSchema;
