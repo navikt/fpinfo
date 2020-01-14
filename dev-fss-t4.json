@@ -1,6 +1,6 @@
 {
     "cluster": "preprod",
-    "oraclecredskv": "/oracle/data/dev/creds/fpsak_q1-fpinfo",
+    "oraclecredskv": "/oracle/data/dev/creds/fpsak_t4-fpinfo",
     "oraclefpinfocredsskv": "/oracle/data/dev/creds/fpsak_t4-fpinfo_schema",
     
     "serviceuserkv": "/serviceuser/data/test/srvfpinfo",
