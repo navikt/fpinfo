@@ -35,7 +35,7 @@ public class NaisRestTjeneste {
     }
 
     @GET
-    @Path("isAlive")
+    @Path("/isAlive")
     @Operation(description = "sjekker om poden lever", tags = "nais", hidden = true)
     public Response isAlive() {
         return Response
@@ -45,7 +45,7 @@ public class NaisRestTjeneste {
     }
 
     @GET
-    @Path("isReady")
+    @Path("/isReady")
     @Operation(description = "sjekker om poden er klar", tags = "nais", hidden = true)
     public Response isReady() {
         if (selftestService.kritiskTjenesteFeilet()) {
@@ -60,7 +60,7 @@ public class NaisRestTjeneste {
     }
 
     @GET
-    @Path("preStop")
+    @Path("/preStop")
     @Operation(description = "kalles på før stopp", tags = "nais", hidden = true)
     public Response preStop() {
         starterService.stopServices();
