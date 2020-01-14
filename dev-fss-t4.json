@@ -1,0 +1,33 @@
+{
+    "cluster": "preprod",
+    "oracleconfigkv": "/oracle/data/dev/config/fpsak_t4",
+    "oraclefpinfoconfigkv": "/oracle/data/dev/config/fpsak_t4",
+    "oraclecredskv": "/oracle/data/dev/creds/fpsak_q1-fpinfo",
+    "oraclefpinfocredsskv": "/oracle/data/dev/creds/fpsak_t4-fpinfo_schema",
+    
+    "serviceuserkv": "/serviceuser/data/test/srvfpinfo",
+    "namespace": "t4",
+    "ingresses": [
+        "https://fpinfo.nais.preprod.local",
+        "https://fpinfo-t4.nais.preprod.local/fpinfo"
+    ],
+    "env": {
+        "DEFAULTDS_URL" : "jdbc:oracle:thin:@d26dbfl020.test.local:1521/fpsak_t4",
+        "DEFAULTDS_USERNAME" : "fpinfo",
+        "FPINFOSCHEMA_URL" : "jdbc:oracle:thin:@d26dbfl020.test.local:1521/fpsak_t4",
+        "FPINFOSCHEMA_USERNAME" : "fpinfo_schema",
+        "SECURITYTOKENSERVICE_URL" : "https://sts-t4.test.local/SecurityTokenServiceProvider/",
+        "SYSTEMBRUKER_USERNAME" : "srvfpinfo",
+        "ABAC_PDP_ENDPOINT_URL" : "https://wasapp-t4.adeo.no/asm-pdp/authorize",
+        "OIDC_OPENAM_ISSUERURL" : "https://isso-t.adeo.no:443/isso/oauth2",
+        "OIDC_OPENAM_AGENTNAME" : "fpinfo-t4",
+        "OIDC_OPENAM_HOSTURL" : "https://isso-t.adeo.no:443/isso/oauth2",
+        "OIDC_OPENAM_JWKSURL" : "https://isso-t.adeo.no:443/isso/oauth2/connect/jwk_uri",
+        "OIDC_STS_ISSUER_URL" : "https://security-token-service-t4.nais.preprod.local",
+        "OIDC_STS_JWKS_URL" : "https://security-token-service-t4.nais.preprod.local/rest/v1/sts/jwks",
+        "OIDC_AAD_B2C_JWKSURL" : "https://login.microsoftonline.com/navtestb2c.onmicrosoft.com/discovery/v2.0/keys?p=b2c_1a_idporten_ver1",
+        "OIDC_AAD_B2C_ISSUERURL" : "https://login.microsoftonline.com/d38f25aa-eab8-4c50-9f28-ebf92c1256f2/v2.0/",
+        "OIDC_AAD_B2C_AGENTNAME" : "0090b6e1-ffcc-4c37-bc21-049f7d1f0fe5",
+        "OIDC_AAD_B2C_HOSTURL" : "https://not.used.in.fss"
+      }
+}

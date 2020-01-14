@@ -1,0 +1,58 @@
+kind: Application
+apiVersion: nais.io/v1alpha1
+metadata:
+  name: fpinfo
+  namespace: {{namespace}}
+  labels:
+    team: teamforeldrepenger
+spec:
+  env:
+{{#each env}}
+   - name: {{@key}}
+     value: "{{this}}"
+{{/each}} 
+  image: repo.adeo.no:5443/fpinfo
+  ingresses:
+{{#each ingresses as |url|}}
+    - {{url}}
+{{/each}}
+  liveness:
+    path: /
+    port: 8080
+  port: 8080
+  preStopHookPath: /fpinfo/internal/health/preStop
+  prometheus:
+    enabled: true
+    path: /fpinfo/internal/metrics/prometheus
+  readiness:
+    path: /
+    port: 8080
+  replicas:
+    min: 3
+    max: 3
+    cpuThresholdPercentage: 80
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1024Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+  vault:
+    enabled: true
+    paths:
+
+    - kvPath: {{oraclecredskv}}
+      mountPath: /var/run/secrets/nais.io/defaultDS
+    - kvPath: {{oracleconfigkv}}
+      mountPath: /var/run/secrets/nais.io/defaultDSconfig 
+    - kvPath: {{oraclefpinfocredsskv}}
+      mountPath: /var/run/secrets/nais.io/fpinfoSchema
+    - kvPath: {{oraclefpinfoconfigkv}}
+      mountPath: /var/run/secrets/nais.io/fpinfoSchemaDSconfig 
+      
+    - kvPath: {{serviceuserkv}}
+      mountPath: /var/run/secrets/nais.io/srvfpinfo
+   
+    - kvPath: /kv/{{cluster}}/fss/fpinfo/{{namespace}}
+      mountPath: /var/run/secrets/nais.io/vault
