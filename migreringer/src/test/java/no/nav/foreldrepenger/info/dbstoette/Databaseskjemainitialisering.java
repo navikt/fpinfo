@@ -93,6 +93,7 @@ public final class Databaseskjemainitialisering {
 
     public static void settOppSkjemaer(DatasourceConfiguration skjemaer) throws FileNotFoundException {
         settSchemaPlaceholder(skjemaer.getRaw());
+        LOG.info("Kjører migrering for {}", DatasourceConfiguration.DBA.get());
         LokalDatabaseStøtte.kjørMigreringFor(DatasourceConfiguration.DBA.get());
         LokalDatabaseStøtte.settOppJndiForDefaultDataSource(skjemaer.get());
     }

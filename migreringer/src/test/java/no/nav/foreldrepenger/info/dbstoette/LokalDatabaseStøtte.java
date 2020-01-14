@@ -15,15 +15,17 @@ public class LokalDatabaseStøtte {
     }
 
     public static void kjørFullMigreringFor(List<DBConnectionProperties> connectionProperties) {
+        LOGGER.info("Kjører full migrering for {}", connectionProperties);
         LokalDatabaseStøtte.nullstill(connectionProperties);
         LokalDatabaseStøtte.kjørMigreringFor(connectionProperties);
     }
 
     /**
-     * Migrering kjøres i vilkårlig rekkefølge. Hvis bruker/skjema angitt i {@link DBConnectionProperties}
-     * ikke finnes, opprettes den
+     * Migrering kjøres i vilkårlig rekkefølge. Hvis bruker/skjema angitt i
+     * {@link DBConnectionProperties} ikke finnes, opprettes den
      */
     public static void kjørMigreringFor(List<DBConnectionProperties> connectionProperties) {
+        LOGGER.info("Kjører migrering for {}", connectionProperties);
         connectionProperties.forEach(LokalDatabaseStøtte::kjørerMigreringFor);
     }
 
@@ -50,12 +52,11 @@ public class LokalDatabaseStøtte {
         } else {
             scriptLocation = DatabaseStøtte.getMigrationScriptLocation(connectionProperties);
         }
-
+        LOGGER.info("Migrerer {} {}", connectionProperties, scriptLocation);
         boolean migreringOk = LokalFlywayKonfig.lagKonfig(dataSource)
                 .medSqlLokasjon(scriptLocation)
                 .medCleanup(connectionProperties.isMigrateClean())
                 .migrerDb();
-
         if (!migreringOk) {
             LOGGER.warn(
                     "\n\nKunne ikke starte inkrementell oppdatering av databasen. Det finnes trolig endringer i allerede kjørte script. Kjører full migrering...");
