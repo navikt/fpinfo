@@ -37,7 +37,7 @@ public class JettyServer {
     /**
      * nedstrippet sett med Jetty configurations for raskere startup.
      */
-    private static final Configuration[] CONFIGURATIONS = new Configuration[]{
+    private static final Configuration[] CONFIGURATIONS = new Configuration[] {
             new WebXmlConfiguration(),
             new AnnotationConfiguration(),
             new WebInfConfiguration(),
@@ -85,7 +85,7 @@ public class JettyServer {
         return hostPort;
     }
 
-    protected void konfigurer() throws Exception { //NOSONAR
+    protected void konfigurer() throws Exception { // NOSONAR
         hacksForManglendeStøttePåNAIS();
         konfigurerSwaggerHash();
     }
@@ -99,23 +99,23 @@ public class JettyServer {
 
     protected void migrerDatabaseScript() {
         DatabaseKonfigINaisEnvironment.setup();
-        List<DBConnectionProperties> dbPropertiesList = null;
         try {
-            dbPropertiesList = getDBConnectionProperties();
+            var dbPropertiesList = getDBConnectionProperties();
+            DatabaseStøtte.settOppJndiForDefaultDataSource(dbPropertiesList);
+            DatabaseStøtte.kjørMigreringFor(dbPropertiesList);
         } catch (Exception e) {
             LOGGER.error("Feil under migrering", e);
             throw e;
         }
 
-        DatabaseStøtte.settOppJndiForDefaultDataSource(dbPropertiesList);
-        DatabaseStøtte.kjørMigreringFor(dbPropertiesList);
     }
 
     protected WebAppContext createContext() throws MalformedURLException {
         WebAppContext webAppContext = new WebAppContext();
         webAppContext.setParentLoaderPriority(true);
 
-        // må hoppe litt bukk for å hente web.xml fra classpath i stedet for fra filsystem.
+        // må hoppe litt bukk for å hente web.xml fra classpath i stedet for fra
+        // filsystem.
         String descriptor;
         try (var resource = Resource.newClassPathResource("/WEB-INF/web.xml")) {
             descriptor = resource.getURI().toURL().toExternalForm();
@@ -124,7 +124,8 @@ public class JettyServer {
         webAppContext.setBaseResource(createResourceCollection());
         webAppContext.setContextPath(CONTEXT_PATH);
         webAppContext.setConfigurations(CONFIGURATIONS);
-        webAppContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern", "^.*resteasy-.*.jar$|^.*felles-.*.jar$");
+        webAppContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
+                "^.*resteasy-.*.jar$|^.*felles-.*.jar$");
         new JettySikkerhetKonfig().konfigurer(webAppContext);
         updateMetaData(webAppContext.getMetaData());
         return webAppContext;
@@ -134,7 +135,9 @@ public class JettyServer {
         // Find path to class-files while starting jetty from development environment.
         List<Class<?>> appClasses = getApplicationClasses();
 
-        List<Resource> resources = appClasses.stream().map(c -> Resource.newResource(c.getProtectionDomain().getCodeSource().getLocation())).collect(Collectors.toList());
+        List<Resource> resources = appClasses.stream()
+                .map(c -> Resource.newResource(c.getProtectionDomain().getCodeSource().getLocation()))
+                .collect(Collectors.toList());
 
         metaData.setWebInfClassesDirs(resources);
     }
@@ -163,15 +166,18 @@ public class JettyServer {
     }
 
     private void temporært() {
-        // FIXME (u139158): PFP-1176 Skriv om i OpenAmIssoHealthCheck og AuthorizationRequestBuilder når Jboss dør
+        // FIXME (u139158): PFP-1176 Skriv om i OpenAmIssoHealthCheck og
+        // AuthorizationRequestBuilder når Jboss dør
         if (System.getenv("OIDC_OPENAM_HOSTURL") != null) {
             System.setProperty("OpenIdConnect.issoHost", System.getenv("OIDC_OPENAM_HOSTURL"));
         }
-        // FIXME (u139158): PFP-1176 Skriv om i AuthorizationRequestBuilder og IdTokenAndRefreshTokenProvider når Jboss dør
+        // FIXME (u139158): PFP-1176 Skriv om i AuthorizationRequestBuilder og
+        // IdTokenAndRefreshTokenProvider når Jboss dør
         if (System.getenv("OIDC_OPENAM_AGENTNAME") != null) {
             System.setProperty("OpenIdConnect.username", System.getenv("OIDC_OPENAM_AGENTNAME"));
         }
-        // FIXME (u139158): PFP-1176 Skriv om i IdTokenAndRefreshTokenProvider når Jboss dør
+        // FIXME (u139158): PFP-1176 Skriv om i IdTokenAndRefreshTokenProvider når Jboss
+        // dør
         if (System.getenv("OIDC_OPENAM_PASSWORD") != null) {
             System.setProperty("OpenIdConnect.password", System.getenv("OIDC_OPENAM_PASSWORD"));
         }
