@@ -17,13 +17,13 @@ spec:
     - {{url}}
 {{/each}}
   liveness:
-    path: /fpinfo/internal/health/isAlive
+    path: fpinfo/internal/health/isAlive
     port: 8080
   port: 8080
   preStopHookPath: /fpinfo/internal/health/preStop
   prometheus:
     enabled: true
-    path: /fpinfo/internal/metrics/prometheus
+    path: fpinfo/internal/metrics/prometheus
   readiness:
     path: /fpinfo/internal/health/isReady
     port: 8080
