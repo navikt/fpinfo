@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.info.web.server;
 
+import static no.nav.vedtak.util.env.Cluster.NAIS_CLUSTER_NAME;
+
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.Arrays;
@@ -27,8 +29,11 @@ import no.nav.foreldrepenger.info.web.app.konfig.ApplicationConfig;
 import no.nav.foreldrepenger.info.web.server.sikkerhet.JettySikkerhetKonfig;
 import no.nav.vedtak.isso.IssoApplication;
 import no.nav.vedtak.sikkerhetsfilter.SecurityFilter;
+import no.nav.vedtak.util.env.Environment;
 
 public class JettyServer {
+
+    private static final Environment ENV = Environment.current();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JettyServer.class);
 
@@ -57,7 +62,7 @@ public class JettyServer {
         if (args.length != 1) {
             throw new IllegalArgumentException("Mangler port");
         }
-
+        System.setProperty(NAIS_CLUSTER_NAME, ENV.clusterName());
         JettyServer jettyServer = new JettyServer(Integer.parseUnsignedInt(args[0]));
 
         jettyServer.konfigurer();
