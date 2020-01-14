@@ -11,7 +11,7 @@ RUN mkdir /app/webapp
 RUN mkdir /app/conf
 
 # Config
-COPY web/target/classes/logback.xml /app/conf/
+COPY web/target/classes/logback*.xml /app/conf/
 COPY web/target/classes/jetty/jaspi-conf.xml /app/conf/
 COPY web/target/classes/jetty/login.conf /app/conf/
 
