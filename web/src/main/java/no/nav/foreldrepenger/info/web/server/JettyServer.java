@@ -35,9 +35,13 @@ public class JettyServer {
 
     private static final Environment ENV = Environment.current();
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JettyServer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JettyServer.class);
 
     private static final String DB_SCHEMAS = "jetty_web_server.json";
+
+    static {
+        System.setProperty(NAIS_CLUSTER_NAME, ENV.clusterName());
+    }
 
     /**
      * nedstrippet sett med Jetty configurations for raskere startup.
@@ -51,7 +55,7 @@ public class JettyServer {
     };
 
     private static final String CONTEXT_PATH = "/fpinfo";
-    private static final String SERVER_HOST = "0.0.0.0"; // NOSONAR
+    private static final String SERVER_HOST = "0.0.0.0";
     private int hostPort;
 
     public JettyServer(int hostPort) {
@@ -62,9 +66,7 @@ public class JettyServer {
         if (args.length != 1) {
             throw new IllegalArgumentException("Mangler port");
         }
-        System.setProperty(NAIS_CLUSTER_NAME, ENV.clusterName());
         JettyServer jettyServer = new JettyServer(Integer.parseUnsignedInt(args[0]));
-
         jettyServer.konfigurer();
         jettyServer.migrerDatabaseScript();
         jettyServer.start();
@@ -72,7 +74,9 @@ public class JettyServer {
 
     public static List<DBConnectionProperties> getDBConnectionProperties() {
         InputStream in = JettyServer.class.getResourceAsStream("/" + DB_SCHEMAS);
-        return DBConnectionProperties.fraStream(in);
+        var props = DBConnectionProperties.fraStream(in);
+        LOG.info("DB connection properties {}", props);
+        return props;
     }
 
     protected void start() throws Exception {
@@ -105,11 +109,11 @@ public class JettyServer {
     protected void migrerDatabaseScript() {
         DatabaseKonfigINaisEnvironment.setup();
         try {
-            var dbPropertiesList = getDBConnectionProperties();
-            DatabaseStøtte.settOppJndiForDefaultDataSource(dbPropertiesList);
-            DatabaseStøtte.kjørMigreringFor(dbPropertiesList);
+            var dbs = getDBConnectionProperties();
+            DatabaseStøtte.settOppJndiForDefaultDataSource(dbs);
+            DatabaseStøtte.kjørMigreringFor(dbs);
         } catch (Exception e) {
-            LOGGER.error("Feil under migrering", e);
+            LOG.error("Feil under migrering", e);
             throw e;
         }
 
