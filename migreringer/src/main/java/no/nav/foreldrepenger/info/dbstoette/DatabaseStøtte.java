@@ -36,6 +36,7 @@ public final class DatabaseStøtte {
         LOG.info("Kjører migrering for {}", connectionProperties);
         DataSource dataSource = ConnectionHandler.opprettFra(connectionProperties, connectionProperties.getSchema());
         settOppDBSkjema(dataSource, connectionProperties);
+        LOG.info("Kjørt migrering for {} OK", connectionProperties);
     }
 
     static void settOppJndiDataSource(DBConnectionProperties defaultConnectionProperties) {
@@ -72,6 +73,8 @@ public final class DatabaseStøtte {
             LOG.error("Feil under migrering");
             throw new IllegalStateException("Feil i script. Avslutter");
         }
+        LOG.info("Migrerte med lokasjon {} og datasource {} OK ", scriptLocation, dataSource);
+
     }
 
     static String getMigrationScriptLocation(DBConnectionProperties connectionProperties) {
