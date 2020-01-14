@@ -63,7 +63,7 @@ public final class DatabaseStøtte {
         } else {
             scriptLocation = getMigrationScriptLocation(connectionProperties);
         }
-        LOG.info("Migrerer med lokasjon {}", scriptLocation);
+        LOG.info("Migrerer med lokasjon {} og datasource {}", scriptLocation, dataSource);
         boolean migreringOk = FlywayKonfig.lagKonfig(dataSource)
                 .medSqlLokasjon(scriptLocation)
                 .migrerDb();
