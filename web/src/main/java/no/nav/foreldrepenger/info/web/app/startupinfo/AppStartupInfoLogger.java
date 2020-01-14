@@ -90,18 +90,20 @@ class AppStartupInfoLogger {
 
         // callId er påkrevd på utgående kall og må settes før selftest kjøres
         MDCOperations.putCallId();
-        containerLogin.login();
-        SelftestResultat samletResultat = selftests.run();
-        containerLogin.logout();
-        MDCOperations.removeCallId();
+        try {
+            SelftestResultat samletResultat = selftests.run();
+            MDCOperations.removeCallId();
 
-        for (HealthCheck.Result result : samletResultat.getAlleResultater()) {
-            log(result);
+            for (HealthCheck.Result result : samletResultat.getAlleResultater()) {
+                log(result);
+            }
+
+            log(APPLIKASJONENS_STATUS + ": {}", samletResultat.getAggregateResult());
+
+            log(SELFTEST + " " + SLUTT);
+        } catch (Exception e) {
+            logger.info("SELFTEST ERROR ", e);
         }
-
-        log(APPLIKASJONENS_STATUS + ": {}", samletResultat.getAggregateResult());
-
-        log(SELFTEST + " " + SLUTT);
     }
 
     private void log(String msg, Object... args) {
