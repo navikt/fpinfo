@@ -20,7 +20,7 @@ spec:
     path: fpinfo/internal/health/isAlive
     port: 8080
   port: 8080
-  preStopHookPath: /fpinfo/internal/health/preStop
+  preStopHookPath: fpinfo/internal/health/preStop
   prometheus:
     enabled: true
     path: fpinfo/internal/metrics/prometheus
