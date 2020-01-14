@@ -17,7 +17,7 @@ spec:
     - {{url}}
 {{/each}}
   liveness:
-    path: /
+    path: /fpinfo/internal/health/isAlive
     port: 8080
   port: 8080
   preStopHookPath: /fpinfo/internal/health/preStop
@@ -25,7 +25,7 @@ spec:
     enabled: true
     path: /fpinfo/internal/metrics/prometheus
   readiness:
-    path: /
+    path: /fpinfo/internal/health/isReady
     port: 8080
   replicas:
     min: 3
