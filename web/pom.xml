@@ -320,19 +320,13 @@
             <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- 
         <dependency>
-            <groupId>no.nav.foreldrepenger</groupId>
-            <artifactId>migreringer</artifactId>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.codehaus.woodstox</groupId>
-                    <artifactId>woodstox-core-asl</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>com.oracle.ojdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
         </dependency>
-         -->
+        <!-- <dependency> <groupId>no.nav.foreldrepenger</groupId> <artifactId>migreringer</artifactId> 
+            <scope>test</scope> <exclusions> <exclusion> <groupId>org.codehaus.woodstox</groupId> 
+            <artifactId>woodstox-core-asl</artifactId> </exclusion> </exclusions> </dependency> -->
         <dependency>
             <groupId>no.nav.foreldrepenger.info</groupId>
             <artifactId>migreringer</artifactId>
