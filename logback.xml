@@ -108,4 +108,7 @@
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="APP_FILE_LOG"/>
     </root>
+    
+<include optional="true" resource="logback-${NAIS_CLUSTER_NAME}.xml"/>
+    
 </configuration>
