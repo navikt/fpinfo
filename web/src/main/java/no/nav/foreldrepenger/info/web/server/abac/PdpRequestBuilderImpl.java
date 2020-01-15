@@ -77,7 +77,8 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
         LOG.info("Saksnr {}", saksnr);
         aktørIdSet.addAll(pipRepository.hentAktørIdForSaksnummer(saksnr));
         Set<Long> behandling = attributter.getVerdier(AppAbacAttributtType.BEHANDLING_ID);
-        LOG.info("Behandling {}", behandling);
+        LOG.info("Behandling {}", behandling, behandling);
+        behandling.forEach(b -> LOG.info("XXXXXXXX", b.getClass()));
         aktørIdSet.addAll(pipRepository.hentAktørIdForBehandling(behandling));
         Set<UUID> verdier = attributter.getVerdier(AppAbacAttributtType.FORSENDELSE_UUID);
         LOG.info("Forsendelse {}", verdier);
