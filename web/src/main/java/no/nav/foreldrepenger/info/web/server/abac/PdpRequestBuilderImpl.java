@@ -70,7 +70,9 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
     }
 
     private Set<String> utledAktørIdeer(AbacAttributtSamling attributter) {
-        Set<String> aktørIdSet = new HashSet<>(attributter.getVerdier(AppAbacAttributtType.AKTØR_ID));
+        Set<String> aktørIder = attributter.getVerdier(AppAbacAttributtType.AKTØR_ID);
+        LOG.info("AktørIder {}", aktørIder);
+        Set<String> aktørIdSet = new HashSet<>(aktørIder);
         Set<String> saksnr = attributter.getVerdier(AppAbacAttributtType.SAKSNUMMER);
         LOG.info("Saksnr {}", saksnr);
         aktørIdSet.addAll(pipRepository.hentAktørIdForSaksnummer(saksnr));
