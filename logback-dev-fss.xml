@@ -1,3 +1,0 @@
-<included>
-   <logger name="org.flywaydb" level="trace" />
-</included>

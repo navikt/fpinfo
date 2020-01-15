@@ -21,21 +21,21 @@ import no.nav.vedtak.sikkerhet.abac.PdpRequest;
 
 public class PdpRequestBuilderImplTest {
     private static final String DUMMY_ID_TOKEN = "dummyheader.dymmypayload.dummysignaturee";
-    private static final long BEHANDLINGS_ID = 123L;
+    private static final String BEHANDLINGS_ID = "123";
     private static final String AKTØR_ID = "9900077";
     private static final String ANNEN_PART_ID = "7700099";
     private static final String SAKSNUMMER = "678";
-    private static final UUID FORSENDELSE_ID = UUID.randomUUID();
+    private static final String FORSENDELSE_ID = UUID.randomUUID().toString();
     private PipRepository pipRepositoryMock = Mockito.mock(PipRepository.class);
 
     private PdpRequestBuilderImpl requestBuilder = new PdpRequestBuilderImpl(pipRepositoryMock);
 
-    // @Test
+    @Test
     public void skal_utlede_aktørid_fra_behandlingid() {
         AbacAttributtSamling attributter = byggAbacAttributtSamling();
         attributter.leggTil(AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.BEHANDLING_ID, BEHANDLINGS_ID));
 
-        when(pipRepositoryMock.hentAktørIdForBehandling(Collections.singleton(BEHANDLINGS_ID)))
+        when(pipRepositoryMock.hentAktørIdForBehandling(Collections.singleton(Long.valueOf(BEHANDLINGS_ID))))
                 .thenReturn(Collections.singletonList(AKTØR_ID));
 
         PdpRequest request = requestBuilder.lagPdpRequest(attributter);
@@ -54,13 +54,13 @@ public class PdpRequestBuilderImplTest {
         assertThat(request.getListOfString(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE)).containsOnly(AKTØR_ID);
     }
 
-    // @Test
+    @Test
     public void skal_utlede_aktørid_fra_forsendelseId() {
         AbacAttributtSamling attributter = byggAbacAttributtSamling();
         attributter
                 .leggTil(AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.FORSENDELSE_UUID, FORSENDELSE_ID));
 
-        when(pipRepositoryMock.hentAktørIdForForsendelseIder(Collections.singleton(FORSENDELSE_ID)))
+        when(pipRepositoryMock.hentAktørIdForForsendelseIder(Collections.singleton(UUID.fromString(FORSENDELSE_ID))))
                 .thenReturn(Collections.singletonList(AKTØR_ID));
 
         PdpRequest request = requestBuilder.lagPdpRequest(attributter);
