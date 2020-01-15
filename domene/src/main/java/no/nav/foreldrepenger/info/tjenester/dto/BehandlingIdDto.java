@@ -22,7 +22,7 @@ public class BehandlingIdDto implements AbacDto {
 
     @Override
     public AbacDataAttributter abacAttributter() {
-        return AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.BEHANDLING_ID, behandlingId);
+        return AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.BEHANDLING_ID, getBehandlingId());
     }
 
     public Long getBehandlingId() {
