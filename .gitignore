@@ -17,4 +17,8 @@ app-local.properties
 truststore.jts
 *.un~
 APP_LOG_HOME_IS_UNDEFINED
-.flattened
+.flattenednaiserator-prod.yaml
+naiserator-q1.yaml
+naiserator-t4.yaml
+naiserator-prod.yaml
+ENV.t4
