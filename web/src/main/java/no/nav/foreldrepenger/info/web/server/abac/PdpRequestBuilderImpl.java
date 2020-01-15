@@ -70,6 +70,7 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
     }
 
     private Set<String> utledAktørIdeer(AbacAttributtSamling attributter) {
+        LOG.info("KeySet {}", attributter.keySet());
         Set<String> aktørIder = attributter.getVerdier(AppAbacAttributtType.AKTØR_ID);
         LOG.info("AktørIder {}", aktørIder);
         Set<String> aktørIdSet = new HashSet<>(aktørIder);
@@ -77,7 +78,9 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
         LOG.info("Saksnr {}", saksnr);
         aktørIdSet.addAll(pipRepository.hentAktørIdForSaksnummer(saksnr));
         Set<Long> behandling = attributter.getVerdier(AppAbacAttributtType.BEHANDLING_ID);
-        LOG.info("Behandling {}", behandling, behandling);
+        LOG.info("Behandling {}", behandling);
+        Set<Object> obj = attributter.getVerdier(AppAbacAttributtType.BEHANDLING_ID);
+        LOG.info("OBJ {}", obj);
         behandling.forEach(b -> LOG.info("XXXXXXXX", b.getClass()));
         aktørIdSet.addAll(pipRepository.hentAktørIdForBehandling(behandling));
         Set<UUID> verdier = attributter.getVerdier(AppAbacAttributtType.FORSENDELSE_UUID);
