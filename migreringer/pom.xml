@@ -7,7 +7,7 @@
     <parent>
         <groupId>no.nav.foreldrepenger.info</groupId>
         <artifactId>fpinfo</artifactId>
-        <version>${revision}${sha1}${changelist}</version>
+        <version>${sha1}</version>
     </parent>
 
     <artifactId>migreringer</artifactId>
@@ -51,16 +51,6 @@
                     <artifactId>markdown_to_asciidoc</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.5.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.vintage</groupId>
-            <artifactId>junit-vintage-engine</artifactId>
-            <version>5.5.2</version>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
