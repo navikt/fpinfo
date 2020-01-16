@@ -45,6 +45,7 @@ jobs:
             github.issues.createComment({...issue,
                                     title: 'Deploy av ${{ env.TAG }}',
                                     body: '>promote ${{ github.event.client_payload.slash_command.args }} feilet'})
+            github.issues.addLabels({...issue, labels: ['deployment-failed'])
    
       - name: Oppdater kommentar med deployment status
         if: success()
