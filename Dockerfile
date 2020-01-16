@@ -7,11 +7,10 @@ ENV APPDYNAMICS_CONTROLLER_PORT=443
 ENV APPDYNAMICS_CONTROLLER_SSL_ENABLED=true
 
 RUN mkdir /app/lib
-RUN mkdir /app/webapp
 RUN mkdir /app/conf
 
 # Config
-COPY web/target/classes/logback*.xml /app/conf/
+#COPY web/target/classes/logback*.xml /app/conf/
 COPY web/target/classes/jetty/jaspi-conf.xml /app/conf/
 COPY web/target/classes/jetty/login.conf /app/conf/
 
@@ -22,8 +21,8 @@ COPY web/target/lib/*.jar /app/lib/
 
 # Application Start Command
 COPY run-java.sh /
-RUN chmod +x /run-java.sh
+#RUN chmod +x /run-java.sh
 
 COPY 03-export-vault-secrets.sh /init-scripts/
-RUN chmod +x /init-scripts/*
+#RUN chmod +x /init-scripts/*
 
