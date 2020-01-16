@@ -1,5 +1,7 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -12,7 +14,6 @@
     <name>fpinfo :: Domene</name>
 
     <dependencies>
-        <!-- Reaktor -->
         <dependency>
             <!-- for Bean validation -->
             <groupId>org.hibernate.validator</groupId>
@@ -43,27 +44,10 @@
             <groupId>no.nav.foreldrepenger.felles.sikkerhet</groupId>
             <artifactId>felles-sikkerhet</artifactId>
         </dependency>
-
-        <!-- Test avhengigheter -->
         <dependency>
             <groupId>no.nav.foreldrepenger.info</groupId>
             <artifactId>migreringer</artifactId>
             <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -76,6 +60,5 @@
             <artifactId>felles-sikkerhet-testutilities</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 </project>
