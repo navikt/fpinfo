@@ -21,8 +21,8 @@ COPY web/target/lib/*.jar /app/lib/
 
 # Application Start Command
 COPY run-java.sh /
-#RUN chmod +x /run-java.sh
+RUN chmod +x /run-java.sh
 
 COPY 03-export-vault-secrets.sh /init-scripts/
-#RUN chmod +x /init-scripts/*
+RUN chmod +x /init-scripts/*
 
