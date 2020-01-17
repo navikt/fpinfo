@@ -17,6 +17,9 @@
     </modules>
 
     <properties>
+        <sonar.projectKey>navikt_fpinfo</sonar.projectKey>
+        <sonar.organization>navit</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sha1>1.0-SNAPSHOT</sha1>
         <java.version>11</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
