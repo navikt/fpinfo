@@ -58,9 +58,9 @@ jobs:
    
       - name: Kompiler
         run: | 
-          mvn --quiet jacoco:prepare-agent install -e --batch-mode --settings .github/workflows/.m2/settings.xml  -Dchangelist= -Dsha1=-$TAG  -Djacoco.destFile=$(pwd)/target/jacoco.exec
-          mvn --quiet jacoco:report sonar:sonar -e --batch-mode --settings .github/workflows/.m2/settings.xml -Dchangelist= -Dsha1=-$TAG -Djacoco.dataFile=$(pwd)/target/jacoco.exec  -Dsonar.login=${SONAR}
-#        run: mvn --quiet install --settings .github/workflows/.m2/settings.xml -Dchangelist= -Dsha1=-$TAG
+           mvn --quiet install --settings .github/workflows/.m2/settings.xml -Dchangelist= -Dsha1=-$TAG
+    #      mvn --quiet jacoco:prepare-agent install -e --batch-mode --settings .github/workflows/.m2/settings.xml  -Dchangelist= -Dsha1=-$TAG  -Djacoco.destFile=$(pwd)/target/jacoco.exec
+    #      mvn --quiet jacoco:report sonar:sonar -e --batch-mode --settings .github/workflows/.m2/settings.xml -Dchangelist= -Dsha1=-$TAG -Djacoco.dataFile=$(pwd)/target/jacoco.exec  -Dsonar.login=${SONAR}
         env:
           SONAR: ${{ secrets.SONAR }}   
           GITHUB_USERNAME: x-access-token
