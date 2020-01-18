@@ -432,38 +432,6 @@
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>0.8.5</version>
                 </plugin>
-                <!--This plugin's configuration is used to store Eclipse 
-                    m2e settings only. It has no influence on the Maven build itself. -->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>
-                                            org.codehaus.mojo
-                                        </groupId>
-                                        <artifactId>
-                                            flatten-maven-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [1.0.0,)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>flatten</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore />
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
@@ -556,7 +524,7 @@
     </build>
    <scm>
         <connection>scm:git:ssh://git@github.com:navikt/fpinfo.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com:navikt/fpinfi.git</developerConnection>
+        <developerConnection>scm:git:ssh://git@github.com:navikt/fpinfo.git</developerConnection>
         <url>https://github.com/navikt/fpinfo</url>
     </scm>
 
