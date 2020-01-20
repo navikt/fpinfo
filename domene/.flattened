@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>no.nav.foreldrepenger.info</groupId>
@@ -7,25 +7,21 @@
   <version>1.0-SNAPSHOT</version>
   <name>fpinfo :: Domene</name>
   <scm>
-    <connection>scm:git:ssh://git@stash.devillo.no:7999/vedfp/vl-fpinfo.git/domene</connection>
-    <developerConnection>scm:git:ssh://git@stash.devillo.no:7999/vedfp/vl-fpinfo.git/domene</developerConnection>
-    <url>http://stash.devillo.no/projects/VEDFP/repos/vl-fpinfo/browse/domene</url>
+    <connection>scm:git:ssh://git@github.com:navikt/fpinfo.git/domene</connection>
+    <developerConnection>scm:git:ssh://git@github.com:navikt/fpinfo.git/domene</developerConnection>
+    <url>https://github.com/navikt/fpinfo/domene</url>
   </scm>
   <distributionManagement>
     <repository>
-      <id>m2internal</id>
-      <name>NAV Maven2 Internal Repository</name>
-      <url>http://maven.adeo.no/nexus/content/repositories/m2internal</url>
+      <id>fpfordel</id>
+      <name>Github navikt Maven Packages</name>
+      <url>https://maven.pkg.github.com/navikt/fpinfo</url>
     </repository>
-    <snapshotRepository>
-      <id>m2snapshot</id>
-      <name>NAV Maven2 Snapshot Repository</name>
-      <url>http://maven.adeo.no/nexus/content/repositories/m2snapshot</url>
-    </snapshotRepository>
   </distributionManagement>
   <properties>
     <apache.ws.xmlschema.version>2.2.2</apache.ws.xmlschema.version>
     <flyway.version>4.2.0</flyway.version>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <felles.version>1.5.0-20200115082538-c89157e</felles.version>
     <hamcrest.version>1.3</hamcrest.version>
     <javaslang.version>2.0.6</javaslang.version>
@@ -39,10 +35,13 @@
     <maven.compiler.source>11</maven.compiler.source>
     <ojdbc.version>19.3.0.0</ojdbc.version>
     <metrics.version>4.1.2</metrics.version>
+    <sonar.organization>navit</sonar.organization>
     <mockito.version>3.2.4</mockito.version>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <sha1>1.0-SNAPSHOT</sha1>
+    <sonar.projectKey>navikt_fpinfo1</sonar.projectKey>
     <maven.compiler.target>11</maven.compiler.target>
+    <sonar.moduleKey>domene</sonar.moduleKey>
     <prometheus.version>0.8.0</prometheus.version>
     <owaspencoder.version>1.2.2</owaspencoder.version>
     <logstash.version>6.3</logstash.version>
@@ -53,7 +52,7 @@
     <dependency>
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
-      <version>6.1.0.Final</version>
+      <version>6.1.1.Final</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
