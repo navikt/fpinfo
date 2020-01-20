@@ -17,7 +17,7 @@
     </modules>
 
     <properties>
- <sonar.moduleKey>${artifactId}</sonar.moduleKey>
+        <sonar.moduleKey>${artifactId}</sonar.moduleKey>
         <sonar.projectKey>navikt_fpinfo1</sonar.projectKey>
         <sonar.organization>navit</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>

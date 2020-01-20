@@ -133,7 +133,7 @@ public class JettyServer {
         webAppContext.setBaseResource(createResourceCollection());
         webAppContext.setContextPath(CONTEXT_PATH);
         webAppContext.setConfigurations(CONFIGURATIONS);
-        webAppContext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
+        webAppContext.setAttribute("org.eclipse.jetty.server.webapp.WebInfIncludeJarPattern",
                 "^.*resteasy-.*.jar$|^.*felles-.*.jar$");
         new JettySikkerhetKonfig().konfigurer(webAppContext);
         updateMetaData(webAppContext.getMetaData());
