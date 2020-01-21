@@ -4,4 +4,5 @@
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=navikt_fpinfo1&metric=sqale_index)](https://sonarcloud.io/dashboard?id=navikt_fpinfo1)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=navikt_fpinfo1&metric=security_rating)](https://sonarcloud.io/dashboard?id=navikt_fpinfo1)
 
-Rest-grensesnitt for å slå opp behandlinger i fpsak. Går mot views i fpsak db.   Brukes av selvbetjening . 
+Rest-grensesnitt for å slå opp behandlinger i fpsak. Går mot views i fpsak db.   
+Brukes av selvbetjening . 
