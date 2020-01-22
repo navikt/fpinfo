@@ -45,8 +45,8 @@ jobs:
           docker-compose -f oracle/docker-compose.yml pull
           rm -f nohup.out
           docker-compose -f oracle/docker-compose.yml up oracle >nohup.out 2>&1 &
-          sh -c 'tail -n +0 -f nohup.out | { sed "/Disconnected/q" && kill $$; }' || true‹
-   
+          sh -c 'tail -n +0 -f nohup.out | { sed "/Disconnected/q" && kill $$; }' || true
+     
       - name: Kompiler
         run: | 
             mvn --quiet jacoco:prepare-agent install -e --batch-mode --settings .github/workflows/.m2/settings.xml -Dsha1=$TAG  -Djacoco.destFile=$(pwd)/target/jacoco.exec
