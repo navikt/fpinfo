@@ -9,8 +9,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 import javax.annotation.Priority;
 import javax.enterprise.context.Dependent;
@@ -71,22 +69,12 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
     }
 
     private Set<String> utledAktørIdeer(AbacAttributtSamling attributter) {
-        LOG.info("KeySet {}", attributter.keySet());
-        Set<String> aktørIder = attributter.getVerdier(AppAbacAttributtType.AKTØR_ID);
-        LOG.info("AktørIder {}", aktørIder);
-        Set<String> aktørIdSet = new HashSet<>(aktørIder);
-        Set<String> saksnr = attributter.getVerdier(AppAbacAttributtType.SAKSNUMMER);
-        LOG.info("Saksnr {}", saksnr);
-        aktørIdSet.addAll(pipRepository.hentAktørIdForSaksnummer(saksnr));
-        Set<String> behandling = attributter.getVerdier(AppAbacAttributtType.BEHANDLING_ID);
-        LOG.info("Behandling {}", behandling);
+        Set<String> aktørIdSet = new HashSet<>(attributter.getVerdier(AppAbacAttributtType.AKTØR_ID));
+        aktørIdSet.addAll(pipRepository.hentAktørIdForSaksnummer(attributter.getVerdier(AppAbacAttributtType.SAKSNUMMER)));
         aktørIdSet.addAll(pipRepository
-                .hentAktørIdForBehandling(behandling.stream().map(Long::valueOf).collect(Collectors.toSet())));
-        Set<String> verdier = attributter.getVerdier(AppAbacAttributtType.FORSENDELSE_UUID);
-        LOG.info("Forsendelse {}", verdier);
+                .hentAktørIdForBehandling(attributter.getVerdier(AppAbacAttributtType.BEHANDLING_ID)));
         aktørIdSet.addAll(pipRepository
-                .hentAktørIdForForsendelseIder(verdier.stream().map(UUID::fromString).collect(Collectors.toSet())));
-
+                .hentAktørIdForForsendelseIder(attributter.getVerdier(AppAbacAttributtType.FORSENDELSE_UUID)));
         return aktørIdSet;
     }
 

@@ -22,8 +22,5 @@ naiserator-q1.yaml
 naiserator-t4.yaml
 naiserator-prod.yaml
 ENV.t4
-.flattened
-web/.flattened
-migreringer/.flattened
-domene/.flattened
-.flattened
+.flattened*
+docs
