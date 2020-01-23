@@ -27,7 +27,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <felles.version>1.5.0-20200115082538-c89157e</felles.version>
+        <felles.version>1.5.0-20200123060955-7e89e24</felles.version>
         <flyway.version>4.2.0</flyway.version>
         <metrics.version>4.1.2</metrics.version>
         <prometheus.version>0.8.0</prometheus.version>
