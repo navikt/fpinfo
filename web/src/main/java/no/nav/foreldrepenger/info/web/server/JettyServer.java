@@ -4,7 +4,6 @@ import static no.nav.vedtak.util.env.Cluster.NAIS_CLUSTER_NAME;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -94,8 +93,12 @@ public class JettyServer {
         return hostPort;
     }
 
-    protected void konfigurer() throws Exception { // NOSONAR
-        hacksForManglendeStøttePåNAIS();
+    protected void konfigurer() throws Exception {
+        if (ENV.isProd()) {
+            hacksForManglendeStøttePåNAIS();
+        } else {
+            LOG.info("ingen hacks");
+        }
         konfigurerSwaggerHash();
     }
 
@@ -152,7 +155,7 @@ public class JettyServer {
     }
 
     protected List<Class<?>> getApplicationClasses() {
-        return Arrays.asList(ApplicationConfig.class, IssoApplication.class);
+        return List.of(ApplicationConfig.class, IssoApplication.class);
     }
 
     protected Resource createResourceCollection() {
