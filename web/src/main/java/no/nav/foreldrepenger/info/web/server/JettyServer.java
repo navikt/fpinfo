@@ -94,11 +94,7 @@ public class JettyServer {
     }
 
     protected void konfigurer() throws Exception {
-        if (ENV.isProd()) {
-            hacksForManglendeStøttePåNAIS();
-        } else {
-            LOG.info("ingen hacks");
-        }
+        // hacksForManglendeStøttePåNAIS();
         konfigurerSwaggerHash();
     }
 
@@ -164,38 +160,32 @@ public class JettyServer {
                 Resource.newClassPathResource("/web"));
     }
 
-    private void hacksForManglendeStøttePåNAIS() {
-        loadBalancerFqdnTilLoadBalancerUrl();
-        temporært();
-    }
-
-    private void loadBalancerFqdnTilLoadBalancerUrl() {
-        if (System.getenv("LOADBALANCER_FQDN") != null) {
-            String loadbalancerFqdn = System.getenv("LOADBALANCER_FQDN");
-            String protocol = (loadbalancerFqdn.startsWith("localhost")) ? "http" : "https";
-            System.setProperty("loadbalancer.url", protocol + "://" + loadbalancerFqdn);
-        }
-    }
-
-    private void temporært() {
-        // FIXME (u139158): PFP-1176 Skriv om i OpenAmIssoHealthCheck og
-        // AuthorizationRequestBuilder når Jboss dør
-        if (System.getenv("OIDC_OPENAM_HOSTURL") != null) {
-            System.setProperty("OpenIdConnect.issoHost", System.getenv("OIDC_OPENAM_HOSTURL"));
-        }
-        // FIXME (u139158): PFP-1176 Skriv om i AuthorizationRequestBuilder og
-        // IdTokenAndRefreshTokenProvider når Jboss dør
-        if (System.getenv("OIDC_OPENAM_AGENTNAME") != null) {
-            System.setProperty("OpenIdConnect.username", System.getenv("OIDC_OPENAM_AGENTNAME"));
-        }
-        // FIXME (u139158): PFP-1176 Skriv om i IdTokenAndRefreshTokenProvider når Jboss
-        // dør
-        if (System.getenv("OIDC_OPENAM_PASSWORD") != null) {
-            System.setProperty("OpenIdConnect.password", System.getenv("OIDC_OPENAM_PASSWORD"));
-        }
-        // FIXME (u139158): PFP-1176 Skriv om i BaseJmsKonfig når Jboss dør
-        if (System.getenv("FPSAK_CHANNEL_NAME") != null) {
-            System.setProperty("mqGateway02.channel", System.getenv("FPSAK_CHANNEL_NAME"));
-        }
-    }
+    /*
+     * private void hacksForManglendeStøttePåNAIS() {
+     * loadBalancerFqdnTilLoadBalancerUrl(); temporært(); }
+     * 
+     * private void loadBalancerFqdnTilLoadBalancerUrl() { if
+     * (System.getenv("LOADBALANCER_FQDN") != null) { String loadbalancerFqdn =
+     * System.getenv("LOADBALANCER_FQDN"); String protocol =
+     * (loadbalancerFqdn.startsWith("localhost")) ? "http" : "https";
+     * System.setProperty("loadbalancer.url", protocol + "://" + loadbalancerFqdn);
+     * } }
+     * 
+     * private void temporært() { // FIXME (u139158): PFP-1176 Skriv om i
+     * OpenAmIssoHealthCheck og // AuthorizationRequestBuilder når Jboss dør if
+     * (System.getenv("OIDC_OPENAM_HOSTURL") != null) {
+     * System.setProperty("OpenIdConnect.issoHost",
+     * System.getenv("OIDC_OPENAM_HOSTURL")); } // FIXME (u139158): PFP-1176 Skriv
+     * om i AuthorizationRequestBuilder og // IdTokenAndRefreshTokenProvider når
+     * Jboss dør if (System.getenv("OIDC_OPENAM_AGENTNAME") != null) {
+     * System.setProperty("OpenIdConnect.username",
+     * System.getenv("OIDC_OPENAM_AGENTNAME")); } // FIXME (u139158): PFP-1176 Skriv
+     * om i IdTokenAndRefreshTokenProvider når Jboss // dør if
+     * (System.getenv("OIDC_OPENAM_PASSWORD") != null) {
+     * System.setProperty("OpenIdConnect.password",
+     * System.getenv("OIDC_OPENAM_PASSWORD")); } // FIXME (u139158): PFP-1176 Skriv
+     * om i BaseJmsKonfig når Jboss dør if (System.getenv("FPSAK_CHANNEL_NAME") !=
+     * null) { System.setProperty("mqGateway02.channel",
+     * System.getenv("FPSAK_CHANNEL_NAME")); } }
+     */
 }
