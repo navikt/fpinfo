@@ -62,26 +62,21 @@ public final class Databaseskjemainitialisering {
             }
         }
 
-        if (!isJenkins()) {
-            slettAlleSemaphorer();
-            try {
-                Files.createTempFile(SEMAPHORE_FIL_PREFIX, SEMAPHORE_FIL_SUFFIX);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            LOG.info("Kjører på jenkins");
+        slettAlleSemaphorer();
+        try {
+            Files.createTempFile(SEMAPHORE_FIL_PREFIX, SEMAPHORE_FIL_SUFFIX);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
     }
 
     public static void kjørMigreringHvisNødvendig() {
-        if (!Databaseskjemainitialisering.isJenkins() && !Databaseskjemainitialisering.erMigreringKjørt()) {
+        if (!Databaseskjemainitialisering.erMigreringKjørt()) {
             LOG.info("Kjører migrering på nytt");
             Databaseskjemainitialisering.migrerUnittestSkjemaer();
         } else {
-            if (!Databaseskjemainitialisering.isJenkins()) {
-                LOG.info("Migrering var kjørt nylig (under 10 min siden), så skipper den.");
-            }
+
             try {
                 settSchemaPlaceholder(DatasourceConfiguration.UNIT_TEST.getRaw());
                 LokalDatabaseStøtte.settOppJndiForDefaultDataSource(DatasourceConfiguration.UNIT_TEST.get());
@@ -129,10 +124,6 @@ public final class Databaseskjemainitialisering {
                 }
             }
         }
-    }
-
-    private static boolean isJenkins() {
-        return System.getenv().containsKey("BUILD_NUMBER") && System.getenv().containsKey("BRANCH_NAME");
     }
 
     private static void slettAlleSemaphorer() {
