@@ -1,62 +1,37 @@
 package no.nav.foreldrepenger.info.dbstoette;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Optional;
+import java.util.Properties;
 
-/**
- * TODO(Humle): skriv tester
- */
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import no.nav.vedtak.util.env.Environment;
+
 public class VariablePlaceholderReplacer {
 
     private static final String PLACEHOLDER_PREFIX = "${";
     private static final String PLACEHOLDER_SUFFIX = "}";
+    private static final Environment ENV = Environment.current();
+    private static final Logger LOG = LoggerFactory.getLogger(VariablePlaceholderReplacer.class);
+    private final Properties properties;
 
-    @SuppressWarnings("rawtypes")
-    private Map placeholders;
-
-    public VariablePlaceholderReplacer(@SuppressWarnings("rawtypes") Map placeholders) {
-        this.placeholders = placeholders;
+    public VariablePlaceholderReplacer() {
+        this(new Properties());
     }
 
-    @SuppressWarnings("rawtypes")
+    @Deprecated
+    public VariablePlaceholderReplacer(Properties properties) {
+        this.properties = properties;
+        if (!properties.isEmpty()) {
+            LOG.warn(
+                    "Ikke konstruer denne klassen med properties, bruk heller en av application.properties-variantene");
+        }
+    }
+
     public String replacePlaceholders(String input) {
-        String processedInput = input;
-
-        String searchTerm;
-        String value;
-        Map myPlaceholders = placeholders;
-
-        for (Iterator itr = myPlaceholders.keySet().iterator(); itr
-                .hasNext(); processedInput = replaceAll(processedInput, searchTerm, value == null ? "" : value)) {
-            String placeholder = (String) itr.next();
-            searchTerm = PLACEHOLDER_PREFIX + placeholder + PLACEHOLDER_SUFFIX;
-            value = (String) myPlaceholders.get(placeholder); //NOSONAR
-        }
-
-        checkForUnmatchedPlaceholderExpression(processedInput);
-        return processedInput;
+        var key = input.replace(PLACEHOLDER_PREFIX, "").replace(PLACEHOLDER_SUFFIX, "");
+        return key != input ? Optional.ofNullable(ENV.getProperty(key))
+                .orElse(properties.getProperty(key)) : input;
     }
-
-    private String replaceAll(String str, String originalToken, String replacementToken) {
-        return str.replaceAll(Pattern.quote(originalToken), Matcher.quoteReplacement(replacementToken));
-    }
-
-    private void checkForUnmatchedPlaceholderExpression(String input) {
-        String regex = Pattern.quote(PLACEHOLDER_PREFIX) + "(.+?)" + Pattern.quote(PLACEHOLDER_SUFFIX);
-        Matcher matcher = Pattern.compile(regex).matcher(input);
-        TreeSet<String> unmatchedPlaceHolderExpressions = new TreeSet<>();
-
-        while (matcher.find()) {
-            unmatchedPlaceHolderExpressions.add(matcher.group());
-        }
-
-        if (!unmatchedPlaceHolderExpressions.isEmpty()) {
-            throw new IllegalStateException("Ingen verdi funnet for placeholder: "
-                    + String.join(", ", unmatchedPlaceHolderExpressions) + ".  Sjekk miljøvariabler");
-        }
-    }
-
 }
