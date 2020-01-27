@@ -13,7 +13,6 @@ public final class VariablePlaceholderReplacer {
                 .replace(PLACEHOLDER_PREFIX, "")
                 .replace(PLACEHOLDER_SUFFIX, ""),
                 placeHolder));
-
     }
 
     private static String sjekk(String verdi) {

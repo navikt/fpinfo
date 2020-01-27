@@ -1,8 +1,9 @@
 package no.nav.foreldrepenger.info.dbstoette;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class VariablePlaceholderReplacerTest {
 
@@ -18,5 +19,8 @@ public class VariablePlaceholderReplacerTest {
         assertEquals(vpr.replacePlaceholders("${flyway.placeholders.fpinfo.fpsak.schema.navn}"), "fpsak");
         assertEquals(vpr.replacePlaceholders("ingen"), "ingen");
         assertEquals(vpr.replacePlaceholders("${flyway.test}"), "hallo");
+        assertThrows(IllegalStateException.class, () -> {
+            vpr.replacePlaceholders("${ingen}");
+        });
     }
 }
