@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.info.web.app.selftest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class StackTraceFormatterTests {
 

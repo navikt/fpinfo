@@ -13,8 +13,8 @@ import static org.mockito.Mockito.when;
 
 import javax.ws.rs.core.Response;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.info.web.app.selftest.SelftestService;
 
@@ -26,7 +26,7 @@ public class SelftestRestTjenesteTest {
 
     private SelftestService selftestServiceMock = mock(SelftestService.class);
 
-    @Before
+    @BeforeEach
     public void setup() {
         restTjeneste = new SelftestRestTjeneste(selftestServiceMock);
     }
@@ -65,7 +65,7 @@ public class SelftestRestTjenesteTest {
     }
 
     private Response lagJsonTypeResponse() {
-        byte[] s = {'a', 'b'};
+        byte[] s = { 'a', 'b' };
 
         return Response.ok()
                 .encoding(RESPONSE_ENCODING)
@@ -75,7 +75,7 @@ public class SelftestRestTjenesteTest {
     }
 
     private Response lagHtmlTypeResponse(boolean jsonFormat) {
-        byte[] s = {'a','b'};
+        byte[] s = { 'a', 'b' };
         return Response.ok()
                 .encoding(RESPONSE_ENCODING)
                 .type(TEXT_HTML)

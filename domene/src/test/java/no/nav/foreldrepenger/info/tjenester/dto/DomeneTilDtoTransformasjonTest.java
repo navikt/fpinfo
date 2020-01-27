@@ -6,16 +6,12 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.info.domene.UttakPeriode;
-import no.nav.foreldrepenger.info.felles.datatyper.GraderingAvslagÅrsak;
-import no.nav.foreldrepenger.info.felles.datatyper.MorsAktivitet;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
 
 import no.nav.foreldrepenger.info.domene.Behandling;
 import no.nav.foreldrepenger.info.domene.MottattDokument;
 import no.nav.foreldrepenger.info.domene.SakStatus;
+import no.nav.foreldrepenger.info.domene.UttakPeriode;
 import no.nav.foreldrepenger.info.felles.datatyper.BehandlingResultatType;
 import no.nav.foreldrepenger.info.felles.datatyper.BehandlingStatus;
 import no.nav.foreldrepenger.info.felles.datatyper.BehandlingTema;
@@ -23,6 +19,8 @@ import no.nav.foreldrepenger.info.felles.datatyper.BehandlingÅrsak;
 import no.nav.foreldrepenger.info.felles.datatyper.DokumentTypeId;
 import no.nav.foreldrepenger.info.felles.datatyper.FagsakYtelseType;
 import no.nav.foreldrepenger.info.felles.datatyper.FamilieHendelseType;
+import no.nav.foreldrepenger.info.felles.datatyper.GraderingAvslagÅrsak;
+import no.nav.foreldrepenger.info.felles.datatyper.MorsAktivitet;
 import no.nav.foreldrepenger.info.felles.rest.ResourceLink;
 import no.nav.vedtak.exception.TekniskException;
 
@@ -48,9 +46,6 @@ public class DomeneTilDtoTransformasjonTest {
     String DOKUMENT_ID = "123";
     UUID FORSENDELSE_ID = UUID.randomUUID();
     String DOKUMENT_TYPE_ID = DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL.getVerdi();
-
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void skalTransformereBehandlingTilBehandlingDto() {
@@ -98,7 +93,8 @@ public class DomeneTilDtoTransformasjonTest {
         assertThat(dto.getAktørId()).isEqualTo(AKTØR_ID);
         assertThat(dto.getAktørIdAnnenPart()).isEqualTo(AKTØR_ID_ANNEN_PART);
         assertThat(dto.getFagsakStatus()).isEqualTo(FAGSAK_STATUS);
-        assertThat(dto.getBehandlingTema()).isEqualTo(BehandlingTema.fraYtelse(FAGSAK_YTELSE_TYPE, FAMILIEHENDELSE_TYPE));
+        assertThat(dto.getBehandlingTema())
+                .isEqualTo(BehandlingTema.fraYtelse(FAGSAK_YTELSE_TYPE, FAMILIEHENDELSE_TYPE));
 
         assertThat(dto.getLenker()).isEmpty();
         dto.leggTilLenke(TEST_LENKE, TEST_REL);
@@ -118,11 +114,7 @@ public class DomeneTilDtoTransformasjonTest {
     public void skalKasteFeilmeldingNårVedForsøkPåSammenslåingAvToUrelaterteDokumenter() {
         MottattDokument dokument1 = lagDokument(1L, JOURNALPOST_ID, XML_PAYLOAD);
         MottattDokument dokument2 = lagDokument(2L, JOURNALPOST_ID, XML_PAYLOAD);
-
-        expectedException.expect(TekniskException.class);
-        expectedException.expectMessage("FP-241631");
-
-        SøknadXmlDto.fraDomene(dokument1, dokument2);
+        Assertions.assertThrows(TekniskException.class, () -> SøknadXmlDto.fraDomene(dokument1, dokument2));
     }
 
     @Test

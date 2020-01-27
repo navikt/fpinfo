@@ -1,20 +1,21 @@
 package no.nav.foreldrepenger.info.web.app.selftest;
 
-import static no.nav.foreldrepenger.info.web.app.selftest.SelftestResultat.AggregateResult;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.codahale.metrics.health.HealthCheck;
+
+import no.nav.foreldrepenger.info.web.app.selftest.SelftestResultat.AggregateResult;
 
 public class SelftestsOverallresultsTest {
 
     private SelftestResultat samletResultat;
 
-    @Before
+    @BeforeEach
     public void setup() {
         samletResultat = new SelftestResultat();
     }
