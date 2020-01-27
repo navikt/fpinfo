@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -135,9 +134,7 @@ public final class DBConnectionProperties {
     private static DBConnectionProperties read(JsonObject db) {
 
         DBConnectionProperties raw = readRaw(db);
-
-        Properties placeholders = System.getProperties();
-        VariablePlaceholderReplacer replacer = new VariablePlaceholderReplacer(placeholders);
+        VariablePlaceholderReplacer replacer = new VariablePlaceholderReplacer();
 
         // FIXME (GS): dumt å fange opp runtimeexception
         // Håndtering av verdier som kan inneholde placeholdere
