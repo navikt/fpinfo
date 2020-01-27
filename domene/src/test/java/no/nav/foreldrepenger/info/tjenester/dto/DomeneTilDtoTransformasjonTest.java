@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.info.domene.Behandling;
 import no.nav.foreldrepenger.info.domene.MottattDokument;
