@@ -9,18 +9,17 @@ import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.jboss.weld.junit5.EnableWeld;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.codahale.metrics.health.HealthCheck;
 import com.codahale.metrics.health.HealthCheckRegistry;
 
 import no.nav.foreldrepenger.info.web.app.selftest.checks.ExtHealthCheck;
-import no.nav.vedtak.felles.testutilities.cdi.CdiRunner;
 
-@RunWith(CdiRunner.class)
+@EnableWeld
 public class SelftestsTest {
 
     @Inject
@@ -29,13 +28,13 @@ public class SelftestsTest {
 
     private Selftests selftests;
 
-    @Before
+    @BeforeEach
     public void setup() {
         HealthCheckRegistry registry = Mockito.mock(HealthCheckRegistry.class);
 
         List<ExtHealthCheck> checks = new ArrayList<>();
 
-        for(ExtHealthCheck ex: healthChecks){
+        for (ExtHealthCheck ex : healthChecks) {
             ExtHealthCheck newEx = Mockito.spy(ex);
             Mockito.doReturn(false).when(newEx).erKritiskTjeneste();
             checks.add(newEx);

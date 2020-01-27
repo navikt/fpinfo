@@ -11,10 +11,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import no.nav.foreldrepenger.info.domene.Behandling;
@@ -31,7 +30,6 @@ import no.nav.foreldrepenger.info.tjenester.dto.ForsendelseIdDto;
 import no.nav.foreldrepenger.info.tjenester.dto.ForsendelseStatus;
 import no.nav.foreldrepenger.info.tjenester.dto.ForsendelseStatusDataDTO;
 import no.nav.vedtak.exception.TekniskException;
-import no.nav.vedtak.felles.jpa.TomtResultatException;
 
 public class DokumentforsendelseTjenesteImplTest {
     private static final Long BEHANDLING_ID = 123L;
@@ -50,17 +48,16 @@ public class DokumentforsendelseTjenesteImplTest {
 
     private DokumentforsendelseTjeneste tjeneste;
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
-
     @Mock
     private DokumentForsendelseRepository mockRepository = mock(DokumentForsendelseRepository.class);
 
-    @Before
+    @BeforeEach
     public void setUp() {
         tjeneste = new DokumentforsendelseTjenesteImpl(mockRepository);
 
-        when(mockRepository.hentBehandling(UKJENT_BEHANDLING_ID)).thenThrow(DokumentforsendelseTjenesteImpl.DokumentforsendelseFeil.FACTORY.fantIkkeSøknadForBehandling(UKJENT_BEHANDLING_ID).toException());
+        when(mockRepository.hentBehandling(UKJENT_BEHANDLING_ID))
+                .thenThrow(DokumentforsendelseTjenesteImpl.DokumentforsendelseFeil.FACTORY
+                        .fantIkkeSøknadForBehandling(UKJENT_BEHANDLING_ID).toException());
     }
 
     @Test
@@ -90,7 +87,6 @@ public class DokumentforsendelseTjenesteImplTest {
 
         assertThat(dto.getLenker()).isEmpty();
     }
-
 
     @Test
     public void skalReturnereTomtResultat() {
@@ -131,12 +127,10 @@ public class DokumentforsendelseTjenesteImplTest {
     public void skalKasteFeilVedFlereBehandlingerKnyttetTilForsendelseId() {
         UUID fid = UUID.randomUUID();
 
-        expectedException.expect(TekniskException.class);
-        expectedException.expectMessage("FP-760822");
-
         when(mockRepository.hentMottatteDokumenter(any(UUID.class))).thenReturn(lagDokumenter(fid, 2, true));
 
-        tjeneste.hentStatusInformasjon(new ForsendelseIdDto(fid.toString()));
+        Assertions.assertThrows(TekniskException.class,
+                () -> tjeneste.hentStatusInformasjon(new ForsendelseIdDto(fid.toString())));
     }
 
     private Behandling lagBehandling() {
@@ -162,11 +156,10 @@ public class DokumentforsendelseTjenesteImplTest {
                     .medMottattDokumentId(DOKUMENT_ID)
                     .medSøknadXml(XML_CLOB)
                     .medType(DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL.getVerdi());
-            if(medBehandling){
+            if (medBehandling) {
                 builder.medBehandlingId(BEHANDLING_ID + antall);
             }
-            dokumenter.add(builder.build()
-            );
+            dokumenter.add(builder.build());
         }
         return dokumenter;
     }

@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 
 import javax.ws.rs.core.Response;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.codahale.metrics.health.HealthCheck;
 
@@ -25,7 +25,7 @@ public class SelftestServiceTest {
     private static final String MSG_KRITISK_FEIL = "kritisk feil";
     private static final String MSG_IKKEKRITISK_FEIL = "ikke-kritisk feil";
 
-    @Before
+    @BeforeEach
     public void setup() {
         mockSelftests = mock(Selftests.class);
         mockKjørSelftestTjeneste = mock(KjørSelftestTjeneste.class);
@@ -99,15 +99,17 @@ public class SelftestServiceTest {
         assertThat(response.getEntity()).isNotNull();
     }
 
-    //-------
+    // -------
 
     private SelftestResultat lagSelftestResultat(boolean kritiskeOk, boolean ikkeKritiskeOk) {
         SelftestResultat resultat = lagSelftestResultat();
 
-        HealthCheck.Result delRes1 = kritiskeOk ? HealthCheck.Result.healthy() : HealthCheck.Result.unhealthy(MSG_KRITISK_FEIL);
+        HealthCheck.Result delRes1 = kritiskeOk ? HealthCheck.Result.healthy()
+                : HealthCheck.Result.unhealthy(MSG_KRITISK_FEIL);
         resultat.leggTilResultatForKritiskTjeneste(delRes1);
 
-        HealthCheck.Result delRes2 = ikkeKritiskeOk ? HealthCheck.Result.healthy() : HealthCheck.Result.unhealthy(MSG_IKKEKRITISK_FEIL);
+        HealthCheck.Result delRes2 = ikkeKritiskeOk ? HealthCheck.Result.healthy()
+                : HealthCheck.Result.unhealthy(MSG_IKKEKRITISK_FEIL);
         resultat.leggTilResultatForIkkeKritiskTjeneste(delRes2);
 
         return resultat;
