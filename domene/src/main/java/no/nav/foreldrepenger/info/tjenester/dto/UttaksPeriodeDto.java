@@ -46,6 +46,8 @@ public class UttaksPeriodeDto implements AbacDto {
     private String arbeidsgiverAktoerId;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String arbeidsgiverOrgnr;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String periodeResultatÅrsak;
 
 
     public String getPeriodeResultatType() {
@@ -83,6 +85,7 @@ public class UttaksPeriodeDto implements AbacDto {
         dto.overfoeringAarsak = dash2null(uttakPeriode.getOverføringÅrsak());
         dto.uttakArbeidType = uttakPeriode.getUttakArbeidType();
         dto.morsAktivitet = dash2null(uttakPeriode.getMorsAktivitet());
+        dto.periodeResultatÅrsak = dash2null(uttakPeriode.getPeriodeResultatÅrsak());
         return dto;
     }
 
@@ -168,6 +171,10 @@ public class UttaksPeriodeDto implements AbacDto {
 
     public String getMorsAktivitet() {
         return morsAktivitet;
+    }
+
+    public String getPeriodeResultatÅrsak() {
+        return periodeResultatÅrsak;
     }
 
     @Override
