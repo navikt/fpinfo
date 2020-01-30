@@ -36,6 +36,9 @@ public class UttakPeriode {
     @Column(name = "GRADERING_AVSLAG_AARSAK")
     private GraderingAvslagÅrsak graderingAvslagAarsak;
 
+    @Column(name = "PERIODE_RESULTAT_AARSAK")
+    private String periodeResultatÅrsak;
+
     @Column(name = "UTTAK_UTSETTELSE_TYPE")
     private String uttakUtsettelseType;
 
@@ -106,6 +109,10 @@ public class UttakPeriode {
 
     public String getGraderingAvslagAarsak() {
         return graderingAvslagAarsak.equals(GraderingAvslagÅrsak.UKJENT) ? null : graderingAvslagAarsak.name();
+    }
+
+    public String getPeriodeResultatÅrsak() {
+        return periodeResultatÅrsak;
     }
 
     public String getUttakUtsettelseType() {
@@ -208,6 +215,11 @@ public class UttakPeriode {
 
         public Builder withGraderingAvslagAarsak(GraderingAvslagÅrsak graderingAvslagAarsak) {
             uttakPeriode.graderingAvslagAarsak = graderingAvslagAarsak;
+            return this;
+        }
+
+        public Builder withPeriodeResultatÅrsak(String periodeResultatÅrsak) {
+            uttakPeriode.periodeResultatÅrsak = periodeResultatÅrsak;
             return this;
         }
 
