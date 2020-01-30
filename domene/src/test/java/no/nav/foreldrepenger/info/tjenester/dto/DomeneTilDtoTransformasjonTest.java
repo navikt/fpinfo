@@ -131,11 +131,13 @@ public class DomeneTilDtoTransformasjonTest {
 
     @Test
     public void skalMappeUttakPeriodeTilUttakPeriodeDto() {
+        var periodeResultatÅrsak = "4005";
         UttakPeriode uttakPeriode = UttakPeriode.builder()
                 .withPeriodeResultatType("INNVILGET")
                 .withSamtidigUttak(null)
                 .withUttakUtsettelseType("-")
                 .withGraderingAvslagAarsak(GraderingAvslagÅrsak.MOR_OPPFYLLER_IKKE_AKTIVITETSKRAV)
+                .withPeriodeResultatÅrsak(periodeResultatÅrsak)
                 .withBehandlingId(42L)
                 .withUttakUtsettelseType("-")
                 .withFlerbarnsdager(null)
@@ -160,6 +162,7 @@ public class DomeneTilDtoTransformasjonTest {
 
         assertThat(uttaksPeriodeDto.getMorsAktivitet()).isEqualTo(null);
         assertThat(uttaksPeriodeDto.getGraderingAvslagAarsak()).isEqualTo("MOR_OPPFYLLER_IKKE_AKTIVITETSKRAV");
+        assertThat(uttaksPeriodeDto.getPeriodeResultatÅrsak()).isEqualTo(periodeResultatÅrsak);
     }
 
     private MottattDokument lagDokument(Long behandlingId, String journalpostId, String xmlPayload) {
