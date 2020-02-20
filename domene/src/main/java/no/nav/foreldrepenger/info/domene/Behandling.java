@@ -1,7 +1,10 @@
 package no.nav.foreldrepenger.info.domene;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.Column;
@@ -18,6 +21,9 @@ import no.nav.foreldrepenger.info.felles.datatyper.BehandlingResultatType;
 @Table(name = "BEHANDLING")
 @Immutable
 public class Behandling extends BaseEntitet {
+
+    private static final String VENT_PGA_FOR_TIDLIG_SØKNAD_KODE = "7008";
+    private static final Set<String> AUTOPUNKTER_SOM_HINDRER_OPPSTART_AV_BEHANDLING = Set.of(VENT_PGA_FOR_TIDLIG_SØKNAD_KODE);
 
     @Id
     @Column(name = "BEHANDLING_ID")
@@ -106,6 +112,13 @@ public class Behandling extends BaseEntitet {
                 BehandlingResultatType.HENLAGT_SØKNAD_MANGLER.getVerdi().equalsIgnoreCase(behandlingResultatType) ||
                 BehandlingResultatType.HENLAGT_SØKNAD_TRUKKET.getVerdi().equalsIgnoreCase(behandlingResultatType) ||
                 BehandlingResultatType.MERGET_OG_HENLAGT.getVerdi().equalsIgnoreCase(behandlingResultatType);
+    }
+
+    public Optional<LocalDateTime> getTidligstBehandlingsTidspunkt() {
+        return getÅpneAksjonspunkter().stream()
+                .filter(aksjonspunkt -> AUTOPUNKTER_SOM_HINDRER_OPPSTART_AV_BEHANDLING.contains(aksjonspunkt.getDefinisjon()))
+                .map(Aksjonspunkt::getFristTid)
+                .findFirst();
     }
 
     public static Builder builder() {

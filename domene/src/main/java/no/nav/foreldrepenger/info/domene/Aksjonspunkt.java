@@ -1,5 +1,8 @@
 package no.nav.foreldrepenger.info.domene;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -22,6 +25,12 @@ public class Aksjonspunkt extends BaseEntitet {
     @Column(name = "AKSJONSPUNKT_STATUS")
     private String status;
 
+    @Column(name = "AKSJONSPUNKT_DEF")
+    private String definisjon;
+
+    @Column(name = "FRIST_TID")
+    private LocalDateTime fristTid;
+
     @Column(name = "behandling_id")
     private Long behandlingId;
 
@@ -39,6 +48,14 @@ public class Aksjonspunkt extends BaseEntitet {
 
     public Long getBehandlingId() {
         return behandlingId;
+    }
+
+    public String getDefinisjon() {
+        return definisjon;
+    }
+
+    public LocalDateTime getFristTid() {
+        return fristTid;
     }
 
     public static class Builder {

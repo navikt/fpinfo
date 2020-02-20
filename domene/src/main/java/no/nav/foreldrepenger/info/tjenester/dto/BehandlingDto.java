@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.info.tjenester.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ public class BehandlingDto implements AbacDto {
     private LocalDateTime opprettetTidspunkt;
     private LocalDateTime endretTidspunkt;
     private String behandlingResultat;
+    private LocalDate tidligstBehandlingsdato;
 
     public BehandlingDto() {
         lenker = new ArrayList<>();
@@ -78,6 +80,10 @@ public class BehandlingDto implements AbacDto {
         return lenker;
     }
 
+    public LocalDate getTidligstBehandlingsdato() {
+        return tidligstBehandlingsdato;
+    }
+
     public void leggTilLenke(String href, String rel) {
         if (href != null) {
             lenker.add(ResourceLink.get(href, rel, null));
@@ -96,6 +102,7 @@ public class BehandlingDto implements AbacDto {
         dto.opprettetTidspunkt = behandling.getOpprettetTidspunkt();
         dto.endretTidspunkt = behandling.getEndretTidspunkt();
         dto.behandlingResultat = behandling.getBehandlingResultatType();
+        dto.tidligstBehandlingsdato = behandling.getTidligstBehandlingsTidspunkt().isPresent() ? behandling.getTidligstBehandlingsTidspunkt().get().toLocalDate() : null;
 
         return dto;
     }
