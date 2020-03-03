@@ -48,11 +48,6 @@ public class DokumentForsendelseRepositoryImpl implements DokumentForsendelseRep
     }
 
     @Override
-    public boolean harSøknad(Long behandlingId) {
-        return !hentSøknadXml(behandlingId).isEmpty();
-    }
-
-    @Override
     public List<UttakPeriode> hentUttakPerioder(Long behandlingId) {
         TypedQuery<UttakPeriode> query = entityManager.createQuery("from UttakPeriode where behandlingId=:behandlingId", UttakPeriode.class);
         query.setParameter("behandlingId", behandlingId);
@@ -130,7 +125,7 @@ public class DokumentForsendelseRepositoryImpl implements DokumentForsendelseRep
     }
 
     @Override
-    public List<MottattDokument> hentSøknadXml(Long behandlingId) {
+    public List<MottattDokument> hentMottattDokument(Long behandlingId) {
         TypedQuery<MottattDokument> query = entityManager.createQuery("from MottattDokument where behandling_id=:behandlingId", MottattDokument.class);
         query.setParameter("behandlingId", behandlingId);
         return query.getResultList();

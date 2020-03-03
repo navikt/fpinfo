@@ -21,7 +21,7 @@ public interface DokumentforsendelseTjeneste {
 
     List<SakStatusDto> hentSakStatus(AktørIdDto aktørIdDto, String linkPathBehandling, String linkPathUttaksplan);
 
-    SøknadXmlDto hentSøknadXml(BehandlingIdDto behandlingId);
+    Optional<SøknadXmlDto> hentSøknadXml(BehandlingIdDto behandlingId);
 
     Optional<ForsendelseStatusDataDTO> hentStatusInformasjon(ForsendelseIdDto forsendelseIdDto);
 

@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.swing.text.html.Option;
 
 import no.nav.foreldrepenger.info.domene.Saksnummer;
 import org.slf4j.Logger;
@@ -67,27 +68,23 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
         Long behandlingId = behandlingIdDto.getBehandlingId();
         Behandling behandling = dokumentForsendelseRepository.hentBehandling(behandlingId);
         BehandlingDto dto = BehandlingDto.fraDomene(behandling);
-        List<MottattDokument> inntektsmeldinger = dokumentForsendelseRepository.hentInntektsmeldinger(behandlingId);
-        dto.setInntektsmeldinger(inntektsmeldinger.stream().map(MottattDokument::getJournalpostId).collect(Collectors.toList()));
-        if (dokumentForsendelseRepository.harSøknad(behandlingId)) {
+        if (hentSøknadXml(behandlingIdDto).isPresent()) {
             dto.leggTilLenke(linkPathSøknad + behandlingId, "søknad");
         }
+        List<MottattDokument> inntektsmeldinger = dokumentForsendelseRepository.hentInntektsmeldinger(behandlingId);
+        dto.setInntektsmeldinger(inntektsmeldinger.stream()
+                .map(MottattDokument::getJournalpostId)
+                .collect(Collectors.toList()));
         return dto;
     }
 
     @Override
-    public SøknadXmlDto hentSøknadXml(BehandlingIdDto behandlingIdDto) {
+    public Optional<SøknadXmlDto> hentSøknadXml(BehandlingIdDto behandlingIdDto) {
         LOGGER.info("henter søknad for behandling {}", behandlingIdDto.getBehandlingId());
-
-        Long behandlingId = behandlingIdDto.getBehandlingId();
-        List<MottattDokument> dokumenter = dokumentForsendelseRepository.hentSøknadXml(behandlingId)
-                .stream().filter(MottattDokument::erSøknad).collect(Collectors.toList());
-        if (dokumenter.isEmpty()) {
-            throw DokumentforsendelseFeil.FACTORY.fantIkkeSøknadForBehandling(behandlingId).toException();
-        }
-        SøknadXmlDto søknad = mapTilSøknadXml(dokumenter);
-        LOGGER.info("returnerer søknad for behandling {}", behandlingIdDto.getBehandlingId());
-        return søknad;
+        var mottatteDokumenter = dokumentForsendelseRepository.hentMottattDokument(behandlingIdDto.getBehandlingId()).stream()
+                .filter(MottattDokument::erSøknad)
+                .collect(Collectors.toList());
+        return Optional.of(mottatteDokumenter).map(this::mapTilSøknadXml);
     }
 
     @Override
@@ -259,6 +256,7 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
     }
 
     private SøknadXmlDto mapTilSøknadXml(List<MottattDokument> dokumenter) {
+        if (dokumenter.isEmpty()) return null;
         // Noen søknader er lagret i to innslag hvor ett innslag har XML payload og det andre har journalpostId
         if (dokumenter.size() == 2) {
             return SøknadXmlDto.fraDomene(dokumenter.get(0), dokumenter.get(1));
