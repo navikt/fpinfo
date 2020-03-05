@@ -51,8 +51,7 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
 
     private Response handleTomtResultatFeil(TomtResultatException tomtResultatException) {
         return Response
-                .status(Response.Status.NOT_FOUND)
-                .entity(new FeilDto(FeilType.TOMT_RESULTAT_FEIL, tomtResultatException.getMessage()))
+                .status(Response.Status.OK)
                 .type(MediaType.APPLICATION_JSON)
                 .build();
     }
