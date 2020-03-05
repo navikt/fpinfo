@@ -83,7 +83,7 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
         var mottatteDokumenter = dokumentForsendelseRepository.hentMottattDokument(behandlingIdDto.getBehandlingId()).stream()
                 .filter(MottattDokument::erSøknad)
                 .collect(Collectors.toList());
-        return Optional.of(mottatteDokumenter).map(this::mapTilSøknadXml);
+        return Optional.of(mottatteDokumenter).flatMap(this::mapTilSøknadXml);
     }
 
     @Override
@@ -257,13 +257,12 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
                 }).collect(Collectors.toList());
     }
 
-    private SøknadXmlDto mapTilSøknadXml(List<MottattDokument> dokumenter) {
-        if (dokumenter.isEmpty()) return null;
+    private Optional<SøknadXmlDto> mapTilSøknadXml(List<MottattDokument> dokumenter) {
         // Noen søknader er lagret i to innslag hvor ett innslag har XML payload og det andre har journalpostId
         if (dokumenter.size() == 2) {
-            return SøknadXmlDto.fraDomene(dokumenter.get(0), dokumenter.get(1));
+            return Optional.of(SøknadXmlDto.fraDomene(dokumenter.get(0), dokumenter.get(1)));
         }
-        return SøknadXmlDto.fraDomene(dokumenter.get(0));
+        return dokumenter.stream().findFirst().map(SøknadXmlDto::fraDomene);
     }
 
     interface DokumentforsendelseFeil extends DeklarerteFeil {
