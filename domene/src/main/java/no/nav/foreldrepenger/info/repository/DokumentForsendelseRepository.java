@@ -21,11 +21,9 @@ public interface DokumentForsendelseRepository {
 
     List<MottattDokument> hentInntektsmeldinger(Long behandlingId);
 
-    List<MottattDokument> hentSøknadXml(Long behandlingId);
+    List<MottattDokument> hentMottattDokument(Long behandlingId);
 
     List<SakStatus> hentSakStatus(String aktørId);
-
-    boolean harSøknad(Long behandlingId);
 
     Optional<FagsakRelasjon> hentFagsakRelasjon(String saksnummer);
 

@@ -103,9 +103,11 @@ public class DokumentforsendelseRestTjeneste {
     @Operation(description = "Url for å hente søknad XML og journalpostId", summary = "Returnerer søknad XML og Journalpost ID", responses = {
             @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SøknadXmlDto.class)), responseCode = "200", description = "Returnerer søknad XML")
     })
-    public SøknadXmlDto hentSøknadXml(
+    public Response hentSøknadXml(
             @NotNull @QueryParam("behandlingId") @Parameter(name = "behandlingId") @Valid BehandlingIdDto behandlingIdDto) {
-        return dokumentForsendelseTjenester.hentSøknadXml(behandlingIdDto);
+        return dokumentForsendelseTjenester.hentSøknadXml(behandlingIdDto)
+                .map(søknadXml -> Response.ok(søknadXml).build())
+                .orElseGet(() -> Response.status(Response.Status.NOT_FOUND).build());
     }
 
     @GET

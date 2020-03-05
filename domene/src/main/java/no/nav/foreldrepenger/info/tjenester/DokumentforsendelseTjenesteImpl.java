@@ -67,27 +67,23 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
         Long behandlingId = behandlingIdDto.getBehandlingId();
         Behandling behandling = dokumentForsendelseRepository.hentBehandling(behandlingId);
         BehandlingDto dto = BehandlingDto.fraDomene(behandling);
-        List<MottattDokument> inntektsmeldinger = dokumentForsendelseRepository.hentInntektsmeldinger(behandlingId);
-        dto.setInntektsmeldinger(inntektsmeldinger.stream().map(MottattDokument::getJournalpostId).collect(Collectors.toList()));
-        if (dokumentForsendelseRepository.harSøknad(behandlingId)) {
+        if (hentSøknadXml(behandlingIdDto).isPresent()) {
             dto.leggTilLenke(linkPathSøknad + behandlingId, "søknad");
         }
+        List<MottattDokument> inntektsmeldinger = dokumentForsendelseRepository.hentInntektsmeldinger(behandlingId);
+        dto.setInntektsmeldinger(inntektsmeldinger.stream()
+                .map(MottattDokument::getJournalpostId)
+                .collect(Collectors.toList()));
         return dto;
     }
 
     @Override
-    public SøknadXmlDto hentSøknadXml(BehandlingIdDto behandlingIdDto) {
+    public Optional<SøknadXmlDto> hentSøknadXml(BehandlingIdDto behandlingIdDto) {
         LOGGER.info("henter søknad for behandling {}", behandlingIdDto.getBehandlingId());
-
-        Long behandlingId = behandlingIdDto.getBehandlingId();
-        List<MottattDokument> dokumenter = dokumentForsendelseRepository.hentSøknadXml(behandlingId)
-                .stream().filter(MottattDokument::erSøknad).collect(Collectors.toList());
-        if (dokumenter.isEmpty()) {
-            throw DokumentforsendelseFeil.FACTORY.fantIkkeSøknadForBehandling(behandlingId).toException();
-        }
-        SøknadXmlDto søknad = mapTilSøknadXml(dokumenter);
-        LOGGER.info("returnerer søknad for behandling {}", behandlingIdDto.getBehandlingId());
-        return søknad;
+        var mottatteDokumenter = dokumentForsendelseRepository.hentMottattDokument(behandlingIdDto.getBehandlingId()).stream()
+                .filter(MottattDokument::erSøknad)
+                .collect(Collectors.toList());
+        return Optional.of(mottatteDokumenter).flatMap(this::mapTilSøknadXml);
     }
 
     @Override
@@ -208,7 +204,8 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
     private ForsendelseStatusDataDTO getForsendelseStatusDataDTO(Behandling behandling, UUID forsendelseId) {
         ForsendelseStatusDataDTO forsendelseStatusDataDTO;
         String behandlingStatus = behandling.getBehandlingStatus();
-        if (behandlingStatus.equals(BehandlingStatus.AVSLUTTET.getVerdi()) || behandlingStatus.equals(BehandlingStatus.IVERKSETTER_VEDTAK.getVerdi())) {
+        if (behandlingStatus.equals(BehandlingStatus.AVSLUTTET.getVerdi())
+                || behandlingStatus.equals(BehandlingStatus.IVERKSETTER_VEDTAK.getVerdi())) {
 
             String resultat = behandling.getBehandlingResultatType();
             if (resultat.equals(BehandlingResultatType.INNVILGET.getVerdi())
@@ -237,33 +234,35 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
     }
 
     private List<SakStatusDto> mapTilSakStatusDtoListe(List<SakStatus> sakListe, String linkPathBehandling, String linkPathUttaksplan) {
-        return sakListe.stream().filter(distinct(SakStatus::getSaksnummer)).map(sak -> {
-            SakStatusDto dto = SakStatusDto.fraDomene(sak);
+        return sakListe.stream()
+                .filter(distinct(SakStatus::getSaksnummer))
+                .map(sak -> {
+                    SakStatusDto dto = SakStatusDto.fraDomene(sak);
 
-            // Alle barn som gjelder denne saken, kan spenne over flere behandlinger uansett status
-            sakListe.stream()
-                    .filter(e -> sak.getSaksnummer().equals(e.getSaksnummer()))
-                    .forEach(e -> dto.leggTilBarn(e.getAktørIdBarn()));
+                    // Alle barn som gjelder denne saken, kan spenne over flere behandlinger uansett status
+                    sakListe.stream()
+                            .filter(e -> sak.getSaksnummer().equals(e.getSaksnummer()))
+                            .forEach(e -> dto.leggTilBarn(e.getAktørIdBarn()));
 
-            hentIkkeHenlagteBehandlingIder(sak.getSaksnummer()).forEach(elem -> {
-                String href = linkPathBehandling + elem;
-                dto.leggTilLenke(href, "behandlinger");
-            });
+                    hentIkkeHenlagteBehandlingIder(sak.getSaksnummer()).forEach(elem -> {
+                        String href = linkPathBehandling + elem;
+                        dto.leggTilLenke(href, "behandlinger");
+                    });
 
-            dokumentForsendelseRepository.hentFagsakRelasjon(sak.getSaksnummer()).ifPresent(up -> {
-                String href = linkPathUttaksplan + sak.getSaksnummer();
-                dto.leggTilLenke(href, "uttaksplan");
-            });
-            return dto;
-        }).collect(Collectors.toList());
+                    dokumentForsendelseRepository.hentFagsakRelasjon(sak.getSaksnummer()).ifPresent(up -> {
+                        String href = linkPathUttaksplan + sak.getSaksnummer();
+                        dto.leggTilLenke(href, "uttaksplan");
+                    });
+                    return dto;
+                }).collect(Collectors.toList());
     }
 
-    private SøknadXmlDto mapTilSøknadXml(List<MottattDokument> dokumenter) {
+    private Optional<SøknadXmlDto> mapTilSøknadXml(List<MottattDokument> dokumenter) {
         // Noen søknader er lagret i to innslag hvor ett innslag har XML payload og det andre har journalpostId
         if (dokumenter.size() == 2) {
-            return SøknadXmlDto.fraDomene(dokumenter.get(0), dokumenter.get(1));
+            return Optional.of(SøknadXmlDto.fraDomene(dokumenter.get(0), dokumenter.get(1)));
         }
-        return SøknadXmlDto.fraDomene(dokumenter.get(0));
+        return dokumenter.stream().findFirst().map(SøknadXmlDto::fraDomene);
     }
 
     interface DokumentforsendelseFeil extends DeklarerteFeil {

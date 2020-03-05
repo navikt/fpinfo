@@ -7,10 +7,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import no.nav.foreldrepenger.info.tjenester.dto.SøknadXmlDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,7 +65,7 @@ public class DokumentforsendelseTjenesteImplTest {
     @Test
     public void skalKonvertereBehandlingTilDtoOgUtledeBehandlingTema() {
         when(mockRepository.hentBehandling(BEHANDLING_ID)).thenReturn(lagBehandling());
-        when(mockRepository.harSøknad(BEHANDLING_ID)).thenReturn(true);
+        when(mockRepository.hentMottattDokument(BEHANDLING_ID)).thenReturn(lagDokument());
 
         BehandlingDto dto = tjeneste.hentBehandling(new BehandlingIdDto(BEHANDLING_ID.toString()), LINK_PATH_SØKNAD);
         assertThat(dto.getType()).isEqualTo(FAGSAK_YTELSE_TYPE);
@@ -81,10 +83,19 @@ public class DokumentforsendelseTjenesteImplTest {
     @Test
     public void skalIkkeLageLenkerSøknadSomIkkeFinnes() {
         when(mockRepository.hentBehandling(BEHANDLING_ID)).thenReturn(lagBehandling());
-        when(mockRepository.harSøknad(BEHANDLING_ID)).thenReturn(false);
+        when(mockRepository.hentMottattDokument(BEHANDLING_ID)).thenReturn(Collections.emptyList());
 
         BehandlingDto dto = tjeneste.hentBehandling(new BehandlingIdDto(BEHANDLING_ID.toString()), LINK_PATH_SØKNAD);
 
+        assertThat(dto.getLenker()).isEmpty();
+    }
+
+    @Test
+    public void skalIkkeLageLenkeTilSøknadSomIkkeErRelevant() {
+        when(mockRepository.hentBehandling(BEHANDLING_ID)).thenReturn(lagBehandling());
+        when(mockRepository.hentMottattDokument(BEHANDLING_ID)).thenReturn(lagDokument(DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD));
+
+        BehandlingDto dto = tjeneste.hentBehandling(new BehandlingIdDto(BEHANDLING_ID.toString()), LINK_PATH_SØKNAD);
         assertThat(dto.getLenker()).isEmpty();
     }
 
@@ -145,16 +156,23 @@ public class DokumentforsendelseTjenesteImplTest {
                 .build();
     }
 
+    private List<MottattDokument> lagDokument() {
+        return lagDokument(DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL);
+    }
+
+    private List<MottattDokument> lagDokument(DokumentTypeId type) {
+        return List.of(dokumentBuilder()
+                .medForsendelseId(UUID.randomUUID())
+                .medType(type.getVerdi())
+                .build());
+    }
+
     private List<MottattDokument> lagDokumenter(UUID forsendelseId, int antall, boolean medBehandling) {
         List<MottattDokument> dokumenter = new ArrayList<>();
         while (antall > 0) {
             antall--;
-            MottattDokument.Builder builder = MottattDokument.builder()
-                    .medBehandlingStatus(BEHANDLING_STATUS)
+            var builder = dokumentBuilder()
                     .medForsendelseId(forsendelseId)
-                    .medJournalpostId(JOURNALPOST_ID)
-                    .medMottattDokumentId(DOKUMENT_ID)
-                    .medSøknadXml(XML_CLOB)
                     .medType(DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL.getVerdi());
             if (medBehandling) {
                 builder.medBehandlingId(BEHANDLING_ID + antall);
@@ -162,5 +180,13 @@ public class DokumentforsendelseTjenesteImplTest {
             dokumenter.add(builder.build());
         }
         return dokumenter;
+    }
+
+    private MottattDokument.Builder dokumentBuilder() {
+        return MottattDokument.builder()
+                .medBehandlingStatus(BEHANDLING_STATUS)
+                .medJournalpostId(JOURNALPOST_ID)
+                .medMottattDokumentId(DOKUMENT_ID)
+                .medSøknadXml(XML_CLOB);
     }
 }
