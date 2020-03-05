@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.swing.text.html.Option;
 
 import no.nav.foreldrepenger.info.domene.Saksnummer;
 import org.slf4j.Logger;
@@ -205,7 +204,8 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
     private ForsendelseStatusDataDTO getForsendelseStatusDataDTO(Behandling behandling, UUID forsendelseId) {
         ForsendelseStatusDataDTO forsendelseStatusDataDTO;
         String behandlingStatus = behandling.getBehandlingStatus();
-        if (behandlingStatus.equals(BehandlingStatus.AVSLUTTET.getVerdi()) || behandlingStatus.equals(BehandlingStatus.IVERKSETTER_VEDTAK.getVerdi())) {
+        if (behandlingStatus.equals(BehandlingStatus.AVSLUTTET.getVerdi())
+                || behandlingStatus.equals(BehandlingStatus.IVERKSETTER_VEDTAK.getVerdi())) {
 
             String resultat = behandling.getBehandlingResultatType();
             if (resultat.equals(BehandlingResultatType.INNVILGET.getVerdi())
@@ -234,25 +234,27 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
     }
 
     private List<SakStatusDto> mapTilSakStatusDtoListe(List<SakStatus> sakListe, String linkPathBehandling, String linkPathUttaksplan) {
-        return sakListe.stream().filter(distinct(SakStatus::getSaksnummer)).map(sak -> {
-            SakStatusDto dto = SakStatusDto.fraDomene(sak);
+        return sakListe.stream()
+                .filter(distinct(SakStatus::getSaksnummer))
+                .map(sak -> {
+                    SakStatusDto dto = SakStatusDto.fraDomene(sak);
 
-            // Alle barn som gjelder denne saken, kan spenne over flere behandlinger uansett status
-            sakListe.stream()
-                    .filter(e -> sak.getSaksnummer().equals(e.getSaksnummer()))
-                    .forEach(e -> dto.leggTilBarn(e.getAktørIdBarn()));
+                    // Alle barn som gjelder denne saken, kan spenne over flere behandlinger uansett status
+                    sakListe.stream()
+                            .filter(e -> sak.getSaksnummer().equals(e.getSaksnummer()))
+                            .forEach(e -> dto.leggTilBarn(e.getAktørIdBarn()));
 
-            hentIkkeHenlagteBehandlingIder(sak.getSaksnummer()).forEach(elem -> {
-                String href = linkPathBehandling + elem;
-                dto.leggTilLenke(href, "behandlinger");
-            });
+                    hentIkkeHenlagteBehandlingIder(sak.getSaksnummer()).forEach(elem -> {
+                        String href = linkPathBehandling + elem;
+                        dto.leggTilLenke(href, "behandlinger");
+                    });
 
-            dokumentForsendelseRepository.hentFagsakRelasjon(sak.getSaksnummer()).ifPresent(up -> {
-                String href = linkPathUttaksplan + sak.getSaksnummer();
-                dto.leggTilLenke(href, "uttaksplan");
-            });
-            return dto;
-        }).collect(Collectors.toList());
+                    dokumentForsendelseRepository.hentFagsakRelasjon(sak.getSaksnummer()).ifPresent(up -> {
+                        String href = linkPathUttaksplan + sak.getSaksnummer();
+                        dto.leggTilLenke(href, "uttaksplan");
+                    });
+                    return dto;
+                }).collect(Collectors.toList());
     }
 
     private SøknadXmlDto mapTilSøknadXml(List<MottattDokument> dokumenter) {
