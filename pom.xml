@@ -43,7 +43,7 @@
         <mockito.version>3.3.3</mockito.version>
         <ojdbc.version>19.3.0.0</ojdbc.version>
 
-        <!-- Transitive avh. versjoner for å sikre unikhet (enforcer dependencyConvergence). 
+        <!-- Transitive avh. versjoner for å sikre unikhet (enforcer dependencyConvergence).
             Skal ikke benyttes direkte av vår egen kode. -->
         <apache.ws.xmlschema.version>2.2.2</apache.ws.xmlschema.version>
         <joda-time.version>2.10.5</joda-time.version>
@@ -179,17 +179,17 @@
                 <version>${geronimo.osgi.version}</version>
             </dependency>
 
-            <!-- Transitive avh. versjoner for å sikre unikhet (enforcer 
+            <!-- Transitive avh. versjoner for å sikre unikhet (enforcer
                 dependencyConvergence). Skal ikke benyttes direkte av vår egen kode. -->
             <dependency>
-                <!-- Transitive avhengighet resolution for å sikre bestemt 
+                <!-- Transitive avhengighet resolution for å sikre bestemt
                     versjon -->
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
                 <version>${joda-time.version}</version>
             </dependency>
             <dependency>
-                <!-- Transitive avhengighet resolution for å sikre bestemt 
+                <!-- Transitive avhengighet resolution for å sikre bestemt
                     versjon -->
                 <groupId>org.owasp.encoder</groupId>
                 <artifactId>encoder</artifactId>
@@ -505,9 +505,9 @@
                                     </excludes>
                                 </bannedDependencies>
                                 <dependencyConvergence />
-                                <!-- Ikke kommenter inn denne. Det brekker 
-                                    muligheten til å bygge bare deler av prosjektet https://issues.apache.org/jira/browse/MENFORCER-189 
-                                    -> "ReactorModuleConvergence is not compatible with 'advanced' reactor options: 
+                                <!-- Ikke kommenter inn denne. Det brekker
+                                    muligheten til å bygge bare deler av prosjektet https://issues.apache.org/jira/browse/MENFORCER-189
+                                    -> "ReactorModuleConvergence is not compatible with 'advanced' reactor options:
                                     -pl, -rf" <reactorModuleConvergence /> -->
                             </rules>
                         </configuration>
@@ -524,7 +524,7 @@
 
     <distributionManagement>
         <repository>
-            <id>fpfordel</id>
+            <id>fpinfo</id>
             <name>Github navikt Maven Packages</name>
             <url>https://maven.pkg.github.com/navikt/fpinfo</url>
         </repository>

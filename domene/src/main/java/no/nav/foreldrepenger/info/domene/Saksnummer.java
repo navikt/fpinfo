@@ -16,9 +16,7 @@ public class Saksnummer {
 
     @Override
     public String toString() {
-        return "Saksnummer{" +
-                "saksnummer='" + saksnummer + '\'' +
-                '}';
+        return "saksnummer " + saksnummer;
     }
 
     @Override

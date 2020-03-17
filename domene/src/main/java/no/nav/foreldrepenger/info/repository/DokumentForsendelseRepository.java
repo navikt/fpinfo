@@ -29,7 +29,7 @@ public interface DokumentForsendelseRepository {
 
     List<UttakPeriode> hentUttakPerioder(Long behandlingId);
 
-    SøknadsGrunnlag hentSøknadsGrunnlag(Long behandlingId);
+    Optional<SøknadsGrunnlag> hentSøknadsGrunnlag(Long behandlingId);
 
     Optional<Long> hentGjeldendeBehandling(Saksnummer saksnummer);
 

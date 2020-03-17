@@ -25,9 +25,7 @@ public interface DokumentforsendelseTjeneste {
 
     Optional<ForsendelseStatusDataDTO> hentStatusInformasjon(ForsendelseIdDto forsendelseIdDto);
 
-    List<UttaksPeriodeDto> hentFellesUttaksplan(SaksnummerDto saksnummerDto, boolean hentForAnnenPart);
+    Optional<SøknadsGrunnlagDto> hentSøknadsgrunnlag(SaksnummerDto saksnummerDto, boolean erAnnenPart);
 
-    SøknadsGrunnlagDto hentSøknadsgrunnlag(SaksnummerDto saksnummerDto, boolean erAnnenPart);
-
-    SøknadsGrunnlagDto hentSøknadAnnenPart(AktørIdDto aktørIdBrukerDto, AktørAnnenPartDto aktørAnnenPartDto);
+    Optional<SøknadsGrunnlagDto> hentSøknadAnnenPart(AktørIdDto aktørIdBrukerDto, AktørAnnenPartDto aktørAnnenPartDto);
 }

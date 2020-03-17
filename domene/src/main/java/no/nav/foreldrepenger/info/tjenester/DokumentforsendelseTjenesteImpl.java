@@ -39,12 +39,6 @@ import no.nav.foreldrepenger.info.tjenester.dto.SaksnummerDto;
 import no.nav.foreldrepenger.info.tjenester.dto.SøknadXmlDto;
 import no.nav.foreldrepenger.info.tjenester.dto.SøknadsGrunnlagDto;
 import no.nav.foreldrepenger.info.tjenester.dto.UttaksPeriodeDto;
-import no.nav.vedtak.feil.Feil;
-import no.nav.vedtak.feil.FeilFactory;
-import no.nav.vedtak.feil.LogLevel;
-import no.nav.vedtak.feil.deklarasjon.DeklarerteFeil;
-import no.nav.vedtak.feil.deklarasjon.TekniskFeil;
-import no.nav.vedtak.felles.jpa.TomtResultatException;
 
 @ApplicationScoped
 class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
@@ -112,13 +106,11 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
         return Optional.ofNullable(forsendelseStatusDataDTO);
     }
 
-    @Override
-    public List<UttaksPeriodeDto> hentFellesUttaksplan(SaksnummerDto saksnummerDto, boolean erAnnenPart) {
-        String saksnummer = saksnummerDto.getSaksnummer();
-        LOGGER.info("Henter felles uttaksplan basert på saksnummer {}", saksnummerDto.getSaksnummer());
-        Optional<FagsakRelasjon> fagsakRelasjonOptional = dokumentForsendelseRepository.hentFagsakRelasjon(saksnummerDto.getSaksnummer());
+    private List<UttaksPeriodeDto> hentFellesUttaksplan(Saksnummer saksnummer, boolean erAnnenPart) {
+        LOGGER.info("Henter felles uttaksplan basert på {}", saksnummer);
+        Optional<FagsakRelasjon> fagsakRelasjonOptional = dokumentForsendelseRepository.hentFagsakRelasjon(saksnummer.asString());
         if (fagsakRelasjonOptional.isEmpty()) {
-            LOGGER.info("Fant ingen uttaksplan for saksnummer {}", saksnummerDto.getSaksnummer());
+            LOGGER.info("Fant ingen uttaksplan for {}", saksnummer);
             return Collections.emptyList();
         }
 
@@ -133,32 +125,24 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
                     .map(up -> UttaksPeriodeDto.fraDomene(saksnummer, up, !erAnnenPart))
                     .forEach(fellesPlan::add);
         }
-        LOGGER.info("Returnererer uttaksplan med {} perioder for saksnummer {}", fellesPlan.size(), saksnummerDto.getSaksnummer());
+        LOGGER.info("Returnererer uttaksplan med {} perioder for saksnummer {}", fellesPlan.size(), saksnummer.asString());
         return fellesPlan;
     }
 
     private List<UttakPeriode> hentUttakPerioder(Saksnummer saksnummer) {
-        var gjeldendeBehandling = getGjeldendeBehandlingId(saksnummer);
-        return gjeldendeBehandling
+        return getGjeldendeBehandlingId(saksnummer)
                 .map(gb -> dokumentForsendelseRepository.hentUttakPerioder(gb))
-                .orElse(List.of());
+                .orElse(Collections.emptyList());
     }
 
     @Override
-    public SøknadsGrunnlagDto hentSøknadsgrunnlag(SaksnummerDto saksnummerDto, boolean erAnnenPart) {
-        var saksnummer = new Saksnummer(saksnummerDto.getSaksnummer());
-        var gjeldendeBehandling = getGjeldendeBehandlingId(saksnummer);
-        if (gjeldendeBehandling.isEmpty()) {
-            throw DokumentforsendelseFeil.FACTORY.kanIkkeLageSøknadsgrunnlag(saksnummer.toString()).toException();
-        }
-        var søknadsGrunnlag = dokumentForsendelseRepository.hentSøknadsGrunnlag(gjeldendeBehandling.get());
-        var uttaksplan = hentFellesUttaksplan(saksnummerDto, erAnnenPart);
-        LOGGER.info("Henter søknadsgrunnlag for saksnummer {}. Gjeldende vedtak er {}. Antall uttaksperioder i felles plan er {}.",
-                saksnummer.asString(), gjeldendeBehandling.get(), uttaksplan.size());
-        return SøknadsGrunnlagDto
-                .fraDomene(saksnummer, søknadsGrunnlag)
-                .medUttaksPerioder(uttaksplan);
-
+    public Optional<SøknadsGrunnlagDto> hentSøknadsgrunnlag(SaksnummerDto saksnummerDto, boolean erAnnenPart) {
+        Saksnummer saksnummer = new Saksnummer(saksnummerDto.getSaksnummer());
+        return getGjeldendeBehandlingId(saksnummer)
+                .flatMap(dokumentForsendelseRepository::hentSøknadsGrunnlag)
+                .map(sg -> SøknadsGrunnlagDto
+                        .fraDomene(saksnummer, sg)
+                        .medUttaksPerioder(hentFellesUttaksplan(saksnummer, erAnnenPart)));
     }
 
     private Optional<Long> getGjeldendeBehandlingId(Saksnummer saksnummer) {
@@ -166,21 +150,17 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
         if (behandlingId.isEmpty()) {
             LOGGER.info("Finner ingen gjeldende behandlingId for saksnummer " + saksnummer.asString());
         } else {
-            LOGGER.info("Bruker behandlingId: " + behandlingId.get());
+            LOGGER.info("Bruker gjeldende behandlingId: " + behandlingId.get());
         }
         return behandlingId;
     }
 
     @Override
-    public SøknadsGrunnlagDto hentSøknadAnnenPart(AktørIdDto aktørIdBrukerDto, AktørAnnenPartDto aktørAnnenPartDto) {
+    public Optional<SøknadsGrunnlagDto> hentSøknadAnnenPart(AktørIdDto aktørIdBrukerDto, AktørAnnenPartDto aktørAnnenPartDto) {
         Optional<SakStatus> sakAnnenPart = dokumentForsendelseRepository.finnNyesteSakForAnnenPart(aktørIdBrukerDto.getAktørId(), aktørAnnenPartDto.getAnnenPartAktørId());
-        if (sakAnnenPart.isEmpty()) {
-            throw DokumentforsendelseFeil.FACTORY.kanIkkeLageSøknadsgrunnlag(aktørAnnenPartDto.toString()).toException();
-        }
-        SakStatus sak = sakAnnenPart.get();
-        var grunnlag = hentSøknadsgrunnlag(new SaksnummerDto(sak.getSaksnummer()), true);
-        grunnlag.setAnnenPartFraSak(sak.getAktørIdAnnenPart());
-        return grunnlag;
+        Optional<SøknadsGrunnlagDto> søknadsgrunnlag = sakAnnenPart.flatMap(sap -> hentSøknadsgrunnlag(new SaksnummerDto(sap.getSaksnummer()), true));
+        søknadsgrunnlag.ifPresent(sg -> sg.setAnnenPartFraSak(sakAnnenPart.get().getAktørIdAnnenPart()));
+        return søknadsgrunnlag;
     }
 
     @Override
@@ -194,7 +174,6 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
 
     private Set<Long> hentIkkeHenlagteBehandlingIder(String saksnummer) {
         List<Behandling> behandlinger = dokumentForsendelseRepository.hentTilknyttedeBehandlinger(saksnummer);
-
         return behandlinger.stream()
                 .filter(behandling -> !behandling.erHenlagt())
                 .map(Behandling::getBehandlingId)
@@ -263,19 +242,6 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
             return Optional.of(SøknadXmlDto.fraDomene(dokumenter.get(0), dokumenter.get(1)));
         }
         return dokumenter.stream().findFirst().map(SøknadXmlDto::fraDomene);
-    }
-
-    interface DokumentforsendelseFeil extends DeklarerteFeil {
-        DokumentforsendelseFeil FACTORY = FeilFactory.create(DokumentforsendelseFeil.class);
-
-        @TekniskFeil(feilkode = "FP-782451", feilmelding = "Fant ingen søknader for behandling: %s", logLevel = LogLevel.WARN, exceptionClass = TomtResultatException.class)
-        Feil fantIkkeSøknadForBehandling(Long behandlingId);
-
-        @TekniskFeil(feilkode = "FP-356326", feilmelding = "Fant ingen vedtak for behandling: %s", logLevel = LogLevel.INFO, exceptionClass = TomtResultatException.class)
-        Feil fantIkkeVedtakForBehandling(Long behandlingId);
-
-        @TekniskFeil(feilkode = "FP-356327", feilmelding = "Fant ingen ferdige behandlinger, kan ikke bygge søknadsgrunnlag: %s", logLevel = LogLevel.INFO, exceptionClass = TomtResultatException.class)
-        Feil kanIkkeLageSøknadsgrunnlag(String markør);
     }
 
     private static <T> Predicate<T> distinct(Function<? super T, ?> key) {
