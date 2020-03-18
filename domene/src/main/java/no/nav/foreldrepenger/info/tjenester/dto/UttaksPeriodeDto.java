@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import no.nav.foreldrepenger.info.abac.AppAbacAttributtType;
+import no.nav.foreldrepenger.info.domene.Saksnummer;
 import no.nav.foreldrepenger.info.domene.UttakPeriode;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
@@ -59,10 +60,10 @@ public class UttaksPeriodeDto implements AbacDto {
         return this;
     }
 
-    public static UttaksPeriodeDto fraDomene(String saksnummer, UttakPeriode uttakPeriode, boolean gjelderAnnenPart) {
+    public static UttaksPeriodeDto fraDomene(Saksnummer saksnummer, UttakPeriode uttakPeriode, boolean gjelderAnnenPart) {
         UttaksPeriodeDto dto = new UttaksPeriodeDto();
         dto.gjelderAnnenPart = gjelderAnnenPart;
-        dto.saksnummer = saksnummer;
+        dto.saksnummer = saksnummer.asString();
         dto.periodeResultatType = dash2null(uttakPeriode.getPeriodeResultatType());
         dto.fom = uttakPeriode.getFom();
         dto.tom = uttakPeriode.getTom();

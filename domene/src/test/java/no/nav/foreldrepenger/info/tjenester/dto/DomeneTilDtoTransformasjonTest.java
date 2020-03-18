@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import no.nav.foreldrepenger.info.domene.Saksnummer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -157,7 +158,7 @@ public class DomeneTilDtoTransformasjonTest {
                 .withArbeidsgiverAktørId(null)
                 .withArbeidsgiverAktørId("11111111")
                 .build();
-        UttaksPeriodeDto uttaksPeriodeDto = UttaksPeriodeDto.fraDomene("1", uttakPeriode, false);
+        UttaksPeriodeDto uttaksPeriodeDto = UttaksPeriodeDto.fraDomene(new Saksnummer("1"), uttakPeriode, false);
         System.out.println(uttaksPeriodeDto);
 
         assertThat(uttaksPeriodeDto.getMorsAktivitet()).isEqualTo(null);

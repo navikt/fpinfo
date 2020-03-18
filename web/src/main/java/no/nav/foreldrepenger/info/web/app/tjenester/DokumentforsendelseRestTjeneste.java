@@ -116,7 +116,7 @@ public class DokumentforsendelseRestTjeneste {
     @Operation(description = "Url for å hente søknadsgrunnlag og felles uttaksplan", summary = "Returnerer grunnlagsinfo og liste av uttaksperioder for begge parter", responses = {
             @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SøknadsGrunnlagDto.class)), responseCode = "200", description = "Returnerer søknad XML")
     })
-    public SøknadsGrunnlagDto hentSøknadsgrunnlag(
+    public Optional<SøknadsGrunnlagDto> hentSøknadsgrunnlag(
             @NotNull @QueryParam("saksnummer") @Parameter(name = "saksnummer") @Valid SaksnummerDto saksnummerDto) {
         return dokumentForsendelseTjenester.hentSøknadsgrunnlag(saksnummerDto, false);
     }
@@ -127,8 +127,7 @@ public class DokumentforsendelseRestTjeneste {
     @Operation(description = "Url for å hente søknadsgrunnlag og felles uttaksplan", summary = "Returnerer grunnlagsinfo og liste av uttaksperioder for begge parter", responses = {
             @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SøknadsGrunnlagDto.class)), responseCode = "200", description = "Returnerer søknad XML")
     })
-
-    public SøknadsGrunnlagDto hentGrunnlagForAnnenPart(
+    public Optional<SøknadsGrunnlagDto> hentGrunnlagForAnnenPart(
             @NotNull @QueryParam("aktorIdBruker") @Parameter(name = "aktorId") @Valid AktørIdDto aktørIdBrukerDto,
             @NotNull @QueryParam("aktorIdAnnenPart") @Parameter(name = "aktorId") @Valid AktørAnnenPartDto aktørAnnenPartDto) {
         return dokumentForsendelseTjenester.hentSøknadAnnenPart(aktørIdBrukerDto, aktørAnnenPartDto);

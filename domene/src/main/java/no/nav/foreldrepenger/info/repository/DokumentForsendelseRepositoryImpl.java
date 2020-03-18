@@ -55,15 +55,10 @@ public class DokumentForsendelseRepositoryImpl implements DokumentForsendelseRep
     }
 
     @Override
-    public SøknadsGrunnlag hentSøknadsGrunnlag(Long behandlingId) {
+    public Optional<SøknadsGrunnlag> hentSøknadsGrunnlag(Long behandlingId) {
         TypedQuery<SøknadsGrunnlag> query = entityManager.createQuery("from SøknadsGrunnlag where behandlingId=:behandlingId", SøknadsGrunnlag.class);
         query.setParameter("behandlingId", behandlingId);
-
-        SøknadsGrunnlag søknadsGrunnlag = query.getResultList().stream().reduce((first, second) -> second).orElse(null);
-        if (søknadsGrunnlag == null) {
-            throw DokumentForsendelseRepositoryFeil.FACTORY.fantIkkeSøknadsgrunnlagForBehandling(behandlingId).toException();
-        }
-        return søknadsGrunnlag;
+        return query.getResultList().stream().reduce((first, second) -> second);
     }
 
     @Override

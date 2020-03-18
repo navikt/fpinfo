@@ -46,21 +46,9 @@ public class DokumentforsendelseTjenesteImplTest {
     private static final String DOKUMENT_ID = "1234";
     private static final String JOURNALPOST_ID = "1234";
     private static final String LINK_PATH_SØKNAD = "/søknad?param=";
-    private static final Long UKJENT_BEHANDLING_ID = 987L;
-
-    private DokumentforsendelseTjeneste tjeneste;
-
     @Mock
     private DokumentForsendelseRepository mockRepository = mock(DokumentForsendelseRepository.class);
-
-    @BeforeEach
-    public void setUp() {
-        tjeneste = new DokumentforsendelseTjenesteImpl(mockRepository);
-
-        when(mockRepository.hentBehandling(UKJENT_BEHANDLING_ID))
-                .thenThrow(DokumentforsendelseTjenesteImpl.DokumentforsendelseFeil.FACTORY
-                        .fantIkkeSøknadForBehandling(UKJENT_BEHANDLING_ID).toException());
-    }
+    private DokumentforsendelseTjeneste tjeneste = new DokumentforsendelseTjenesteImpl(mockRepository);
 
     @Test
     public void skalKonvertereBehandlingTilDtoOgUtledeBehandlingTema() {
