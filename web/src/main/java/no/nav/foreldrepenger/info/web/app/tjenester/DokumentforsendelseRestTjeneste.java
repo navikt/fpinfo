@@ -116,9 +116,10 @@ public class DokumentforsendelseRestTjeneste {
     @Operation(description = "Url for å hente søknadsgrunnlag og felles uttaksplan", summary = "Returnerer grunnlagsinfo og liste av uttaksperioder for begge parter", responses = {
             @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SøknadsGrunnlagDto.class)), responseCode = "200", description = "Returnerer søknad XML")
     })
-    public Optional<SøknadsGrunnlagDto> hentSøknadsgrunnlag(
+    public Response hentSøknadsgrunnlag(
             @NotNull @QueryParam("saksnummer") @Parameter(name = "saksnummer") @Valid SaksnummerDto saksnummerDto) {
-        return dokumentForsendelseTjenester.hentSøknadsgrunnlag(saksnummerDto, false);
+        var dto = dokumentForsendelseTjenester.hentSøknadsgrunnlag(saksnummerDto, false);
+        return dto.map(d -> Response.ok(d).build()).orElse(Response.noContent().build());
     }
 
     @GET
@@ -127,9 +128,11 @@ public class DokumentforsendelseRestTjeneste {
     @Operation(description = "Url for å hente søknadsgrunnlag og felles uttaksplan", summary = "Returnerer grunnlagsinfo og liste av uttaksperioder for begge parter", responses = {
             @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SøknadsGrunnlagDto.class)), responseCode = "200", description = "Returnerer søknad XML")
     })
-    public Optional<SøknadsGrunnlagDto> hentGrunnlagForAnnenPart(
+    public Response hentGrunnlagForAnnenPart(
             @NotNull @QueryParam("aktorIdBruker") @Parameter(name = "aktorId") @Valid AktørIdDto aktørIdBrukerDto,
             @NotNull @QueryParam("aktorIdAnnenPart") @Parameter(name = "aktorId") @Valid AktørAnnenPartDto aktørAnnenPartDto) {
-        return dokumentForsendelseTjenester.hentSøknadAnnenPart(aktørIdBrukerDto, aktørAnnenPartDto);
+        var søknadsGrunnlagDto = dokumentForsendelseTjenester.hentSøknadAnnenPart(aktørIdBrukerDto, aktørAnnenPartDto);
+        return søknadsGrunnlagDto.map(d -> Response.ok(d).build()).orElse(Response.noContent().build());
     }
+
 }
