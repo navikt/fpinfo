@@ -6,6 +6,7 @@
     "serviceuserkv": "/serviceuser/data/dev/srvfpinfo",
     "namespace": "q1",
     "ingresses": [
+        "https://fpinfo.dev-fss.nais.io",
         "https://fpinfo-q1.nais.preprod.local"
     ],
     "env": {

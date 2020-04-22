@@ -6,6 +6,7 @@
     "serviceuserkv": "/serviceuser/data/prod/srvfpinfo",
     "namespace": "default",
     "ingresses": [
+        "https://fpinfo.prod-fss.nais.io",
         "https://fpinfo.nais.adeo.no"
     ],
     "env": {
