@@ -12,8 +12,6 @@ select
     ub.FOEDSEL_DATO             as FOEDSEL_DATO,
     f.BRUKER_ROLLE              as BRUKER_ROLLE,
     fr.DEKNINGSGRAD             as DEKNINGSGRAD,
-    rt.ALENEOMSORG              as ALENEOMSORG, -- fjern i contract
-    rt.ANNEN_FORELDRE_RETT      as ANNEN_FORELDRE_RETT, -- fjern i contract
     fp.MORS_AKTIVITET           as MORS_AKTIVITET_UFOERE,
     yf.ANNENFORELDERERINFORMERT as ANNENFORELDERERINFORMERT
 from ${fpinfo.fpsak.schema.navn}.BEHANDLING b
@@ -21,7 +19,6 @@ from ${fpinfo.fpsak.schema.navn}.BEHANDLING b
          join ${fpinfo.fpsak.schema.navn}.FH_FAMILIE_HENDELSE h on h.ID = coalesce(grfh.OVERSTYRT_FAMILIE_HENDELSE_ID, grfh.BEKREFTET_FAMILIE_HENDELSE_ID, grfh.SOEKNAD_FAMILIE_HENDELSE_ID)
          join ${fpinfo.fpsak.schema.navn}.GR_YTELSES_FORDELING gryf on gryf.BEHANDLING_ID = b.ID and gryf.AKTIV = 'J'
          join ${fpinfo.fpsak.schema.navn}.YF_FORDELING yf ON gryf.SO_FORDELING_ID = yf.ID
-         join ${fpinfo.fpsak.schema.navn}.SO_RETTIGHET rt on gryf.SO_RETTIGHET_ID = rt.ID -- fjern i contract
          join ${fpinfo.fpsak.schema.navn}.FAGSAK f on B.FAGSAK_ID = f.ID
          join ${fpinfo.fpsak.schema.navn}.FAGSAK_RELASJON fr on f.ID in (fr.FAGSAK_EN_ID, fr.FAGSAK_TO_ID) and fr.AKTIV = 'J'
          left join ${fpinfo.fpsak.schema.navn}.YF_FORDELING_PERIODE fp on fp.FORDELING_ID = coalesce(gryf.overstyrt_fordeling_id, gryf.justert_fordeling_id, gryf.SO_FORDELING_ID) and fp.MORS_AKTIVITET = 'UFØRE'
