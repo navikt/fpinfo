@@ -13,11 +13,14 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Immutable;
 
 import no.nav.foreldrepenger.info.felles.datatyper.BehandlingResultatType;
+import no.nav.vedtak.util.env.Environment;
 
 @Entity(name = "Behandling")
 @Table(name = "BEHANDLING")
 @Immutable
 public class Behandling extends BaseEntitet {
+
+    private static final Environment ENV = Environment.current();
 
     @Id
     @Column(name = "BEHANDLING_ID")
@@ -46,7 +49,6 @@ public class Behandling extends BaseEntitet {
 
     @Column(name = "BEHANDLING_ARSAK")
     private String behandlingÅrsak;
-
 
     @OneToMany(mappedBy = "behandlingId")
     private List<Aksjonspunkt> aksjonspunkter = new ArrayList<>(1);
@@ -100,6 +102,9 @@ public class Behandling extends BaseEntitet {
     }
 
     public Boolean erHenlagt() {
+        if (!ENV.isProd()) {
+            return false;
+        }
         return BehandlingResultatType.HENLAGT_BRUKER_DØD.getVerdi().equalsIgnoreCase(behandlingResultatType) ||
                 BehandlingResultatType.HENLAGT_FEILOPPRETTET.getVerdi().equalsIgnoreCase(behandlingResultatType) ||
                 BehandlingResultatType.HENLAGT_KLAGE_TRUKKET.getVerdi().equalsIgnoreCase(behandlingResultatType) ||
