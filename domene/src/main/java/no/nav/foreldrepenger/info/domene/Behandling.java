@@ -102,9 +102,6 @@ public class Behandling extends BaseEntitet {
     }
 
     public Boolean erHenlagt() {
-        if (!ENV.isProd()) {
-            return false;
-        }
         return BehandlingResultatType.HENLAGT_BRUKER_DØD.getVerdi().equalsIgnoreCase(behandlingResultatType) ||
                 BehandlingResultatType.HENLAGT_FEILOPPRETTET.getVerdi().equalsIgnoreCase(behandlingResultatType) ||
                 BehandlingResultatType.HENLAGT_KLAGE_TRUKKET.getVerdi().equalsIgnoreCase(behandlingResultatType) ||

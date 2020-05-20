@@ -13,17 +13,17 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.info.domene.Saksnummer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.sf.ehcache.util.concurrent.ConcurrentHashMap;
 import no.nav.foreldrepenger.info.domene.Aksjonspunkt;
 import no.nav.foreldrepenger.info.domene.Behandling;
+import no.nav.foreldrepenger.info.domene.FagsakRelasjon;
 import no.nav.foreldrepenger.info.domene.MottattDokument;
 import no.nav.foreldrepenger.info.domene.SakStatus;
+import no.nav.foreldrepenger.info.domene.Saksnummer;
 import no.nav.foreldrepenger.info.domene.UttakPeriode;
-import no.nav.foreldrepenger.info.domene.FagsakRelasjon;
 import no.nav.foreldrepenger.info.felles.datatyper.BehandlingResultatType;
 import no.nav.foreldrepenger.info.felles.datatyper.BehandlingStatus;
 import no.nav.foreldrepenger.info.repository.DokumentForsendelseRepository;
@@ -45,7 +45,6 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DokumentforsendelseTjenesteImpl.class);
     private DokumentForsendelseRepository dokumentForsendelseRepository;
-
 
     public DokumentforsendelseTjenesteImpl() {
         // FOR CDI Proxy
@@ -74,7 +73,8 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
     @Override
     public Optional<SøknadXmlDto> hentSøknadXml(BehandlingIdDto behandlingIdDto) {
         LOGGER.info("henter søknad for behandling {}", behandlingIdDto.getBehandlingId());
-        var mottatteDokumenter = dokumentForsendelseRepository.hentMottattDokument(behandlingIdDto.getBehandlingId()).stream()
+        var mottatteDokumenter = dokumentForsendelseRepository.hentMottattDokument(behandlingIdDto.getBehandlingId())
+                .stream()
                 .filter(MottattDokument::erSøknad)
                 .collect(Collectors.toList());
         return Optional.of(mottatteDokumenter).flatMap(this::mapTilSøknadXml);
@@ -91,13 +91,15 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
             LOGGER.info("Fant ingen dokumenter for forsendelse {}", forsendelseId);
             return Optional.empty();
         }
-        Set<Long> behandlingsIder = mottatteDokumenter.stream().map(MottattDokument::getBehandlingId).filter(Objects::nonNull).collect(Collectors.toSet());
+        Set<Long> behandlingsIder = mottatteDokumenter.stream().map(MottattDokument::getBehandlingId)
+                .filter(Objects::nonNull).collect(Collectors.toSet());
         if (behandlingsIder.isEmpty()) {
             LOGGER.info("Returnerer MOTTATT for forsendelse {}", forsendelseId);
             return Optional.of(new ForsendelseStatusDataDTO(ForsendelseStatus.MOTTATT));
         }
         if (behandlingsIder.size() > 1) {
-            throw DokumentforsendelseTjenesteFeil.FACTORY.flereBehandlingerForForsendelsen(behandlingsIder, forsendelseId).toException();
+            throw DokumentforsendelseTjenesteFeil.FACTORY
+                    .flereBehandlingerForForsendelsen(behandlingsIder, forsendelseId).toException();
         }
 
         Behandling behandling = dokumentForsendelseRepository.hentBehandling(behandlingsIder.iterator().next());
@@ -108,7 +110,8 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
 
     private List<UttaksPeriodeDto> hentFellesUttaksplan(Saksnummer saksnummer, boolean erAnnenPart) {
         LOGGER.info("Henter felles uttaksplan basert på {}", saksnummer);
-        Optional<FagsakRelasjon> fagsakRelasjonOptional = dokumentForsendelseRepository.hentFagsakRelasjon(saksnummer.asString());
+        Optional<FagsakRelasjon> fagsakRelasjonOptional = dokumentForsendelseRepository
+                .hentFagsakRelasjon(saksnummer.asString());
         if (fagsakRelasjonOptional.isEmpty()) {
             LOGGER.info("Fant ingen uttaksplan for {}", saksnummer);
             return Collections.emptyList();
@@ -125,7 +128,8 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
                     .map(up -> UttaksPeriodeDto.fraDomene(saksnummer, up, !erAnnenPart))
                     .forEach(fellesPlan::add);
         }
-        LOGGER.info("Returnererer uttaksplan med {} perioder for saksnummer {}", fellesPlan.size(), saksnummer.asString());
+        LOGGER.info("Returnererer uttaksplan med {} perioder for saksnummer {}", fellesPlan.size(),
+                saksnummer.asString());
         return fellesPlan;
     }
 
@@ -156,15 +160,19 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
     }
 
     @Override
-    public Optional<SøknadsGrunnlagDto> hentSøknadAnnenPart(AktørIdDto aktørIdBrukerDto, AktørAnnenPartDto aktørAnnenPartDto) {
-        Optional<SakStatus> sakAnnenPart = dokumentForsendelseRepository.finnNyesteSakForAnnenPart(aktørIdBrukerDto.getAktørId(), aktørAnnenPartDto.getAnnenPartAktørId());
-        Optional<SøknadsGrunnlagDto> søknadsgrunnlag = sakAnnenPart.flatMap(sap -> hentSøknadsgrunnlag(new SaksnummerDto(sap.getSaksnummer()), true));
+    public Optional<SøknadsGrunnlagDto> hentSøknadAnnenPart(AktørIdDto aktørIdBrukerDto,
+            AktørAnnenPartDto aktørAnnenPartDto) {
+        Optional<SakStatus> sakAnnenPart = dokumentForsendelseRepository
+                .finnNyesteSakForAnnenPart(aktørIdBrukerDto.getAktørId(), aktørAnnenPartDto.getAnnenPartAktørId());
+        Optional<SøknadsGrunnlagDto> søknadsgrunnlag = sakAnnenPart
+                .flatMap(sap -> hentSøknadsgrunnlag(new SaksnummerDto(sap.getSaksnummer()), true));
         søknadsgrunnlag.ifPresent(sg -> sg.setAnnenPartFraSak(sakAnnenPart.get().getAktørIdAnnenPart()));
         return søknadsgrunnlag;
     }
 
     @Override
-    public List<SakStatusDto> hentSakStatus(AktørIdDto aktørIdDto, String linkPathBehandling, String linkPathUttaksplan) {
+    public List<SakStatusDto> hentSakStatus(AktørIdDto aktørIdDto, String linkPathBehandling,
+            String linkPathUttaksplan) {
         LOGGER.info("Henter sakstatus");
         List<SakStatus> sakListe = dokumentForsendelseRepository.hentSakStatus(aktørIdDto.getAktørId());
         List<SakStatusDto> statusListe = mapTilSakStatusDtoListe(sakListe, linkPathBehandling, linkPathUttaksplan);
@@ -172,10 +180,10 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
         return statusListe;
     }
 
-    private Set<Long> hentIkkeHenlagteBehandlingIder(String saksnummer) {
+    private Set<Long> hentBehandlingIder(String saksnummer) {
         List<Behandling> behandlinger = dokumentForsendelseRepository.hentTilknyttedeBehandlinger(saksnummer);
         return behandlinger.stream()
-                .filter(behandling -> !behandling.erHenlagt())
+                // .filter(behandling -> !behandling.erHenlagt())
                 .map(Behandling::getBehandlingId)
                 .collect(Collectors.toSet());
     }
@@ -195,7 +203,8 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
                 forsendelseStatusDataDTO = new ForsendelseStatusDataDTO(ForsendelseStatus.AVSLÅTT);
             } else if (resultat.equals(BehandlingResultatType.MERGET_OG_HENLAGT.getVerdi())) {
                 // FIXME: finnes ikke funksjonalitet for å håndtere MERGET_OG_HENLAGT
-                LOGGER.info("Behandlingsresultat er {}, fpinfo ser ikke videre på denne", BehandlingResultatType.MERGET_OG_HENLAGT.getVerdi());
+                LOGGER.info("Behandlingsresultat er {}, fpinfo ser ikke videre på denne",
+                        BehandlingResultatType.MERGET_OG_HENLAGT.getVerdi());
                 forsendelseStatusDataDTO = null;
             } else {
                 throw DokumentforsendelseTjenesteFeil.FACTORY.ugyldigBehandlingResultat(forsendelseId).toException();
@@ -212,18 +221,20 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
         return forsendelseStatusDataDTO;
     }
 
-    private List<SakStatusDto> mapTilSakStatusDtoListe(List<SakStatus> sakListe, String linkPathBehandling, String linkPathUttaksplan) {
+    private List<SakStatusDto> mapTilSakStatusDtoListe(List<SakStatus> sakListe, String linkPathBehandling,
+            String linkPathUttaksplan) {
         return sakListe.stream()
                 .filter(distinct(SakStatus::getSaksnummer))
                 .map(sak -> {
                     SakStatusDto dto = SakStatusDto.fraDomene(sak);
 
-                    // Alle barn som gjelder denne saken, kan spenne over flere behandlinger uansett status
+                    // Alle barn som gjelder denne saken, kan spenne over flere behandlinger uansett
+                    // status
                     sakListe.stream()
                             .filter(e -> sak.getSaksnummer().equals(e.getSaksnummer()))
                             .forEach(e -> dto.leggTilBarn(e.getAktørIdBarn()));
 
-                    hentIkkeHenlagteBehandlingIder(sak.getSaksnummer()).forEach(elem -> {
+                    hentBehandlingIder(sak.getSaksnummer()).forEach(elem -> {
                         String href = linkPathBehandling + elem;
                         dto.leggTilLenke(href, "behandlinger");
                     });
@@ -237,7 +248,8 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
     }
 
     private Optional<SøknadXmlDto> mapTilSøknadXml(List<MottattDokument> dokumenter) {
-        // Noen søknader er lagret i to innslag hvor ett innslag har XML payload og det andre har journalpostId
+        // Noen søknader er lagret i to innslag hvor ett innslag har XML payload og det
+        // andre har journalpostId
         if (dokumenter.size() == 2) {
             return Optional.of(SøknadXmlDto.fraDomene(dokumenter.get(0), dokumenter.get(1)));
         }
