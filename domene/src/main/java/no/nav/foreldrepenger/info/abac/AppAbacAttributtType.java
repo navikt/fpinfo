@@ -7,8 +7,7 @@ public enum AppAbacAttributtType implements AbacAttributtType {
 
     FORSENDELSE_UUID("forsendelseUuid"),
     ANNEN_PART("annen_part"),
-    OPPGITT_ALENEOMSORG("oppgitt_aleneomsorg")
-    ;
+    OPPGITT_ALENEOMSORG("oppgitt_aleneomsorg");
 
     public static AbacAttributtType AKTØR_ID = StandardAbacAttributtType.AKTØR_ID;
 

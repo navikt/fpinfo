@@ -11,8 +11,9 @@ import no.nav.vedtak.sikkerhet.context.SubjectHandler;
 /**
  * SubjectHandler som kan benyttes til testing lokalt på Jetty.
  * <p/>
- * For å benytte denne subjecthandleren må følgende konfigureres i oppstart av Jetty:
- * {@link SubjectHandlerUtils#useSubjectHandler(JettySubjectHandler .class)}
+ * For å benytte denne subjecthandleren må følgende konfigureres i oppstart av
+ * Jetty: {@link SubjectHandlerUtils#useSubjectHandler(JettySubjectHandler
+ * .class)}
  *
  * @see SubjectHandler
  */
@@ -22,7 +23,8 @@ public class JettySubjectHandler extends SubjectHandler {
 
     @Override
     public Subject getSubject() {
-        HttpConnection httpConnection = HttpConnection.getCurrentConnection(); // NOSONAR kan ikke closes i denne metoden
+        HttpConnection httpConnection = HttpConnection.getCurrentConnection(); // NOSONAR kan ikke closes i denne
+                                                                               // metoden
         if (httpConnection != null) {
             hentSubjectFraRequest(httpConnection);
         }
@@ -33,7 +35,7 @@ public class JettySubjectHandler extends SubjectHandler {
         subjectHolder.set(subject);
     }
 
-    private void hentSubjectFraRequest(HttpConnection httpConnection) {
+    private static void hentSubjectFraRequest(HttpConnection httpConnection) {
         Request request = httpConnection.getHttpChannel().getRequest();
         Authentication authentication = request.getAuthentication();
 

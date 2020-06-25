@@ -12,9 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.info.tjenester.dto.SøknadXmlDto;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
@@ -81,7 +79,8 @@ public class DokumentforsendelseTjenesteImplTest {
     @Test
     public void skalIkkeLageLenkeTilSøknadSomIkkeErRelevant() {
         when(mockRepository.hentBehandling(BEHANDLING_ID)).thenReturn(lagBehandling());
-        when(mockRepository.hentMottattDokument(BEHANDLING_ID)).thenReturn(lagDokument(DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD));
+        when(mockRepository.hentMottattDokument(BEHANDLING_ID))
+                .thenReturn(lagDokument(DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD));
 
         BehandlingDto dto = tjeneste.hentBehandling(new BehandlingIdDto(BEHANDLING_ID.toString()), LINK_PATH_SØKNAD);
         assertThat(dto.getLenker()).isEmpty();
@@ -132,7 +131,7 @@ public class DokumentforsendelseTjenesteImplTest {
                 () -> tjeneste.hentStatusInformasjon(new ForsendelseIdDto(fid.toString())));
     }
 
-    private Behandling lagBehandling() {
+    private static Behandling lagBehandling() {
         return Behandling.builder()
                 .medBehandlingId(BEHANDLING_ID)
                 .medBehandlingStatus(BEHANDLING_STATUS)
@@ -144,18 +143,18 @@ public class DokumentforsendelseTjenesteImplTest {
                 .build();
     }
 
-    private List<MottattDokument> lagDokument() {
+    private static List<MottattDokument> lagDokument() {
         return lagDokument(DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL);
     }
 
-    private List<MottattDokument> lagDokument(DokumentTypeId type) {
+    private static List<MottattDokument> lagDokument(DokumentTypeId type) {
         return List.of(dokumentBuilder()
                 .medForsendelseId(UUID.randomUUID())
                 .medType(type.getVerdi())
                 .build());
     }
 
-    private List<MottattDokument> lagDokumenter(UUID forsendelseId, int antall, boolean medBehandling) {
+    private static List<MottattDokument> lagDokumenter(UUID forsendelseId, int antall, boolean medBehandling) {
         List<MottattDokument> dokumenter = new ArrayList<>();
         while (antall > 0) {
             antall--;
@@ -170,7 +169,7 @@ public class DokumentforsendelseTjenesteImplTest {
         return dokumenter;
     }
 
-    private MottattDokument.Builder dokumentBuilder() {
+    private static MottattDokument.Builder dokumentBuilder() {
         return MottattDokument.builder()
                 .medBehandlingStatus(BEHANDLING_STATUS)
                 .medJournalpostId(JOURNALPOST_ID)

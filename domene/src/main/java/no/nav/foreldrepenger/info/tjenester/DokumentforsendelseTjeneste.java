@@ -13,7 +13,6 @@ import no.nav.foreldrepenger.info.tjenester.dto.SakStatusDto;
 import no.nav.foreldrepenger.info.tjenester.dto.SaksnummerDto;
 import no.nav.foreldrepenger.info.tjenester.dto.SøknadXmlDto;
 import no.nav.foreldrepenger.info.tjenester.dto.SøknadsGrunnlagDto;
-import no.nav.foreldrepenger.info.tjenester.dto.UttaksPeriodeDto;
 
 public interface DokumentforsendelseTjeneste {
 

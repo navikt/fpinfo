@@ -19,8 +19,8 @@ public class SelftestsJsonSerializerModuleTest {
     private ObjectMapper objectMapper;
 
     @BeforeEach
-    public void setup() throws IOException {
-        objectMapper = (new ObjectMapper()).registerModule(new SelftestsJsonSerializerModule());
+    public void setup() {
+        objectMapper = new ObjectMapper().registerModule(new SelftestsJsonSerializerModule());
     }
 
     @Test
@@ -36,7 +36,7 @@ public class SelftestsJsonSerializerModuleTest {
         assertThat(json.contains("http://ws.nav.no")).isTrue();
     }
 
-    private SelftestResultat createPopulatedOverallResult() {
+    private static SelftestResultat createPopulatedOverallResult() {
         SelftestResultat samletResultat = new SelftestResultat();
 
         samletResultat.setApplication("myapp");

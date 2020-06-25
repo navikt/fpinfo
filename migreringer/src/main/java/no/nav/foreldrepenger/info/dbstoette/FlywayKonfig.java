@@ -24,7 +24,6 @@ public final class FlywayKonfig {
         return new FlywayKonfig(dataSource);
     }
 
-
     public FlywayKonfig medSqlLokasjon(String sqlLokasjon) {
         this.sqlLokasjon = sqlLokasjon;
         return this;
@@ -39,8 +38,8 @@ public final class FlywayKonfig {
             flyway.setLocations(sqlLokasjon);
         } else {
             /**
-             * Default leter flyway etter classpath:db/migration.
-             * Her vet vi at vi ikke skal lete i classpath
+             * Default leter flyway etter classpath:db/migration. Her vet vi at vi ikke skal
+             * lete i classpath
              */
             flyway.setLocations("denne/stien/finnes/ikke");
         }
@@ -56,7 +55,7 @@ public final class FlywayKonfig {
         }
     }
 
-    private Properties lesFlywayPlaceholders() {
+    private static Properties lesFlywayPlaceholders() {
         Properties placeholders = new Properties();
         for (String prop : System.getProperties().stringPropertyNames()) {
             if (prop.startsWith("flyway.placeholders.")) {

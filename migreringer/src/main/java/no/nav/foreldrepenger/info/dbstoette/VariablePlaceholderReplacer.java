@@ -8,7 +8,7 @@ public final class VariablePlaceholderReplacer {
     private static final String PLACEHOLDER_SUFFIX = "}";
     private static final Environment ENV = Environment.current();
 
-    public String replacePlaceholders(String placeHolder) {
+    public static String replacePlaceholders(String placeHolder) {
         return sjekk(ENV.getProperty(placeHolder
                 .replace(PLACEHOLDER_PREFIX, "")
                 .replace(PLACEHOLDER_SUFFIX, ""),

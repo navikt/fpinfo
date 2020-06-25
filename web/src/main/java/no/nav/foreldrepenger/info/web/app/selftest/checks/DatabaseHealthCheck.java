@@ -111,14 +111,14 @@ public class DatabaseHealthCheck extends ExtHealthCheck {
         return results.isEmpty() ? Optional.empty() : Optional.of(results);
     }
 
-    private InternalResult opprettInternalResult(String message, Exception feil) {
+    private static InternalResult opprettInternalResult(String message, Exception feil) {
         InternalResult internalResult = new InternalResult();
         internalResult.setMessage(message);
         internalResult.setException(feil);
         return internalResult;
     }
 
-    private String extractEndpoint(Connection connection) {
+    private static String extractEndpoint(Connection connection) {
         String result = "?";
         try {
             DatabaseMetaData metaData = connection.getMetaData();
@@ -129,7 +129,7 @@ public class DatabaseHealthCheck extends ExtHealthCheck {
                 }
                 result = url;
             }
-        } catch (SQLException e) { // NOSONAR
+        } catch (SQLException e) {
             // ikke fatalt
         }
         return result;

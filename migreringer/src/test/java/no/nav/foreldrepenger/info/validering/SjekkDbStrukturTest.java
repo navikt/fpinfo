@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.info.validering;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assume.assumeTrue;
 
-import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -50,19 +49,19 @@ public class SjekkDbStrukturTest {
     }
 
     @BeforeClass
-    public static void setup() throws FileNotFoundException {
+    public static void setup() {
         Databaseskjemainitialisering.migrerUnittestSkjemaer();
 
-        List<no.nav.foreldrepenger.info.dbstoette.DBConnectionProperties> dbConnectionProperties = DatasourceConfiguration.UNIT_TEST.get();
+        List<no.nav.foreldrepenger.info.dbstoette.DBConnectionProperties> dbConnectionProperties = DatasourceConfiguration.UNIT_TEST
+                .get();
 
         dbConnectionProperties.forEach(e -> {
-            //bør ikke ta med fpsak
+            // bør ikke ta med fpsak
             if (!e.getSchema().toLowerCase().contains("fpsak") || !e.getSchema().equalsIgnoreCase("vl_dba")) {
                 datasourceSchemas.add(new DatasourceSchema(ConnectionHandler.opprettFra(e, e.getSchema()), e));
             }
         });
     }
-
 
     @Test
     public void sjekk_at_alle_tabeller_er_dokumentert() throws Exception {
@@ -135,7 +134,6 @@ public class SjekkDbStrukturTest {
         }
     }
 
-
     @Test
     public void skal_ikke_bruke_FLOAT_eller_DOUBLE() throws Exception {
         for (DatasourceSchema datasourceSchema : datasourceSchemas) {
@@ -143,16 +141,17 @@ public class SjekkDbStrukturTest {
         }
     }
 
-    private void println() {
-        System.out.print("\n\n-------------------------------------------------------------------------------------------------------------------\n");
+    private static void println() {
+        System.out.print(
+                "\n\n-------------------------------------------------------------------------------------------------------------------\n");
     }
 
-    private void sjekkTabellerDokumentert(DatasourceSchema schema) throws SQLException {
+    private static void sjekkTabellerDokumentert(DatasourceSchema schema) throws SQLException {
         String sql = "SELECT table_name FROM all_tab_comments WHERE (comments IS NULL OR comments in ('', 'MISSING COLUMN COMMENT')) AND owner=sys_context('userenv', 'current_schema') AND table_name NOT LIKE 'schema_%' AND table_name not like '%_MOCK'";
         List<String> avvik = new ArrayList<>();
         try (Connection conn = schema.dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 avvik.add(rs.getString(1));
@@ -160,11 +159,10 @@ public class SjekkDbStrukturTest {
 
         }
 
-        assertThat(avvik).containsOnly(
-        );
+        assertThat(avvik).containsOnly();
     }
 
-    private void sjekkRelevanteKolonner(DatasourceSchema schema) throws SQLException {
+    private static void sjekkRelevanteKolonner(DatasourceSchema schema) throws SQLException {
         List<String> avvik = new ArrayList<>();
 
         String sql = "SELECT t.table_name||'.'||t.column_name "
@@ -184,8 +182,8 @@ public class SjekkDbStrukturTest {
                 + " ORDER BY t.table_name, t.column_name ";
 
         try (Connection conn = schema.dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 avvik.add("\n" + rs.getString(1));
@@ -201,14 +199,17 @@ public class SjekkDbStrukturTest {
 
         assumeTrue(error, avvik.size() == 0); // Fjerne denne når denne ikke
         // lenger ignorerer
-        assertThat(avvik).withFailMessage("Mangler dokumentasjon for %s kolonner. %s\n %s i skjema %s", avvik.size(), avvik, HJELP, schema.schema.getSchema()).isEmpty();
+        assertThat(avvik).withFailMessage("Mangler dokumentasjon for %s kolonner. %s\n %s i skjema %s", avvik.size(),
+                avvik, HJELP, schema.schema.getSchema()).isEmpty();
     }
 
-    private void sjekkIndekser(DatasourceSchema schema) throws SQLException {
+    private static void sjekkIndekser(DatasourceSchema schema) throws SQLException {
         String sql = "SELECT "
-                + "  uc.table_name, uc.constraint_name, LISTAGG(dcc.column_name, ',') WITHIN GROUP (ORDER BY dcc.position) as columns" +
+                + "  uc.table_name, uc.constraint_name, LISTAGG(dcc.column_name, ',') WITHIN GROUP (ORDER BY dcc.position) as columns"
+                +
                 " FROM all_Constraints Uc" +
-                "   INNER JOIN all_cons_columns dcc ON dcc.constraint_name  =uc.constraint_name AND dcc.owner=uc.owner" +
+                "   INNER JOIN all_cons_columns dcc ON dcc.constraint_name  =uc.constraint_name AND dcc.owner=uc.owner"
+                +
                 " WHERE Uc.Constraint_Type='R'" +
                 "   AND Uc.Owner            = upper(?)" +
                 "   AND Dcc.Column_Name NOT LIKE 'KL_%'" +
@@ -230,7 +231,7 @@ public class SjekkDbStrukturTest {
         List<String> avvik = new ArrayList<>();
         StringBuilder tekst = new StringBuilder();
         try (Connection conn = schema.dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);) {
+                PreparedStatement stmt = conn.prepareStatement(sql);) {
 
             stmt.setString(1, schema.schema.getSchema());
 
@@ -245,15 +246,17 @@ public class SjekkDbStrukturTest {
 
         }
         int sz = avvik.size();
-        String manglerIndeks = "Kolonner som inngår i Foreign Keys skal ha indeker (ikke KL_ kolonner).\nMangler indekser for (gjelder skjema " + schema.schema.getSchema() + ")";
+        String manglerIndeks = "Kolonner som inngår i Foreign Keys skal ha indeker (ikke KL_ kolonner).\nMangler indekser for (gjelder skjema "
+                + schema.schema.getSchema() + ")";
 
         assertThat(avvik).withFailMessage(manglerIndeks + sz + " foreign keys\n" + tekst).isEmpty();
     }
 
-    private void sjekkKLPrefiks(DatasourceSchema schema) throws SQLException {
+    private static void sjekkKLPrefiks(DatasourceSchema schema) throws SQLException {
         String sql = "Select cola.table_name, cola.column_name From All_Constraints Uc  " +
                 "Inner Join All_Cons_Columns Cola On Cola.Constraint_Name=Uc.Constraint_Name And Cola.Owner=Uc.Owner " +
-                "Inner Join All_Cons_Columns Colb On Colb.Constraint_Name=Uc.r_Constraint_Name And Colb.Owner=Uc.Owner " +
+                "Inner Join All_Cons_Columns Colb On Colb.Constraint_Name=Uc.r_Constraint_Name And Colb.Owner=Uc.Owner "
+                +
                 " " +
                 "Where Uc.Constraint_Type='R' And Uc.Owner= upper(?) " +
                 "And Colb.Column_Name='KODEVERK' And Colb.Table_Name='KODELISTE' " +
@@ -264,7 +267,7 @@ public class SjekkDbStrukturTest {
         List<String> avvik = new ArrayList<>();
         StringBuilder tekst = new StringBuilder();
         try (Connection conn = schema.dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);) {
+                PreparedStatement stmt = conn.prepareStatement(sql);) {
 
             stmt.setString(1, schema.schema.getSchema());
 
@@ -280,37 +283,47 @@ public class SjekkDbStrukturTest {
         }
 
         int sz = avvik.size();
-        String feilTekst = "Feil i skjema " + schema.schema.getSchema() + ". Feil navn på kolonner som refererer KODELISTE, skal ha 'KL_' prefiks. Antall feil=";
+        String feilTekst = "Feil i skjema " + schema.schema.getSchema()
+                + ". Feil navn på kolonner som refererer KODELISTE, skal ha 'KL_' prefiks. Antall feil=";
 
         assertThat(avvik).withFailMessage(feilTekst + sz + ".\n\nTabell, kolonne\n" + tekst).isEmpty();
     }
 
-    private void sjekkVirtualColumnDefinition(DatasourceSchema schema) throws SQLException {
-        String sql = "SELECT T.TABLE_NAME, T.CONSTRAINT_NAME, LISTAGG(COLC.COLUMN_NAME, ',') WITHIN GROUP (ORDER BY COLC.POSITION) AS COLUMNS FROM ALL_CONSTRAINTS T\n" +
-                "INNER JOIN ALL_CONS_COLUMNS COLC ON COLC.CONSTRAINT_NAME=T.CONSTRAINT_NAME AND COLC.TABLE_NAME = T.TABLE_NAME AND COLC.OWNER=T.OWNER \n" +
+    private static void sjekkVirtualColumnDefinition(DatasourceSchema schema) throws SQLException {
+        String sql = "SELECT T.TABLE_NAME, T.CONSTRAINT_NAME, LISTAGG(COLC.COLUMN_NAME, ',') WITHIN GROUP (ORDER BY COLC.POSITION) AS COLUMNS FROM ALL_CONSTRAINTS T\n"
+                +
+                "INNER JOIN ALL_CONS_COLUMNS COLC ON COLC.CONSTRAINT_NAME=T.CONSTRAINT_NAME AND COLC.TABLE_NAME = T.TABLE_NAME AND COLC.OWNER=T.OWNER \n"
+                +
                 "WHERE T.OWNER = UPPER(?) AND COLC.OWNER = UPPER(?) \n" +
                 "AND EXISTS\n" +
                 "  (SELECT 1 FROM ALL_CONSTRAINTS UC\n" +
-                "    INNER JOIN ALL_CONS_COLUMNS COLA ON COLA.CONSTRAINT_NAME=UC.CONSTRAINT_NAME AND COLA.OWNER =UC.OWNER \n" +
-                "    INNER JOIN ALL_CONS_COLUMNS COLB ON COLB.CONSTRAINT_NAME=UC.R_CONSTRAINT_NAME AND COLB.OWNER =UC.OWNER AND COLB.OWNER=UC.OWNER AND COLB.OWNER=COLA.OWNER\n" +
-                "    INNER JOIN ALL_TAB_COLS AT ON AT.COLUMN_NAME       =COLA.COLUMN_NAME AND AT.TABLE_NAME       =COLA.TABLE_NAME AND AT.OWNER =COLA.OWNER\n" +
-                "    WHERE UC.CONSTRAINT_TYPE=T.CONSTRAINT_TYPE AND UC.CONSTRAINT_NAME = T.CONSTRAINT_NAME AND UC.OWNER = T.OWNER\n" +
-                "      AND COLA.TABLE_NAME = T.TABLE_NAME AND T.TABLE_NAME=COLA.TABLE_NAME AND COLA.owner=T.OWNER AND COLA.CONSTRAINT_NAME=T.CONSTRAINT_NAME AND COLB.OWNER=T.OWNER \n" +
-                "      AND COLB.COLUMN_NAME    ='KODEVERK' AND COLB.TABLE_NAME ='KODELISTE' AND COLB.POSITION =COLA.POSITION\n" +
+                "    INNER JOIN ALL_CONS_COLUMNS COLA ON COLA.CONSTRAINT_NAME=UC.CONSTRAINT_NAME AND COLA.OWNER =UC.OWNER \n"
+                +
+                "    INNER JOIN ALL_CONS_COLUMNS COLB ON COLB.CONSTRAINT_NAME=UC.R_CONSTRAINT_NAME AND COLB.OWNER =UC.OWNER AND COLB.OWNER=UC.OWNER AND COLB.OWNER=COLA.OWNER\n"
+                +
+                "    INNER JOIN ALL_TAB_COLS AT ON AT.COLUMN_NAME       =COLA.COLUMN_NAME AND AT.TABLE_NAME       =COLA.TABLE_NAME AND AT.OWNER =COLA.OWNER\n"
+                +
+                "    WHERE UC.CONSTRAINT_TYPE=T.CONSTRAINT_TYPE AND UC.CONSTRAINT_NAME = T.CONSTRAINT_NAME AND UC.OWNER = T.OWNER\n"
+                +
+                "      AND COLA.TABLE_NAME = T.TABLE_NAME AND T.TABLE_NAME=COLA.TABLE_NAME AND COLA.owner=T.OWNER AND COLA.CONSTRAINT_NAME=T.CONSTRAINT_NAME AND COLB.OWNER=T.OWNER \n"
+                +
+                "      AND COLB.COLUMN_NAME    ='KODEVERK' AND COLB.TABLE_NAME ='KODELISTE' AND COLB.POSITION =COLA.POSITION\n"
+                +
                 "      AND COLA.TABLE_NAME NOT LIKE 'KODELI%'\n" +
                 "      AND AT.VIRTUAL_COLUMN='NO'\n" +
-                "      AND UC.OWNER = UPPER(?) AND AT.OWNER = UPPER(?) AND COLA.OWNER = UPPER(?) AND COLB.OWNER = UPPER(?) \n" +
+                "      AND UC.OWNER = UPPER(?) AND AT.OWNER = UPPER(?) AND COLA.OWNER = UPPER(?) AND COLB.OWNER = UPPER(?) \n"
+                +
                 "  )\n" +
                 "\n" +
                 "GROUP BY T.TABLE_NAME, T.CONSTRAINT_NAME\n" +
                 "ORDER BY 1, 2";
 
-        //System.out.println(sql);
+        // System.out.println(sql);
 
         List<String> avvik = new ArrayList<>();
         StringBuilder tekst = new StringBuilder();
         try (Connection conn = schema.dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);) {
+                PreparedStatement stmt = conn.prepareStatement(sql);) {
 
             String schema1 = schema.schema.getSchema();
             stmt.setString(1, schema1);
@@ -343,17 +356,18 @@ public class SjekkDbStrukturTest {
         }
 
         int sz = avvik.size();
-        String feilTekst = "Feil i skjema " + schema.schema.getSchema() + ". Feil definisjon på kolonner som refererer KODELISTE, definieres som virtual column, ikke med default eller annet. Antall feil=";
+        String feilTekst = "Feil i skjema " + schema.schema.getSchema()
+                + ". Feil definisjon på kolonner som refererer KODELISTE, definieres som virtual column, ikke med default eller annet. Antall feil=";
 
         assertThat(avvik).withFailMessage(feilTekst + sz + ".\n\nTabell, kolonne\n" + tekst).isEmpty();
     }
 
-    private boolean ignoreColumn(String table, String cols) {
-        String[][] ignored = new String[][]{
-                {"IAY_INNTEKTSPOST", "KL_YTELSE_TYPE"},
-                {"YF_FORDELING_PERIODE", "KL_AARSAK_TYPE"},
-                {"UTTAK_RESULTAT_PERIODE", "KL_PERIODE_RESULTAT_AARSAK"},
-                {"GAMMEL_UTTAK_RESULTAT_PERIODE", "KL_AARSAK_TYPE"}, // TODO(TeamSommerfugl) Fjern denne tabellen herfra
+    private static boolean ignoreColumn(String table, String cols) {
+        String[][] ignored = new String[][] {
+                { "IAY_INNTEKTSPOST", "KL_YTELSE_TYPE" },
+                { "YF_FORDELING_PERIODE", "KL_AARSAK_TYPE" },
+                { "UTTAK_RESULTAT_PERIODE", "KL_PERIODE_RESULTAT_AARSAK" },
+                { "GAMMEL_UTTAK_RESULTAT_PERIODE", "KL_AARSAK_TYPE" },
         };
 
         table = table.toUpperCase(Locale.getDefault());
@@ -367,7 +381,7 @@ public class SjekkDbStrukturTest {
         return false;
     }
 
-    private void sjekkPrimaryKey(DatasourceSchema schema) throws SQLException {
+    private static void sjekkPrimaryKey(DatasourceSchema schema) throws SQLException {
         String sql = "SELECT table_name FROM all_tables at "
                 + " WHERE table_name "
                 + " NOT IN ( SELECT ac.table_name FROM all_constraints ac "
@@ -377,7 +391,7 @@ public class SjekkDbStrukturTest {
         List<String> avvik = new ArrayList<>();
         StringBuilder tekst = new StringBuilder();
         try (Connection conn = schema.dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);) {
+                PreparedStatement stmt = conn.prepareStatement(sql);) {
 
             stmt.setString(1, schema.schema.getSchema());
 
@@ -393,19 +407,20 @@ public class SjekkDbStrukturTest {
         }
 
         int sz = avvik.size();
-        String feilTekst = "Feil i skjema " + schema.schema.getSchema() + ". Feil eller mangelende definisjon av primary key (skal hete 'PK_<tabell navn>'). Antall feil=";
+        String feilTekst = "Feil i skjema " + schema.schema.getSchema()
+                + ". Feil eller mangelende definisjon av primary key (skal hete 'PK_<tabell navn>'). Antall feil=";
 
         assertThat(avvik).withFailMessage(feilTekst + +sz + "\n\nTabell\n" + tekst).isEmpty();
     }
 
-    private void sjekkForeignKeys(DatasourceSchema datasourceSchema) throws SQLException {
+    private static void sjekkForeignKeys(DatasourceSchema datasourceSchema) throws SQLException {
         String sql = "SELECT ac.table_name, ac.constraint_name FROM all_constraints ac"
                 + " WHERE ac.constraint_type ='R' and ac.owner=upper(?) and constraint_name NOT LIKE 'FK_%'";
 
         List<String> avvik = new ArrayList<>();
         StringBuilder tekst = new StringBuilder();
         try (Connection conn = datasourceSchema.dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);) {
+                PreparedStatement stmt = conn.prepareStatement(sql);) {
 
             stmt.setString(1, datasourceSchema.schema.getSchema());
 
@@ -421,12 +436,13 @@ public class SjekkDbStrukturTest {
         }
 
         int sz = avvik.size();
-        String feilTekst = "Feil i skjema " + datasourceSchema.schema.getSchema() + ".Feil eller mangelende definisjon av foreign key (skal hete 'FK_<tabell navn>_<løpenummer>'). Antall feil=";
+        String feilTekst = "Feil i skjema " + datasourceSchema.schema.getSchema()
+                + ".Feil eller mangelende definisjon av foreign key (skal hete 'FK_<tabell navn>_<løpenummer>'). Antall feil=";
 
         assertThat(avvik).withFailMessage(feilTekst + sz + "\n\nTabell, Foreign Key\n" + tekst).isEmpty();
     }
 
-    private void sjekkIndeksNavn(DatasourceSchema datasourceSchema) throws SQLException {
+    private static void sjekkIndeksNavn(DatasourceSchema datasourceSchema) throws SQLException {
         String sql = "select table_name, index_name, column_name"
                 + " from all_ind_columns"
                 + " where table_owner=upper(?)"
@@ -436,7 +452,7 @@ public class SjekkDbStrukturTest {
         List<String> avvik = new ArrayList<>();
         StringBuilder tekst = new StringBuilder();
         try (Connection conn = datasourceSchema.dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);) {
+                PreparedStatement stmt = conn.prepareStatement(sql);) {
 
             stmt.setString(1, datasourceSchema.schema.getSchema());
 
@@ -452,12 +468,13 @@ public class SjekkDbStrukturTest {
         }
 
         int sz = avvik.size();
-        String feilTekst = "Feil i skjema " + datasourceSchema.schema.getSchema() + ". Feil navngiving av index.  Primary Keys skal ha prefiks PK_, andre unike indekser prefiks UIDX_, vanlige indekser prefiks IDX_. Antall feil=";
+        String feilTekst = "Feil i skjema " + datasourceSchema.schema.getSchema()
+                + ". Feil navngiving av index.  Primary Keys skal ha prefiks PK_, andre unike indekser prefiks UIDX_, vanlige indekser prefiks IDX_. Antall feil=";
 
         assertThat(avvik).withFailMessage(feilTekst + +sz + "\n\nTabell, Index, Kolonne\n" + tekst).isEmpty();
     }
 
-    private void sjekkSameDatatypeForFK(DatasourceSchema datasourceSchema) throws SQLException {
+    private static void sjekkSameDatatypeForFK(DatasourceSchema datasourceSchema) throws SQLException {
         String sql = "SELECT T.TABLE_NAME\n" +
                 ", TCC.COLUMN_NAME AS KOL_A\n" +
                 ", ATT.DATA_TYPE AS KOL_A_DATA_TYPE\n" +
@@ -469,27 +486,34 @@ public class SjekkDbStrukturTest {
                 ", atr.CHAR_USED as KOL_B_CHAR_USED\n" +
                 "FROM ALL_CONSTRAINTS T \n" +
                 "INNER JOIN ALL_CONSTRAINTS R ON R.OWNER=T.OWNER AND R.CONSTRAINT_NAME = T.R_CONSTRAINT_NAME\n" +
-                "INNER JOIN ALL_CONS_COLUMNS TCC ON TCC.TABLE_NAME=T.TABLE_NAME AND TCC.OWNER=T.OWNER AND TCC.CONSTRAINT_NAME=T.CONSTRAINT_NAME \n" +
-                "INNER JOIN ALL_CONS_COLUMNS RCC ON RCC.TABLE_NAME = R.TABLE_NAME AND RCC.OWNER=R.OWNER AND RCC.CONSTRAINT_NAME=R.CONSTRAINT_NAME\n" +
-                "INNER JOIN ALL_TAB_COLS ATT ON ATT.COLUMN_NAME=TCC.COLUMN_NAME AND ATT.OWNER=TCC.OWNER AND Att.TABLE_NAME=TCC.TABLE_NAME\n" +
-                "inner join all_tab_cols atr on atr.column_name=rcc.column_name and atr.owner=rcc.owner and atr.table_name=rcc.table_name\n" +
+                "INNER JOIN ALL_CONS_COLUMNS TCC ON TCC.TABLE_NAME=T.TABLE_NAME AND TCC.OWNER=T.OWNER AND TCC.CONSTRAINT_NAME=T.CONSTRAINT_NAME \n"
+                +
+                "INNER JOIN ALL_CONS_COLUMNS RCC ON RCC.TABLE_NAME = R.TABLE_NAME AND RCC.OWNER=R.OWNER AND RCC.CONSTRAINT_NAME=R.CONSTRAINT_NAME\n"
+                +
+                "INNER JOIN ALL_TAB_COLS ATT ON ATT.COLUMN_NAME=TCC.COLUMN_NAME AND ATT.OWNER=TCC.OWNER AND Att.TABLE_NAME=TCC.TABLE_NAME\n"
+                +
+                "inner join all_tab_cols atr on atr.column_name=rcc.column_name and atr.owner=rcc.owner and atr.table_name=rcc.table_name\n"
+                +
                 "WHERE T.OWNER=upper(?) AND T.CONSTRAINT_TYPE='R'\n" +
                 "AND TCC.POSITION = RCC.POSITION\n" +
                 "AND TCC.POSITION IS NOT NULL AND RCC.POSITION IS NOT NULL\n" +
-                "AND ((ATT.DATA_TYPE!=ATR.DATA_TYPE) OR (ATT.CHAR_LENGTH!=ATR.CHAR_LENGTH OR ATT.CHAR_USED!=ATR.CHAR_USED) OR (ATT.DATA_TYPE NOT LIKE '%CHAR%' AND ATT.DATA_LENGTH!=ATR.DATA_LENGTH))\n" +
+                "AND ((ATT.DATA_TYPE!=ATR.DATA_TYPE) OR (ATT.CHAR_LENGTH!=ATR.CHAR_LENGTH OR ATT.CHAR_USED!=ATR.CHAR_USED) OR (ATT.DATA_TYPE NOT LIKE '%CHAR%' AND ATT.DATA_LENGTH!=ATR.DATA_LENGTH))\n"
+                +
                 "ORDER BY T.TABLE_NAME, TCC.COLUMN_NAME";
 
         List<String> avvik = new ArrayList<>();
         StringBuilder tekst = new StringBuilder();
         try (Connection conn = datasourceSchema.dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);) {
+                PreparedStatement stmt = conn.prepareStatement(sql);) {
 
             stmt.setString(1, datasourceSchema.schema.getSchema());
 
             try (ResultSet rs = stmt.executeQuery()) {
 
                 while (rs.next()) {
-                    String t = rs.getString(1) + ", " + rs.getString(2) + ", " + rs.getString(3) + ", " + rs.getString(4) + ", " + rs.getString(5) + ", " + rs.getString(6) + ", " + rs.getString(7) + ", " + rs.getString(8) + ", " + rs.getString(9);
+                    String t = rs.getString(1) + ", " + rs.getString(2) + ", " + rs.getString(3) + ", "
+                            + rs.getString(4) + ", " + rs.getString(5) + ", " + rs.getString(6) + ", " + rs.getString(7)
+                            + ", " + rs.getString(8) + ", " + rs.getString(9);
                     avvik.add(t);
                     tekst.append(t).append("\n");
                 }
@@ -498,13 +522,16 @@ public class SjekkDbStrukturTest {
         }
 
         int sz = avvik.size();
-        String feilTekst = "Feil i skjema " + datasourceSchema.schema.getSchema() + ". Forskjellig datatype for kolonne på hver side av en FK. Kan være deklarert feil (husk VARCHAR2(100 CHAR) og ikke VARCHAR2(100)). Antall feil=";
+        String feilTekst = "Feil i skjema " + datasourceSchema.schema.getSchema()
+                + ". Forskjellig datatype for kolonne på hver side av en FK. Kan være deklarert feil (husk VARCHAR2(100 CHAR) og ikke VARCHAR2(100)). Antall feil=";
         String cols = ".\n\nTABELL, KOL_A, KOL_A_DATA_TYPE, KOL_A_CHAR_LENGTH, KOL_A_CHAR_USED, KOL_B, KOL_B_DATA_TYPE, KOL_B_CHAR_LENGTH, KOL_B_CHAR_USED\n";
 
         assertThat(avvik).withFailMessage(feilTekst + +sz + cols + tekst).isEmpty();
     }
 
-    private void sjekk_at_deklarerer_VARCHAR2_kolonner_som_CHAR_ikke_BYTE_semantikk(DatasourceSchema datasourceSchema) throws SQLException {
+    private static void sjekk_at_deklarerer_VARCHAR2_kolonner_som_CHAR_ikke_BYTE_semantikk(
+            DatasourceSchema datasourceSchema)
+            throws SQLException {
         String sql = "SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE, CHAR_USED, CHAR_LENGTH\n"
                 + "FROM ALL_TAB_COLS\n"
                 + "WHERE DATA_TYPE = 'VARCHAR2'\n"
@@ -514,14 +541,15 @@ public class SjekkDbStrukturTest {
         List<String> avvik = new ArrayList<>();
         StringBuilder tekst = new StringBuilder();
         try (Connection conn = datasourceSchema.dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);) {
+                PreparedStatement stmt = conn.prepareStatement(sql);) {
 
             stmt.setString(1, datasourceSchema.schema.getSchema());
 
             try (ResultSet rs = stmt.executeQuery()) {
 
                 while (rs.next()) {
-                    String t = rs.getString(1) + ", " + rs.getString(2) + ", " + rs.getString(3) + ", " + rs.getString(4) + ", " + rs.getString(5);
+                    String t = rs.getString(1) + ", " + rs.getString(2) + ", " + rs.getString(3) + ", "
+                            + rs.getString(4) + ", " + rs.getString(5);
                     avvik.add(t);
                     tekst.append(t).append("\n");
                 }
@@ -530,19 +558,21 @@ public class SjekkDbStrukturTest {
         }
 
         int sz = avvik.size();
-        String feilTekst = "Feil i skjema " + datasourceSchema.schema.getSchema() + ". Feil deklarasjon av VARCHAR2 kolonne (husk VARCHAR2(100 CHAR) og ikke VARCHAR2(100)). Antall feil=";
+        String feilTekst = "Feil i skjema " + datasourceSchema.schema.getSchema()
+                + ". Feil deklarasjon av VARCHAR2 kolonne (husk VARCHAR2(100 CHAR) og ikke VARCHAR2(100)). Antall feil=";
         String cols = ".\n\nTABELL, KOLONNE, DATA_TYPE, CHAR_USED, CHAR_LENGTH\n";
 
         assertThat(avvik).withFailMessage(feilTekst + +sz + cols + tekst).isEmpty();
     }
 
-    private void sjekk_skal_ikke_bruke_FLOAT_eller_DOUBLE(DatasourceSchema datasourceSchema) throws SQLException {
+    private static void sjekk_skal_ikke_bruke_FLOAT_eller_DOUBLE(DatasourceSchema datasourceSchema)
+            throws SQLException {
         String sql = "select table_name, column_name, data_type from all_tab_cols where owner=upper(?) and data_type in ('FLOAT', 'DOUBLE') order by 1, 2";
 
         List<String> avvik = new ArrayList<>();
         StringBuilder tekst = new StringBuilder();
         try (Connection conn = datasourceSchema.dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);) {
+                PreparedStatement stmt = conn.prepareStatement(sql);) {
 
             stmt.setString(1, datasourceSchema.schema.getSchema());
 
@@ -559,14 +589,15 @@ public class SjekkDbStrukturTest {
 
         int sz = avvik.size();
         println();
-        String feilTekst = "Feil i skjema " + datasourceSchema.schema.getSchema() + ". Feil bruk av datatype, skal ikke ha FLOAT eller DOUBLE (bruk NUMBER for alle desimaltall, spesielt der penger representeres). Antall feil=";
+        String feilTekst = "Feil i skjema " + datasourceSchema.schema.getSchema()
+                + ". Feil bruk av datatype, skal ikke ha FLOAT eller DOUBLE (bruk NUMBER for alle desimaltall, spesielt der penger representeres). Antall feil=";
         System.err.println("\n\n" + feilTekst + sz + ".\n\nTabell, Index, Kolonne, data type\n" + tekst + "\n\n");
 
         assertThat(sz).isLessThanOrEqualTo(17);
 
-        assumeTrue(feilTekst + +sz + "\n\nTabell, Kolonne, Datatype\n" + tekst, sz == 0); // Fjerne denne når denne ikke lenger ignorerer
+        assumeTrue(feilTekst + +sz + "\n\nTabell, Kolonne, Datatype\n" + tekst, sz == 0); // Fjerne denne når denne ikke
+                                                                                          // lenger ignorerer
 
         assertThat(avvik).withFailMessage(feilTekst + +sz + "\n\nTabell, Kolonne, Datatype\n" + tekst).isEmpty();
     }
 }
-

@@ -15,7 +15,8 @@ public class JettyLoginModule implements LoginModule {
     private Subject subject;
 
     @Override
-    public void initialize(Subject subject, CallbackHandler callbackHandler, Map<String, ?> sharedState, Map<String, ?> options) {
+    public void initialize(Subject subject, CallbackHandler callbackHandler, Map<String, ?> sharedState,
+            Map<String, ?> options) {
         this.subject = subject;
     }
 
@@ -42,11 +43,12 @@ public class JettyLoginModule implements LoginModule {
         return true;
     }
 
-    private JettySubjectHandler getSubjectHandler() {
+    private static JettySubjectHandler getSubjectHandler() {
         SubjectHandler subjectHandler = SubjectHandler.getSubjectHandler();
         if (!(subjectHandler instanceof JettySubjectHandler)) {
-            throw new IllegalArgumentException(JettyLoginModule.class.getSimpleName() + " krever subject handler av klasse "
-                    + JettySubjectHandler.class + ", men fikk istedet: " + subjectHandler);
+            throw new IllegalArgumentException(
+                    JettyLoginModule.class.getSimpleName() + " krever subject handler av klasse "
+                            + JettySubjectHandler.class + ", men fikk istedet: " + subjectHandler);
         }
         return (JettySubjectHandler) subjectHandler;
     }

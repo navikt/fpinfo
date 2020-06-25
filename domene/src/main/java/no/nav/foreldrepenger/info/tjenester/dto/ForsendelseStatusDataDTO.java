@@ -13,12 +13,12 @@ public class ForsendelseStatusDataDTO implements AbacDto {
     /**
      * Joark journalpostid.
      */
-    private Long journalpostId;//TODO HUMLE: endre til String
+    private Long journalpostId;// TODO HUMLE: endre til String
 
     /**
      * GSAK Saksnummer. (samme som Fagsak#saksnummer).
      */
-    private Long saksnummer;//TODO HUMLE: endre til String
+    private Long saksnummer;// TODO HUMLE: endre til String
 
     public ForsendelseStatusDataDTO(ForsendelseStatus forsendelseStatus) {
         this.forsendelseStatus = forsendelseStatus;

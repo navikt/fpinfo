@@ -55,7 +55,8 @@ public class JettyDevServer extends JettyServer {
         Files.copy(tempTrustStore.toPath(), truststore.toPath(), StandardCopyOption.REPLACE_EXISTING);
     }
 
-    private static String initCryptoStoreConfig(String storeName, String storeProperty, String storePasswordProperty, String defaultPassword) {
+    private static String initCryptoStoreConfig(String storeName, String storeProperty, String storePasswordProperty,
+            String defaultPassword) {
         String defaultLocation = getProperty("user.home", ".") + "/.modig/" + storeName + ".jks";
 
         String storePath = getProperty(storeProperty, defaultLocation);
@@ -67,7 +68,8 @@ public class JettyDevServer extends JettyServer {
         }
         String password = getProperty(storePasswordProperty, defaultPassword);
         if (password == null) {
-            throw new IllegalStateException("Passord for å aksessere store " + storeName + " i " + storePath + " er null");
+            throw new IllegalStateException(
+                    "Passord for å aksessere store " + storeName + " i " + storePath + " er null");
         }
 
         System.setProperty(storeProperty, storeFile.getAbsolutePath());
@@ -101,7 +103,7 @@ public class JettyDevServer extends JettyServer {
         Databaseskjemainitialisering.migrerSkjemaer(DatasourceConfiguration.JETTY_DEV_WEB_SERVER);
     }
 
-    private void konfigurerLogback() throws IOException {
+    private static void konfigurerLogback() throws IOException {
         new File("./logs").mkdirs();
         System.setProperty("APP_LOG_HOME", "./logs");
         File logbackConfig = PropertiesUtils.lagLogbackConfig();

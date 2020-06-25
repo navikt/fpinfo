@@ -37,7 +37,8 @@ public class XacmlRequestBuilderTjenesteImpl implements XacmlRequestBuilderTjene
         actionAttributeSet.addAttribute(XACML10_ACTION_ACTION_ID, pdpRequest.getString(XACML10_ACTION_ACTION_ID));
         xacmlBuilder.addActionAttributeSet(actionAttributeSet);
 
-        List<Tuple<String, String>> identer = hentIdenter(pdpRequest, RESOURCE_FELLES_PERSON_FNR, RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE);
+        List<Tuple<String, String>> identer = hentIdenter(pdpRequest, RESOURCE_FELLES_PERSON_FNR,
+                RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE);
 
         if (identer.isEmpty()) {
             xacmlBuilder.addResourceAttributeSet(byggRessursAttributter(pdpRequest, null));
@@ -50,12 +51,15 @@ public class XacmlRequestBuilderTjenesteImpl implements XacmlRequestBuilderTjene
         return xacmlBuilder;
     }
 
-    private XacmlAttributeSet byggRessursAttributter(PdpRequest pdpRequest, Tuple<String, String> ident) {
+    private static XacmlAttributeSet byggRessursAttributter(PdpRequest pdpRequest, Tuple<String, String> ident) {
         XacmlAttributeSet resourceAttributeSet = new XacmlAttributeSet();
         resourceAttributeSet.addAttribute(RESOURCE_FELLES_DOMENE, pdpRequest.getString(RESOURCE_FELLES_DOMENE));
-        resourceAttributeSet.addAttribute(RESOURCE_FELLES_RESOURCE_TYPE, pdpRequest.getString(RESOURCE_FELLES_RESOURCE_TYPE));
-        setOptionalValueinAttributeSet(resourceAttributeSet, pdpRequest, AppAbacAttributtType.RESOURCE_FORELDREPENGER_ANNEN_PART);
-        setOptionalValueinAttributeSet(resourceAttributeSet, pdpRequest, AppAbacAttributtType.RESOURCE_FORELDREPENGER_ALENEOMSORG);
+        resourceAttributeSet.addAttribute(RESOURCE_FELLES_RESOURCE_TYPE,
+                pdpRequest.getString(RESOURCE_FELLES_RESOURCE_TYPE));
+        setOptionalValueinAttributeSet(resourceAttributeSet, pdpRequest,
+                AppAbacAttributtType.RESOURCE_FORELDREPENGER_ANNEN_PART);
+        setOptionalValueinAttributeSet(resourceAttributeSet, pdpRequest,
+                AppAbacAttributtType.RESOURCE_FORELDREPENGER_ALENEOMSORG);
 
         if (ident != null) {
             resourceAttributeSet.addAttribute(ident.getElement1(), ident.getElement2());
@@ -64,14 +68,16 @@ public class XacmlRequestBuilderTjenesteImpl implements XacmlRequestBuilderTjene
         return resourceAttributeSet;
     }
 
-    private void setOptionalValueinAttributeSet(XacmlAttributeSet resourceAttributeSet, PdpRequest pdpRequest, String key) {
+    private static void setOptionalValueinAttributeSet(XacmlAttributeSet resourceAttributeSet, PdpRequest pdpRequest,
+            String key) {
         pdpRequest.getOptional(key).ifPresent(s -> resourceAttributeSet.addAttribute(key, s));
     }
 
-    private List<Tuple<String, String>> hentIdenter(PdpRequest pdpRequest, String... identNøkler) {
+    private static List<Tuple<String, String>> hentIdenter(PdpRequest pdpRequest, String... identNøkler) {
         List<Tuple<String, String>> identer = new ArrayList<>();
         for (String key : identNøkler) {
-            identer.addAll(pdpRequest.getListOfString(key).stream().map(it -> new Tuple<>(key, it)).collect(Collectors.toList()));
+            identer.addAll(pdpRequest.getListOfString(key).stream().map(it -> new Tuple<>(key, it))
+                    .collect(Collectors.toList()));
         }
         return identer;
     }

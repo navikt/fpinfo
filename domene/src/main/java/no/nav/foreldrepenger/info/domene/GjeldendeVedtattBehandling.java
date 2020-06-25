@@ -1,11 +1,11 @@
 package no.nav.foreldrepenger.info.domene;
 
-import org.hibernate.annotations.Immutable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Immutable;
 
 @Entity(name = "GjeldendeVedtattBehandling")
 @Table(name = "GJELDENDE_VEDTATT_BEHANDLING")
@@ -30,4 +30,3 @@ public class GjeldendeVedtattBehandling {
         return new Saksnummer(saksnummer);
     }
 }
-

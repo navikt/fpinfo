@@ -1,11 +1,12 @@
 package no.nav.foreldrepenger.info.dbstoette;
 
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
 
 public enum DatasourceConfiguration {
-    UNIT_TEST, DBA, JETTY_DEV_WEB_SERVER;
+    UNIT_TEST,
+    DBA,
+    JETTY_DEV_WEB_SERVER;
 
     private String extension;
 
@@ -21,13 +22,13 @@ public enum DatasourceConfiguration {
         }
     }
 
-    public List<DBConnectionProperties> get() throws FileNotFoundException {
+    public List<DBConnectionProperties> get() {
         String fileName = this.name().toLowerCase() + extension; // NOSONAR
         InputStream io = DatasourceConfiguration.class.getClassLoader().getResourceAsStream(fileName);
         return DBConnectionProperties.fraStream(io);
     }
 
-    public List<DBConnectionProperties> getRaw() throws FileNotFoundException {
+    public List<DBConnectionProperties> getRaw() {
         String fileName = this.name().toLowerCase() + extension; // NOSONAR
         InputStream io = DatasourceConfiguration.class.getClassLoader().getResourceAsStream(fileName);
         return DBConnectionProperties.rawFraStream(io);

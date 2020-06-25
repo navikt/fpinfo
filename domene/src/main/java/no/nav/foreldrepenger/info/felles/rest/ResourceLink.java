@@ -101,7 +101,7 @@ public class ResourceLink {
     public boolean equals(Object obj) {
         if (obj == this) {
             return true;
-        } else if (obj == null || !this.getClass().equals(obj.getClass())) {
+        } else if ((obj == null) || !this.getClass().equals(obj.getClass())) {
             return false;
         }
         ResourceLink other = (ResourceLink) obj;

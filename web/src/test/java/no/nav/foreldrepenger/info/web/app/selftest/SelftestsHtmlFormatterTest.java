@@ -32,7 +32,7 @@ public class SelftestsHtmlFormatterTest {
         assertThat(html).endsWith("</html>");
     }
 
-    private SelftestResultat createPopulatedOverallResult() {
+    private static SelftestResultat createPopulatedOverallResult() {
         SelftestResultat samletResultat = new SelftestResultat();
 
         samletResultat.setApplication("myapp");

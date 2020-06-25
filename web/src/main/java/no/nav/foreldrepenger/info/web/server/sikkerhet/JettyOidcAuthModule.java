@@ -16,7 +16,8 @@ import no.nav.vedtak.sikkerhet.jaspic.OidcAuthModule;
 
 public class JettyOidcAuthModule extends OidcAuthModule {
 
-    private static final Map<HttpServletRequest, HttpServletRequest> REQUEST_MAP = Collections.synchronizedMap(new IdentityHashMap<>());
+    private static final Map<HttpServletRequest, HttpServletRequest> REQUEST_MAP = Collections
+            .synchronizedMap(new IdentityHashMap<>());
     private static final String ORIGINAL_REQUEST_KEY = "originalRequest";
 
     public JettyOidcAuthModule() {
@@ -52,13 +53,11 @@ public class JettyOidcAuthModule extends OidcAuthModule {
      * Must be called after the last call
      * to @{@link MessageInfo#setRequestMessage(Object)}
      *
-     * @param originalRequest
-     *            the original request into the SAM
-     * @param messageInfo
-     *            contains the final request from this SAM
+     * @param originalRequest the original request into the SAM
+     * @param messageInfo     contains the final request from this SAM
      * @see JettyOidcAuthModule#getWrappedRequest(HttpServletRequest)
      */
-    private void exposeWrappedRequestToJetty(HttpServletRequest originalRequest, MessageInfo messageInfo) {
+    private static void exposeWrappedRequestToJetty(HttpServletRequest originalRequest, MessageInfo messageInfo) {
         HttpServletRequest finalRequest = (HttpServletRequest) messageInfo.getRequestMessage();
         REQUEST_MAP.put(originalRequest, finalRequest);
         messageInfo.getMap().put(ORIGINAL_REQUEST_KEY, originalRequest);
@@ -68,8 +67,7 @@ public class JettyOidcAuthModule extends OidcAuthModule {
      * Jetty ignores the fact that a SAM can wrap the HTTP request/response objects
      * so we need to put it in a map and retrieve it again from a Filter.
      *
-     * @param request
-     *            the request that we need the wrapped version of
+     * @param request the request that we need the wrapped version of
      * @return the wrapped version of the <tt>request</tt>, or <tt>null</tt> if
      *         there was no mapping for <tt>request</tt>.
      */

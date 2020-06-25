@@ -50,9 +50,8 @@ public class FagsakRelasjon {
         return saksnummerFra(saksnummer.equals(saksnummerEn) ? saksnummerTo : saksnummerEn);
     }
 
-    private Optional<Saksnummer> saksnummerFra(String saksnummer) {
+    private static Optional<Saksnummer> saksnummerFra(String saksnummer) {
         return saksnummer == null ? Optional.empty() : Optional.of(new Saksnummer(saksnummer));
     }
-
 
 }

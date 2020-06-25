@@ -17,7 +17,7 @@ import javax.json.JsonReader;
  * TODO(Humle): Skriv tester Enkel representasjon av properties for migrering av
  * skjema med flyway. Tilhørende json ser ca slik ut:
  * <p>
- * 
+ *
  * <pre>
  * {
  *  "datasource" : "vl_dba",
@@ -134,7 +134,6 @@ public final class DBConnectionProperties {
     private static DBConnectionProperties read(JsonObject db) {
 
         DBConnectionProperties raw = readRaw(db);
-        VariablePlaceholderReplacer replacer = new VariablePlaceholderReplacer();
 
         // FIXME (GS): dumt å fange opp runtimeexception
         // Håndtering av verdier som kan inneholde placeholdere
@@ -145,18 +144,18 @@ public final class DBConnectionProperties {
         String effectiveSchema;
         String url = raw.getUrl();
         try {
-            schema = replacer.replacePlaceholders(raw.getSchema());
-            defaultSchema = replacer.replacePlaceholders(raw.getDefaultSchema());
-            user = replacer.replacePlaceholders(raw.getUser());
-            password = replacer.replacePlaceholders(raw.getPassword());
-            effectiveSchema = replacer.replacePlaceholders(raw.getEffectiveSchema());
-            url = replacer.replacePlaceholders(raw.getUrl());
+            schema = VariablePlaceholderReplacer.replacePlaceholders(raw.getSchema());
+            defaultSchema = VariablePlaceholderReplacer.replacePlaceholders(raw.getDefaultSchema());
+            user = VariablePlaceholderReplacer.replacePlaceholders(raw.getUser());
+            password = VariablePlaceholderReplacer.replacePlaceholders(raw.getPassword());
+            effectiveSchema = VariablePlaceholderReplacer.replacePlaceholders(raw.getEffectiveSchema());
+            url = VariablePlaceholderReplacer.replacePlaceholders(raw.getUrl());
         } catch (IllegalStateException e) { // NOSONAR
             user = password = schema = effectiveSchema = defaultSchema = raw.getDefaultSchema();
         }
 
         return new Builder().fromPrototype(raw)
-                .datasource(replacer.replacePlaceholders(raw.getDatasource()))
+                .datasource(VariablePlaceholderReplacer.replacePlaceholders(raw.getDatasource()))
                 .schema(schema)
                 .user(user)
                 .defaultSchema(defaultSchema)

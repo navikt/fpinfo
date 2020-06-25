@@ -188,7 +188,7 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
                 .collect(Collectors.toSet());
     }
 
-    private ForsendelseStatusDataDTO getForsendelseStatusDataDTO(Behandling behandling, UUID forsendelseId) {
+    private static ForsendelseStatusDataDTO getForsendelseStatusDataDTO(Behandling behandling, UUID forsendelseId) {
         ForsendelseStatusDataDTO forsendelseStatusDataDTO;
         String behandlingStatus = behandling.getBehandlingStatus();
         if (behandlingStatus.equals(BehandlingStatus.AVSLUTTET.getVerdi())

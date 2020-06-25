@@ -164,7 +164,7 @@ public class MottattDokument extends BaseEntitet {
     @Override
     public boolean equals(Object arg0) {
         return ((arg0 instanceof MottattDokument) &&
-                this.mottattDokumentId != null && this.behandlingId != null &&
+                (this.mottattDokumentId != null) && (this.behandlingId != null) &&
                 this.mottattDokumentId.equals(((MottattDokument) arg0).getMottattDokumentId()) &&
                 this.behandlingId.equals(((MottattDokument) arg0).getBehandlingId()));
     }

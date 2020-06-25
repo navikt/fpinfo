@@ -7,7 +7,6 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Immutable;
 
-
 @Entity(name = "Aksjonspunkt")
 @Table(name = "AKSJONSPUNKT")
 @Immutable

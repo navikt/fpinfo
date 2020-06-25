@@ -9,12 +9,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Immutable;
+
 import no.nav.foreldrepenger.info.domene.converters.StringToGraderingAvslagÅrsakConverter;
 import no.nav.foreldrepenger.info.domene.converters.StringToMorsAktivitetConverter;
 import no.nav.foreldrepenger.info.felles.datatyper.GraderingAvslagÅrsak;
 import no.nav.foreldrepenger.info.felles.datatyper.MorsAktivitet;
-import org.hibernate.annotations.Immutable;
-
 import no.nav.vedtak.felles.jpa.converters.BooleanToStringConverter;
 
 @Entity(name = "UttakPeriode")
@@ -98,7 +98,6 @@ public class UttakPeriode {
     @Column(name = "MORS_AKTIVITET")
     private MorsAktivitet morsAktivitet;
 
-
     public String getPeriodeResultatType() {
         return periodeResultatType;
     }
@@ -132,7 +131,7 @@ public class UttakPeriode {
     }
 
     public boolean getSamtidigUttak() {
-        return samtidigUttak != null && samtidigUttak;
+        return (samtidigUttak != null) && samtidigUttak;
     }
 
     public LocalDate getFom() {
@@ -192,11 +191,11 @@ public class UttakPeriode {
     }
 
     public static class Builder {
-            private UttakPeriode uttakPeriode;
+        private UttakPeriode uttakPeriode;
 
-            public Builder() {
-                uttakPeriode = new UttakPeriode();
-            }
+        public Builder() {
+            uttakPeriode = new UttakPeriode();
+        }
 
         public Builder withId(Long id) {
             uttakPeriode.id = id;

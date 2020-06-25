@@ -8,9 +8,7 @@ import static no.nav.vedtak.konfig.StandardPropertySource.SYSTEM_PROPERTIES;
 
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.SortedMap;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
@@ -22,14 +20,10 @@ import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.health.HealthCheck;
 
-import no.nav.foreldrepenger.info.felles.ContainerLoginCDI;
-import no.nav.foreldrepenger.info.web.app.selftest.SelftestResultat;
 import no.nav.foreldrepenger.info.web.app.selftest.Selftests;
 import no.nav.foreldrepenger.info.web.app.selftest.checks.ExtHealthCheck;
 import no.nav.vedtak.konfig.StandardPropertySource;
 import no.nav.vedtak.log.mdc.MDCOperations;
-import no.nav.vedtak.log.util.LoggerUtils;
-import no.nav.vedtak.sikkerhet.loginmodule.ContainerLogin;
 import no.nav.vedtak.util.env.Environment;
 
 /** Dependent scope siden vi lukker denne når vi er ferdig. */
@@ -69,7 +63,7 @@ class AppStartupInfoLogger {
         log(HILITE_START + " " + OPPSTARTSINFO + " " + SLUTT + " " + HILITE_SLUTT);
     }
 
-    private void logKonfigurasjon() {
+    private static void logKonfigurasjon() {
         log(KONFIGURASJON + " " + START);
         log(SYSTEM_PROPERTIES);
         log(ENV_PROPERTIES);
@@ -77,7 +71,7 @@ class AppStartupInfoLogger {
         log(KONFIGURASJON + " " + SLUTT);
     }
 
-    private void log(StandardPropertySource source) {
+    private static void log(StandardPropertySource source) {
         fromProperties(ENV.getProperties(source).getVerdier()).entrySet()
                 .stream()
                 .sorted(comparingByKey())
@@ -159,7 +153,7 @@ class AppStartupInfoLogger {
         return isHealthy ? "OK" : "ERROR";
     }
 
-    private void logVersjoner() {
+    private static void logVersjoner() {
         // Noen biblioteker er bundlet med jboss og kan skape konflikter, eller jboss
         // overstyrer vår overstyring via modul classpath
         // her logges derfor hva som er effektivt tilgjengelig av ulike biblioteker som

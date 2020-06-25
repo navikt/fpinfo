@@ -25,7 +25,8 @@ class SelftestsJsonSerializerModule extends Module {
     private static final int VERSION_MAJOR = 1;
     private static final int VERSION_MINOR = 0;
     private static final int VERSION_PATCH_LEVEL = 0;
-    private static final Version VERSION = new Version(VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH_LEVEL, null, null, null);
+    private static final Version VERSION = new Version(VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH_LEVEL, null, null,
+            null);
 
     private static final String FORMAT_TIMESTAMP = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
@@ -57,8 +58,7 @@ class SelftestsJsonSerializerModule extends Module {
     public void setupModule(SetupContext setupContext) {
         List<JsonSerializer<?>> serializers = Arrays.asList(
                 new OverallResultSerializer(),
-                new HealthCheckResultSerializer()
-        );
+                new HealthCheckResultSerializer());
         setupContext.addSerializers(new SimpleSerializers(serializers));
     }
 
@@ -70,8 +70,8 @@ class SelftestsJsonSerializerModule extends Module {
 
         @Override
         public void serialize(SelftestResultat samletResultat,
-                              JsonGenerator jsonGenerator,
-                              SerializerProvider serializerProvider) throws IOException {
+                JsonGenerator jsonGenerator,
+                SerializerProvider serializerProvider) throws IOException {
 
             jsonGenerator.writeStartObject();
             jsonGenerator.writeStringField(FIELD_APPLICATION, samletResultat.getApplication());
@@ -92,7 +92,7 @@ class SelftestsJsonSerializerModule extends Module {
             jsonGenerator.writeEndObject();
         }
 
-        private Date toDate(LocalDateTime localDateTime) {
+        private static Date toDate(LocalDateTime localDateTime) {
             ZoneId defaultZoneId = ZoneId.systemDefault();
             return Date.from(localDateTime.atZone(defaultZoneId).toInstant());
         }
@@ -105,7 +105,8 @@ class SelftestsJsonSerializerModule extends Module {
         }
 
         @Override
-        public void serialize(HealthCheck.Result result, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+        public void serialize(HealthCheck.Result result, JsonGenerator jsonGenerator,
+                SerializerProvider serializerProvider) throws IOException {
             Map<String, Object> details = result.getDetails();
             String endpoint = null;
             String description = null;
