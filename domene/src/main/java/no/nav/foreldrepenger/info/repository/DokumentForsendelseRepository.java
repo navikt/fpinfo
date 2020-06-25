@@ -5,12 +5,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 import no.nav.foreldrepenger.info.domene.Behandling;
+import no.nav.foreldrepenger.info.domene.FagsakRelasjon;
 import no.nav.foreldrepenger.info.domene.MottattDokument;
 import no.nav.foreldrepenger.info.domene.SakStatus;
 import no.nav.foreldrepenger.info.domene.Saksnummer;
 import no.nav.foreldrepenger.info.domene.SøknadsGrunnlag;
 import no.nav.foreldrepenger.info.domene.UttakPeriode;
-import no.nav.foreldrepenger.info.domene.FagsakRelasjon;
 
 public interface DokumentForsendelseRepository {
     Behandling hentBehandling(Long behandlingId);

@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.info.dbstoette;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -49,16 +48,14 @@ public final class Databaseskjemainitialisering {
         try {
             settOppSkjemaer(skjemaer);
             LokalDatabaseStøtte.kjørMigreringFor(skjemaer.get());
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (RuntimeException e) {
             LOG.warn(
                     "\n\n Kunne ikke starte inkrementell oppdatering av databasen. Det finnes trolig endringer i allerede kjørte script.\nKjører full migrering...");
             try {
                 settOppSkjemaer(skjemaer);
                 LokalDatabaseStøtte.kjørFullMigreringFor(skjemaer.get());
-            } catch (FileNotFoundException e1) {
-                throw new RuntimeException(e1);
+            } finally {
+
             }
         }
 
@@ -80,13 +77,13 @@ public final class Databaseskjemainitialisering {
             try {
                 settSchemaPlaceholder(DatasourceConfiguration.UNIT_TEST.getRaw());
                 LokalDatabaseStøtte.settOppJndiForDefaultDataSource(DatasourceConfiguration.UNIT_TEST.get());
-            } catch (FileNotFoundException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public static void settOppSkjemaer(DatasourceConfiguration skjemaer) throws FileNotFoundException {
+    public static void settOppSkjemaer(DatasourceConfiguration skjemaer) {
         settSchemaPlaceholder(skjemaer.getRaw());
         LOG.info("Kjører migrering for {}", DatasourceConfiguration.DBA.get());
         LokalDatabaseStøtte.kjørMigreringFor(DatasourceConfiguration.DBA.get());

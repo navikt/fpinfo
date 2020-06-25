@@ -91,38 +91,36 @@ public class SelftestService {
         return SelftestResultat.AggregateResult.ERROR.equals(samletResultat.getAggregateResult());
     }
 
-    private void loggSelftestResultat(SelftestResultat samletResultat) {
+    private static void loggSelftestResultat(SelftestResultat samletResultat) {
         kritiskeFeilTilLogg(samletResultat.getKritiskeResultater());
         ikkeKritiskFeilTilLogg(samletResultat.getIkkeKritiskeResultater());
     }
 
-    private void kritiskeFeilTilLogg(List<HealthCheck.Result> resultat) {
+    private static void kritiskeFeilTilLogg(List<HealthCheck.Result> resultat) {
         resultat.forEach(entry -> {
             if (!entry.isHealthy()) {
                 SelftestFeil.FACTORY.kritiskSelftestFeilet(
                         getDetailValue(entry, ExtHealthCheck.DETAIL_DESCRIPTION),
                         getDetailValue(entry, ExtHealthCheck.DETAIL_ENDPOINT),
                         getDetailValue(entry, ExtHealthCheck.DETAIL_RESPONSE_TIME),
-                        entry.getMessage()
-                ).toException().log(LOGGER);
+                        entry.getMessage()).toException().log(LOGGER);
             }
         });
     }
 
-    private void ikkeKritiskFeilTilLogg(List<HealthCheck.Result> resultat) {
+    private static void ikkeKritiskFeilTilLogg(List<HealthCheck.Result> resultat) {
         resultat.forEach(entry -> {
             if (!entry.isHealthy()) {
                 SelftestFeil.FACTORY.ikkeKritiskSelftestFeilet(
                         getDetailValue(entry, ExtHealthCheck.DETAIL_DESCRIPTION),
                         getDetailValue(entry, ExtHealthCheck.DETAIL_ENDPOINT),
                         getDetailValue(entry, ExtHealthCheck.DETAIL_RESPONSE_TIME),
-                        entry.getMessage()
-                ).toException().log(LOGGER);
+                        entry.getMessage()).toException().log(LOGGER);
             }
         });
     }
 
-    private String getDetailValue(HealthCheck.Result resultat, String key) {
+    private static String getDetailValue(HealthCheck.Result resultat, String key) {
         Map<String, Object> details = resultat.getDetails();
         if (details != null) {
             return (String) details.get(key);

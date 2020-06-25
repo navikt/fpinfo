@@ -8,7 +8,8 @@ import no.nav.vedtak.sikkerhet.loginmodule.ContainerLogin;
 @ApplicationScoped
 public class ContainerLoginProducer {
 
-    @Produces @ContainerLoginCDI
+    @Produces
+    @ContainerLoginCDI
     public ContainerLogin getContainerLogin() {
         return new ContainerLogin();
     }

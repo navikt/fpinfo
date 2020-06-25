@@ -20,7 +20,6 @@ import com.codahale.metrics.health.HealthCheckRegistry;
 
 import no.nav.foreldrepenger.info.web.app.selftest.checks.ExtHealthCheck;
 import no.nav.vedtak.konfig.KonfigVerdi;
-import no.nav.vedtak.util.FPDateUtil;
 
 @ApplicationScoped
 public class Selftests {
@@ -62,7 +61,7 @@ public class Selftests {
 
         SelftestResultat samletResultat = new SelftestResultat();
         populateBuildtimeProperties(samletResultat);
-        samletResultat.setTimestamp(LocalDateTime.now(FPDateUtil.getOffset()));
+        samletResultat.setTimestamp(LocalDateTime.now());
 
         for (String name : registry.getNames()) {
             Boolean kritiskTjeneste = erKritiskTjeneste.get(name);
@@ -133,7 +132,7 @@ public class Selftests {
         samletResultat.setBuildTime(buildtimePropertyValueIfNull(timestamp));
     }
 
-    private String buildtimePropertyValueIfNull(String value) {
+    private static String buildtimePropertyValueIfNull(String value) {
         String newValue = value;
         if (newValue == null) {
             newValue = "?.?.?";

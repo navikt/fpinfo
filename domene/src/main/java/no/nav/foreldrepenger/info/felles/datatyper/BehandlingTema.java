@@ -14,14 +14,16 @@ public class BehandlingTema {
     private static final String KEY_FORELDREPENGER = "foreldrepenger";
 
     private static final ImmutableMap<String, List<String>> HENDELSER = ImmutableMap.of(
-            KEY_ADOPSJON, Collections.unmodifiableList(Arrays.asList(FamilieHendelseType.ADOPSJON.getVerdi(), FamilieHendelseType.OMSORGOVERDRAGELSE.getVerdi())),
-            KEY_FØDSEL, Collections.unmodifiableList(Arrays.asList(FamilieHendelseType.FØDSEL.getVerdi(), FamilieHendelseType.TERMIN.getVerdi()))
-    );
+            KEY_ADOPSJON,
+            Collections.unmodifiableList(Arrays.asList(FamilieHendelseType.ADOPSJON.getVerdi(),
+                    FamilieHendelseType.OMSORGOVERDRAGELSE.getVerdi())),
+            KEY_FØDSEL, Collections.unmodifiableList(
+                    Arrays.asList(FamilieHendelseType.FØDSEL.getVerdi(), FamilieHendelseType.TERMIN.getVerdi())));
 
     private static final ImmutableMap<String, List<String>> YTELSE_TYPER = ImmutableMap.of(
             KEY_ENGANGSSTØNAD, Collections.unmodifiableList(Arrays.asList(FagsakYtelseType.ES.getVerdi())),
-            KEY_FORELDREPENGER, Collections.unmodifiableList(Arrays.asList(FagsakYtelseType.FP.getVerdi(), FagsakYtelseType.ENDRING_FP.getVerdi()))
-    );
+            KEY_FORELDREPENGER, Collections.unmodifiableList(
+                    Arrays.asList(FagsakYtelseType.FP.getVerdi(), FagsakYtelseType.ENDRING_FP.getVerdi())));
 
     public static final String ENGANGSTØNAD = "ENGST";
     public static final String ENGANGSTØNAD_FØDSEL = "ENGST_FODS";
@@ -70,4 +72,3 @@ public class BehandlingTema {
         return YTELSE_TYPER.get(KEY_FORELDREPENGER).contains(ytelseType);
     }
 }
-

@@ -9,7 +9,6 @@ import org.hibernate.annotations.Immutable;
 
 import no.nav.foreldrepenger.info.felles.datatyper.BehandlingTema;
 
-
 @Entity(name = "SakStatus")
 @Table(name = "SAK_STATUS")
 @Immutable

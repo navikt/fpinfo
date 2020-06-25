@@ -28,7 +28,7 @@ public enum BehandlingÅrsak {
     TILSTØTENDE_YTELSE_INNVILGET("RE-TILST-YT-INNVIL"), //$NON-NLS-1$
     ENDRING_BEREGNINGSGRUNNLAG("RE-ENDR-BER-GRUN"), //$NON-NLS-1$
     TILSTØTENDE_YTELSE_OPPHØRT("RE-TILST-YT-OPPH"), //$NON-NLS-1$
-    ANNET("RE-ANNET");  //$NON-NLS-1$
+    ANNET("RE-ANNET"); //$NON-NLS-1$
 
     private String verdi;
 

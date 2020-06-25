@@ -101,7 +101,7 @@ public class SelftestServiceTest {
 
     // -------
 
-    private SelftestResultat lagSelftestResultat(boolean kritiskeOk, boolean ikkeKritiskeOk) {
+    private static SelftestResultat lagSelftestResultat(boolean kritiskeOk, boolean ikkeKritiskeOk) {
         SelftestResultat resultat = lagSelftestResultat();
 
         HealthCheck.Result delRes1 = kritiskeOk ? HealthCheck.Result.healthy()
@@ -115,7 +115,7 @@ public class SelftestServiceTest {
         return resultat;
     }
 
-    private SelftestResultat lagSelftestResultat() {
+    private static SelftestResultat lagSelftestResultat() {
         SelftestResultat resultat = new SelftestResultat();
         resultat.setApplication("test-appl");
         resultat.setRevision("1");

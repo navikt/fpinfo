@@ -1,10 +1,11 @@
 package no.nav.foreldrepenger.info.domene.converters;
 
-import no.nav.foreldrepenger.info.felles.datatyper.MorsAktivitet;
+import java.util.Optional;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
-import java.util.Optional;
+
+import no.nav.foreldrepenger.info.felles.datatyper.MorsAktivitet;
 
 @Converter
 public class StringToMorsAktivitetConverter implements AttributeConverter<MorsAktivitet, String> {

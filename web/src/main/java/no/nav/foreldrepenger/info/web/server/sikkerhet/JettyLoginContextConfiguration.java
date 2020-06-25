@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.info.web.server.sikkerhet;
 
-
 import java.util.Collections;
 
 import javax.annotation.Priority;
@@ -19,8 +18,8 @@ public class JettyLoginContextConfiguration extends LoginContextConfiguration {
         replaceConfiguration(LoginConfigNames.TASK_OIDC.name(), lagConfigNamesTaskOidc());
     }
 
-    private AppConfigurationEntry[] lagConfigNamesSaml() {
-        return new AppConfigurationEntry[]{
+    private static AppConfigurationEntry[] lagConfigNamesSaml() {
+        return new AppConfigurationEntry[] {
                 new AppConfigurationEntry(
                         "no.nav.vedtak.sikkerhet.loginmodule.SamlLoginModule",
                         AppConfigurationEntry.LoginModuleControlFlag.REQUISITE,
@@ -32,8 +31,8 @@ public class JettyLoginContextConfiguration extends LoginContextConfiguration {
         };
     }
 
-    private AppConfigurationEntry[] lagConfigNamesTaskOidc() {
-        return new AppConfigurationEntry[]{
+    private static AppConfigurationEntry[] lagConfigNamesTaskOidc() {
+        return new AppConfigurationEntry[] {
                 new AppConfigurationEntry(
                         "no.nav.vedtak.sikkerhet.loginmodule.OIDCLoginModule",
                         AppConfigurationEntry.LoginModuleControlFlag.REQUISITE,

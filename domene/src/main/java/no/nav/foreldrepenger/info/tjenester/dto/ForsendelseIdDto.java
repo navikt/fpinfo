@@ -38,7 +38,8 @@ public class ForsendelseIdDto implements AbacDto {
 
     @Override
     public AbacDataAttributter abacAttributter() {
-        return AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.FORSENDELSE_UUID, UUID.fromString(forsendelseId));
+        return AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.FORSENDELSE_UUID,
+                UUID.fromString(forsendelseId));
     }
 
 }

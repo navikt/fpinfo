@@ -46,8 +46,10 @@ public class SøknadXmlDto implements AbacDto {
         }
         SøknadXmlDto dto = new SøknadXmlDto();
         dto.xml = dokument1.getSøknadXml() != null ? dokument1.getSøknadXml() : dokument2.getSøknadXml();
-        dto.journalpostId = dokument1.getJournalpostId() != null ? dokument1.getJournalpostId() : dokument2.getJournalpostId();
-        dto.behandlingId = dokument1.getBehandlingId() != null ? dokument1.getBehandlingId() : dokument2.getBehandlingId();
+        dto.journalpostId = dokument1.getJournalpostId() != null ? dokument1.getJournalpostId()
+                : dokument2.getJournalpostId();
+        dto.behandlingId = dokument1.getBehandlingId() != null ? dokument1.getBehandlingId()
+                : dokument2.getBehandlingId();
         return dto;
     }
 

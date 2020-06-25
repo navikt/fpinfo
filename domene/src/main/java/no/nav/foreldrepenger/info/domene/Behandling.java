@@ -13,14 +13,11 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Immutable;
 
 import no.nav.foreldrepenger.info.felles.datatyper.BehandlingResultatType;
-import no.nav.vedtak.util.env.Environment;
 
 @Entity(name = "Behandling")
 @Table(name = "BEHANDLING")
 @Immutable
 public class Behandling extends BaseEntitet {
-
-    private static final Environment ENV = Environment.current();
 
     @Id
     @Column(name = "BEHANDLING_ID")

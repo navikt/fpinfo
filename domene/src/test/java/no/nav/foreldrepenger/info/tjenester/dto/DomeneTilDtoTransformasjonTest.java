@@ -6,13 +6,13 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.info.domene.Saksnummer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.info.domene.Behandling;
 import no.nav.foreldrepenger.info.domene.MottattDokument;
 import no.nav.foreldrepenger.info.domene.SakStatus;
+import no.nav.foreldrepenger.info.domene.Saksnummer;
 import no.nav.foreldrepenger.info.domene.UttakPeriode;
 import no.nav.foreldrepenger.info.felles.datatyper.BehandlingResultatType;
 import no.nav.foreldrepenger.info.felles.datatyper.BehandlingStatus;
@@ -41,7 +41,6 @@ public class DomeneTilDtoTransformasjonTest {
     private static String FAGSAK_STATUS = "OPPR";
     private static String AKTØR_ID = "1234";
     private static String AKTØR_ID_ANNEN_PART = "5678";
-    private static String AKTØR_ID_BARN = "9012";
     private static String JOURNALPOST_ID = "123456789";
     private static String XML_PAYLOAD = "xml";
     private static ResourceLink EXPECTED_RESOURCE_LINK = ResourceLink.get(TEST_LENKE, TEST_REL, null);

@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.info.tjenester.dto;
 
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -30,4 +29,3 @@ public class SaksnummerDto implements AbacDto {
         return saksnummer;
     }
 }
-

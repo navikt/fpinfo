@@ -1,13 +1,14 @@
 package no.nav.foreldrepenger.info.domene;
 
-import no.nav.vedtak.felles.jpa.converters.BooleanToStringConverter;
-import org.hibernate.annotations.Immutable;
-
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Immutable;
+
+import no.nav.vedtak.felles.jpa.converters.BooleanToStringConverter;
 
 @Entity(name = "SøknadsGrunnlagRettigheter")
 @Table(name = "SOEKNADS_GR_RETTIGHETER")

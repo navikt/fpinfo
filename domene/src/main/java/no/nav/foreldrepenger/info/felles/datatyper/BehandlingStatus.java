@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.info.felles.datatyper;
 
-
 public enum BehandlingStatus {
 
     AVSLUTTET("AVSLU"), //$NON-NLS-1$

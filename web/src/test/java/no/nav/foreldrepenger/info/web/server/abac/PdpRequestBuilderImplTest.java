@@ -86,7 +86,7 @@ public class PdpRequestBuilderImplTest {
         assertThat(request.getOptional(AppAbacAttributtType.RESOURCE_FORELDREPENGER_ALENEOMSORG)).hasValue("true");
     }
 
-    private AbacAttributtSamling byggAbacAttributtSamling() {
+    private static AbacAttributtSamling byggAbacAttributtSamling() {
         AbacAttributtSamling attributtSamling = AbacAttributtSamling.medJwtToken(DUMMY_ID_TOKEN);
         attributtSamling.setActionType(BeskyttetRessursActionAttributt.READ);
         attributtSamling.setResource(BeskyttetRessursResourceAttributt.FAGSAK);

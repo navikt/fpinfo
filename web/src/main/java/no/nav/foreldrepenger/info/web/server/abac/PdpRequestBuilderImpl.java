@@ -15,8 +15,6 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 
-import org.slf4j.Logger;
-
 import no.nav.foreldrepenger.info.abac.AppAbacAttributtType;
 import no.nav.foreldrepenger.info.pip.PipRepository;
 import no.nav.vedtak.sikkerhet.abac.AbacAttributtSamling;
@@ -32,7 +30,6 @@ import no.nav.vedtak.sikkerhet.abac.PdpRequestBuilder;
 @Priority(2)
 public class PdpRequestBuilderImpl implements PdpRequestBuilder {
 
-    private static final Logger LOG = org.slf4j.LoggerFactory.getLogger(PdpRequestBuilderImpl.class);
     public static final String ABAC_DOMAIN = "foreldrepenger";
     private PipRepository pipRepository;
 
@@ -70,7 +67,8 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
 
     private Set<String> utledAktørIdeer(AbacAttributtSamling attributter) {
         Set<String> aktørIdSet = new HashSet<>(attributter.getVerdier(AppAbacAttributtType.AKTØR_ID));
-        aktørIdSet.addAll(pipRepository.hentAktørIdForSaksnummer(attributter.getVerdier(AppAbacAttributtType.SAKSNUMMER)));
+        aktørIdSet.addAll(
+                pipRepository.hentAktørIdForSaksnummer(attributter.getVerdier(AppAbacAttributtType.SAKSNUMMER)));
         aktørIdSet.addAll(pipRepository
                 .hentAktørIdForBehandling(attributter.getVerdier(AppAbacAttributtType.BEHANDLING_ID)));
         aktørIdSet.addAll(pipRepository

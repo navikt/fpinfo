@@ -50,7 +50,6 @@ public class UttaksPeriodeDto implements AbacDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String periodeResultatÅrsak;
 
-
     public String getPeriodeResultatType() {
         return periodeResultatType;
     }
@@ -60,7 +59,8 @@ public class UttaksPeriodeDto implements AbacDto {
         return this;
     }
 
-    public static UttaksPeriodeDto fraDomene(Saksnummer saksnummer, UttakPeriode uttakPeriode, boolean gjelderAnnenPart) {
+    public static UttaksPeriodeDto fraDomene(Saksnummer saksnummer, UttakPeriode uttakPeriode,
+            boolean gjelderAnnenPart) {
         UttaksPeriodeDto dto = new UttaksPeriodeDto();
         dto.gjelderAnnenPart = gjelderAnnenPart;
         dto.saksnummer = saksnummer.asString();
@@ -75,7 +75,7 @@ public class UttaksPeriodeDto implements AbacDto {
         dto.manueltBehandlet = uttakPeriode.getManueltBehandlet();
         dto.samtidigUttak = uttakPeriode.getSamtidigUttak();
         dto.samtidigUttaksprosent = uttakPeriode.getSamtidigUttaksprosent();
-        if (!uttakPeriode.getSamtidigUttak()) { //frontend vil ikke ha detaljer om gradering ved samtidigUttak
+        if (!uttakPeriode.getSamtidigUttak()) { // frontend vil ikke ha detaljer om gradering ved samtidigUttak
             dto.graderingInnvilget = uttakPeriode.getGraderingInnvilget();
             dto.arbeidstidprosent = uttakPeriode.getArbeidstidprosent();
             dto.graderingAvslagAarsak = uttakPeriode.getGraderingAvslagAarsak();

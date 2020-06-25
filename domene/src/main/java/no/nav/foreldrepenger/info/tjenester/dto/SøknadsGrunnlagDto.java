@@ -22,7 +22,6 @@ public class SøknadsGrunnlagDto implements AbacDto {
     @JsonIgnore
     private String annenPartFraSak;
 
-
     private String familieHendelseType;
     private LocalDate familieHendelseDato;
 
