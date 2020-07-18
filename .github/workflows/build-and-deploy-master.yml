@@ -10,7 +10,6 @@ env:
   ORACLE_IMAGE: docker.pkg.github.com/navikt/fpsak-autotest/oracle-flattened
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   CLUSTER: dev-fss
-  NAMESPACE: q1
   IMAGE_BASE: docker.pkg.github.com/${{ github.repository }}/fpinfo
          
 jobs:
@@ -105,7 +104,4 @@ jobs:
                      github.issues.createComment({...issue,
                             title: 'Deploy av ${{ env.TAG }}',
                             body: '/promote dev-fss teamforeldrepenger'})
-                     github.issues.createComment({...issue,
-                            title: 'Deploy av ${{ env.TAG }}',
-                            body: '/promote dev-fss q1'})
                });
