@@ -28,7 +28,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <felles.version>1.5.0-20200123060955-7e89e24</felles.version>
-        <metrics.version>4.1.10.1</metrics.version>
+        <metrics.version>4.1.11</metrics.version>
         <prometheus.version>0.9.0</prometheus.version>
         <swagger.version>2.1.3</swagger.version>
 
