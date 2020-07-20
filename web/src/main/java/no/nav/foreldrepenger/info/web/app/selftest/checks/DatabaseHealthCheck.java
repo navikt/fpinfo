@@ -32,14 +32,14 @@ public class DatabaseHealthCheck extends ExtHealthCheck {
 
     static {
         TimeZone.setDefault(TimeZone.getTimeZone("Europe/Oslo"));
-        SQL_QUERIES.add("select count(1) from AKSJONSPUNKT");
-        SQL_QUERIES.add("select count(1) from SAK_STATUS");
-        SQL_QUERIES.add("select count(1) from MOTTATT_DOKUMENT");
-        SQL_QUERIES.add("select count(1) from BEHANDLING");
-        SQL_QUERIES.add("select count(1) from UTTAK_PERIODE");
-        SQL_QUERIES.add("select count(1) from FAGSAK_RELASJON");
-        SQL_QUERIES.add("select count(1) from GJELDENDE_VEDTATT_BEHANDLING");
-        SQL_QUERIES.add("select count(1) from SOEKNAD_GR");
+        SQL_QUERIES.add("select 1 from AKSJONSPUNKT where rownum=1");
+        SQL_QUERIES.add("select 1 from SAK_STATUS where rownum=1");
+        SQL_QUERIES.add("select 1 from MOTTATT_DOKUMENT where rownum=1");
+        SQL_QUERIES.add("select 1 from BEHANDLING where rownum=1");
+        SQL_QUERIES.add("select 1 from UTTAK_PERIODE where rownum=1");
+        SQL_QUERIES.add("select 1 from FAGSAK_RELASJON where rownum=1");
+        SQL_QUERIES.add("select 1 from GJELDENDE_VEDTATT_BEHANDLING where rownum=1");
+        SQL_QUERIES.add("select 1 from SOEKNAD_GR where rownum=1");
     }
 
     private String endpoint = null; // ukjent frem til første gangs test
