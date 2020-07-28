@@ -45,7 +45,7 @@
             <dependency>
                 <groupId>org.webjars</groupId>
                 <artifactId>swagger-ui</artifactId>
-                <version>3.28.0</version>
+                <version>3.30.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -73,6 +73,12 @@
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jaxrs</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.activation</groupId>
+                    <artifactId>jakarta.activation</artifactId>
+                </exclusion>
+            </exclusions>
             <!-- <scope>provided</scope> -->
         </dependency>
         <dependency>
@@ -110,6 +116,10 @@
                 <exclusion>
                     <groupId>ca.szc.thirdparty.nl.jworks.markdown_to_asciidoc</groupId>
                     <artifactId>markdown_to_asciidoc</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jakarta.xml.soap</groupId>
+                    <artifactId>jakarta.xml.soap-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
