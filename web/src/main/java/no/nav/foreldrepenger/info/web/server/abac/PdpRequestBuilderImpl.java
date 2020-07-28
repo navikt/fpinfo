@@ -44,7 +44,7 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
         pdpRequest.put(RESOURCE_FELLES_DOMENE, ABAC_DOMAIN);
         pdpRequest.put(PdpKlient.ENVIRONMENT_AUTH_TOKEN, attributter.getIdToken());
         pdpRequest.put(XACML10_ACTION_ACTION_ID, attributter.getActionType().getEksternKode());
-        pdpRequest.put(RESOURCE_FELLES_RESOURCE_TYPE, attributter.getResource().getEksternKode());
+        pdpRequest.put(RESOURCE_FELLES_RESOURCE_TYPE, attributter.getResource());
 
         if (attributter.getVerdier(AppAbacAttributtType.ANNEN_PART).size() == 1) {
             Optional<String> sakAnnenPart = pipRepository.finnSakenTilAnnenForelder(
