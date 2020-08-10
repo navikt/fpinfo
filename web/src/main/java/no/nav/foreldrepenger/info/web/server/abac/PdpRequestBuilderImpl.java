@@ -14,6 +14,9 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import no.nav.foreldrepenger.info.abac.AppAbacAttributtType;
 import no.nav.foreldrepenger.info.pip.PipRepository;
 import no.nav.vedtak.sikkerhet.abac.AbacAttributtSamling;
@@ -28,6 +31,8 @@ import no.nav.vedtak.sikkerhet.abac.PdpRequestBuilder;
 @Alternative
 @Priority(2)
 public class PdpRequestBuilderImpl implements PdpRequestBuilder {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PdpRequestBuilderImpl.class);
 
     public static final String ABAC_DOMAIN = "foreldrepenger";
     private PipRepository pipRepository;
@@ -46,20 +51,27 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
         pdpRequest.put(RESOURCE_FELLES_RESOURCE_TYPE, attributter.getResource());
 
         if (attributter.getVerdier(AppAbacAttributtType.ANNEN_PART).size() == 1) {
+            LOGGER.info("Annen_part finnes");
+
             Set<String> aktørId = attributter.getVerdier(AppAbacAttributtType.AKTØR_ID);
             Optional<String> sakAnnenPart = pipRepository.finnSaksnummerTilAnnenpart(
                     aktørId,
                     attributter.getVerdier(AppAbacAttributtType.ANNEN_PART));
             if (sakAnnenPart.isPresent()) {
+
                 var saksnummerAnnenpart = sakAnnenPart.get();
                 pdpRequest.put(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, new HashSet<>(
                         pipRepository.hentAktørIdForSaksnummer(Set.of(saksnummerAnnenpart))));
                 pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_ANNEN_PART,
                         pipRepository.hentAnnenPartForSaksnummer(saksnummerAnnenpart).orElse(null));
+                var erAleneomsorg = pipRepository.erAleneomsorg(saksnummerAnnenpart).orElse(null);
                 pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_ALENEOMSORG,
-                        pipRepository.erAleneomsorg(saksnummerAnnenpart).orElse(null));
+                        erAleneomsorg);
+
+                LOGGER.info("Annen_part finnes - sak {}", erAleneomsorg);
             }
         } else {
+            LOGGER.info("Annen_part finnes ikke");
             pdpRequest.put(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, utledAktørIds(attributter));
         }
         return pdpRequest;
