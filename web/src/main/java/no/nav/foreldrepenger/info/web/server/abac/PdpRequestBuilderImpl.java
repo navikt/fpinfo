@@ -57,7 +57,7 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
 
             var saksnummerAnnenpart = pipRepository.finnSaksnummerTilAnnenpart(aktørId, annenpartAktørId);
             if (saksnummerAnnenpart.isPresent()) {
-                var erAleneomsorg = pipRepository.erAleneomsorg(annenpartAktørId).orElse(null);
+                var erAleneomsorg = pipRepository.erAleneomsorg(saksnummerAnnenpart.get()).orElse(null);
                 pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_ALENEOMSORG, erAleneomsorg);
                 LOGGER.info("Annen_part finnes - sak {}", erAleneomsorg);
             }
