@@ -6,7 +6,6 @@ import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FEL
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.XACML10_ACTION_ACTION_ID;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.Priority;
@@ -52,28 +51,18 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
 
         if (attributter.getVerdier(AppAbacAttributtType.ANNEN_PART).size() == 1) {
             LOGGER.info("Annen_part finnes");
+            var aktørId = (String)attributter.getVerdier(AppAbacAttributtType.AKTØR_ID).stream().findFirst().orElseThrow();
+            var annenpartAktørId = (String)attributter.getVerdier(AppAbacAttributtType.ANNEN_PART).stream().findFirst().orElseThrow();
+            pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_ANNEN_PART, annenpartAktørId);
 
-            Set<String> aktørId = attributter.getVerdier(AppAbacAttributtType.AKTØR_ID);
-            Optional<String> sakAnnenPart = pipRepository.finnSaksnummerTilAnnenpart(
-                    aktørId,
-                    attributter.getVerdier(AppAbacAttributtType.ANNEN_PART));
-            if (sakAnnenPart.isPresent()) {
-
-                var saksnummerAnnenpart = sakAnnenPart.get();
-                pdpRequest.put(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, new HashSet<>(
-                        pipRepository.hentAktørIdForSaksnummer(Set.of(saksnummerAnnenpart))));
-                pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_ANNEN_PART,
-                        pipRepository.hentAnnenPartForSaksnummer(saksnummerAnnenpart).orElse(null));
-                var erAleneomsorg = pipRepository.erAleneomsorg(saksnummerAnnenpart).orElse(null);
-                pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_ALENEOMSORG,
-                        erAleneomsorg);
-
+            var saksnummerAnnenpart = pipRepository.finnSaksnummerTilAnnenpart(aktørId, annenpartAktørId);
+            if (saksnummerAnnenpart.isPresent()) {
+                var erAleneomsorg = pipRepository.erAleneomsorg(annenpartAktørId).orElse(null);
+                pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_ALENEOMSORG, erAleneomsorg);
                 LOGGER.info("Annen_part finnes - sak {}", erAleneomsorg);
             }
-        } else {
-            LOGGER.info("Annen_part finnes ikke");
-            pdpRequest.put(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, utledAktørIds(attributter));
         }
+        pdpRequest.put(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, utledAktørIds(attributter));
         return pdpRequest;
     }
 

@@ -161,7 +161,7 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
 
     @Override
     public Optional<SøknadsGrunnlagDto> hentSøknadAnnenPart(AktørIdDto aktørIdBrukerDto,
-            AktørAnnenPartDto aktørAnnenPartDto) {
+                                                            AktørAnnenPartDto aktørAnnenPartDto) {
         Optional<SakStatus> sakAnnenPart = dokumentForsendelseRepository
                 .finnNyesteSakForAnnenPart(aktørIdBrukerDto.getAktørId(), aktørAnnenPartDto.getAnnenPartAktørId());
         Optional<SøknadsGrunnlagDto> søknadsgrunnlag = sakAnnenPart

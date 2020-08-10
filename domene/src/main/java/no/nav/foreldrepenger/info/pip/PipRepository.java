@@ -53,14 +53,6 @@ public class PipRepository {
         return query.getResultList().stream().map(SakStatus::getAktørId).collect(Collectors.toList());
     }
 
-    public Optional<String> hentAnnenPartForSaksnummer(String saksnummer) {
-        Objects.requireNonNull(saksnummer, "saksnummer"); // NOSONAR
-        TypedQuery<SakStatus> query = entityManager.createQuery("from SakStatus where saksnummer like :saksnummer",
-                SakStatus.class);
-        query.setParameter("saksnummer", saksnummer);
-        return query.getResultList().stream().findFirst().map(SakStatus::getAktørIdAnnenPart);
-    }
-
     public Optional<Boolean> erAleneomsorg(String saksnummer) {
         Objects.requireNonNull(saksnummer, "saksnummer"); // NOSONAR
         TypedQuery<SøknadsGrunnlag> query = entityManager
@@ -85,19 +77,16 @@ public class PipRepository {
         return query.getResultList().stream().map(SakStatus::getAktørId).collect(Collectors.toList());
     }
 
-    public Optional<String> finnSaksnummerTilAnnenpart(Set<String> bruker, Set<String> annenpart) {
-        Objects.requireNonNull(bruker, "bruker");
-        Objects.requireNonNull(bruker, "annenpart");
-        if ((bruker.size() != 1) || (annenpart.size() != 1)) {
-            return Optional.empty();
-        }
+    public Optional<String> finnSaksnummerTilAnnenpart(String brukerAktørId, String annenpartAktørId) {
+        Objects.requireNonNull(brukerAktørId, "bruker");
+        Objects.requireNonNull(brukerAktørId, "annenpart");
 
         TypedQuery<SakStatus> query = entityManager.createQuery(
                 "select s from SakStatus s " +
                         "where s.aktørId like :annenpart and s.aktørIdAnnenPart like :bruker order by s.opprettetTidspunkt desc",
                 SakStatus.class);
-        query.setParameter("annenpart", annenpart.stream().findFirst().get());// NOSONAR
-        query.setParameter("bruker", bruker.stream().findFirst().get());// NOSONAR
+        query.setParameter("annenpart", annenpartAktørId);// NOSONAR
+        query.setParameter("bruker", brukerAktørId);// NOSONAR
 
         return query.getResultList().stream().findFirst().map(SakStatus::getSaksnummer);
     }
