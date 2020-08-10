@@ -5,16 +5,15 @@ import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FEL
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_RESOURCE_TYPE;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.XACML10_ACTION_ACTION_ID;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.Priority;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.info.abac.AppAbacAttributtType;
 import no.nav.foreldrepenger.info.pip.PipRepository;
@@ -30,8 +29,6 @@ import no.nav.vedtak.sikkerhet.abac.PdpRequestBuilder;
 @Alternative
 @Priority(2)
 public class PdpRequestBuilderImpl implements PdpRequestBuilder {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PdpRequestBuilderImpl.class);
 
     public static final String ABAC_DOMAIN = "foreldrepenger";
     private PipRepository pipRepository;
@@ -50,31 +47,33 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
         pdpRequest.put(RESOURCE_FELLES_RESOURCE_TYPE, attributter.getResource());
 
         if (attributter.getVerdier(AppAbacAttributtType.ANNEN_PART).size() == 1) {
-            LOGGER.info("Annen_part finnes");
-            var aktørId = (String)attributter.getVerdier(AppAbacAttributtType.AKTØR_ID).stream().findFirst().orElseThrow();
-            var annenpartAktørId = (String)attributter.getVerdier(AppAbacAttributtType.ANNEN_PART).stream().findFirst().orElseThrow();
-            pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_ANNEN_PART, annenpartAktørId);
-
-            var saksnummerAnnenpart = pipRepository.finnSaksnummerTilAnnenpart(aktørId, annenpartAktørId);
-            if (saksnummerAnnenpart.isPresent()) {
-                var erAleneomsorg = pipRepository.erAleneomsorg(saksnummerAnnenpart.get()).orElse(null);
-                pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_ALENEOMSORG, erAleneomsorg);
-                LOGGER.info("Annen_part finnes - sak {}", erAleneomsorg);
+            Optional<String> sakAnnenPart = pipRepository.finnSakenTilAnnenForelder(
+                    attributter.getVerdier(AppAbacAttributtType.AKTØR_ID),
+                    attributter.getVerdier(AppAbacAttributtType.ANNEN_PART));
+            if (sakAnnenPart.isPresent()) {
+                String saksnummerAnnenForelder = sakAnnenPart.get();
+                pdpRequest.put(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, new HashSet<>(
+                        pipRepository.hentAktørIdForSaksnummer(Collections.singleton(saksnummerAnnenForelder))));
+                pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_ANNEN_PART,
+                        pipRepository.hentAnnenPartForSaksnummer(saksnummerAnnenForelder).orElse(null));
+                pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_ALENEOMSORG,
+                        pipRepository.hentOppgittAleneomsorgForSaksnummer(saksnummerAnnenForelder).orElse(null));
             }
+        } else {
+            pdpRequest.put(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, utledAktørIdeer(attributter));
         }
-        pdpRequest.put(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, utledAktørIds(attributter));
         return pdpRequest;
     }
 
-    private Set<String> utledAktørIds(AbacAttributtSamling attributter) {
-        Set<String> aktørIds = new HashSet<>(attributter.getVerdier(AppAbacAttributtType.AKTØR_ID));
-        aktørIds.addAll(
+    private Set<String> utledAktørIdeer(AbacAttributtSamling attributter) {
+        Set<String> aktørIdSet = new HashSet<>(attributter.getVerdier(AppAbacAttributtType.AKTØR_ID));
+        aktørIdSet.addAll(
                 pipRepository.hentAktørIdForSaksnummer(attributter.getVerdier(AppAbacAttributtType.SAKSNUMMER)));
-        aktørIds.addAll(pipRepository
+        aktørIdSet.addAll(pipRepository
                 .hentAktørIdForBehandling(attributter.getVerdier(AppAbacAttributtType.BEHANDLING_ID)));
-        aktørIds.addAll(pipRepository
+        aktørIdSet.addAll(pipRepository
                 .hentAktørIdForForsendelseIder(attributter.getVerdier(AppAbacAttributtType.FORSENDELSE_UUID)));
-        return aktørIds;
+        return aktørIdSet;
     }
 
 }

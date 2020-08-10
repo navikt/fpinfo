@@ -53,7 +53,15 @@ public class PipRepository {
         return query.getResultList().stream().map(SakStatus::getAktørId).collect(Collectors.toList());
     }
 
-    public Optional<Boolean> erAleneomsorg(String saksnummer) {
+    public Optional<String> hentAnnenPartForSaksnummer(String saksnummer) {
+        Objects.requireNonNull(saksnummer, "saksnummer"); // NOSONAR
+        TypedQuery<SakStatus> query = entityManager.createQuery("from SakStatus where saksnummer like :saksnummer",
+                SakStatus.class);
+        query.setParameter("saksnummer", saksnummer);
+        return query.getResultList().stream().findFirst().map(SakStatus::getAktørIdAnnenPart);
+    }
+
+    public Optional<Boolean> hentOppgittAleneomsorgForSaksnummer(String saksnummer) {
         Objects.requireNonNull(saksnummer, "saksnummer"); // NOSONAR
         TypedQuery<SøknadsGrunnlag> query = entityManager
                 .createQuery("from SøknadsGrunnlag where saksnummer like :saksnummer", SøknadsGrunnlag.class);
@@ -77,16 +85,19 @@ public class PipRepository {
         return query.getResultList().stream().map(SakStatus::getAktørId).collect(Collectors.toList());
     }
 
-    public Optional<String> finnSaksnummerTilAnnenpart(String brukerAktørId, String annenpartAktørId) {
-        Objects.requireNonNull(brukerAktørId, "bruker");
-        Objects.requireNonNull(brukerAktørId, "annenpart");
+    public Optional<String> finnSakenTilAnnenForelder(Set<String> bruker, Set<String> annenForelder) {
+        Objects.requireNonNull(bruker, "bruker");
+        Objects.requireNonNull(bruker, "annenForelder");
+        if ((bruker.size() != 1) || (annenForelder.size() != 1)) {
+            return Optional.empty();
+        }
 
         TypedQuery<SakStatus> query = entityManager.createQuery(
                 "select s from SakStatus s " +
-                        "where s.aktørId like :annenpart and s.aktørIdAnnenPart like :bruker order by s.opprettetTidspunkt desc",
+                        "where s.aktørId like :annenForelder and s.aktørIdAnnenPart like :bruker order by s.opprettetTidspunkt desc",
                 SakStatus.class);
-        query.setParameter("annenpart", annenpartAktørId);// NOSONAR
-        query.setParameter("bruker", brukerAktørId);// NOSONAR
+        query.setParameter("annenForelder", annenForelder.stream().findFirst().get());// NOSONAR
+        query.setParameter("bruker", bruker.stream().findFirst().get());// NOSONAR
 
         return query.getResultList().stream().findFirst().map(SakStatus::getSaksnummer);
     }

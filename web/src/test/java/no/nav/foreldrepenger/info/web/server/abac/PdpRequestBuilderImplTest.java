@@ -5,9 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -27,7 +25,6 @@ public class PdpRequestBuilderImplTest {
     private static final String AKTØR_ID = "9900077";
     private static final String ANNEN_PART_ID = "7700099";
     private static final String SAKSNUMMER = "678";
-    private static final String SAKSNUMMER_ANNEN_PART = "123";
     private static final UUID FORSENDELSE_ID = UUID.randomUUID();
     private PipRepository pipRepositoryMock = Mockito.mock(PipRepository.class);
 
@@ -76,10 +73,12 @@ public class PdpRequestBuilderImplTest {
         attributter.leggTil(AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.ANNEN_PART, ANNEN_PART_ID));
         attributter.leggTil(AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.AKTØR_ID, AKTØR_ID));
 
-        when(pipRepositoryMock.hentAktørIdForSaksnummer(Collections.singleton(SAKSNUMMER))).thenReturn(List.of(AKTØR_ID));
-        when(pipRepositoryMock.finnSaksnummerTilAnnenpart(AKTØR_ID, ANNEN_PART_ID)).thenReturn(Optional.of(SAKSNUMMER_ANNEN_PART));
-        when(pipRepositoryMock.hentAktørIdForSaksnummer(Set.of(SAKSNUMMER_ANNEN_PART))).thenReturn(List.of(ANNEN_PART_ID));
-        when(pipRepositoryMock.erAleneomsorg(SAKSNUMMER_ANNEN_PART)).thenReturn(Optional.of(Boolean.TRUE));
+        when(pipRepositoryMock.hentAktørIdForSaksnummer(Collections.singleton(SAKSNUMMER)))
+                .thenReturn(Collections.singletonList(AKTØR_ID));
+        when(pipRepositoryMock.finnSakenTilAnnenForelder(Collections.singleton(AKTØR_ID),
+                Collections.singleton(ANNEN_PART_ID))).thenReturn(Optional.of(SAKSNUMMER));
+        when(pipRepositoryMock.hentAnnenPartForSaksnummer(SAKSNUMMER)).thenReturn(Optional.of(ANNEN_PART_ID));
+        when(pipRepositoryMock.hentOppgittAleneomsorgForSaksnummer(SAKSNUMMER)).thenReturn(Optional.of(Boolean.TRUE));
 
         PdpRequest request = requestBuilder.lagPdpRequest(attributter);
         assertThat(request.getListOfString(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE)).containsOnly(AKTØR_ID);
