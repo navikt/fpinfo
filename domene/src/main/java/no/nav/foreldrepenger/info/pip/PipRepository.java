@@ -61,7 +61,7 @@ public class PipRepository {
         return query.getResultList().stream().findFirst().map(SakStatus::getAktørIdAnnenPart);
     }
 
-    public Optional<Boolean> hentOppgittAleneomsorgForSaksnummer(String saksnummer) {
+    public Optional<Boolean> erAleneomsorg(String saksnummer) {
         Objects.requireNonNull(saksnummer, "saksnummer"); // NOSONAR
         TypedQuery<SøknadsGrunnlag> query = entityManager
                 .createQuery("from SøknadsGrunnlag where saksnummer like :saksnummer", SøknadsGrunnlag.class);
@@ -85,18 +85,18 @@ public class PipRepository {
         return query.getResultList().stream().map(SakStatus::getAktørId).collect(Collectors.toList());
     }
 
-    public Optional<String> finnSakenTilAnnenForelder(Set<String> bruker, Set<String> annenForelder) {
+    public Optional<String> finnSaksnummerTilAnnenpart(Set<String> bruker, Set<String> annenpart) {
         Objects.requireNonNull(bruker, "bruker");
-        Objects.requireNonNull(bruker, "annenForelder");
-        if ((bruker.size() != 1) || (annenForelder.size() != 1)) {
+        Objects.requireNonNull(bruker, "annenpart");
+        if ((bruker.size() != 1) || (annenpart.size() != 1)) {
             return Optional.empty();
         }
 
         TypedQuery<SakStatus> query = entityManager.createQuery(
                 "select s from SakStatus s " +
-                        "where s.aktørId like :annenForelder and s.aktørIdAnnenPart like :bruker order by s.opprettetTidspunkt desc",
+                        "where s.aktørId like :annenpart and s.aktørIdAnnenPart like :bruker order by s.opprettetTidspunkt desc",
                 SakStatus.class);
-        query.setParameter("annenForelder", annenForelder.stream().findFirst().get());// NOSONAR
+        query.setParameter("annenpart", annenpart.stream().findFirst().get());// NOSONAR
         query.setParameter("bruker", bruker.stream().findFirst().get());// NOSONAR
 
         return query.getResultList().stream().findFirst().map(SakStatus::getSaksnummer);

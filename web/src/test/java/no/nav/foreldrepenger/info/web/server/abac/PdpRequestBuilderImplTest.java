@@ -75,10 +75,10 @@ public class PdpRequestBuilderImplTest {
 
         when(pipRepositoryMock.hentAktørIdForSaksnummer(Collections.singleton(SAKSNUMMER)))
                 .thenReturn(Collections.singletonList(AKTØR_ID));
-        when(pipRepositoryMock.finnSakenTilAnnenForelder(Collections.singleton(AKTØR_ID),
+        when(pipRepositoryMock.finnSaksnummerTilAnnenpart(Collections.singleton(AKTØR_ID),
                 Collections.singleton(ANNEN_PART_ID))).thenReturn(Optional.of(SAKSNUMMER));
         when(pipRepositoryMock.hentAnnenPartForSaksnummer(SAKSNUMMER)).thenReturn(Optional.of(ANNEN_PART_ID));
-        when(pipRepositoryMock.hentOppgittAleneomsorgForSaksnummer(SAKSNUMMER)).thenReturn(Optional.of(Boolean.TRUE));
+        when(pipRepositoryMock.erAleneomsorg(SAKSNUMMER)).thenReturn(Optional.of(Boolean.TRUE));
 
         PdpRequest request = requestBuilder.lagPdpRequest(attributter);
         assertThat(request.getListOfString(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE)).containsOnly(AKTØR_ID);

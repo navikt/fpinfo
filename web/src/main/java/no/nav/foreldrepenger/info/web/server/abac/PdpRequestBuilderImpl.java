@@ -47,34 +47,33 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
 
         if (attributter.getVerdier(AppAbacAttributtType.ANNEN_PART).size() == 1) {
             Set<String> aktørId = attributter.getVerdier(AppAbacAttributtType.AKTØR_ID);
-            Optional<String> sakAnnenPart = pipRepository.finnSakenTilAnnenForelder(
+            Optional<String> sakAnnenPart = pipRepository.finnSaksnummerTilAnnenpart(
                     aktørId,
                     attributter.getVerdier(AppAbacAttributtType.ANNEN_PART));
             if (sakAnnenPart.isPresent()) {
-                String saksnummerAnnenForelder = sakAnnenPart.get();
+                var saksnummerAnnenpart = sakAnnenPart.get();
                 pdpRequest.put(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, new HashSet<>(
-                        pipRepository.hentAktørIdForSaksnummer(Set.of(saksnummerAnnenForelder))));
-                var aktørIdAnnenPart = pipRepository.hentAnnenPartForSaksnummer(saksnummerAnnenForelder).orElse(null);
-
-                pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_ANNEN_PART, aktørIdAnnenPart);
+                        pipRepository.hentAktørIdForSaksnummer(Set.of(saksnummerAnnenpart))));
+                pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_ANNEN_PART,
+                        pipRepository.hentAnnenPartForSaksnummer(saksnummerAnnenpart).orElse(null));
                 pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_ALENEOMSORG,
-                        pipRepository.hentOppgittAleneomsorgForSaksnummer(saksnummerAnnenForelder).orElse(null));
+                        pipRepository.erAleneomsorg(saksnummerAnnenpart).orElse(null));
             }
         } else {
-            pdpRequest.put(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, utledAktørIdeer(attributter));
+            pdpRequest.put(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, utledAktørIds(attributter));
         }
         return pdpRequest;
     }
 
-    private Set<String> utledAktørIdeer(AbacAttributtSamling attributter) {
-        Set<String> aktørIdSet = new HashSet<>(attributter.getVerdier(AppAbacAttributtType.AKTØR_ID));
-        aktørIdSet.addAll(
+    private Set<String> utledAktørIds(AbacAttributtSamling attributter) {
+        Set<String> aktørIds = new HashSet<>(attributter.getVerdier(AppAbacAttributtType.AKTØR_ID));
+        aktørIds.addAll(
                 pipRepository.hentAktørIdForSaksnummer(attributter.getVerdier(AppAbacAttributtType.SAKSNUMMER)));
-        aktørIdSet.addAll(pipRepository
+        aktørIds.addAll(pipRepository
                 .hentAktørIdForBehandling(attributter.getVerdier(AppAbacAttributtType.BEHANDLING_ID)));
-        aktørIdSet.addAll(pipRepository
+        aktørIds.addAll(pipRepository
                 .hentAktørIdForForsendelseIder(attributter.getVerdier(AppAbacAttributtType.FORSENDELSE_UUID)));
-        return aktørIdSet;
+        return aktørIds;
     }
 
 }
