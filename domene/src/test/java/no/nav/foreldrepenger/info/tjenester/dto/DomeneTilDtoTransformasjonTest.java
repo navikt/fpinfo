@@ -17,7 +17,6 @@ import no.nav.foreldrepenger.info.domene.UttakPeriode;
 import no.nav.foreldrepenger.info.felles.datatyper.BehandlingResultatType;
 import no.nav.foreldrepenger.info.felles.datatyper.BehandlingStatus;
 import no.nav.foreldrepenger.info.felles.datatyper.BehandlingTema;
-import no.nav.foreldrepenger.info.felles.datatyper.BehandlingÅrsak;
 import no.nav.foreldrepenger.info.felles.datatyper.DokumentTypeId;
 import no.nav.foreldrepenger.info.felles.datatyper.FagsakYtelseType;
 import no.nav.foreldrepenger.info.felles.datatyper.FamilieHendelseType;
@@ -34,7 +33,7 @@ public class DomeneTilDtoTransformasjonTest {
     private static String RESULTAT_TYPE = BehandlingResultatType.IKKE_FASTSATT.getVerdi();
     private static String BEHANDLING_STATUS = BehandlingStatus.UTREDES.getVerdi();
     private static String FAGSAK_YTELSE_TYPE = FagsakYtelseType.FP.getVerdi();
-    private static String BEHANDLING_ÅRSAK = BehandlingÅrsak.ANNET.getVerdi();
+    private static String BEHANDLING_ÅRSAK = "ANNET";
     private static String FAMILIEHENDELSE_TYPE = FamilieHendelseType.FØDSEL.getVerdi();
     private static String TEST_LENKE = "test-lenke";
     private static String TEST_REL = "test-rel";
