@@ -4,7 +4,6 @@
     "oraclefpinfocredsskv": "/oracle/data/dev/creds/fpsak_q1-fpinfo_schema",
 
     "serviceuserkv": "/serviceuser/data/dev/srvfpinfo",
-    "namespace": "teamforeldrepenger",
     "ingresses": [
         "https://fpinfo-q1.dev.adeo.no",
         "https://fpinfo-q1.nais.preprod.local"
