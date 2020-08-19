@@ -101,7 +101,7 @@ public class JettyServer {
      * @see SecurityFilter#getSwaggerHash()
      */
     protected void konfigurerSwaggerHash() {
-        System.setProperty(SecurityFilter.SWAGGER_HASH_KEY, "sha256-E2MuDn7TjNl6T+nRqM4DMP4tBI4qnU9dc7+hiOBbAMU=");
+        System.setProperty(SecurityFilter.SWAGGER_HASH_KEY, "sha256-q/YPt9L9Ie+qVycDQ7fOW4abIqYB+EE3F18SkqJJZcQ=");
     }
 
     protected void migrerDatabaseScript() {
