@@ -3,6 +3,9 @@ package no.nav.foreldrepenger.info.tjenester.dto;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import no.nav.foreldrepenger.info.abac.AppAbacAttributtType;
@@ -13,6 +16,8 @@ import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
 
 public class SøknadsGrunnlagDto implements AbacDto {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SøknadsGrunnlagDto.class);
 
     private static final String MOR_ROLLE = "MORA";
     private static final String MOR_UFØR = "UFØRE";
@@ -155,6 +160,8 @@ public class SøknadsGrunnlagDto implements AbacDto {
 
     @Override
     public AbacDataAttributter abacAttributter() {
+        LOG.info("abac dto kalles {}", saksnummer);
+
         AbacDataAttributter abacDataAttributter = AbacDataAttributter.opprett()
                 .leggTil(AppAbacAttributtType.SAKSNUMMER, saksnummer)
                 .leggTil(AppAbacAttributtType.OPPGITT_ALENEOMSORG, morErAleneOmOmsorg);

@@ -15,6 +15,9 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import no.nav.foreldrepenger.info.abac.AppAbacAttributtType;
 import no.nav.foreldrepenger.info.pip.PipRepository;
 import no.nav.vedtak.sikkerhet.abac.AbacAttributtSamling;
@@ -29,6 +32,8 @@ import no.nav.vedtak.sikkerhet.abac.PdpRequestBuilder;
 @Alternative
 @Priority(2)
 public class PdpRequestBuilderImpl implements PdpRequestBuilder {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PdpRequestBuilderImpl.class);
 
     public static final String ABAC_DOMAIN = "foreldrepenger";
     private PipRepository pipRepository;
@@ -47,6 +52,7 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
         pdpRequest.put(RESOURCE_FELLES_RESOURCE_TYPE, attributter.getResource());
 
         if (attributter.getVerdier(AppAbacAttributtType.ANNEN_PART).size() == 1) {
+            LOG.info("abac Attributter inneholder annen part");
             Optional<String> sakAnnenPart = pipRepository.finnSakenTilAnnenForelder(
                     attributter.getVerdier(AppAbacAttributtType.AKTØR_ID),
                     attributter.getVerdier(AppAbacAttributtType.ANNEN_PART));
