@@ -312,13 +312,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <!-- Java11 -->
-        <dependency>
-            <groupId>com.sun.xml.ws</groupId>
-            <artifactId>jaxws-rt</artifactId>
-        </dependency>
-
         <!-- Annet -->
         <dependency>
             <groupId>org.owasp.encoder</groupId>
