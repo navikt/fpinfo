@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.info.web.app.tjenester;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import javax.ws.rs.core.Response;
@@ -16,12 +15,11 @@ public class NaisRestTjenesteTest {
 
     private NaisRestTjeneste restTjeneste;
 
-    private ApplicationServiceStarter serviceStarterMock = mock(ApplicationServiceStarter.class);
     private SelftestService selftestServiceMock = mock(SelftestService.class);
 
     @BeforeEach
     public void setup() {
-        restTjeneste = new NaisRestTjeneste(serviceStarterMock, selftestServiceMock);
+        restTjeneste = new NaisRestTjeneste(selftestServiceMock);
     }
 
     @Test
@@ -53,7 +51,6 @@ public class NaisRestTjenesteTest {
     public void test_preStop_skal_kalle_stopServices_og_returnere_status_ok() {
         Response response = restTjeneste.preStop();
 
-        verify(serviceStarterMock).stopServices();
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
     }
 }
