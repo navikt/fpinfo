@@ -1,4 +1,3 @@
 <included>
-   <logger name="org.flywaydb" level="trace" />
-   <logger name="no.nav.foreldrepenger.info.dbstoette" level="trace" />
+   <logger name="no.nav.foreldrepenger.info" level="trace" />
 </included>
