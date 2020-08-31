@@ -47,10 +47,4 @@ public class NaisRestTjenesteTest {
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
     }
 
-    @Test
-    public void test_preStop_skal_kalle_stopServices_og_returnere_status_ok() {
-        Response response = restTjeneste.preStop();
-
-        assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
-    }
 }
