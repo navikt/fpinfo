@@ -23,7 +23,6 @@ spec:
     timeout: 5
     periodSeconds: 10
     failureThreshold: 27
-  preStopHookPath: /fpinfo/internal/health/preStop
   prometheus:
     enabled: true
     path: /fpinfo/internal/metrics/prometheus

@@ -56,12 +56,4 @@ public class NaisRestTjeneste {
                     .build();
         }
     }
-
-    @GET
-    @Path("/preStop")
-    @Operation(description = "kalles på før stopp", tags = "nais", hidden = true)
-    public Response preStop() {
-        return Response.ok(RESPONSE_OK).build();
-    }
-
 }
