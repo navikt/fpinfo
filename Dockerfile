@@ -1,10 +1,10 @@
-FROM navikt/java:11
-#FROM navikt/java:11-appdynamics
+FROM navikt/java:14
 ENV APPD_ENABLED=true
 ENV APP_NAME=fpfordel
 ENV APPDYNAMICS_CONTROLLER_HOST_NAME=appdynamics.adeo.no
 ENV APPDYNAMICS_CONTROLLER_PORT=443
 ENV APPDYNAMICS_CONTROLLER_SSL_ENABLED=true
+ENV JAVA_OPTS --enable-preview
 
 RUN mkdir /app/lib
 RUN mkdir /app/conf
