@@ -86,7 +86,7 @@ public class DokumentforsendelseRestTjeneste {
 
     @GET
     @Path("/sak")
-    @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
+    @BeskyttetRessurs(action = READ, resource = "FAGSAK")
     @Operation(description = "Url for å hente sak status informasjon som er relevant til aktør", summary = ("Returnerer Sak Status Informasjon"), responses = {
             @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SakStatusDto.class)), responseCode = "200", description = "Returnerer Sak Status Informasjon")
     })
