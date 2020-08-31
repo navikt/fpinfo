@@ -1,5 +1,4 @@
-FROM navikt/java:11
-#FROM navikt/java:11-appdynamics
+FROM navikt/java:14
 ENV APPD_ENABLED=true
 ENV APP_NAME=fpfordel
 ENV APPDYNAMICS_CONTROLLER_HOST_NAME=appdynamics.adeo.no
