@@ -32,6 +32,7 @@ public class ApplicationServiceStarter {
 
     @Inject
     public ApplicationServiceStarter(@Any Instance<AppServiceHandler> serviceHandlers) {
+        LOGGER.info("Konstruerer starter: {}", serviceHandlers);
         serviceHandlers.forEach(handler -> serviceMap.put(handler, new AtomicBoolean()));
     }
 
