@@ -7,7 +7,7 @@ public enum FamilieHendelseType {
     FØDSEL("FODSL"),
     TERMIN("TERM");
 
-    private String verdi;
+    private final String verdi;
 
     FamilieHendelseType(String verdi) {
         this.verdi = verdi;

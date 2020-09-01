@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.info.felles.datatyper;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -13,7 +14,7 @@ public class BehandlingTema {
     private static final String KEY_ENGANGSSTØNAD = "engangsstønad";
     private static final String KEY_FORELDREPENGER = "foreldrepenger";
 
-    private static final ImmutableMap<String, List<String>> HENDELSER = ImmutableMap.of(
+    private static final Map<String, List<String>> HENDELSER = Map.of(
             KEY_ADOPSJON,
             Collections.unmodifiableList(Arrays.asList(FamilieHendelseType.ADOPSJON.getVerdi(),
                     FamilieHendelseType.OMSORGOVERDRAGELSE.getVerdi())),

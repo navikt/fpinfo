@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.info.web.server;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,27 +11,21 @@ import no.nav.vedtak.util.env.Environment;
 class DatabaseKonfigINaisEnvironment {
 
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseKonfigINaisEnvironment.class);
-    private static final Set<String> FASIT_RESURSSER = new HashSet<>();
-    private static final Map<String, String> DEFAULT_FLYWAY_PLACEHOLDERE = new HashMap<>();
+    private static final Set<String> FASIT_RESURSSER = Set.of(
+            "DEFAULTDS_URL",
+            "DEFAULTDS_USERNAME",
+            "DEFAULTDS_PASSWORD",
+            "FPINFOSCHEMA_URL",
+            "FPINFOSCHEMA_USERNAME",
+            "FPINFOSCHEMA_PASSWORD");
+    private static final Map<String, String> DEFAULT_FLYWAY_PLACEHOLDERE = Map.of(
+            "flyway.placeholders.fpinfo.fpsak.schema.navn", "fpsak",
+            "flyway.placeholders.fpinfo.schema.navn", "fpinfo",
+            "flyway.placeholders.fpinfoschema.schema.navn", "fpinfo_schema");
 
     private static final Environment ENV = Environment.current();
 
     private DatabaseKonfigINaisEnvironment() {
-    }
-
-    static {
-        FASIT_RESURSSER.add("DEFAULTDS_URL");
-        FASIT_RESURSSER.add("DEFAULTDS_USERNAME");
-        FASIT_RESURSSER.add("DEFAULTDS_PASSWORD");
-        FASIT_RESURSSER.add("FPINFOSCHEMA_URL");
-        FASIT_RESURSSER.add("FPINFOSCHEMA_USERNAME");
-        FASIT_RESURSSER.add("FPINFOSCHEMA_PASSWORD");
-
-        // Disse flyway-placeholderne refererer til skjemanavn i alle NAIS-testmiljøer
-        // og PROD.
-        DEFAULT_FLYWAY_PLACEHOLDERE.put("flyway.placeholders.fpinfo.fpsak.schema.navn", "fpsak");
-        DEFAULT_FLYWAY_PLACEHOLDERE.put("flyway.placeholders.fpinfo.schema.navn", "fpinfo");
-        DEFAULT_FLYWAY_PLACEHOLDERE.put("flyway.placeholders.fpinfoschema.schema.navn", "fpinfo_schema");
     }
 
     public static void setup() {

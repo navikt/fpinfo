@@ -140,13 +140,9 @@ public class JettyServer {
 
     private void updateMetaData(MetaData metaData) {
         // Find path to class-files while starting jetty from development environment.
-        List<Class<?>> appClasses = getApplicationClasses();
-
-        List<Resource> resources = appClasses.stream()
+        metaData.setWebInfClassesDirs(getApplicationClasses().stream()
                 .map(c -> Resource.newResource(c.getProtectionDomain().getCodeSource().getLocation()))
-                .collect(Collectors.toList());
-
-        metaData.setWebInfClassesDirs(resources);
+                .collect(Collectors.toList()));
     }
 
     protected List<Class<?>> getApplicationClasses() {

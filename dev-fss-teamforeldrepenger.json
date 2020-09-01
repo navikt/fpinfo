@@ -6,6 +6,7 @@
     "serviceuserkv": "/serviceuser/data/dev/srvfpinfo",
     "ingresses": [
         "https://fpinfo-q1.dev.adeo.no",
+        "https://fpinfo.dev.adeo.no",
         "https://fpinfo-q1.dev.nav.no"
     ],
     "env": {

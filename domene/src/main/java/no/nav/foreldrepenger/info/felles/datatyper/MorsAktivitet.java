@@ -28,7 +28,7 @@ public enum MorsAktivitet {
         MORS_AKTIVITET_MAP = Collections.unmodifiableMap(map);
     }
 
-    private String verdi;
+    private final String verdi;
 
     MorsAktivitet(String verdi) {
         this.verdi = verdi;
