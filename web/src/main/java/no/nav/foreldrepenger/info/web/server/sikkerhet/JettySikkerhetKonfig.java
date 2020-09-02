@@ -11,11 +11,19 @@ import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.DefaultIdentityService;
 import org.eclipse.jetty.security.jaspi.JaspiAuthenticatorFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import no.nav.vedtak.util.env.Environment;
 
 /**
  * Konfigurerer sikkerhet for jetty webappContext.
  */
 public class JettySikkerhetKonfig {
+
+    private static final Logger LOG = LoggerFactory.getLogger(JettySikkerhetKonfig.class);
+
+    private static final Environment ENV = Environment.current();
 
     public void konfigurer(WebAppContext webAppContext) {
 
@@ -40,11 +48,13 @@ public class JettySikkerhetKonfig {
         System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass",
                 "no.nav.foreldrepenger.info.web.server.sikkerhet.JettySubjectHandler");
         String confDir = System.getProperty("app.confdir", System.getenv("APP_CONFDIR"));
+        LOG.info("XXXXX app.confdir=" + ENV.getProperty("app.confdir"));
         confDir = confDir == null ? "./conf" : confDir;
 
         setFileProperty("org.apache.geronimo.jaspic.configurationFile", confDir + "/jaspi-conf.xml");
         setFileProperty("java.security.auth.login.config", confDir + "/login.conf");
 
+        LOG.info("XXXXX securityTokenService.url=" + ENV.getProperty("securityTokenService.url"));
         // REMAP fra NAIS til SKYA format på prop
         System.setProperty("securityTokenService.url",
                 System.getProperty("securityTokenService.url", System.getenv("SECURITYTOKENSERVICE_URL")));
