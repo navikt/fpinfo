@@ -44,7 +44,7 @@ class DatabaseKonfigINaisEnvironment {
         environment.keySet().stream().forEach(key -> {
             if (skalOppretteSystemProperty(key)) {
                 String systemPropertyKey = key.replaceAll("_", ".").toLowerCase();
-                LOG.info("Setter system property {} fra env property {}", systemPropertyKey, environment.get(key));
+                LOG.info("Setter system property {} fra env property {}", systemPropertyKey, key);
                 System.setProperty(systemPropertyKey, environment.get(key));
             }
         });
@@ -60,7 +60,6 @@ class DatabaseKonfigINaisEnvironment {
     }
 
     private static boolean skalOppretteSystemProperty(String key) {
-        LOG.info("Sjekker {}", ENV.getProperty(key));
         return FASIT_RESURSSER.contains(key);
     }
 
