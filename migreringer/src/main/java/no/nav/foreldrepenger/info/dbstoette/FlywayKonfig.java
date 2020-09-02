@@ -85,6 +85,7 @@ public final class FlywayKonfig {
                 placeholders.setProperty(prop, System.getProperty(prop));
             }
         }
+        LOGGER.info("Gammel filtering " + placeholders);
         return placeholders;
     }
 
