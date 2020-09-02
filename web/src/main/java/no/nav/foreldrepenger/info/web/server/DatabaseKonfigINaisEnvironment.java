@@ -6,8 +6,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.vedtak.util.env.Environment;
-
 class DatabaseKonfigINaisEnvironment {
 
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseKonfigINaisEnvironment.class);
@@ -18,19 +16,12 @@ class DatabaseKonfigINaisEnvironment {
             "FPINFOSCHEMA_URL",
             "FPINFOSCHEMA_USERNAME",
             "FPINFOSCHEMA_PASSWORD");
-    private static final Map<String, String> DEFAULT_FLYWAY_PLACEHOLDERE = Map.of(
-            "flyway.placeholders.fpinfo.fpsak.schema.navn", "fpsak",
-            "flyway.placeholders.fpinfo.schema.navn", "fpinfo",
-            "flyway.placeholders.fpinfoschema.schema.navn", "fpinfo_schema");
-
-    private static final Environment ENV = Environment.current();
 
     private DatabaseKonfigINaisEnvironment() {
     }
 
     public static void setup() {
         readInNaisEnvironment();
-        opprettSystemPropertiesHvisIkkeFinnes();
     }
 
     /**
@@ -46,15 +37,6 @@ class DatabaseKonfigINaisEnvironment {
                 String systemPropertyKey = key.replaceAll("_", ".").toLowerCase();
                 LOG.info("Setter system property {} fra env property {}", systemPropertyKey, key);
                 System.setProperty(systemPropertyKey, environment.get(key));
-            }
-        });
-    }
-
-    private static void opprettSystemPropertiesHvisIkkeFinnes() {
-        DEFAULT_FLYWAY_PLACEHOLDERE.keySet().stream().forEach(key -> {
-            if (System.getProperty(key) == null) {
-                LOG.info("Setter system property {} fra flyway property {}", key, DEFAULT_FLYWAY_PLACEHOLDERE.get(key));
-                System.setProperty(key, DEFAULT_FLYWAY_PLACEHOLDERE.get(key));
             }
         });
     }
