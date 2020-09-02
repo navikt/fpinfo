@@ -47,17 +47,10 @@ public class JettySikkerhetKonfig {
 
         System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass",
                 "no.nav.foreldrepenger.info.web.server.sikkerhet.JettySubjectHandler");
-        String confDir = System.getProperty("app.confdir", System.getenv("APP_CONFDIR"));
-        LOG.info("XXXXX app.confdir=" + ENV.getProperty("app.confdir"));
-        confDir = confDir == null ? "./conf" : confDir;
+        String confDir = ENV.getProperty("app.confdir", "./conf");
 
         setFileProperty("org.apache.geronimo.jaspic.configurationFile", confDir + "/jaspi-conf.xml");
         setFileProperty("java.security.auth.login.config", confDir + "/login.conf");
-
-        LOG.info("XXXXX securityTokenService.url=" + ENV.getProperty("securityTokenService.url"));
-        // REMAP fra NAIS til SKYA format på prop
-        System.setProperty("securityTokenService.url",
-                System.getProperty("securityTokenService.url", System.getenv("SECURITYTOKENSERVICE_URL")));
     }
 
     private static void setFileProperty(String property, String filePath) {
