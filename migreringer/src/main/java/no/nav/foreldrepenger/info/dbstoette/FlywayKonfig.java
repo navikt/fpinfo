@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.info.dbstoette;
 
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
@@ -9,10 +10,14 @@ import org.flywaydb.core.api.FlywayException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import no.nav.vedtak.konfig.StandardPropertySource;
+import no.nav.vedtak.util.env.Environment;
+
 public final class FlywayKonfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FlywayKonfig.class);
 
+    private static final Environment ENV = Environment.current();
     private DataSource dataSource;
     private String sqlLokasjon = null;
 
@@ -57,6 +62,24 @@ public final class FlywayKonfig {
 
     private static Properties lesFlywayPlaceholders() {
         Properties placeholders = new Properties();
+        Properties placeholders1 = new Properties();
+        placeholders1.putAll(ENV.getProperties(StandardPropertySource.SYSTEM_PROPERTIES).getVerdier());
+        placeholders1.putAll(ENV.getProperties(StandardPropertySource.ENV_PROPERTIES).getVerdier());
+        placeholders1.putAll(ENV.getProperties(StandardPropertySource.APP_PROPERTIES).getVerdier());
+
+        // ny
+        var mapProp = placeholders1.entrySet()
+                .stream()
+                .filter(k -> k.getKey().toString().startsWith("flyway.placeholders."))
+                .collect(
+                        Collectors.toMap(
+                                e -> (String) e.getKey(),
+                                e -> (String) e.getValue()));
+        var filtered = new Properties();
+        filtered.putAll(mapProp);
+        LOGGER.info("Alternative filtering " + filtered);
+
+        // gammel
         for (String prop : System.getProperties().stringPropertyNames()) {
             if (prop.startsWith("flyway.placeholders.")) {
                 placeholders.setProperty(prop, System.getProperty(prop));
