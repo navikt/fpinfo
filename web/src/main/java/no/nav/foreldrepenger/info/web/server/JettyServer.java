@@ -27,7 +27,6 @@ import no.nav.foreldrepenger.info.dbstoette.DatabaseStøtte;
 import no.nav.foreldrepenger.info.web.app.konfig.ApplicationConfig;
 import no.nav.foreldrepenger.info.web.server.sikkerhet.JettySikkerhetKonfig;
 import no.nav.vedtak.isso.IssoApplication;
-import no.nav.vedtak.sikkerhetsfilter.SecurityFilter;
 import no.nav.vedtak.util.env.Environment;
 
 public class JettyServer {
@@ -94,7 +93,7 @@ public class JettyServer {
     }
 
     protected void konfigurer() throws Exception {
-        konfigurerSwaggerHash();
+        // konfigurerSwaggerHash();
     }
 
     /**
