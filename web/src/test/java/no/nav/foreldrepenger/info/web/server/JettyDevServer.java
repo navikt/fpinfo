@@ -83,7 +83,7 @@ public class JettyDevServer extends JettyServer {
         PropertiesUtils.lagPropertiesFilFraTemplate();
         PropertiesUtils.initProperties();
 
-        konfigurerSwaggerHash();
+        // konfigurerSwaggerHash();
         konfigurerLogback();
 
         File webapproot = new File(WEBAPP_ROOT);
