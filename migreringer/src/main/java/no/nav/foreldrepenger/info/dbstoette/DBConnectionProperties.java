@@ -1,8 +1,5 @@
 package no.nav.foreldrepenger.info.dbstoette;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,10 +45,6 @@ public final class DBConnectionProperties {
     private String datasource;
     private String schema;
 
-    /**
-     * Hvis alle tabeller/views ligger i et annet skjema enn skjema som brukes av
-     * EntityManager. Default er effectiveSchema og schema det samme
-     */
     private String effectiveSchema;
     private String defaultSchema;
     private String url;
@@ -85,10 +78,6 @@ public final class DBConnectionProperties {
         this.defaultDataSource = builder.defaultDataSource;
         this.sqlLoggable = builder.sqlLoggable;
         this.migrateClean = builder.migrateClean;
-    }
-
-    public static List<DBConnectionProperties> fraFil(File jsonFil) throws FileNotFoundException {
-        return fraStream(new FileInputStream(jsonFil));
     }
 
     public static List<DBConnectionProperties> fraStream(InputStream jsonFil) {

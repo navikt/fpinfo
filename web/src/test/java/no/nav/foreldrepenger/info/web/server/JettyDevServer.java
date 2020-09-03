@@ -77,13 +77,11 @@ public class JettyDevServer extends JettyServer {
         return storePath;
     }
 
-    @Override
     protected void konfigurer() throws Exception {
 
         PropertiesUtils.lagPropertiesFilFraTemplate();
         PropertiesUtils.initProperties();
 
-        // konfigurerSwaggerHash();
         konfigurerLogback();
 
         File webapproot = new File(WEBAPP_ROOT);

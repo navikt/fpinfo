@@ -65,12 +65,11 @@ public class JettyServer {
             throw new IllegalArgumentException("Mangler port");
         }
         JettyServer jettyServer = new JettyServer(Integer.parseUnsignedInt(args[0]));
-        jettyServer.konfigurer();
         jettyServer.migrerDatabaseScript();
         jettyServer.start();
     }
 
-    public static List<DBConnectionProperties> getDBConnectionProperties() {
+    private static List<DBConnectionProperties> getDBConnectionProperties() {
         InputStream in = JettyServer.class.getResourceAsStream("/" + DB_SCHEMAS);
         var props = DBConnectionProperties.fraStream(in);
         LOG.info("DB connection properties {}", props);
@@ -91,18 +90,6 @@ public class JettyServer {
     protected int getServerPort() {
         return hostPort;
     }
-
-    protected void konfigurer() throws Exception {
-        // konfigurerSwaggerHash();
-    }
-
-    /**
-     * @see SecurityFilter#getSwaggerHash()
-     */
-    // protected void konfigurerSwaggerHash() {
-    // System.setProperty(SecurityFilter.SWAGGER_HASH_KEY,
-    // "sha256-q/YPt9L9Ie+qVycDQ7fOW4abIqYB+EE3F18SkqJJZcQ=");
-    // }
 
     protected void migrerDatabaseScript() {
         DatabaseKonfigINaisEnvironment.setup();

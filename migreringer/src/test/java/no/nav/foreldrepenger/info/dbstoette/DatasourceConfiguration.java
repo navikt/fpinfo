@@ -23,13 +23,13 @@ public enum DatasourceConfiguration {
     }
 
     public List<DBConnectionProperties> get() {
-        String fileName = this.name().toLowerCase() + extension; // NOSONAR
+        String fileName = this.name().toLowerCase() + extension;
         InputStream io = DatasourceConfiguration.class.getClassLoader().getResourceAsStream(fileName);
         return DBConnectionProperties.fraStream(io);
     }
 
     public List<DBConnectionProperties> getRaw() {
-        String fileName = this.name().toLowerCase() + extension; // NOSONAR
+        String fileName = this.name().toLowerCase() + extension;
         InputStream io = DatasourceConfiguration.class.getClassLoader().getResourceAsStream(fileName);
         return DBConnectionProperties.rawFraStream(io);
     }
