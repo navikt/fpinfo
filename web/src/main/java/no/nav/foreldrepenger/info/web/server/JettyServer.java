@@ -78,9 +78,7 @@ public class JettyServer {
             var m = new ObjectMapper().readValue(in, Map.class);
             LOG.info("DB connection properties jackson {}", m);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-
+            LOG.warn("OOPS", e);
         }
 
         var props = DBConnectionProperties.fraStream(in);
