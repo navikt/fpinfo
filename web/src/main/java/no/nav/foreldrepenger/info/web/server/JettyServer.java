@@ -19,11 +19,8 @@ import org.eclipse.jetty.webapp.MetaData;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebInfConfiguration;
 import org.eclipse.jetty.webapp.WebXmlConfiguration;
-import org.hibernate.mapping.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import no.nav.foreldrepenger.info.dbstoette.DBConnectionProperties;
 import no.nav.foreldrepenger.info.dbstoette.DatabaseStøtte;
@@ -74,13 +71,11 @@ public class JettyServer {
 
     private static List<DBConnectionProperties> getDBConnectionProperties() {
         InputStream in = JettyServer.class.getResourceAsStream("/" + DB_SCHEMAS);
-        try {
-            var m = new ObjectMapper().readValue(in, Map.class);
-            LOG.info("DB connection properties jackson {}", m);
-        } catch (Exception e) {
-            LOG.warn("OOPS", e);
-        }
-
+        /*
+         * try { var m = new ObjectMapper().readValue(in, Map.class);
+         * LOG.info("DB connection properties jackson {}", m); } catch (Exception e) {
+         * LOG.warn("OOPS", e); }
+         */
         var props = DBConnectionProperties.fraStream(in);
         LOG.info("DB connection properties {}", props);
         return props;
