@@ -49,7 +49,7 @@ public class Jalla {
             defaultSchema = p.defaultSchema != null ? VariablePlaceholderReplacer.replacePlaceholders(p.defaultSchema) : schema;
             user = p.user != null ? VariablePlaceholderReplacer.replacePlaceholders(p.user) : schema;
             password = p.password != null ? VariablePlaceholderReplacer.replacePlaceholders(p.password) : schema;
-            effectiveSchema = VariablePlaceholderReplacer.replacePlaceholders(p.effective_schema);
+            effectiveSchema = p.effective_schema != null ? VariablePlaceholderReplacer.replacePlaceholders(p.effective_schema) : defaultSchema;
         } catch (IllegalStateException e) {
             user = password = schema = effectiveSchema = defaultSchema = p.defaultSchema;
         }

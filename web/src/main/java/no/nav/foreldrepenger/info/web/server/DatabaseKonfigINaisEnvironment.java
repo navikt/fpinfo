@@ -21,7 +21,7 @@ class DatabaseKonfigINaisEnvironment {
     }
 
     public static void setup() {
-        readInNaisEnvironment();
+        // readInNaisEnvironment();
     }
 
     /**
