@@ -92,7 +92,6 @@ public class JettyServer {
     }
 
     protected void migrerDatabaseScript() {
-        DatabaseKonfigINaisEnvironment.setup();
         try {
             var dbs = getDBConnectionProperties();
             DatabaseStøtte.settOppJndiForDefaultDataSource(dbs);
