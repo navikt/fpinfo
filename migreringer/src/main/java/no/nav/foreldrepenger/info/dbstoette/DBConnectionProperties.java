@@ -87,6 +87,100 @@ public final class DBConnectionProperties {
         this.migrateClean = builder.migrateClean;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((datasource == null) ? 0 : datasource.hashCode());
+        result = prime * result + (defaultDataSource ? 1231 : 1237);
+        result = prime * result + ((defaultSchema == null) ? 0 : defaultSchema.hashCode());
+        result = prime * result + ((effectiveSchema == null) ? 0 : effectiveSchema.hashCode());
+        result = prime * result + (migrateClean ? 1231 : 1237);
+        result = prime * result + ((migrationScriptsClasspathRoot == null) ? 0 : migrationScriptsClasspathRoot.hashCode());
+        result = prime * result + ((migrationScriptsFilesystemRoot == null) ? 0 : migrationScriptsFilesystemRoot.hashCode());
+        result = prime * result + ((password == null) ? 0 : password.hashCode());
+        result = prime * result + ((schema == null) ? 0 : schema.hashCode());
+        result = prime * result + (sqlLoggable ? 1231 : 1237);
+        result = prime * result + ((testdataClasspathRoot == null) ? 0 : testdataClasspathRoot.hashCode());
+        result = prime * result + ((url == null) ? 0 : url.hashCode());
+        result = prime * result + ((user == null) ? 0 : user.hashCode());
+        result = prime * result + ((versjonstabell == null) ? 0 : versjonstabell.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        DBConnectionProperties other = (DBConnectionProperties) obj;
+        if (datasource == null) {
+            if (other.datasource != null)
+                return false;
+        } else if (!datasource.equals(other.datasource))
+            return false;
+        if (defaultDataSource != other.defaultDataSource)
+            return false;
+        if (defaultSchema == null) {
+            if (other.defaultSchema != null)
+                return false;
+        } else if (!defaultSchema.equals(other.defaultSchema))
+            return false;
+        if (effectiveSchema == null) {
+            if (other.effectiveSchema != null)
+                return false;
+        } else if (!effectiveSchema.equals(other.effectiveSchema))
+            return false;
+        if (migrateClean != other.migrateClean)
+            return false;
+        if (migrationScriptsClasspathRoot == null) {
+            if (other.migrationScriptsClasspathRoot != null)
+                return false;
+        } else if (!migrationScriptsClasspathRoot.equals(other.migrationScriptsClasspathRoot))
+            return false;
+        if (migrationScriptsFilesystemRoot == null) {
+            if (other.migrationScriptsFilesystemRoot != null)
+                return false;
+        } else if (!migrationScriptsFilesystemRoot.equals(other.migrationScriptsFilesystemRoot))
+            return false;
+        if (password == null) {
+            if (other.password != null)
+                return false;
+        } else if (!password.equals(other.password))
+            return false;
+        if (schema == null) {
+            if (other.schema != null)
+                return false;
+        } else if (!schema.equals(other.schema))
+            return false;
+        if (sqlLoggable != other.sqlLoggable)
+            return false;
+        if (testdataClasspathRoot == null) {
+            if (other.testdataClasspathRoot != null)
+                return false;
+        } else if (!testdataClasspathRoot.equals(other.testdataClasspathRoot))
+            return false;
+        if (url == null) {
+            if (other.url != null)
+                return false;
+        } else if (!url.equals(other.url))
+            return false;
+        if (user == null) {
+            if (other.user != null)
+                return false;
+        } else if (!user.equals(other.user))
+            return false;
+        if (versjonstabell == null) {
+            if (other.versjonstabell != null)
+                return false;
+        } else if (!versjonstabell.equals(other.versjonstabell))
+            return false;
+        return true;
+    }
+
     public static List<DBConnectionProperties> fraStream(InputStream jsonFil) {
         List<DBConnectionProperties> dbProperties = new ArrayList<>();
 
@@ -380,6 +474,7 @@ public final class DBConnectionProperties {
         String password;
         String effectiveSchema;
         String url = p.url;
+        String versjonstabell = "schema_version";
         try {
             url = VariablePlaceholderReplacer.replacePlaceholders(p.url);
             schema = VariablePlaceholderReplacer.replacePlaceholders(p.schema);
@@ -407,7 +502,7 @@ public final class DBConnectionProperties {
                 .migrateClean(p.migrateClean)
                 .testdataClasspathRoot(p.testdataClasspathRoot)
                 .url(url)
-                .versjonstabell(p.versjonstabell)
+                .versjonstabell(versjonstabell)
                 .build();
     }
 
