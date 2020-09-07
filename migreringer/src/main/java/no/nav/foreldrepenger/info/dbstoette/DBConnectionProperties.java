@@ -1,14 +1,21 @@
 package no.nav.foreldrepenger.info.dbstoette;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * TODO(Humle): Skriv tester Enkel representasjon av properties for migrering av
@@ -358,4 +365,50 @@ public final class DBConnectionProperties {
             return new DBConnectionProperties(this);
         }
     }
+
+    public static Object fraStream1(InputStream in) throws JsonParseException, JsonMappingException, IOException {
+        var m = new ObjectMapper().readValue(in, Wrapper.class);
+        return Arrays.stream(m.schemas)
+                .map(DBConnectionProperties::map).collect(Collectors.toList());
+
+    }
+
+    private static DBConnectionProperties map(Schema p) {
+        String schema;
+        String defaultSchema;
+        String user;
+        String password;
+        String effectiveSchema;
+        String url = p.url;
+        try {
+            url = VariablePlaceholderReplacer.replacePlaceholders(p.url);
+            schema = VariablePlaceholderReplacer.replacePlaceholders(p.schema);
+            defaultSchema = p.defaultSchema != null ? VariablePlaceholderReplacer.replacePlaceholders(p.defaultSchema) : schema;
+            user = p.user != null ? VariablePlaceholderReplacer.replacePlaceholders(p.user) : schema;
+            password = p.password != null ? VariablePlaceholderReplacer.replacePlaceholders(p.password) : schema;
+            effectiveSchema = p.effective_schema != null ? VariablePlaceholderReplacer.replacePlaceholders(p.effective_schema) : defaultSchema;
+        } catch (IllegalStateException e) {
+            user = password = schema = effectiveSchema = defaultSchema = p.defaultSchema;
+        }
+
+        return new Builder()
+                .migrationScriptsFilesystemRoot(p.migrationScriptsFilesystemRoot)
+                .migrationScriptsClasspathRoot(p.migrationScriptsClasspathRoot)
+                .defaultSchema(defaultSchema)
+                .defaultDataSource(p.defaultDataSource)
+                .datasource(VariablePlaceholderReplacer.replacePlaceholders(p.datasource))
+                .schema(schema)
+                .user(user)
+                .defaultSchema(defaultSchema)
+                .url(url)
+                .effectiveSchema(effectiveSchema)
+                .password(password)
+                .sqlLoggable(p.sqlLoggable)
+                .migrateClean(p.migrateClean)
+                .testdataClasspathRoot(p.testdataClasspathRoot)
+                .url(url)
+                .versjonstabell(p.versjonstabell)
+                .build();
+    }
+
 }
