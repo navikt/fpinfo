@@ -78,7 +78,7 @@ public class JettyServer {
             var props1 = DBConnectionProperties.fraStream1(in1);
             LOG.info("DB connection properties 1{}", props1);
         } catch (Exception e) {
-
+            LOG.info("DB connection properties feilet", e);
         }
         return props;
     }
