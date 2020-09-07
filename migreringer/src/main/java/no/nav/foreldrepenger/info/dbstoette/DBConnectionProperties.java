@@ -460,7 +460,7 @@ public final class DBConnectionProperties {
         }
     }
 
-    public static Object fraStream1(InputStream in) throws JsonParseException, JsonMappingException, IOException {
+    public static List<DBConnectionProperties> fraStream1(InputStream in) throws JsonParseException, JsonMappingException, IOException {
         var m = new ObjectMapper().readValue(in, Wrapper.class);
         return Arrays.stream(m.schemas)
                 .map(DBConnectionProperties::map).collect(Collectors.toList());
