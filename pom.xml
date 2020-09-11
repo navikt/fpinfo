@@ -27,7 +27,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <felles.version>2.1.0-20200902145135-53eb41e</felles.version>
+        <felles.version>2.1.0-20200911114222-6363464</felles.version>
         <metrics.version>4.1.12.1</metrics.version>
         <prometheus.version>0.9.0</prometheus.version>
         <swagger.version>2.1.4</swagger.version>
@@ -37,7 +37,7 @@
         <geronimo.jaspi.version>2.0.0</geronimo.jaspi.version>
         <geronimo.osgi.version>1.1</geronimo.osgi.version>
         <hamcrest.version>1.3</hamcrest.version>
-        <jupiter.version>5.4.1</jupiter.version>
+        <jupiter.version>5.6.2</jupiter.version>
         <logstash.version>6.4</logstash.version>
         <mockito.version>3.5.10</mockito.version>
         <ojdbc.version>19.3.0.0</ojdbc.version>
@@ -304,6 +304,12 @@
         <dependency>
             <groupId>javax.json</groupId>
             <artifactId>javax.json-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>3.5.10</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
