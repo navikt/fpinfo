@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.info.tjenester;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -13,8 +12,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.info.domene.Behandling;
 import no.nav.foreldrepenger.info.domene.MottattDokument;
@@ -31,6 +33,7 @@ import no.nav.foreldrepenger.info.tjenester.dto.ForsendelseStatus;
 import no.nav.foreldrepenger.info.tjenester.dto.ForsendelseStatusDataDTO;
 import no.nav.vedtak.exception.TekniskException;
 
+@ExtendWith(MockitoExtension.class)
 public class DokumentforsendelseTjenesteImplTest {
     private static final Long BEHANDLING_ID = 123L;
     private static final String BEHANDLING_STATUS = "FVED";
@@ -45,8 +48,13 @@ public class DokumentforsendelseTjenesteImplTest {
     private static final String JOURNALPOST_ID = "1234";
     private static final String LINK_PATH_SØKNAD = "/søknad?param=";
     @Mock
-    private DokumentForsendelseRepository mockRepository = mock(DokumentForsendelseRepository.class);
-    private DokumentforsendelseTjeneste tjeneste = new DokumentforsendelseTjenesteImpl(mockRepository);
+    private DokumentForsendelseRepository mockRepository;
+    private DokumentforsendelseTjeneste tjeneste;
+
+    @BeforeEach
+    public void beforeEach() {
+        tjeneste = new DokumentforsendelseTjenesteImpl(mockRepository);
+    }
 
     @Test
     public void skalKonvertereBehandlingTilDtoOgUtledeBehandlingTema() {
