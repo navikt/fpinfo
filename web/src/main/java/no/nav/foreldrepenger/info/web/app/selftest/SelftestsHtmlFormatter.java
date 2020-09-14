@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.info.web.app.selftest;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 
 import com.codahale.metrics.health.HealthCheck;
 

@@ -11,8 +11,6 @@ import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.DefaultIdentityService;
 import org.eclipse.jetty.security.jaspi.JaspiAuthenticatorFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import no.nav.vedtak.util.env.Environment;
 
@@ -20,8 +18,6 @@ import no.nav.vedtak.util.env.Environment;
  * Konfigurerer sikkerhet for jetty webappContext.
  */
 public class JettySikkerhetKonfig {
-
-    private static final Logger LOG = LoggerFactory.getLogger(JettySikkerhetKonfig.class);
 
     private static final Environment ENV = Environment.current();
 

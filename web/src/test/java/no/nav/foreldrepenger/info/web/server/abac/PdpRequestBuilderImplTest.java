@@ -12,11 +12,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import no.nav.foreldrepenger.info.abac.AppAbacAttributtType;
+import no.nav.foreldrepenger.info.pip.BeskyttetRessursAttributt;
 import no.nav.foreldrepenger.info.pip.PipRepository;
 import no.nav.vedtak.sikkerhet.abac.AbacAttributtSamling;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt;
-import no.nav.vedtak.sikkerhet.abac.BeskyttetRessursResourceAttributt;
 import no.nav.vedtak.sikkerhet.abac.PdpRequest;
 
 public class PdpRequestBuilderImplTest {
@@ -89,7 +89,7 @@ public class PdpRequestBuilderImplTest {
     private static AbacAttributtSamling byggAbacAttributtSamling() {
         AbacAttributtSamling attributtSamling = AbacAttributtSamling.medJwtToken(DUMMY_ID_TOKEN);
         attributtSamling.setActionType(BeskyttetRessursActionAttributt.READ);
-        attributtSamling.setResource(BeskyttetRessursResourceAttributt.FAGSAK.getEksternKode());
+        attributtSamling.setResource(BeskyttetRessursAttributt.FAGSAK);
         return attributtSamling;
     }
 }

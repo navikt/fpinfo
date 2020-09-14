@@ -2,8 +2,6 @@ package no.nav.foreldrepenger.info.web.app.tjenester;
 
 import static no.nav.foreldrepenger.info.web.app.tjenester.DokumentforsendelseRestTjeneste.DOKUMENTFORSENDELSE_PATH;
 import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.READ;
-import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursResourceAttributt.FAGSAK;
-import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursResourceAttributt.UTTAKSPLAN;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +22,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import no.nav.foreldrepenger.info.pip.BeskyttetRessursAttributt;
 import no.nav.foreldrepenger.info.tjenester.DokumentforsendelseTjeneste;
 import no.nav.foreldrepenger.info.tjenester.dto.AktørAnnenPartDto;
 import no.nav.foreldrepenger.info.tjenester.dto.AktørIdDto;
@@ -58,7 +57,7 @@ public class DokumentforsendelseRestTjeneste {
 
     @GET
     @Path("/behandling")
-    @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
+    @BeskyttetRessurs(action = READ, resource = BeskyttetRessursAttributt.FAGSAK)
     @Operation(description = "Url for å hente Behandling", summary = "Returnerer Behandling", responses = {
             @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = BehandlingDto.class)), responseCode = "200", description = "Returnerer søknad XML")
     })
@@ -71,7 +70,7 @@ public class DokumentforsendelseRestTjeneste {
     @GET
     @Path("/status")
     @Produces(MediaType.APPLICATION_JSON)
-    @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
+    @BeskyttetRessurs(action = READ, resource = BeskyttetRessursAttributt.FAGSAK)
     @Operation(description = "Søker om status på prossesseringen av et mottatt dokument", summary = "status på prossesseringen av et mottatt dokument", responses = {
             @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = ForsendelseStatusDataDTO.class)), responseCode = "200", description = "Status og Periode"),
             @ApiResponse(responseCode = "404", description = "Forsendelse ikke funnet")
@@ -86,7 +85,7 @@ public class DokumentforsendelseRestTjeneste {
 
     @GET
     @Path("/sak")
-    @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
+    @BeskyttetRessurs(action = READ, resource = BeskyttetRessursAttributt.FAGSAK)
     @Operation(description = "Url for å hente sak status informasjon som er relevant til aktør", summary = ("Returnerer Sak Status Informasjon"), responses = {
             @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SakStatusDto.class)), responseCode = "200", description = "Returnerer Sak Status Informasjon")
     })
@@ -99,7 +98,7 @@ public class DokumentforsendelseRestTjeneste {
 
     @GET
     @Path("/soknad")
-    @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
+    @BeskyttetRessurs(action = READ, resource = BeskyttetRessursAttributt.FAGSAK)
     @Operation(description = "Url for å hente søknad XML og journalpostId", summary = "Returnerer søknad XML og Journalpost ID", responses = {
             @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SøknadXmlDto.class)), responseCode = "200", description = "Returnerer søknad XML")
     })
@@ -112,7 +111,7 @@ public class DokumentforsendelseRestTjeneste {
 
     @GET
     @Path("/uttaksplan")
-    @BeskyttetRessurs(action = READ, ressurs = UTTAKSPLAN)
+    @BeskyttetRessurs(action = READ, resource = BeskyttetRessursAttributt.UTTAKSPLAN)
     @Operation(description = "Url for å hente søknadsgrunnlag og felles uttaksplan", summary = "Returnerer grunnlagsinfo og liste av uttaksperioder for begge parter", responses = {
             @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SøknadsGrunnlagDto.class)), responseCode = "200", description = "Returnerer søknad XML")
     })
@@ -124,7 +123,7 @@ public class DokumentforsendelseRestTjeneste {
 
     @GET
     @Path("/annenforelderplan")
-    @BeskyttetRessurs(action = READ, ressurs = UTTAKSPLAN)
+    @BeskyttetRessurs(action = READ, resource = BeskyttetRessursAttributt.UTTAKSPLAN)
     @Operation(description = "Url for å hente søknadsgrunnlag og felles uttaksplan", summary = "Returnerer grunnlagsinfo og liste av uttaksperioder for begge parter", responses = {
             @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SøknadsGrunnlagDto.class)), responseCode = "200", description = "Returnerer søknad XML")
     })
