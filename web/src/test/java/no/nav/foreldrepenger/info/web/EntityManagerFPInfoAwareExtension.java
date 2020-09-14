@@ -11,6 +11,5 @@ public class EntityManagerFPInfoAwareExtension extends EntityManagerAwareExtensi
     protected void init() {
         TimeZone.setDefault(TimeZone.getTimeZone("Europe/Oslo"));
         Databaseskjemainitialisering.kjørMigreringHvisNødvendig();
-
     }
 }
