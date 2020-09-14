@@ -15,23 +15,18 @@ import javax.sql.DataSource;
 
 import org.junit.BeforeClass;
 import org.junit.Ignore;
-import org.junit.Rule;
 import org.junit.Test;
 
 import no.nav.foreldrepenger.info.dbstoette.ConnectionHandler;
 import no.nav.foreldrepenger.info.dbstoette.DBConnectionProperties;
 import no.nav.foreldrepenger.info.dbstoette.Databaseskjemainitialisering;
 import no.nav.foreldrepenger.info.dbstoette.DatasourceConfiguration;
-import no.nav.foreldrepenger.info.dbstoette.UnittestRepositoryRule;
 
 /**
  * Tester at alle migreringer følger standarder for navn og god praksis.
  */
 @Ignore
 public class SjekkDbStrukturTest {
-
-    @Rule
-    public final UnittestRepositoryRule repoRule = new UnittestRepositoryRule();
 
     private static final String HJELP = "\n\nDu har nylig lagt til en ny tabell eller kolonne som ikke er dokumentert ihht. gjeldende regler for dokumentasjon."
             + "\nVennligst gå over sql scriptene og dokumenter tabellene på korrekt måte.";
