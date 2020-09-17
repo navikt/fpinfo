@@ -6,6 +6,7 @@ import java.util.TimeZone;
 
 import javax.naming.NameNotFoundException;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -14,6 +15,7 @@ import no.nav.foreldrepenger.info.web.app.selftest.checks.ExtHealthCheck.Interna
 import no.nav.vedtak.felles.testutilities.db.EntityManagerAwareTest;
 
 @ExtendWith(EntityManagerFPInfoAwareExtension.class)
+@Disabled
 public class DatabaseHealthCheckTest extends EntityManagerAwareTest {
 
     static {
