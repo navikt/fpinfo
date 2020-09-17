@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.ImmutableMap;
-
 public class BehandlingTema {
 
     private static final String KEY_ADOPSJON = "adopsjon";
@@ -21,7 +19,7 @@ public class BehandlingTema {
             KEY_FØDSEL, Collections.unmodifiableList(
                     Arrays.asList(FamilieHendelseType.FØDSEL.getVerdi(), FamilieHendelseType.TERMIN.getVerdi())));
 
-    private static final ImmutableMap<String, List<String>> YTELSE_TYPER = ImmutableMap.of(
+    private static final Map<String, List<String>> YTELSE_TYPER = Map.of(
             KEY_ENGANGSSTØNAD, Collections.unmodifiableList(Arrays.asList(FagsakYtelseType.ES.getVerdi())),
             KEY_FORELDREPENGER, Collections.unmodifiableList(
                     Arrays.asList(FagsakYtelseType.FP.getVerdi(), FagsakYtelseType.ENDRING_FP.getVerdi())));
