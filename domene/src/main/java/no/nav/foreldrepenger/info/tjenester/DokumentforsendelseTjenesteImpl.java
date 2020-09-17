@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -16,7 +17,6 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.sf.ehcache.util.concurrent.ConcurrentHashMap;
 import no.nav.foreldrepenger.info.domene.Aksjonspunkt;
 import no.nav.foreldrepenger.info.domene.Behandling;
 import no.nav.foreldrepenger.info.domene.FagsakRelasjon;
@@ -161,7 +161,7 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
 
     @Override
     public Optional<SøknadsGrunnlagDto> hentSøknadAnnenPart(AktørIdDto aktørIdBrukerDto,
-                                                            AktørAnnenPartDto aktørAnnenPartDto) {
+            AktørAnnenPartDto aktørAnnenPartDto) {
         Optional<SakStatus> sakAnnenPart = dokumentForsendelseRepository
                 .finnNyesteSakForAnnenPart(aktørIdBrukerDto.getAktørId(), aktørAnnenPartDto.getAnnenPartAktørId());
         Optional<SøknadsGrunnlagDto> søknadsgrunnlag = sakAnnenPart
