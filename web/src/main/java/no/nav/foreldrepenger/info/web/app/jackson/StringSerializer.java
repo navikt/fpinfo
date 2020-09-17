@@ -29,7 +29,7 @@ public class StringSerializer extends StdScalarSerializer<Object> {
     /**
      * @deprecated
      */
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "2.3.x")
     @Override
     public boolean isEmpty(Object value) {
         String str = (String) value;
@@ -47,7 +47,8 @@ public class StringSerializer extends StdScalarSerializer<Object> {
         String originalValue = (String) value;
         String encodedValue = Encode.forHtml(originalValue);
         if (!originalValue.equals(encodedValue)) {
-            log.trace("Encoding av jsonString : fra '{}' til '{}'", LoggerUtils.removeLineBreaks(originalValue), LoggerUtils.removeLineBreaks(encodedValue)); //NOSONAR
+            log.trace("Encoding av jsonString : fra '{}' til '{}'", LoggerUtils.removeLineBreaks(originalValue),
+                    LoggerUtils.removeLineBreaks(encodedValue)); // NOSONAR
         }
         gen.writeString(encodedValue);
     }
