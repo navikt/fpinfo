@@ -4,13 +4,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TimeZone;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.naming.InitialContext;
@@ -21,26 +15,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
-public class DatabaseHealthCheck extends ExtHealthCheck {
+public class DatabaseHealthCheck {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseHealthCheck.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DatabaseHealthCheck.class);
     private static final String JDBC_DEFAULT_DS = "jdbc/defaultDS";
+    private static final String SQL_QUERY = "select count(1) from BEHANDLING";
 
-    private String jndiName;
+    private final String jndiName;
 
-    private static final Set<String> SQL_QUERIES = new HashSet<>();
-
-    static {
-        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Oslo"));
-        SQL_QUERIES.add("select 1 from AKSJONSPUNKT where rownum=1");
-        SQL_QUERIES.add("select 1 from SAK_STATUS where rownum=1");
-        SQL_QUERIES.add("select 1 from MOTTATT_DOKUMENT where rownum=1");
-        SQL_QUERIES.add("select 1 from BEHANDLING where rownum=1");
-        SQL_QUERIES.add("select 1 from UTTAK_PERIODE where rownum=1");
-        SQL_QUERIES.add("select 1 from FAGSAK_RELASJON where rownum=1");
-        SQL_QUERIES.add("select 1 from GJELDENDE_VEDTATT_BEHANDLING where rownum=1");
-        SQL_QUERIES.add("select 1 from SOEKNAD_GR where rownum=1");
-    }
+    // må være rask, og bruke et stabilt tabell-navn
 
     private String endpoint = null; // ukjent frem til første gangs test
 
@@ -48,77 +31,41 @@ public class DatabaseHealthCheck extends ExtHealthCheck {
         this.jndiName = JDBC_DEFAULT_DS;
     }
 
-    DatabaseHealthCheck(String dsJndiName) {
-        this.jndiName = dsJndiName;
-    }
-
-    @Override
-    protected String getDescription() {
+    public String getDescription() {
         return "Test av databaseforbindelse (" + jndiName + ")";
     }
 
-    @Override
-    protected String getEndpoint() {
+    public String getEndpoint() {
         return endpoint;
     }
 
-    @Override
-    protected InternalResult performCheck() {
+    public boolean isOK() {
 
-        InternalResult intTestRes = new InternalResult();
-
-        DataSource dataSource = null;
+        DataSource dataSource;
         try {
             dataSource = (DataSource) new InitialContext().lookup(jndiName);
         } catch (NamingException e) {
-            intTestRes.setMessage("Feil ved JNDI-oppslag for " + jndiName + " - " + e);
-            intTestRes.setException(e);
-            return intTestRes;
+            return false;
         }
 
-        Optional<List<InternalResult>> results = performChecks(dataSource);
-        if (results.isPresent()) {
-            return results.get().get(0);
-        }
-
-        intTestRes.noteResponseTime();
-        intTestRes.setOk(true);
-        return intTestRes;
-    }
-
-    private Optional<List<InternalResult>> performChecks(DataSource dataSource) {
-        List<InternalResult> results = new ArrayList<>();
-        String runningQuery = "";
         try (Connection connection = dataSource.getConnection()) {
             if (endpoint == null) {
                 endpoint = extractEndpoint(connection);
             }
-            for (String sqlQuery : SQL_QUERIES) {
-                runningQuery = sqlQuery;
-                try (Statement statement = connection.createStatement()) {
-                    if (!statement.execute(sqlQuery)) { // NOSONAR
-                        String message = "SQL-spørring '" + sqlQuery + "' feilet";
-                        results.add(opprettInternalResult(message, new SQLException(message)));
-                    }
+            try (Statement statement = connection.createStatement()) {
+                if (!statement.execute(SQL_QUERY)) {
+                    throw new SQLException("SQL-spørring ga ikke et resultatsett");
                 }
             }
         } catch (SQLException e) {
-            String error = "Feil ved kjøring av selftest mot db for query (" + runningQuery + ") mot "
-                    + JDBC_DEFAULT_DS;
-            LOGGER.error(error, e);
-            results.add(opprettInternalResult(error, e));
+            LOG.warn("Feil ved SQL-spørring {} mot databasen", SQL_QUERY);
+            return false;
         }
-        return results.isEmpty() ? Optional.empty() : Optional.of(results);
+
+        return true;
     }
 
-    private static InternalResult opprettInternalResult(String message, Exception feil) {
-        InternalResult internalResult = new InternalResult();
-        internalResult.setMessage(message);
-        internalResult.setException(feil);
-        return internalResult;
-    }
-
-    private static String extractEndpoint(Connection connection) {
+    private String extractEndpoint(Connection connection) {
         String result = "?";
         try {
             DatabaseMetaData metaData = connection.getMetaData();
@@ -129,7 +76,7 @@ public class DatabaseHealthCheck extends ExtHealthCheck {
                 }
                 result = url;
             }
-        } catch (SQLException e) {
+        } catch (SQLException e) { //NOSONAR
             // ikke fatalt
         }
         return result;
