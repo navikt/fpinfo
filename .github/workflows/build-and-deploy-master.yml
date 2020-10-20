@@ -1,7 +1,7 @@
 name: Bygg og deploy master
 
 on:
-  push:
+  pull_request:
     branches:
       - master
 
@@ -51,7 +51,7 @@ jobs:
 
       - name: Kompiler
         run: |
-            mvn  install --settings .github/workflows/.m2/settings.xml -Dchangelist= -Dsha1=-${BUILD_VERSION}
+            mvn install -e --settings .github/workflows/.m2/settings.xml -Dchangelist= -Dsha1=-${BUILD_VERSION} -Dfile.encoding=UTF-8
             echo "TAG=$(mvn help:evaluate --batch-mode --settings .github/workflows/.m2/settings.xml --file .flattened -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
         env:
           SONAR: ${{ secrets.SONAR }}
@@ -64,44 +64,49 @@ jobs:
           echo  $GITHUB_TOKEN | docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} --password-stdin
           docker push $IMAGE_BASE
 
-      - name: Lukk gamle bygg-issues
-        if: success()
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            github.issues.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'open',
-              labels: ['bygg']
-            }).then(response => {
-              response.data.forEach(issue => {
-                github.issues.update({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: issue.number,
-                  state: 'closed'
-                });
-              });
-            });
 
-      - name: Opprett issue, trigg deploy til dev-fss
-        if: success()
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{secrets.NOTIFICATION}}
-          script: |
-              github.issues.create( {
-                owner: context.issue.owner,
-                repo: context.issue.repo,
-                labels: ['bygg'],
-                title: 'Deploy av ${{ env.TAG }}'})
-              .then(response => {
-                      const issue = { owner: context.issue.owner,
-                      repo: context.issue.repo,
-                      issue_number: response.data.number }
-                     github.issues.createComment({...issue,
-                            title: 'Deploy av ${{ env.TAG }}',
-                            body: '/promote dev-fss'})
-               });
+      - name: TEST
+        run: |
+          echo "BUILD_VERSION=$(date +%Y.%m.%d.%H%M%S)-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
+
+#      - name: Lukk gamle bygg-issues
+#        if: success()
+#        uses: actions/github-script@v3
+#        with:
+#          github-token: ${{ secrets.GITHUB_TOKEN }}
+#          script: |
+#            github.issues.listForRepo({
+#              owner: context.repo.owner,
+#              repo: context.repo.repo,
+#              state: 'open',
+#              labels: ['bygg']
+#            }).then(response => {
+#              response.data.forEach(issue => {
+#                github.issues.update({
+#                  owner: context.repo.owner,
+#                  repo: context.repo.repo,
+#                  issue_number: issue.number,
+#                  state: 'closed'
+#                });
+#              });
+#            });
+#
+#      - name: Opprett issue, trigg deploy til dev-fss
+#        if: success()
+#        uses: actions/github-script@v3
+#        with:
+#          github-token: ${{secrets.NOTIFICATION}}
+#          script: |
+#              github.issues.create( {
+#                owner: context.issue.owner,
+#                repo: context.issue.repo,
+#                labels: ['bygg'],
+#                title: 'Deploy av ${{ env.TAG }}'})
+#              .then(response => {
+#                      const issue = { owner: context.issue.owner,
+#                      repo: context.issue.repo,
+#                      issue_number: response.data.number }
+#                     github.issues.createComment({...issue,
+#                            title: 'Deploy av ${{ env.TAG }}',
+#                            body: '/promote dev-fss'})
+#               });
