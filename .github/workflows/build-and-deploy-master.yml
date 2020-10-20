@@ -64,11 +64,6 @@ jobs:
           echo  $GITHUB_TOKEN | docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} --password-stdin
           docker push $IMAGE_BASE
 
-
-      - name: TEST
-        run: |
-          echo "BUILD_VERSION=$(date +%Y.%m.%d.%H%M%S)-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
-
       - name: Lukk gamle bygg-issues
         if: success()
         uses: actions/github-script@v3
