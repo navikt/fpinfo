@@ -6,7 +6,7 @@
 
     <groupId>no.nav.foreldrepenger.info</groupId>
     <artifactId>fpinfo</artifactId>
-    <version>${sha1}</version>
+    <version>${revision}${sha1}${changelist}</version>
     <packaging>pom</packaging>
     <name>fpinfo</name>
 
@@ -21,7 +21,9 @@
         <sonar.projectKey>navikt_fpinfo1</sonar.projectKey>
         <sonar.organization>navit</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sha1>1.0-SNAPSHOT</sha1>
+        <revision>1.0</revision>
+        <sha1 />
+        <changelist>-SNAPSHOT</changelist>
         <java.version>14</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
