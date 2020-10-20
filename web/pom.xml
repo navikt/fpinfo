@@ -7,7 +7,7 @@
     <parent>
         <groupId>no.nav.foreldrepenger.info</groupId>
         <artifactId>fpinfo</artifactId>
-        <version>${sha1}</version>
+        <version>${revision}${sha1}${changelist}</version>
     </parent>
 
     <artifactId>web</artifactId>

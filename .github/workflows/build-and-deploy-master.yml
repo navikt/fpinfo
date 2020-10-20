@@ -51,7 +51,7 @@ jobs:
 
       - name: Kompiler
         run: |
-            mvn install -e --settings .github/workflows/.m2/settings.xml -Dchangelist= -Dsha1=-${BUILD_VERSION} -Dfile.encoding=UTF-8
+            mvn install --settings .github/workflows/.m2/settings.xml -Dchangelist= -Dsha1=-${BUILD_VERSION}
             echo "TAG=$(mvn help:evaluate --batch-mode --settings .github/workflows/.m2/settings.xml --file .flattened -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
         env:
           SONAR: ${{ secrets.SONAR }}
