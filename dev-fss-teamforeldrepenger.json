@@ -10,7 +10,6 @@
         "https://fpinfo-q1.dev.nav.no"
     ],
     "env": {
-        "ABAC_PDP_ENDPOINT_URL" : "http://abac-foreldrepenger.default/application/authorize",
         "APPDYNAMICS_AGENT_ACCOUNT_NAME" :"NON-PROD",
         "DEFAULTDS_URL" : "jdbc:oracle:thin:@a01dbfl032.adeo.no:1521/fpsak_q1",
         "FPINFOSCHEMA_URL" :"jdbc:oracle:thin:@a01dbfl032.adeo.no:1521/fpsak_q1",

@@ -7,7 +7,6 @@
     "namespace": "teamforeldrepenger",
     "ingresses": [ "https://fpinfo.nais.adeo.no" ],
     "env": {
-        "ABAC_PDP_ENDPOINT_URL" : "https://wasapp.adeo.no/asm-pdp/authorize",
         "APPDYNAMICS_AGENT_ACCOUNT_NAME" :"PROD",
         "DEFAULTDS_URL" : "jdbc:oracle:thin:@a01dbfl037.adeo.no:1521/fpsak",
         "FPINFOSCHEMA_URL" :"jdbc:oracle:thin:@a01dbfl037.adeo.no:1521/fpsak",
