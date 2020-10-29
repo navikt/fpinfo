@@ -59,3 +59,4 @@ spec:
    
     - kvPath: /kv/{{cluster}}/fss/fpinfo/{{namespace}}
       mountPath: /var/run/secrets/nais.io/vault
+  webproxy: true
