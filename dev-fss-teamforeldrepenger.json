@@ -20,7 +20,6 @@
         "OPENIDCONNECT_ISSOHOST" : "https://isso-q.adeo.no:443/isso/oauth2",
         "OIDC_STS_ISSUER_URL"  : "https://security-token-service.nais.preprod.local",
         "OIDC_STS_JWKS_URL" : "https://security-token-service.nais.preprod.local/rest/v1/sts/jwks",
-        "OIDC_AAD_B2C_ISSUERURL" : "https://navtestb2c.b2clogin.com/d38f25aa-eab8-4c50-9f28-ebf92c1256f2/v2.0/",
         "OIDC_AAD_B2C_HOSTURL" : "https://not.used.in.fss",
         "SECURITYTOKENSERVICE_URL" :"https://sts-q1.preprod.local/SecurityTokenServiceProvider/"
       }
