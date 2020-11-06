@@ -33,7 +33,6 @@ DECLARE
     BEGIN
         EXECUTE IMMEDIATE ('GRANT CONNECT TO ${fpinfo.fpsak.schema.navn}');
         EXECUTE IMMEDIATE ('GRANT SELECT ON ${fpinfo.fpsak.schema.navn}.FAGSAK                      TO  ${fpinfoschema.schema.navn} WITH GRANT OPTION');
-        EXECUTE IMMEDIATE ('GRANT SELECT ON ${fpinfo.fpsak.schema.navn}.KODELISTE                   TO  ${fpinfoschema.schema.navn} WITH GRANT OPTION');
         EXECUTE IMMEDIATE ('GRANT SELECT ON ${fpinfo.fpsak.schema.navn}.FH_FAMILIE_HENDELSE         TO  ${fpinfoschema.schema.navn} WITH GRANT OPTION');
         EXECUTE IMMEDIATE ('GRANT SELECT ON ${fpinfo.fpsak.schema.navn}.GR_PERSONOPPLYSNING         TO  ${fpinfoschema.schema.navn} WITH GRANT OPTION');
         EXECUTE IMMEDIATE ('GRANT SELECT ON ${fpinfo.fpsak.schema.navn}.PO_INFORMASJON              TO  ${fpinfoschema.schema.navn} WITH GRANT OPTION');
