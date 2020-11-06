@@ -430,41 +430,6 @@ create index ${fpinfo.fpsak.schema.navn}.IDX_BEHANDLING_ARSAK_6
 create index ${fpinfo.fpsak.schema.navn}.IDX_BEHANDLING_ARSAK_7
    on ${fpinfo.fpsak.schema.navn}.BEHANDLING_ARSAK (ORIGINAL_BEHANDLING_ID);
 
-create table ${fpinfo.fpsak.schema.navn}.KODELISTE
-(
-   KODEVERK VARCHAR2(100 char) not NULL,
-   KODE VARCHAR2(100 char) not null,
-   OFFISIELL_KODE VARCHAR2(1000 char),
-   BESKRIVELSE VARCHAR2(4000 char),
-   GYLDIG_FOM DATE default sysdate not null,
-   GYLDIG_TOM DATE default to_date('31.12.9999','dd.mm.yyyy') not null,
-   OPPRETTET_AV VARCHAR2(200 char) default 'VL' not null,
-   OPPRETTET_TID TIMESTAMP(3) default systimestamp not null,
-   ENDRET_AV VARCHAR2(200 char),
-   ENDRET_TID TIMESTAMP(3)
-);
-
-
-
-create index ${fpinfo.fpsak.schema.navn}.IDX_KODELISTE_1
-   on ${fpinfo.fpsak.schema.navn}.KODELISTE (KODE);
-
-create index ${fpinfo.fpsak.schema.navn}.IDX_KODELISTE_2
-   on ${fpinfo.fpsak.schema.navn}.KODELISTE (OFFISIELL_KODE);
-
-create index ${fpinfo.fpsak.schema.navn}.IDX_KODELISTE_3
-   on ${fpinfo.fpsak.schema.navn}.KODELISTE (GYLDIG_FOM);
-
-create unique index ${fpinfo.fpsak.schema.navn}.UIDX_KODELISTE_1
-   on ${fpinfo.fpsak.schema.navn}.KODELISTE (KODE, KODEVERK);
-
-create index ${fpinfo.fpsak.schema.navn}.IDX_KODELISTE_6
-   on ${fpinfo.fpsak.schema.navn}.KODELISTE (KODEVERK);
-
-alter table ${fpinfo.fpsak.schema.navn}.KODELISTE
-   add constraint PK_KODELISTE
-      primary key (KODE, KODEVERK);
-
 create table ${fpinfo.fpsak.schema.navn}.FH_FAMILIE_HENDELSE
 (
    ID NUMBER(19) not null
