@@ -24,7 +24,7 @@
         <revision>1.0</revision>
         <sha1 />
         <changelist>-SNAPSHOT</changelist>
-        <java.version>14</java.version>
+        <java.version>15</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -330,7 +330,7 @@
                         <arg>--enable-preview</arg>
                     </compilerArgs>
                     <parameters>true</parameters>
-                    <release>14</release>
+                    <release>15</release>
                 </configuration>
             </plugin>
                 <plugin>
