@@ -29,7 +29,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <felles.version>2.4.0-20201125100519-780282a</felles.version>
+        <felles.version>2.5.0-20201130142225-9738df0</felles.version>
         <metrics.version>4.1.12.1</metrics.version>
         <prometheus.version>0.9.0</prometheus.version>
         <swagger.version>2.1.5</swagger.version>
@@ -281,12 +281,7 @@
     </dependencyManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
+       
         <dependency>
             <groupId>com.oracle.ojdbc</groupId>
             <artifactId>ojdbc8</artifactId>
@@ -296,12 +291,6 @@
         <dependency>
             <groupId>javax.json</groupId>
             <artifactId>javax.json-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-junit-jupiter</artifactId>
-            <version>3.6.28</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
