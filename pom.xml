@@ -46,7 +46,7 @@
 
         <!-- Transitive avh. versjoner for å sikre unikhet (enforcer dependencyConvergence).
             Skal ikke benyttes direkte av vår egen kode. -->
-        <joda-time.version>2.10.8</joda-time.version>
+        <joda-time.version>2.10.9</joda-time.version>
         <owaspencoder.version>1.2.3</owaspencoder.version>
         <sysdoc.version>1.0.8</sysdoc.version>
         <javaslang.version>2.0.6</javaslang.version>
