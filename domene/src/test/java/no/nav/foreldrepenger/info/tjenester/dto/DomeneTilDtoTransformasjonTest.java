@@ -79,7 +79,7 @@ public class DomeneTilDtoTransformasjonTest {
 
     @Test
     public void skalTransformereSakStatusTilSakStatusDto() {
-        SakStatus sakStatus = SakStatus.builder()
+        var sakStatus = SakStatus.builder()
                 .medFagsakStatus(FAGSAK_STATUS)
                 .medAktørId(AKTØR_ID)
                 .medAktørIdAnnenPart(AKTØR_ID_ANNEN_PART)
@@ -89,8 +89,9 @@ public class DomeneTilDtoTransformasjonTest {
                 .medAktørIdBarn(AKTØR_ID)
                 .build();
 
-        SakStatusDto dto = SakStatusDto.fraDomene(sakStatus);
+        var dto = SakStatusDto.fraDomene(sakStatus, true);
         assertThat(dto.getAktørId()).isEqualTo(AKTØR_ID);
+        assertThat(dto.isMottattEndringssøknad()).isTrue();
         assertThat(dto.getAktørIdAnnenPart()).isEqualTo(AKTØR_ID_ANNEN_PART);
         assertThat(dto.getFagsakStatus()).isEqualTo(FAGSAK_STATUS);
         assertThat(dto.getBehandlingTema())

@@ -23,6 +23,7 @@ public class SakStatusDto implements AbacDto {
     private List<ResourceLink> lenker = new ArrayList<>();
     private LocalDateTime opprettetTidspunkt;
     private LocalDateTime endretTidspunkt;
+    private boolean mottattEndringssøknad;
 
     public SakStatusDto() {
     }
@@ -75,7 +76,11 @@ public class SakStatusDto implements AbacDto {
         }
     }
 
-    public static SakStatusDto fraDomene(SakStatus sakStatus) {
+    public boolean isMottattEndringssøknad() {
+        return mottattEndringssøknad;
+    }
+
+    public static SakStatusDto fraDomene(SakStatus sakStatus, boolean mottattEndringssøknad) {
         SakStatusDto dto = new SakStatusDto();
         dto.saksnummer = sakStatus.getSaksnummer();
         dto.fagsakStatus = sakStatus.getFagsakStatus();
@@ -84,6 +89,7 @@ public class SakStatusDto implements AbacDto {
         dto.behandlingTema = sakStatus.getBehandlingstema();
         dto.opprettetTidspunkt = sakStatus.getOpprettetTidspunkt();
         dto.endretTidspunkt = sakStatus.getEndretTidspunkt();
+        dto.mottattEndringssøknad = mottattEndringssøknad;
         return dto;
     }
 

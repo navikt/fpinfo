@@ -226,7 +226,7 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
         return sakListe.stream()
                 .filter(distinct(SakStatus::getSaksnummer))
                 .map(sak -> {
-                    SakStatusDto dto = SakStatusDto.fraDomene(sak);
+                    var dto = SakStatusDto.fraDomene(sak, harMottattEndringssøknad(sak));
 
                     // Alle barn som gjelder denne saken, kan spenne over flere behandlinger uansett
                     // status
@@ -245,6 +245,12 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
                     });
                     return dto;
                 }).collect(Collectors.toList());
+    }
+
+    private boolean harMottattEndringssøknad(SakStatus sak) {
+        return dokumentForsendelseRepository.hentTilknyttedeBehandlinger(sak.getSaksnummer())
+                .stream()
+                .anyMatch(behandling -> Objects.equals(behandling.getBehandlingÅrsak(), "RE-END-FRA-BRUKER"));
     }
 
     private Optional<SøknadXmlDto> mapTilSøknadXml(List<MottattDokument> dokumenter) {
