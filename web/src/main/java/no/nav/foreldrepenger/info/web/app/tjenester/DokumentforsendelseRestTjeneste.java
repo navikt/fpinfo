@@ -30,7 +30,7 @@ import no.nav.foreldrepenger.info.tjenester.dto.BehandlingDto;
 import no.nav.foreldrepenger.info.tjenester.dto.BehandlingIdDto;
 import no.nav.foreldrepenger.info.tjenester.dto.ForsendelseIdDto;
 import no.nav.foreldrepenger.info.tjenester.dto.ForsendelseStatusDataDTO;
-import no.nav.foreldrepenger.info.tjenester.dto.SakStatusDto;
+import no.nav.foreldrepenger.info.tjenester.dto.SakDto;
 import no.nav.foreldrepenger.info.tjenester.dto.SaksnummerDto;
 import no.nav.foreldrepenger.info.tjenester.dto.SøknadXmlDto;
 import no.nav.foreldrepenger.info.tjenester.dto.SøknadsGrunnlagDto;
@@ -87,9 +87,9 @@ public class DokumentforsendelseRestTjeneste {
     @Path("/sak")
     @BeskyttetRessurs(action = READ, resource = BeskyttetRessursAttributt.FAGSAK)
     @Operation(description = "Url for å hente sak status informasjon som er relevant til aktør", summary = ("Returnerer Sak Status Informasjon"), responses = {
-            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SakStatusDto.class)), responseCode = "200", description = "Returnerer Sak Status Informasjon")
+            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SakDto.class)), responseCode = "200", description = "Returnerer Sak Status Informasjon")
     })
-    public List<SakStatusDto> hentSakStatus(
+    public List<SakDto> hentSakStatus(
             @NotNull @QueryParam("aktorId") @Parameter(name = "aktorId") @Valid AktørIdDto aktørIdDto) {
         String linkPathBehandling = API_PATH + "/behandling?behandlingId=";
         String linkPathUttaksplan = API_PATH + "/uttaksplan?saksnummer=";

@@ -21,7 +21,7 @@ import no.nav.foreldrepenger.info.domene.Aksjonspunkt;
 import no.nav.foreldrepenger.info.domene.Behandling;
 import no.nav.foreldrepenger.info.domene.FagsakRelasjon;
 import no.nav.foreldrepenger.info.domene.MottattDokument;
-import no.nav.foreldrepenger.info.domene.SakStatus;
+import no.nav.foreldrepenger.info.domene.Sak;
 import no.nav.foreldrepenger.info.domene.Saksnummer;
 import no.nav.foreldrepenger.info.domene.UttakPeriode;
 import no.nav.foreldrepenger.info.felles.datatyper.BehandlingResultatType;
@@ -34,7 +34,7 @@ import no.nav.foreldrepenger.info.tjenester.dto.BehandlingIdDto;
 import no.nav.foreldrepenger.info.tjenester.dto.ForsendelseIdDto;
 import no.nav.foreldrepenger.info.tjenester.dto.ForsendelseStatus;
 import no.nav.foreldrepenger.info.tjenester.dto.ForsendelseStatusDataDTO;
-import no.nav.foreldrepenger.info.tjenester.dto.SakStatusDto;
+import no.nav.foreldrepenger.info.tjenester.dto.SakDto;
 import no.nav.foreldrepenger.info.tjenester.dto.SaksnummerDto;
 import no.nav.foreldrepenger.info.tjenester.dto.SøknadXmlDto;
 import no.nav.foreldrepenger.info.tjenester.dto.SøknadsGrunnlagDto;
@@ -162,7 +162,7 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
     @Override
     public Optional<SøknadsGrunnlagDto> hentSøknadAnnenPart(AktørIdDto aktørIdBrukerDto,
             AktørAnnenPartDto aktørAnnenPartDto) {
-        Optional<SakStatus> sakAnnenPart = dokumentForsendelseRepository
+        Optional<Sak> sakAnnenPart = dokumentForsendelseRepository
                 .finnNyesteSakForAnnenPart(aktørIdBrukerDto.getAktørId(), aktørAnnenPartDto.getAnnenPartAktørId());
         Optional<SøknadsGrunnlagDto> søknadsgrunnlag = sakAnnenPart
                 .flatMap(sap -> hentSøknadsgrunnlag(new SaksnummerDto(sap.getSaksnummer()), true));
@@ -171,11 +171,11 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
     }
 
     @Override
-    public List<SakStatusDto> hentSakStatus(AktørIdDto aktørIdDto, String linkPathBehandling,
-            String linkPathUttaksplan) {
+    public List<SakDto> hentSakStatus(AktørIdDto aktørIdDto, String linkPathBehandling,
+                                      String linkPathUttaksplan) {
         LOGGER.info("Henter sakstatus");
-        List<SakStatus> sakListe = dokumentForsendelseRepository.hentSakStatus(aktørIdDto.getAktørId());
-        List<SakStatusDto> statusListe = mapTilSakStatusDtoListe(sakListe, linkPathBehandling, linkPathUttaksplan);
+        List<Sak> sakListe = dokumentForsendelseRepository.hentSakStatus(aktørIdDto.getAktørId());
+        List<SakDto> statusListe = mapTilSakStatusDtoListe(sakListe, linkPathBehandling, linkPathUttaksplan);
         LOGGER.info("Fant {} statuser", statusListe.size());
         return statusListe;
     }
@@ -183,7 +183,6 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
     private Set<Long> hentBehandlingIder(String saksnummer) {
         List<Behandling> behandlinger = dokumentForsendelseRepository.hentTilknyttedeBehandlinger(saksnummer);
         return behandlinger.stream()
-                // .filter(behandling -> !behandling.erHenlagt())
                 .map(Behandling::getBehandlingId)
                 .collect(Collectors.toSet());
     }
@@ -221,12 +220,12 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
         return forsendelseStatusDataDTO;
     }
 
-    private List<SakStatusDto> mapTilSakStatusDtoListe(List<SakStatus> sakListe, String linkPathBehandling,
-            String linkPathUttaksplan) {
+    private List<SakDto> mapTilSakStatusDtoListe(List<Sak> sakListe, String linkPathBehandling,
+                                                 String linkPathUttaksplan) {
         return sakListe.stream()
-                .filter(distinct(SakStatus::getSaksnummer))
+                .filter(distinct(Sak::getSaksnummer))
                 .map(sak -> {
-                    var dto = SakStatusDto.fraDomene(sak, harMottattEndringssøknad(sak));
+                    var dto = SakDto.fraDomene(sak, harMottattEndringssøknad(sak));
 
                     // Alle barn som gjelder denne saken, kan spenne over flere behandlinger uansett
                     // status
@@ -247,7 +246,7 @@ class DokumentforsendelseTjenesteImpl implements DokumentforsendelseTjeneste {
                 }).collect(Collectors.toList());
     }
 
-    private boolean harMottattEndringssøknad(SakStatus sak) {
+    private boolean harMottattEndringssøknad(Sak sak) {
         return dokumentForsendelseRepository.hentTilknyttedeBehandlinger(sak.getSaksnummer())
                 .stream()
                 .anyMatch(behandling -> Objects.equals(behandling.getBehandlingÅrsak(), "RE-END-FRA-BRUKER"));

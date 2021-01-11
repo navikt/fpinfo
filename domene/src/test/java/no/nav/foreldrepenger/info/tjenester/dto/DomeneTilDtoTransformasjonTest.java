@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.info.domene.Behandling;
 import no.nav.foreldrepenger.info.domene.MottattDokument;
-import no.nav.foreldrepenger.info.domene.SakStatus;
+import no.nav.foreldrepenger.info.domene.Sak;
 import no.nav.foreldrepenger.info.domene.Saksnummer;
 import no.nav.foreldrepenger.info.domene.UttakPeriode;
 import no.nav.foreldrepenger.info.felles.datatyper.BehandlingResultatType;
@@ -33,7 +33,6 @@ public class DomeneTilDtoTransformasjonTest {
     private static String RESULTAT_TYPE = BehandlingResultatType.IKKE_FASTSATT.getVerdi();
     private static String BEHANDLING_STATUS = BehandlingStatus.UTREDES.getVerdi();
     private static String FAGSAK_YTELSE_TYPE = FagsakYtelseType.FP.getVerdi();
-    private static String BEHANDLING_ÅRSAK = "ANNET";
     private static String FAMILIEHENDELSE_TYPE = FamilieHendelseType.FØDSEL.getVerdi();
     private static String TEST_LENKE = "test-lenke";
     private static String TEST_REL = "test-rel";
@@ -55,7 +54,6 @@ public class DomeneTilDtoTransformasjonTest {
                 .medBehandlingStatus(BEHANDLING_STATUS)
                 .medBehandlendeEnhet(BEHANDLENDE_ENHET, BEHANDLENDE_ENHET_NAVN)
                 .medFagsakYtelseType(FAGSAK_YTELSE_TYPE)
-                .medBehandlingÅrsak(BEHANDLING_ÅRSAK)
                 .medFamilieHendelseType(FAMILIEHENDELSE_TYPE)
                 .medSaksnummer(SAKSNUMMER)
                 .build();
@@ -66,7 +64,6 @@ public class DomeneTilDtoTransformasjonTest {
         assertThat(dto.getStatus()).isEqualTo(BEHANDLING_STATUS);
         assertThat(dto.getTema()).isEqualTo(forventetBehandlingTema);
         assertThat(dto.getType()).isEqualTo(FAGSAK_YTELSE_TYPE);
-        assertThat(dto.getÅrsak()).isEqualTo(BEHANDLING_ÅRSAK);
         assertThat(dto.getBehandlendeEnhet()).isEqualTo(BEHANDLENDE_ENHET);
         assertThat(dto.getBehandlendeEnhetNavn()).isEqualTo(BEHANDLENDE_ENHET_NAVN);
         assertThat(dto.getLenker()).isEmpty();
@@ -79,7 +76,7 @@ public class DomeneTilDtoTransformasjonTest {
 
     @Test
     public void skalTransformereSakStatusTilSakStatusDto() {
-        var sakStatus = SakStatus.builder()
+        var sakStatus = Sak.builder()
                 .medFagsakStatus(FAGSAK_STATUS)
                 .medAktørId(AKTØR_ID)
                 .medAktørIdAnnenPart(AKTØR_ID_ANNEN_PART)
@@ -89,7 +86,7 @@ public class DomeneTilDtoTransformasjonTest {
                 .medAktørIdBarn(AKTØR_ID)
                 .build();
 
-        var dto = SakStatusDto.fraDomene(sakStatus, true);
+        var dto = SakDto.fraDomene(sakStatus, true);
         assertThat(dto.getAktørId()).isEqualTo(AKTØR_ID);
         assertThat(dto.isMottattEndringssøknad()).isTrue();
         assertThat(dto.getAktørIdAnnenPart()).isEqualTo(AKTØR_ID_ANNEN_PART);

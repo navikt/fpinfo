@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Set;
 
 import no.nav.foreldrepenger.info.abac.AppAbacAttributtType;
-import no.nav.foreldrepenger.info.domene.SakStatus;
+import no.nav.foreldrepenger.info.domene.Sak;
 import no.nav.foreldrepenger.info.felles.rest.ResourceLink;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
 
-public class SakStatusDto implements AbacDto {
+public class SakDto implements AbacDto {
 
     private String saksnummer;
     private String fagsakStatus;
@@ -25,7 +25,7 @@ public class SakStatusDto implements AbacDto {
     private LocalDateTime endretTidspunkt;
     private boolean mottattEndringssøknad;
 
-    public SakStatusDto() {
+    public SakDto() {
     }
 
     public String getSaksnummer() {
@@ -80,15 +80,15 @@ public class SakStatusDto implements AbacDto {
         return mottattEndringssøknad;
     }
 
-    public static SakStatusDto fraDomene(SakStatus sakStatus, boolean mottattEndringssøknad) {
-        SakStatusDto dto = new SakStatusDto();
-        dto.saksnummer = sakStatus.getSaksnummer();
-        dto.fagsakStatus = sakStatus.getFagsakStatus();
-        dto.aktørId = sakStatus.getAktørId();
-        dto.aktørIdAnnenPart = sakStatus.getAktørIdAnnenPart();
-        dto.behandlingTema = sakStatus.getBehandlingstema();
-        dto.opprettetTidspunkt = sakStatus.getOpprettetTidspunkt();
-        dto.endretTidspunkt = sakStatus.getEndretTidspunkt();
+    public static SakDto fraDomene(Sak sak, boolean mottattEndringssøknad) {
+        SakDto dto = new SakDto();
+        dto.saksnummer = sak.getSaksnummer();
+        dto.fagsakStatus = sak.getFagsakStatus();
+        dto.aktørId = sak.getAktørId();
+        dto.aktørIdAnnenPart = sak.getAktørIdAnnenPart();
+        dto.behandlingTema = sak.getBehandlingstema();
+        dto.opprettetTidspunkt = sak.getOpprettetTidspunkt();
+        dto.endretTidspunkt = sak.getEndretTidspunkt();
         dto.mottattEndringssøknad = mottattEndringssøknad;
         return dto;
     }

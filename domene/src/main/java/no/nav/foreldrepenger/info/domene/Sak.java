@@ -12,7 +12,7 @@ import no.nav.foreldrepenger.info.felles.datatyper.BehandlingTema;
 @Entity(name = "SakStatus")
 @Table(name = "SAK_STATUS")
 @Immutable
-public class SakStatus extends BaseEntitet {
+public class Sak extends BaseEntitet {
 
     @Id
     @Column(name = "RANDOM_ID")
@@ -42,7 +42,7 @@ public class SakStatus extends BaseEntitet {
     @Column(name = "familie_hendelse_type")
     private String familieHendelseType;
 
-    public SakStatus() {
+    public Sak() {
         // Hibernate
     }
 
@@ -79,54 +79,54 @@ public class SakStatus extends BaseEntitet {
     }
 
     public static class Builder {
-        private SakStatus sakStatus;
+        private final Sak sak;
 
         public Builder() {
-            sakStatus = new SakStatus();
+            sak = new Sak();
         }
 
         public Builder medSaksnummer(String saksnummer) {
-            sakStatus.saksnummer = saksnummer;
+            sak.saksnummer = saksnummer;
             return this;
         }
 
         public Builder medBehandlingId(String behandlingId) {
-            sakStatus.behandlingId = behandlingId;
+            sak.behandlingId = behandlingId;
             return this;
         }
 
         public Builder medFagsakStatus(String fagsakstatus) {
-            sakStatus.fagsakStatus = fagsakstatus;
+            sak.fagsakStatus = fagsakstatus;
             return this;
         }
 
         public Builder medFagsakYtelseType(String fagsakYtelseType) {
-            sakStatus.fagsakYtelseType = fagsakYtelseType;
+            sak.fagsakYtelseType = fagsakYtelseType;
             return this;
         }
 
         public Builder medAktørId(String aktørId) {
-            sakStatus.aktørId = aktørId;
+            sak.aktørId = aktørId;
             return this;
         }
 
         public Builder medAktørIdAnnenPart(String aktørIdAnnenPart) {
-            sakStatus.aktørIdAnnenPart = aktørIdAnnenPart;
+            sak.aktørIdAnnenPart = aktørIdAnnenPart;
             return this;
         }
 
         public Builder medAktørIdBarn(String aktørId) {
-            sakStatus.aktørIdBarn = aktørId;
+            sak.aktørIdBarn = aktørId;
             return this;
         }
 
         public Builder medFamilieHendelseType(String familiehendelseType) {
-            sakStatus.familieHendelseType = familiehendelseType;
+            sak.familieHendelseType = familiehendelseType;
             return this;
         }
 
-        public SakStatus build() {
-            return sakStatus;
+        public Sak build() {
+            return sak;
         }
     }
 }
