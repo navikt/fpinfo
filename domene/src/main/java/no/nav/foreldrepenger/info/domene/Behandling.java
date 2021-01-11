@@ -12,8 +12,6 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Immutable;
 
-import no.nav.foreldrepenger.info.felles.datatyper.BehandlingResultatType;
-
 @Entity(name = "Behandling")
 @Table(name = "BEHANDLING")
 @Immutable
@@ -90,21 +88,8 @@ public class Behandling extends BaseEntitet {
         return behandlendeEnhetNavn;
     }
 
-    public List<Aksjonspunkt> getAksjonspunkter() {
-        return aksjonspunkter;
-    }
-
     public List<Aksjonspunkt> getÅpneAksjonspunkter() {
         return this.aksjonspunkter.stream().filter(Aksjonspunkt::erÅpentAksjonspunkt).collect(Collectors.toList());
-    }
-
-    public Boolean erHenlagt() {
-        return BehandlingResultatType.HENLAGT_BRUKER_DØD.getVerdi().equalsIgnoreCase(behandlingResultatType) ||
-                BehandlingResultatType.HENLAGT_FEILOPPRETTET.getVerdi().equalsIgnoreCase(behandlingResultatType) ||
-                BehandlingResultatType.HENLAGT_KLAGE_TRUKKET.getVerdi().equalsIgnoreCase(behandlingResultatType) ||
-                BehandlingResultatType.HENLAGT_SØKNAD_MANGLER.getVerdi().equalsIgnoreCase(behandlingResultatType) ||
-                BehandlingResultatType.HENLAGT_SØKNAD_TRUKKET.getVerdi().equalsIgnoreCase(behandlingResultatType) ||
-                BehandlingResultatType.MERGET_OG_HENLAGT.getVerdi().equalsIgnoreCase(behandlingResultatType);
     }
 
     public static Builder builder() {
@@ -112,7 +97,7 @@ public class Behandling extends BaseEntitet {
     }
 
     public static class Builder {
-        private Behandling behandling;
+        private final Behandling behandling;
 
         public Builder() {
             this.behandling = new Behandling();

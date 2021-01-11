@@ -13,7 +13,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import no.nav.foreldrepenger.info.domene.SakStatus;
+import no.nav.foreldrepenger.info.domene.Sak;
 import no.nav.foreldrepenger.info.domene.SøknadsGrunnlag;
 
 @ApplicationScoped
@@ -35,11 +35,11 @@ public class PipRepository {
         if (behandlingIder.isEmpty()) {
             return Collections.emptyList();
         }
-        TypedQuery<SakStatus> query = entityManager.createQuery(
+        TypedQuery<Sak> query = entityManager.createQuery(
                 "select s from SakStatus s left join Behandling b on s.saksnummer = b.saksnummer where b.behandlingId in :behandlingIder",
-                SakStatus.class);
+                Sak.class);
         query.setParameter("behandlingIder", behandlingIder);
-        return query.getResultList().stream().map(SakStatus::getAktørId).collect(Collectors.toList());
+        return query.getResultList().stream().map(Sak::getAktørId).collect(Collectors.toList());
     }
 
     public List<String> hentAktørIdForSaksnummer(Set<String> saksnummre) {
@@ -47,18 +47,18 @@ public class PipRepository {
         if (saksnummre.isEmpty()) {
             return Collections.emptyList();
         }
-        TypedQuery<SakStatus> query = entityManager.createQuery("from SakStatus where saksnummer in :saksnummre",
-                SakStatus.class);
+        TypedQuery<Sak> query = entityManager.createQuery("from SakStatus where saksnummer in :saksnummre",
+                Sak.class);
         query.setParameter("saksnummre", saksnummre);
-        return query.getResultList().stream().map(SakStatus::getAktørId).collect(Collectors.toList());
+        return query.getResultList().stream().map(Sak::getAktørId).collect(Collectors.toList());
     }
 
     public Optional<String> hentAnnenPartForSaksnummer(String saksnummer) {
         Objects.requireNonNull(saksnummer, "saksnummer"); // NOSONAR
-        TypedQuery<SakStatus> query = entityManager.createQuery("from SakStatus where saksnummer like :saksnummer",
-                SakStatus.class);
+        TypedQuery<Sak> query = entityManager.createQuery("from SakStatus where saksnummer like :saksnummer",
+                Sak.class);
         query.setParameter("saksnummer", saksnummer);
-        return query.getResultList().stream().findFirst().map(SakStatus::getAktørIdAnnenPart);
+        return query.getResultList().stream().findFirst().map(Sak::getAktørIdAnnenPart);
     }
 
     public Optional<Boolean> hentOppgittAleneomsorgForSaksnummer(String saksnummer) {
@@ -75,14 +75,14 @@ public class PipRepository {
             return Collections.emptyList();
         }
 
-        TypedQuery<SakStatus> query = entityManager.createQuery(
+        TypedQuery<Sak> query = entityManager.createQuery(
                 "select s from SakStatus s " +
                         "left join MottattDokument m on s.saksnummer = m.saksnummer " +
                         "where m.forsendelseId in :dokumentforsendelseIder",
-                SakStatus.class);
+                Sak.class);
         query.setParameter("dokumentforsendelseIder", dokumentforsendelseIder);
 
-        return query.getResultList().stream().map(SakStatus::getAktørId).collect(Collectors.toList());
+        return query.getResultList().stream().map(Sak::getAktørId).collect(Collectors.toList());
     }
 
     public Optional<String> finnSakenTilAnnenForelder(Set<String> bruker, Set<String> annenForelder) {
@@ -92,13 +92,13 @@ public class PipRepository {
             return Optional.empty();
         }
 
-        TypedQuery<SakStatus> query = entityManager.createQuery(
+        TypedQuery<Sak> query = entityManager.createQuery(
                 "select s from SakStatus s " +
                         "where s.aktørId like :annenForelder and s.aktørIdAnnenPart like :bruker order by s.opprettetTidspunkt desc",
-                SakStatus.class);
+                Sak.class);
         query.setParameter("annenForelder", annenForelder.stream().findFirst().get());// NOSONAR
         query.setParameter("bruker", bruker.stream().findFirst().get());// NOSONAR
 
-        return query.getResultList().stream().findFirst().map(SakStatus::getSaksnummer);
+        return query.getResultList().stream().findFirst().map(Sak::getSaksnummer);
     }
 }

@@ -21,7 +21,7 @@ import org.hibernate.type.StringType;
 import no.nav.foreldrepenger.info.domene.Behandling;
 import no.nav.foreldrepenger.info.domene.FagsakRelasjon;
 import no.nav.foreldrepenger.info.domene.MottattDokument;
-import no.nav.foreldrepenger.info.domene.SakStatus;
+import no.nav.foreldrepenger.info.domene.Sak;
 import no.nav.foreldrepenger.info.domene.Saksnummer;
 import no.nav.foreldrepenger.info.domene.SøknadsGrunnlag;
 import no.nav.foreldrepenger.info.domene.UttakPeriode;
@@ -43,7 +43,7 @@ public class DokumentForsendelseRepositoryImpl implements DokumentForsendelseRep
     }
 
     @Override
-    public List<SakStatus> hentSakStatus(String aktørId) {
+    public List<Sak> hentSakStatus(String aktørId) {
         return getSakStatus(aktørId);
     }
 
@@ -77,10 +77,10 @@ public class DokumentForsendelseRepositoryImpl implements DokumentForsendelseRep
     }
 
     @Override
-    public Optional<SakStatus> finnNyesteSakForAnnenPart(String aktørIdBruker, String annenPartAktørId) {
-        TypedQuery<SakStatus> query = entityManager.createQuery(
+    public Optional<Sak> finnNyesteSakForAnnenPart(String aktørIdBruker, String annenPartAktørId) {
+        TypedQuery<Sak> query = entityManager.createQuery(
                 "from SakStatus where aktørId=:annenPartAktørId and aktørIdAnnenPart=:aktørId and fagsakYtelseType=:ytelseType order by opprettetTidspunkt desc",
-                SakStatus.class);
+                Sak.class);
         query.setParameter("aktørId", aktørIdBruker);
         query.setParameter("ytelseType", FagsakYtelseType.FP.getVerdi());
         query.setParameter("annenPartAktørId", annenPartAktørId);
@@ -136,21 +136,20 @@ public class DokumentForsendelseRepositoryImpl implements DokumentForsendelseRep
         return query.getResultList();
     }
 
-    private List<SakStatus> getSakStatus(String aktørId) {
-        TypedQuery<SakStatus> query = entityManager.createQuery("from SakStatus where hoved_soeker_aktoer_id=:aktørId",
-                SakStatus.class);
+    private List<Sak> getSakStatus(String aktørId) {
+        TypedQuery<Sak> query = entityManager.createQuery("from SakStatus where hoved_soeker_aktoer_id=:aktørId",
+                Sak.class);
         query.setParameter("aktørId", aktørId);
         return query.getResultList();
     }
 
     private Behandling getBehandling(Long behandlingId) {
+        //Kan ligge flere rader med denne behandlingId'n pga join med behandlingsårsak, så her blir det random
         TypedQuery<Behandling> query = entityManager.createQuery("from Behandling where behandling_id=:behandlingId", //$NON-NLS-1$
                 Behandling.class);
         query.setParameter("behandlingId", behandlingId); //$NON-NLS-1$
-        Behandling behandling = query.getResultList().stream().reduce((first, second) -> second).orElse(null); // TODO(HUMLE):
-                                                                                                               // finn
-                                                                                                               // riktig
-                                                                                                               // implementasjon
+        Behandling behandling = query.getResultList().stream().reduce((first, second) -> second).orElse(null);
+
         if (behandling == null) {
             throw DokumentForsendelseRepositoryFeil.FACTORY.fantIkkeBehandlingForBehandlingId(behandlingId)
                     .toException();

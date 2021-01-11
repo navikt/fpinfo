@@ -17,7 +17,6 @@ public class BehandlingDto implements AbacDto {
     private String status;
     private String type;
     private String tema;
-    private String årsak;
     private String behandlendeEnhet;
     private String behandlendeEnhetNavn;
     private List<String> inntektsmeldinger;
@@ -44,10 +43,6 @@ public class BehandlingDto implements AbacDto {
 
     public String getTema() {
         return tema;
-    }
-
-    public String getÅrsak() {
-        return årsak;
     }
 
     public String getBehandlendeEnhet() {
@@ -88,7 +83,6 @@ public class BehandlingDto implements AbacDto {
         BehandlingDto dto = new BehandlingDto();
         dto.behandlingId = behandling.getBehandlingId();
         dto.status = behandling.getBehandlingStatus();
-        dto.årsak = behandling.getBehandlingÅrsak();
         dto.type = behandling.getFagsakYtelseType();
         dto.behandlendeEnhet = behandling.getBehandlendeEnhet();
         dto.behandlendeEnhetNavn = behandling.getBehandlendeEnhetNavn();

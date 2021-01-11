@@ -7,7 +7,7 @@ import java.util.UUID;
 import no.nav.foreldrepenger.info.domene.Behandling;
 import no.nav.foreldrepenger.info.domene.FagsakRelasjon;
 import no.nav.foreldrepenger.info.domene.MottattDokument;
-import no.nav.foreldrepenger.info.domene.SakStatus;
+import no.nav.foreldrepenger.info.domene.Sak;
 import no.nav.foreldrepenger.info.domene.Saksnummer;
 import no.nav.foreldrepenger.info.domene.SøknadsGrunnlag;
 import no.nav.foreldrepenger.info.domene.UttakPeriode;
@@ -23,7 +23,7 @@ public interface DokumentForsendelseRepository {
 
     List<MottattDokument> hentMottattDokument(Long behandlingId);
 
-    List<SakStatus> hentSakStatus(String aktørId);
+    List<Sak> hentSakStatus(String aktørId);
 
     Optional<FagsakRelasjon> hentFagsakRelasjon(String saksnummer);
 
@@ -33,5 +33,5 @@ public interface DokumentForsendelseRepository {
 
     Optional<Long> hentGjeldendeBehandling(Saksnummer saksnummer);
 
-    Optional<SakStatus> finnNyesteSakForAnnenPart(String aktørId, String annenPartAktørId);
+    Optional<Sak> finnNyesteSakForAnnenPart(String aktørId, String annenPartAktørId);
 }

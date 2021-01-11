@@ -9,7 +9,7 @@ import no.nav.foreldrepenger.info.tjenester.dto.BehandlingDto;
 import no.nav.foreldrepenger.info.tjenester.dto.BehandlingIdDto;
 import no.nav.foreldrepenger.info.tjenester.dto.ForsendelseIdDto;
 import no.nav.foreldrepenger.info.tjenester.dto.ForsendelseStatusDataDTO;
-import no.nav.foreldrepenger.info.tjenester.dto.SakStatusDto;
+import no.nav.foreldrepenger.info.tjenester.dto.SakDto;
 import no.nav.foreldrepenger.info.tjenester.dto.SaksnummerDto;
 import no.nav.foreldrepenger.info.tjenester.dto.SøknadXmlDto;
 import no.nav.foreldrepenger.info.tjenester.dto.SøknadsGrunnlagDto;
@@ -18,7 +18,7 @@ public interface DokumentforsendelseTjeneste {
 
     BehandlingDto hentBehandling(BehandlingIdDto behandlingId, String linkPathSøknad);
 
-    List<SakStatusDto> hentSakStatus(AktørIdDto aktørIdDto, String linkPathBehandling, String linkPathUttaksplan);
+    List<SakDto> hentSakStatus(AktørIdDto aktørIdDto, String linkPathBehandling, String linkPathUttaksplan);
 
     Optional<SøknadXmlDto> hentSøknadXml(BehandlingIdDto behandlingId);
 
