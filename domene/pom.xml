@@ -30,10 +30,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.felles.sikkerhet</groupId>
-            <artifactId>felles-sikkerhet</artifactId>
-        </dependency>
-        <dependency>
             <groupId>no.nav.foreldrepenger.info</groupId>
             <artifactId>migreringer</artifactId>
             <type>test-jar</type>

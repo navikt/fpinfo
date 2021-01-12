@@ -10,7 +10,7 @@ import org.hibernate.annotations.Immutable;
 @Entity(name = "Aksjonspunkt")
 @Table(name = "AKSJONSPUNKT")
 @Immutable
-public class Aksjonspunkt extends BaseEntitet {
+public class Aksjonspunkt {
 
     public static final String OPPRETTET_AKSJONSPUNKT_STATUS_KODE = "OPPR";
 

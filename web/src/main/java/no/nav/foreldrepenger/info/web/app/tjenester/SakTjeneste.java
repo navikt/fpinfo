@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.info.web.app.tjenester;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -16,6 +15,8 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.info.domene.Behandling;
 import no.nav.foreldrepenger.info.domene.Sak;
+import no.nav.foreldrepenger.info.felles.datatyper.BehandlingType;
+import no.nav.foreldrepenger.info.felles.datatyper.BehandlingÅrsakType;
 import no.nav.foreldrepenger.info.repository.Repository;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.AktørIdDto;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.SakDto;
@@ -38,15 +39,10 @@ public class SakTjeneste {
 
     public List<SakDto> hentSak(AktørIdDto aktørIdDto, String linkPathBehandling, String linkPathUttaksplan) {
         LOG.info("Henter sakstatus");
-        var sakListe = repository.hentSakStatus(aktørIdDto.getAktørId());
+        var sakListe = repository.hentSak(aktørIdDto.getAktørId());
         var statusListe = mapTilSakStatusDtoListe(sakListe, linkPathBehandling, linkPathUttaksplan);
         LOG.info("Fant {} statuser", statusListe.size());
         return statusListe;
-    }
-
-    private Set<Long> hentBehandlingIder(String saksnummer) {
-        var behandlinger = repository.hentTilknyttedeBehandlinger(saksnummer);
-        return behandlinger.stream().map(Behandling::getBehandlingId).collect(Collectors.toSet());
     }
 
     private List<SakDto> mapTilSakStatusDtoListe(List<Sak> sakListe,
@@ -61,10 +57,13 @@ public class SakTjeneste {
                     .filter(e -> sak.getSaksnummer().equals(e.getSaksnummer()))
                     .forEach(e -> dto.leggTilBarn(e.getAktørIdBarn()));
 
-            hentBehandlingIder(sak.getSaksnummer()).forEach(elem -> {
-                String href = linkPathBehandling + elem;
-                dto.leggTilLenke(href, "behandlinger");
-            });
+            repository.hentTilknyttedeBehandlinger(sak.getSaksnummer())
+                    .stream()
+                    .filter(this::erRelevant)
+                    .forEach(elem -> {
+                        String href = linkPathBehandling + elem.getBehandlingId();
+                        dto.leggTilLenke(href, "behandlinger");
+                    });
 
             repository.hentFagsakRelasjon(sak.getSaksnummer()).ifPresent(up -> {
                 var href = linkPathUttaksplan + sak.getSaksnummer();
@@ -74,10 +73,26 @@ public class SakTjeneste {
         }).collect(Collectors.toList());
     }
 
+    private boolean erRelevant(Behandling behandling) {
+        return Objects.equals(behandling.getBehandlingType(), BehandlingType.FØRSTEGANGSBEHANDLING)
+                || erRevurderingMedEndringssøknad(behandling);
+    }
+
+    private boolean erRevurderingMedEndringssøknad(Behandling behandling) {
+        return Objects.equals(behandling.getBehandlingType(), BehandlingType.REVURDERING)
+                && behandlingHarMottattEndringssøknad(behandling);
+    }
+
     private boolean harMottattEndringssøknad(Sak sak) {
         return repository.hentTilknyttedeBehandlinger(sak.getSaksnummer())
                 .stream()
-                .anyMatch(behandling -> Objects.equals(behandling.getBehandlingÅrsak(), "RE-END-FRA-BRUKER"));
+                .anyMatch(this::behandlingHarMottattEndringssøknad);
+    }
+
+    private boolean behandlingHarMottattEndringssøknad(Behandling behandling) {
+        return behandling.getÅrsaker()
+                .stream()
+                .anyMatch(behandlingÅrsak -> Objects.equals(behandlingÅrsak.getType(), BehandlingÅrsakType.ENDRINGSSØKNAD));
     }
 
     private static <T> Predicate<T> distinct(Function<? super T, ?> key) {
