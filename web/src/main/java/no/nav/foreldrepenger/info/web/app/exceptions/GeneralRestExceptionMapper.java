@@ -27,7 +27,7 @@ import no.nav.vedtak.log.util.LoggerUtils;
 @Provider
 public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationException> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GeneralRestExceptionMapper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GeneralRestExceptionMapper.class);
 
     @Override
     public Response toResponse(ApplicationException exception) {
@@ -125,10 +125,10 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
 
     private static void loggTilApplikasjonslogg(Throwable cause) {
         if (cause instanceof VLException) {
-            ((VLException) cause).log(LOGGER);
+            ((VLException) cause).log(LOG);
         } else {
             String message = cause.getMessage() != null ? LoggerUtils.removeLineBreaks(cause.getMessage()) : "";
-            LOGGER.error("Fikk uventet feil:" + message, cause);
+            LOG.error("Fikk uventet feil:" + message, cause);
         }
 
         // key for å tracke prosess -- nullstill denne

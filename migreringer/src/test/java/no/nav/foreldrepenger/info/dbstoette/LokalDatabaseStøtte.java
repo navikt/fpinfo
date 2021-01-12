@@ -9,13 +9,13 @@ import org.slf4j.LoggerFactory;
 
 public class LokalDatabaseStøtte {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LokalDatabaseStøtte.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LokalDatabaseStøtte.class);
 
     private LokalDatabaseStøtte() {
     }
 
     public static void kjørFullMigreringFor(List<DBConnectionProperties> connectionProperties) {
-        LOGGER.info("Kjører full migrering for {}", connectionProperties);
+        LOG.info("Kjører full migrering for {}", connectionProperties);
         LokalDatabaseStøtte.nullstill(connectionProperties);
         LokalDatabaseStøtte.kjørMigreringFor(connectionProperties);
     }
@@ -25,7 +25,7 @@ public class LokalDatabaseStøtte {
      * {@link DBConnectionProperties} ikke finnes, opprettes den
      */
     public static void kjørMigreringFor(List<DBConnectionProperties> connectionProperties) {
-        LOGGER.info("Kjører migrering for {}", connectionProperties);
+        LOG.info("Kjører migrering for {}", connectionProperties);
         connectionProperties.forEach(LokalDatabaseStøtte::kjørerMigreringFor);
     }
 
@@ -52,13 +52,13 @@ public class LokalDatabaseStøtte {
         } else {
             scriptLocation = DatabaseStøtte.getMigrationScriptLocation(connectionProperties);
         }
-        LOGGER.info("Migrerer {} {}", connectionProperties, scriptLocation);
+        LOG.info("Migrerer {} {}", connectionProperties, scriptLocation);
         boolean migreringOk = LokalFlywayKonfig.lagKonfig(dataSource)
                 .medSqlLokasjon(scriptLocation)
                 .medCleanup(connectionProperties.isMigrateClean())
                 .migrerDb();
         if (!migreringOk) {
-            LOGGER.warn(
+            LOG.warn(
                     "\n\nKunne ikke starte inkrementell oppdatering av databasen. Det finnes trolig endringer i allerede kjørte script. Kjører full migrering...");
 
             migreringOk = LokalFlywayKonfig.lagKonfig(dataSource)

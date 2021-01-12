@@ -13,7 +13,7 @@ import no.nav.vedtak.util.env.Environment;
 
 public final class FlywayKonfig {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FlywayKonfig.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FlywayKonfig.class);
 
     private static final Environment ENV = Environment.current();
     private DataSource dataSource;
@@ -53,7 +53,7 @@ public final class FlywayKonfig {
             flyway.migrate();
             return true;
         } catch (FlywayException flywayException) {
-            LOGGER.error("Feil under migrering");
+            LOG.error("Feil under migrering");
             throw flywayException;
         }
     }

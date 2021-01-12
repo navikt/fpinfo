@@ -24,7 +24,7 @@ public class GeneralRestExceptionMapperTest {
     private GeneralRestExceptionMapper generalRestExceptionMapper;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
         generalRestExceptionMapper = new GeneralRestExceptionMapper();
     }
 

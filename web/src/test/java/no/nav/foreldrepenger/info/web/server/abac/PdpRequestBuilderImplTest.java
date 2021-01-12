@@ -11,8 +11,8 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import no.nav.foreldrepenger.info.abac.AppAbacAttributtType;
-import no.nav.foreldrepenger.info.pip.BeskyttetRessursAttributt;
+import no.nav.foreldrepenger.info.web.abac.AppAbacAttributtType;
+import no.nav.foreldrepenger.info.web.abac.BeskyttetRessursAttributt;
 import no.nav.foreldrepenger.info.pip.PipRepository;
 import no.nav.vedtak.sikkerhet.abac.AbacAttributtSamling;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
