@@ -17,6 +17,8 @@ import org.hibernate.CacheMode;
 import org.hibernate.jpa.QueryHints;
 import org.hibernate.jpa.TypedParameterValue;
 import org.hibernate.type.StringType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.info.domene.Behandling;
 import no.nav.foreldrepenger.info.domene.FagsakRelasjon;
@@ -31,6 +33,8 @@ import no.nav.foreldrepenger.info.felles.datatyper.FagsakYtelseType;
 @ApplicationScoped
 public class Repository {
 
+    private static final Logger LOG = LoggerFactory.getLogger(Repository.class);
+
     private EntityManager entityManager;
 
     @Inject
@@ -42,8 +46,8 @@ public class Repository {
         // CDI
     }
 
-    public List<Sak> hentSakStatus(String aktørId) {
-        return getSakStatus(aktørId);
+    public List<Sak> hentSak(String aktørId) {
+        return getSak(aktørId);
     }
 
     public List<UttakPeriode> hentUttakPerioder(Long behandlingId) {
@@ -91,17 +95,20 @@ public class Repository {
     }
 
     public Behandling hentBehandling(Long behandlingId) {
-        //Kan ligge flere rader med denne behandlingId'n pga join med behandlingsårsak, så her blir det random
         TypedQuery<Behandling> query = entityManager.createQuery("from Behandling where behandling_id=:behandlingId", //$NON-NLS-1$
                 Behandling.class);
         query.setParameter("behandlingId", behandlingId); //$NON-NLS-1$
-        Behandling behandling = query.getResultList().stream().reduce((first, second) -> second).orElse(null);
+        var resultList = query.getResultList();
+        if (resultList.size() > 1) {
+            LOG.info("Hent behandling med id {} returnerte {} behandlinger", behandlingId, resultList.size());
+        }
+        var behandling = resultList.stream().findFirst();
 
-        if (behandling == null) {
+        if (behandling.isEmpty()) {
             throw RepositoryFeil.FACTORY.fantIkkeBehandlingForBehandlingId(behandlingId)
                     .toException();
         }
-        return behandling;
+        return behandling.get();
     }
 
     public List<Behandling> hentTilknyttedeBehandlinger(String saksnummer) {
@@ -135,7 +142,7 @@ public class Repository {
         return query.getResultList();
     }
 
-    private List<Sak> getSakStatus(String aktørId) {
+    private List<Sak> getSak(String aktørId) {
         TypedQuery<Sak> query = entityManager.createQuery("from SakStatus where hoved_soeker_aktoer_id=:aktørId",
                 Sak.class);
         query.setParameter("aktørId", aktørId);

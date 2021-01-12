@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.info.domene;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,7 +14,7 @@ import no.nav.foreldrepenger.info.felles.datatyper.BehandlingTema;
 @Entity(name = "SakStatus")
 @Table(name = "SAK_STATUS")
 @Immutable
-public class Sak extends BaseEntitet {
+public class Sak {
 
     @Id
     @Column(name = "RANDOM_ID")
@@ -41,6 +43,12 @@ public class Sak extends BaseEntitet {
 
     @Column(name = "familie_hendelse_type")
     private String familieHendelseType;
+
+    @Column(name = "opprettet_tid", nullable = false)
+    private LocalDateTime opprettetTidspunkt;
+
+    @Column(name = "endret_tid")
+    private LocalDateTime endretTidspunkt;
 
     public Sak() {
         // Hibernate
@@ -72,6 +80,14 @@ public class Sak extends BaseEntitet {
 
     public String getFagsakStatus() {
         return fagsakStatus;
+    }
+
+    public LocalDateTime getOpprettetTidspunkt() {
+        return opprettetTidspunkt;
+    }
+
+    public LocalDateTime getEndretTidspunkt() {
+        return endretTidspunkt;
     }
 
     public static Builder builder() {

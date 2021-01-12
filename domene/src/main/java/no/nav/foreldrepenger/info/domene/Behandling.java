@@ -1,10 +1,12 @@
 package no.nav.foreldrepenger.info.domene;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -12,10 +14,12 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Immutable;
 
+import no.nav.foreldrepenger.info.felles.datatyper.BehandlingType;
+
 @Entity(name = "Behandling")
 @Table(name = "BEHANDLING")
 @Immutable
-public class Behandling extends BaseEntitet {
+public class Behandling {
 
     @Id
     @Column(name = "BEHANDLING_ID")
@@ -26,6 +30,10 @@ public class Behandling extends BaseEntitet {
 
     @Column(name = "BEHANDLING_RESULTAT_TYPE")
     private String behandlingResultatType;
+
+    @Column(name = "BEHANDLING_TYPE")
+    @Convert(converter = BehandlingType.KodeverdiConverter.class)
+    private BehandlingType behandlingType;
 
     @Column(name = "FAGSAK_YTELSE_TYPE")
     private String fagsakYtelseType;
@@ -42,11 +50,17 @@ public class Behandling extends BaseEntitet {
     @Column(name = "BEHANDLENDE_ENHET_NAVN")
     private String behandlendeEnhetNavn;
 
-    @Column(name = "BEHANDLING_ARSAK")
-    private String behandlingÅrsak;
-
     @OneToMany(mappedBy = "behandlingId")
     private List<Aksjonspunkt> aksjonspunkter = new ArrayList<>(1);
+
+    @OneToMany(mappedBy = "behandlingId")
+    private List<BehandlingÅrsak> årsaker = new ArrayList<>();
+
+    @Column(name = "opprettet_tid", nullable = false)
+    private LocalDateTime opprettetTidspunkt;
+
+    @Column(name = "endret_tid")
+    private LocalDateTime endretTidspunkt;
 
     public Behandling() {
         // Hibernate
@@ -76,8 +90,8 @@ public class Behandling extends BaseEntitet {
         return familieHendelseType;
     }
 
-    public String getBehandlingÅrsak() {
-        return behandlingÅrsak;
+    public List<BehandlingÅrsak> getÅrsaker() {
+        return årsaker;
     }
 
     public String getBehandlendeEnhet() {
@@ -90,6 +104,18 @@ public class Behandling extends BaseEntitet {
 
     public List<Aksjonspunkt> getÅpneAksjonspunkter() {
         return this.aksjonspunkter.stream().filter(Aksjonspunkt::erÅpentAksjonspunkt).collect(Collectors.toList());
+    }
+
+    public BehandlingType getBehandlingType() {
+        return behandlingType;
+    }
+
+    public LocalDateTime getOpprettetTidspunkt() {
+        return opprettetTidspunkt;
+    }
+
+    public LocalDateTime getEndretTidspunkt() {
+        return endretTidspunkt;
     }
 
     public static Builder builder() {
@@ -128,11 +154,6 @@ public class Behandling extends BaseEntitet {
             return this;
         }
 
-        public Builder medBehandlingÅrsak(String behandlingÅrsak) {
-            behandling.behandlingÅrsak = behandlingÅrsak;
-            return this;
-        }
-
         public Builder medFamilieHendelseType(String familieHendelseType) {
             behandling.familieHendelseType = familieHendelseType;
             return this;
@@ -146,6 +167,16 @@ public class Behandling extends BaseEntitet {
 
         public Builder medAksjonspunkter(List<Aksjonspunkt> aksjonspunkter) {
             behandling.aksjonspunkter = aksjonspunkter;
+            return this;
+        }
+
+        public Builder medBehandlingÅrsaker(List<BehandlingÅrsak> årsaker) {
+            behandling.årsaker = årsaker;
+            return this;
+        }
+
+        public Builder medBehandlingType(BehandlingType behandlingType) {
+            behandling.behandlingType = behandlingType;
             return this;
         }
 

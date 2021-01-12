@@ -15,7 +15,7 @@ import no.nav.foreldrepenger.info.felles.datatyper.DokumentTypeId;
 @Immutable
 @Entity(name = "MottattDokument")
 @Table(name = "MOTTATT_DOKUMENT")
-public class MottattDokument extends BaseEntitet {
+public class MottattDokument {
 
     @Column(name = "BEHANDLING_STATUS")
     private String behandlingStatus;
