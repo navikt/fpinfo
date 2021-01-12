@@ -40,7 +40,7 @@ public class ForsendelseStatusTjeneste {
         this.repository = repository;
     }
 
-    ForsendelseStatusTjeneste() {
+    public ForsendelseStatusTjeneste() {
         //CDI
     }
 

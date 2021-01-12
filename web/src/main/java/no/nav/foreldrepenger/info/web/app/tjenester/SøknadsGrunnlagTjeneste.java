@@ -28,7 +28,7 @@ public class SøknadsGrunnlagTjeneste {
         this.repository = repository;
     }
 
-    SøknadsGrunnlagTjeneste() {
+    public SøknadsGrunnlagTjeneste() {
         //CDI
     }
 

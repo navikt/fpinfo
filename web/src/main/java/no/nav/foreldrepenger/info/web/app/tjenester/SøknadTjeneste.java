@@ -25,7 +25,7 @@ public class SøknadTjeneste {
         this.repository = repository;
     }
 
-    SøknadTjeneste() {
+    public SøknadTjeneste() {
         //CDI
     }
 

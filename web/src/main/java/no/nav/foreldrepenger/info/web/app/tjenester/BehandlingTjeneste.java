@@ -30,7 +30,7 @@ public class BehandlingTjeneste {
         this.repository = repository;
     }
 
-    BehandlingTjeneste() {
+    public BehandlingTjeneste() {
         // FOR CDI Proxy
     }
 

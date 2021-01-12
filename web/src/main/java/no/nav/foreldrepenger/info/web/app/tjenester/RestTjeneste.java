@@ -61,7 +61,7 @@ public class RestTjeneste {
         this.sakTjeneste = sakTjeneste;
     }
 
-    RestTjeneste() {
+    public RestTjeneste() {
         // For Rest-CDI
     }
 

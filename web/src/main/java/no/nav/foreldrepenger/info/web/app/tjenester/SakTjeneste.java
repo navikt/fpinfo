@@ -32,7 +32,7 @@ public class SakTjeneste {
         this.repository = repository;
     }
 
-    SakTjeneste() {
+    public SakTjeneste() {
         //CDI
     }
 

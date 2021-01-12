@@ -38,7 +38,7 @@ public class Repository {
         this.entityManager = entityManager;
     }
 
-    Repository() {
+    public Repository() {
         // CDI
     }
 
