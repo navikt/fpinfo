@@ -46,16 +46,19 @@ public class RestTjeneste {
     private SøknadTjeneste søknadTjeneste;
     private ForsendelseStatusTjeneste forsendelseStatusTjeneste;
     private SøknadsGrunnlagTjeneste søknadsGrunnlagTjeneste;
+    private SakTjeneste sakTjeneste;
 
     @Inject
     public RestTjeneste(BehandlingTjeneste behandlingTjeneste,
                         SøknadTjeneste søknadTjeneste,
                         ForsendelseStatusTjeneste forsendelseStatusTjeneste,
-                        SøknadsGrunnlagTjeneste søknadsGrunnlagTjeneste) {
+                        SøknadsGrunnlagTjeneste søknadsGrunnlagTjeneste,
+                        SakTjeneste sakTjeneste) {
         this.behandlingTjeneste = behandlingTjeneste;
         this.søknadTjeneste = søknadTjeneste;
         this.forsendelseStatusTjeneste = forsendelseStatusTjeneste;
         this.søknadsGrunnlagTjeneste = søknadsGrunnlagTjeneste;
+        this.sakTjeneste = sakTjeneste;
     }
 
     RestTjeneste() {
@@ -117,7 +120,7 @@ public class RestTjeneste {
             @NotNull @QueryParam("aktorId") @Parameter(name = "aktorId") @Valid AktørIdDto aktørIdDto) {
         var linkPathBehandling = API_PATH + "/behandling?behandlingId=";
         var linkPathUttaksplan = API_PATH + "/uttaksplan?saksnummer=";
-        return behandlingTjeneste.hentSak(aktørIdDto, linkPathBehandling, linkPathUttaksplan);
+        return sakTjeneste.hentSak(aktørIdDto, linkPathBehandling, linkPathUttaksplan);
     }
 
     @GET
