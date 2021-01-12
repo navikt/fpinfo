@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.info.domene;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -15,7 +16,7 @@ import no.nav.foreldrepenger.info.felles.datatyper.DokumentTypeId;
 @Immutable
 @Entity(name = "MottattDokument")
 @Table(name = "MOTTATT_DOKUMENT")
-public class MottattDokument {
+public class MottattDokument implements Serializable {
 
     @Column(name = "BEHANDLING_STATUS")
     private String behandlingStatus;
