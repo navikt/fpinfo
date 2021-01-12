@@ -14,7 +14,7 @@ import javax.annotation.Priority;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
 
-import no.nav.foreldrepenger.info.abac.AppAbacAttributtType;
+import no.nav.foreldrepenger.info.web.abac.AppAbacAttributtType;
 import no.nav.vedtak.sikkerhet.abac.PdpRequest;
 import no.nav.vedtak.sikkerhet.pdp.XacmlRequestBuilderTjeneste;
 import no.nav.vedtak.sikkerhet.pdp.xacml.XacmlAttributeSet;

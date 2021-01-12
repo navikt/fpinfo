@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 public class PropertiesUtils {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PropertiesUtils.class);
 
     private static String TEMPLATE_FILNAVN = "app-dev.properties";
     private static String DEV_FILNAVN = "app.properties";
@@ -36,7 +36,7 @@ public class PropertiesUtils {
         if (!localProps.exists()) {
             boolean fileCreated = localProps.createNewFile();
             if (!fileCreated) {
-                LOGGER.error("Kunne ikke opprette properties-fil");
+                LOG.error("Kunne ikke opprette properties-fil");
             }
         }
     }
@@ -65,7 +65,7 @@ public class PropertiesUtils {
             try (InputStream inputStream = new FileInputStream(devFil)) {
                 prop.load(inputStream);
             } catch (IOException e) {
-                LOGGER.error("Kunne ikke finne properties-fil", e);
+                LOG.error("Kunne ikke finne properties-fil", e);
             }
             System.getProperties().putAll(prop);
         }

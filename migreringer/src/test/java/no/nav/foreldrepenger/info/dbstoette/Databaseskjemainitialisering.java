@@ -26,7 +26,7 @@ public final class Databaseskjemainitialisering {
     private static final String SEMAPHORE_FIL_PREFIX = "no.nav.vedtak.felles.behandlingsprosess";
     private static final String SEMAPHORE_FIL_SUFFIX = "no.nav.vedtak.felles.behandlingsprosess";
     private static final Environment ENV = Environment.current();
-    private static final Pattern placeholderPattern = Pattern.compile("\\$\\{(.*)\\}");
+    private static final Pattern placeholderPattern = Pattern.compile("\\$\\{(.*)}");
 
     public static void main(String[] args) {
         TimeZone.setDefault(TimeZone.getTimeZone("Europe/Oslo"));
@@ -51,12 +51,8 @@ public final class Databaseskjemainitialisering {
         } catch (RuntimeException e) {
             LOG.warn(
                     "\n\n Kunne ikke starte inkrementell oppdatering av databasen. Det finnes trolig endringer i allerede kjørte script.\nKjører full migrering...");
-            try {
-                settOppSkjemaer(skjemaer);
-                LokalDatabaseStøtte.kjørFullMigreringFor(skjemaer.get());
-            } finally {
-
-            }
+            settOppSkjemaer(skjemaer);
+            LokalDatabaseStøtte.kjørFullMigreringFor(skjemaer.get());
         }
 
         slettAlleSemaphorer();
@@ -108,7 +104,7 @@ public final class Databaseskjemainitialisering {
             e.printStackTrace();
         }
 
-        return list.length != 0;
+        return true;
     }
 
     private static void settSchemaPlaceholder(List<DBConnectionProperties> connectionProperties) {
@@ -136,8 +132,7 @@ public final class Databaseskjemainitialisering {
 
     private static File[] getSemaphorer() {
         File tmpDir = new File(System.getProperty(TMP_DIR));
-        return tmpDir.listFiles((dir, name) -> {
-            return name.startsWith(SEMAPHORE_FIL_PREFIX) && name.endsWith(SEMAPHORE_FIL_SUFFIX);
-        });
+        return tmpDir.listFiles((dir, name) ->
+                name.startsWith(SEMAPHORE_FIL_PREFIX) && name.endsWith(SEMAPHORE_FIL_SUFFIX));
     }
 }
