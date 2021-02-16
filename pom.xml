@@ -29,8 +29,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <felles.version>3.0.20</felles.version>
-        <metrics.version>4.1.12.1</metrics.version>
+        <felles.version>3.0.91</felles.version>
         <prometheus.version>0.10.0</prometheus.version>
         <swagger.version>2.1.6</swagger.version>
 
@@ -39,14 +38,13 @@
         <geronimo.jaspi.version>2.0.0</geronimo.jaspi.version>
         <geronimo.osgi.version>1.1</geronimo.osgi.version>
         <hamcrest.version>1.3</hamcrest.version>
-        <jupiter.version>5.7.0</jupiter.version>
+        <jupiter.version>5.7.1</jupiter.version>
         <logstash.version>6.6</logstash.version>
         <mockito.version>3.7.7</mockito.version>
         <ojdbc.version>19.3.0.0</ojdbc.version>
 
         <!-- Transitive avh. versjoner for å sikre unikhet (enforcer dependencyConvergence).
             Skal ikke benyttes direkte av vår egen kode. -->
-        <joda-time.version>2.10.10</joda-time.version>
         <owaspencoder.version>1.2.3</owaspencoder.version>
         <sysdoc.version>1.0.8</sysdoc.version>
         <javaslang.version>2.0.6</javaslang.version>
@@ -271,11 +269,6 @@
                 <groupId>org.codehaus.woodstox</groupId>
                 <artifactId>stax2-api</artifactId>
                 <version>4.2.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>javax.el</artifactId>
-                <version>3.0.1-b12</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
