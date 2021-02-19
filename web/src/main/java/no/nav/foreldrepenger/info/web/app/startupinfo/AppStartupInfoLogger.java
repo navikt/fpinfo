@@ -55,7 +55,7 @@ class AppStartupInfoLogger {
     }
 
     private static void log(Selftests.Resultat result) {
-        OppstartFeil.FACTORY.selftestStatus(
+        OppstartFeil.selftestStatus(
                 getStatus(result.isReady()),
                 result.getDescription(),
                 result.getEndpoint()).log(LOG);

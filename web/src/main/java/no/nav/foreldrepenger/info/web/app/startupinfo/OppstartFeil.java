@@ -1,20 +1,16 @@
 package no.nav.foreldrepenger.info.web.app.startupinfo;
 
-import static no.nav.vedtak.feil.LogLevel.ERROR;
-import static no.nav.vedtak.feil.LogLevel.INFO;
+import no.nav.vedtak.exception.TekniskException;
 
-import no.nav.vedtak.feil.Feil;
-import no.nav.vedtak.feil.FeilFactory;
-import no.nav.vedtak.feil.deklarasjon.DeklarerteFeil;
-import no.nav.vedtak.feil.deklarasjon.TekniskFeil;
+class OppstartFeil {
 
-interface OppstartFeil extends DeklarerteFeil {
+    static TekniskException uventetExceptionVedOppstart(Exception e) {
+        return new TekniskException("FP-753407", "Uventet exception ved oppstart");
 
-    OppstartFeil FACTORY = FeilFactory.create(OppstartFeil.class);
+    }
 
-    @TekniskFeil(feilkode = "FP-753407", feilmelding = "Uventet exception ved oppstart", logLevel = ERROR)
-    Feil uventetExceptionVedOppstart(Exception e);
+    static TekniskException selftestStatus(String status, String description, String endpoint) {
+        return new TekniskException("FP-753409", String.format("Selftest %s: %s. Endpoint: %s", status, description));
 
-    @TekniskFeil(feilkode = "FP-753409", feilmelding = "Selftest %s: %s. Endpoint: %s. ", logLevel = INFO)
-    Feil selftestStatus(String status, String description, String endpoint);
+    }
 }
