@@ -1,8 +1,5 @@
 package no.nav.foreldrepenger.info.web.app.tjenester;
 
-import static no.nav.vedtak.feil.LogLevel.ERROR;
-import static no.nav.vedtak.feil.LogLevel.WARN;
-
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -23,10 +20,7 @@ import no.nav.foreldrepenger.info.repository.Repository;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.ForsendelseIdDto;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.ForsendelseStatus;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.ForsendelseStatusDto;
-import no.nav.vedtak.feil.Feil;
-import no.nav.vedtak.feil.FeilFactory;
-import no.nav.vedtak.feil.deklarasjon.DeklarerteFeil;
-import no.nav.vedtak.feil.deklarasjon.TekniskFeil;
+import no.nav.vedtak.exception.TekniskException;
 
 @ApplicationScoped
 public class ForsendelseStatusTjeneste {
@@ -41,7 +35,6 @@ public class ForsendelseStatusTjeneste {
     }
 
     public ForsendelseStatusTjeneste() {
-        //CDI
     }
 
     public Optional<ForsendelseStatusDto> hentForsendelseStatus(ForsendelseIdDto forsendelseIdDto) {
@@ -63,7 +56,7 @@ public class ForsendelseStatusTjeneste {
             return Optional.of(new ForsendelseStatusDto(ForsendelseStatus.MOTTATT));
         }
         if (behandlingsIder.size() > 1) {
-            throw ForsendelseStatusTjenesteFeil.FACTORY.flereBehandlingerForForsendelsen(behandlingsIder, forsendelseId).toException();
+            throw ForsendelseStatusTjenesteFeil.flereBehandlingerForForsendelsen(behandlingsIder, forsendelseId);
         }
 
         var behandling = repository.hentBehandling(behandlingsIder.iterator().next());
@@ -78,17 +71,17 @@ public class ForsendelseStatusTjeneste {
             var resultat = behandling.getBehandlingResultatType();
             if (erInnvilget(resultat)) {
                 return new ForsendelseStatusDto(ForsendelseStatus.INNVILGET);
-            } else if (erAvslått(resultat)) {
+            }
+            if (erAvslått(resultat)) {
                 return new ForsendelseStatusDto(ForsendelseStatus.AVSLÅTT);
-            } else if (erMergetOgHenlagt(resultat)) {
+            }
+            if (erMergetOgHenlagt(resultat)) {
                 // FIXME: finnes ikke funksjonalitet for å håndtere MERGET_OG_HENLAGT
                 LOG.info("Behandlingsresultat er {}, fpinfo ser ikke videre på denne",
                         BehandlingResultatType.MERGET_OG_HENLAGT.getVerdi());
                 return null;
-            } else {
-                throw ForsendelseStatusTjenesteFeil.FACTORY.ugyldigBehandlingResultat(forsendelseId).toException();
             }
-
+            throw ForsendelseStatusTjenesteFeil.ugyldigBehandlingResultat(forsendelseId);
         }
         var aksjonspunkt = behandling.getÅpneAksjonspunkter();
         if (aksjonspunkt.isEmpty()) {
@@ -108,8 +101,9 @@ public class ForsendelseStatusTjeneste {
 
     private static boolean erInnvilget(String resultat) {
         return resultat.equals(BehandlingResultatType.INNVILGET.getVerdi()) || resultat.equals(
-                BehandlingResultatType.FORELDREPENGER_ENDRET.getVerdi()) || resultat.equals(
-                BehandlingResultatType.INGEN_ENDRING.getVerdi());
+                BehandlingResultatType.FORELDREPENGER_ENDRET.getVerdi())
+                || resultat.equals(
+                        BehandlingResultatType.INGEN_ENDRING.getVerdi());
     }
 
     private static boolean erAvsluttet(String behandlingStatus) {
@@ -117,14 +111,15 @@ public class ForsendelseStatusTjeneste {
                 BehandlingStatus.IVERKSETTER_VEDTAK.getVerdi());
     }
 
-    private interface ForsendelseStatusTjenesteFeil extends DeklarerteFeil {
+    private static class ForsendelseStatusTjenesteFeil {
 
-        ForsendelseStatusTjenesteFeil FACTORY = FeilFactory.create(ForsendelseStatusTjenesteFeil.class);
+        static TekniskException flereBehandlingerForForsendelsen(Set<Long> behandlingsIder, UUID forsendelseId) {
+            return new TekniskException("FP-760822",
+                    String.format("Det er flere behandlinger (%s) knyttet til forsendelsen med ID %s", behandlingsIder, forsendelseId));
+        }
 
-        @TekniskFeil(feilkode = "FP-760822", feilmelding = "Det er flere behandlinger (%s) knyttet til forsendelsen med ID %s", logLevel = ERROR)
-        Feil flereBehandlingerForForsendelsen(Set<Long> behandlingsIder, UUID forsendelseId);
-
-        @TekniskFeil(feilkode = "FP-760823", feilmelding = "Ugyldig behandlingsresultat for forsendelse ID %s", logLevel = WARN)
-        Feil ugyldigBehandlingResultat(UUID forsendelseId);
+        static TekniskException ugyldigBehandlingResultat(UUID forsendelseId) {
+            return new TekniskException("FP-760822", String.format("Ugyldig behandlingsresultat for forsendelse ID %s", forsendelseId));
+        }
     }
 }

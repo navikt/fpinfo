@@ -10,9 +10,6 @@ import no.nav.foreldrepenger.info.felles.datatyper.MorsAktivitet;
 @Converter
 public class StringToMorsAktivitetConverter implements AttributeConverter<MorsAktivitet, String> {
 
-    public StringToMorsAktivitetConverter() {
-    }
-
     @Override
     public String convertToDatabaseColumn(MorsAktivitet attribute) {
         return Optional.ofNullable(attribute)

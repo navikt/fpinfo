@@ -1,7 +1,13 @@
 package no.nav.foreldrepenger.info.felles.datatyper;
 
-import java.util.Arrays;
-import java.util.Collections;
+import static no.nav.foreldrepenger.info.felles.datatyper.FagsakYtelseType.ENDRING_FP;
+import static no.nav.foreldrepenger.info.felles.datatyper.FagsakYtelseType.ES;
+import static no.nav.foreldrepenger.info.felles.datatyper.FagsakYtelseType.FP;
+import static no.nav.foreldrepenger.info.felles.datatyper.FamilieHendelseType.ADOPSJON;
+import static no.nav.foreldrepenger.info.felles.datatyper.FamilieHendelseType.FØDSEL;
+import static no.nav.foreldrepenger.info.felles.datatyper.FamilieHendelseType.OMSORGOVERDRAGELSE;
+import static no.nav.foreldrepenger.info.felles.datatyper.FamilieHendelseType.TERMIN;
+
 import java.util.List;
 import java.util.Map;
 
@@ -14,15 +20,18 @@ public class BehandlingTema {
 
     private static final Map<String, List<String>> HENDELSER = Map.of(
             KEY_ADOPSJON,
-            Collections.unmodifiableList(Arrays.asList(FamilieHendelseType.ADOPSJON.getVerdi(),
-                    FamilieHendelseType.OMSORGOVERDRAGELSE.getVerdi())),
-            KEY_FØDSEL, Collections.unmodifiableList(
-                    Arrays.asList(FamilieHendelseType.FØDSEL.getVerdi(), FamilieHendelseType.TERMIN.getVerdi())));
+            List.of(ADOPSJON.getVerdi(),
+                    OMSORGOVERDRAGELSE.getVerdi()),
+            KEY_FØDSEL,
+            List.of(FØDSEL.getVerdi(),
+                    TERMIN.getVerdi()));
 
     private static final Map<String, List<String>> YTELSE_TYPER = Map.of(
-            KEY_ENGANGSSTØNAD, Collections.unmodifiableList(Arrays.asList(FagsakYtelseType.ES.getVerdi())),
-            KEY_FORELDREPENGER, Collections.unmodifiableList(
-                    Arrays.asList(FagsakYtelseType.FP.getVerdi(), FagsakYtelseType.ENDRING_FP.getVerdi())));
+            KEY_ENGANGSSTØNAD,
+            List.of(ES.getVerdi()),
+            KEY_FORELDREPENGER,
+            List.of(FP.getVerdi(),
+                    ENDRING_FP.getVerdi()));
 
     public static final String ENGANGSTØNAD = "ENGST";
     public static final String ENGANGSTØNAD_FØDSEL = "ENGST_FODS";
@@ -40,14 +49,17 @@ public class BehandlingTema {
         if (gjelderEngangstønad(ytelseType)) {
             if (gjelderAdopsjon(hendelse)) {
                 return ENGANGSTØNAD_ADOPSJON;
-            } else if (gjelderFødsel(ytelseType)) {
+            }
+            if (gjelderFødsel(ytelseType)) {
                 return ENGANGSTØNAD_FØDSEL;
             }
             return ENGANGSTØNAD;
-        } else if (gjelderForeldrepenger(ytelseType)) {
+        }
+        if (gjelderForeldrepenger(ytelseType)) {
             if (gjelderAdopsjon(hendelse)) {
                 return FORELDREPENGER_ADOPSJON;
-            } else if (gjelderFødsel(hendelse)) {
+            }
+            if (gjelderFødsel(hendelse)) {
                 return FORELDREPENGER_FØDSEL;
             }
             return FORELDREPENGER;

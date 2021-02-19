@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.info.web.app.metrics;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.io.Writer;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.GET;
@@ -20,7 +19,7 @@ public class PrometheusRestService {
     @Operation(tags = "metrics", hidden = true)
     @Path("/prometheus")
     public Response prometheus() {
-        try (final Writer writer = new StringWriter()) {
+        try (var writer = new StringWriter()) {
             TextFormatter.write004(writer, CollectorRegistry.defaultRegistry.metricFamilySamples());
             return Response.ok().encoding("UTF-8").entity(writer.toString()).header("content-type", TextFormatter.CONTENT_TYPE_004).build();
         } catch (IOException e) {
@@ -28,4 +27,3 @@ public class PrometheusRestService {
         }
     }
 }
-

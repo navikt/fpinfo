@@ -10,9 +10,6 @@ import no.nav.foreldrepenger.info.felles.datatyper.GraderingAvslagÅrsak;
 @Converter
 public class StringToGraderingAvslagÅrsakConverter implements AttributeConverter<GraderingAvslagÅrsak, String> {
 
-    public StringToGraderingAvslagÅrsakConverter() {
-    }
-
     @Override
     public String convertToDatabaseColumn(GraderingAvslagÅrsak årsak) {
         return Optional.ofNullable(årsak)

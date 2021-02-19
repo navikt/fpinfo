@@ -31,7 +31,6 @@ public class BehandlingTjeneste {
     }
 
     public BehandlingTjeneste() {
-        // FOR CDI Proxy
     }
 
     public BehandlingDto hentBehandling(BehandlingIdDto behandlingIdDto, String linkPathSøknad) {
@@ -47,7 +46,9 @@ public class BehandlingTjeneste {
     }
 
     private List<String> journalPostIdr(List<MottattDokument> inntektsmeldinger) {
-        return inntektsmeldinger.stream().map(MottattDokument::getJournalpostId).collect(Collectors.toList());
+        return inntektsmeldinger.stream()
+                .map(MottattDokument::getJournalpostId)
+                .collect(Collectors.toList());
     }
 
     private boolean harSøknad(BehandlingIdDto behandlingIdDto) {
@@ -57,7 +58,7 @@ public class BehandlingTjeneste {
     public Optional<Long> getGjeldendeBehandlingId(Saksnummer saksnummer) {
         var behandlingId = repository.hentGjeldendeBehandling(saksnummer);
         if (behandlingId.isEmpty()) {
-            LOG.info("Finner ingen gjeldende behandlingId for saksnummer " + saksnummer.asString());
+            LOG.info("Finner ingen gjeldende behandlingId for saksnummer " + saksnummer.saksnummer());
         } else {
             LOG.info("Bruker gjeldende behandlingId: " + behandlingId.get());
         }

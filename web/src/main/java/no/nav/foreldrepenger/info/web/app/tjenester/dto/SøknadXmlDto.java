@@ -1,12 +1,8 @@
 package no.nav.foreldrepenger.info.web.app.tjenester.dto;
 
-import no.nav.foreldrepenger.info.web.abac.AppAbacAttributtType;
 import no.nav.foreldrepenger.info.domene.MottattDokument;
-import no.nav.vedtak.feil.Feil;
-import no.nav.vedtak.feil.FeilFactory;
-import no.nav.vedtak.feil.LogLevel;
-import no.nav.vedtak.feil.deklarasjon.DeklarerteFeil;
-import no.nav.vedtak.feil.deklarasjon.TekniskFeil;
+import no.nav.foreldrepenger.info.web.abac.AppAbacAttributtType;
+import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
 
@@ -42,7 +38,7 @@ public class SøknadXmlDto implements AbacDto {
 
     public static SøknadXmlDto fraDomene(MottattDokument dokument1, MottattDokument dokument2) {
         if (!dokument1.getBehandlingId().equals(dokument2.getBehandlingId())) {
-            throw SøknadXmlDtoFeil.FACTORY.gjelderIkkeSammeBehandling().toException();
+            throw new TekniskException("FP-241631", "Dokumentene gjelder ikke samme behandling");
         }
         SøknadXmlDto dto = new SøknadXmlDto();
         dto.xml = dokument1.getSøknadXml() != null ? dokument1.getSøknadXml() : dokument2.getSøknadXml();
@@ -80,12 +76,4 @@ public class SøknadXmlDto implements AbacDto {
         }
     }
 
-    interface SøknadXmlDtoFeil extends DeklarerteFeil {
-
-        SøknadXmlDtoFeil FACTORY = FeilFactory.create(SøknadXmlDtoFeil.class);
-
-        @TekniskFeil(feilkode = "FP-241631", feilmelding = "Dokumentene gjelder ikke samme behandling", logLevel = LogLevel.WARN)
-        Feil gjelderIkkeSammeBehandling();
-
-    }
 }

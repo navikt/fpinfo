@@ -1,17 +1,11 @@
 package no.nav.foreldrepenger.info.felles.datatyper;
 
 public enum FagsakYtelseType {
-    ENDRING_FP("ENDRING_FP"),
-    FP("FP"),
-    ES("ES");
-
-    private String verdi;
-
-    FagsakYtelseType(String verdi) {
-        this.verdi = verdi;
-    }
+    ENDRING_FP,
+    FP,
+    ES;
 
     public String getVerdi() {
-        return verdi;
+        return name();
     }
 }

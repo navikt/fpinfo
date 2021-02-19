@@ -26,7 +26,7 @@ public class SøknadTjeneste {
     }
 
     public SøknadTjeneste() {
-        //CDI
+        // CDI
     }
 
     public Optional<SøknadXmlDto> hentSøknadXml(Long behandlingId) {
@@ -48,6 +48,8 @@ public class SøknadTjeneste {
         if (dokumenter.size() == 2) {
             return Optional.of(SøknadXmlDto.fraDomene(dokumenter.get(0), dokumenter.get(1)));
         }
-        return dokumenter.stream().findFirst().map(SøknadXmlDto::fraDomene);
+        return dokumenter.stream()
+                .findFirst()
+                .map(SøknadXmlDto::fraDomene);
     }
 }
