@@ -19,13 +19,13 @@ import no.nav.foreldrepenger.info.felles.datatyper.BehandlingTema;
 import no.nav.foreldrepenger.info.felles.datatyper.DokumentTypeId;
 import no.nav.foreldrepenger.info.felles.datatyper.FagsakYtelseType;
 import no.nav.foreldrepenger.info.felles.datatyper.FamilieHendelseType;
-import no.nav.foreldrepenger.info.web.app.ResourceLink;
 import no.nav.foreldrepenger.info.repository.Repository;
+import no.nav.foreldrepenger.info.web.app.ResourceLink;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.BehandlingDto;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.BehandlingIdDto;
 
 @ExtendWith(MockitoExtension.class)
-public class BehandlingTjenesteTest {
+class BehandlingTjenesteTest {
     private static final Long BEHANDLING_ID = 123L;
     private static final String BEHANDLING_STATUS = "FVED";
     private static final String FAGSAK_YTELSE_TYPE = FagsakYtelseType.FP.getVerdi();
@@ -43,12 +43,12 @@ public class BehandlingTjenesteTest {
     private BehandlingTjeneste behandlingTjeneste;
 
     @BeforeEach
-    public void beforeEach() {
+    void beforeEach() {
         behandlingTjeneste = new BehandlingTjeneste(new SøknadTjeneste(mockRepository), mockRepository);
     }
 
     @Test
-    public void skalKonvertereBehandlingTilDtoOgUtledeBehandlingTema() {
+    void skalKonvertereBehandlingTilDtoOgUtledeBehandlingTema() {
         when(mockRepository.hentBehandling(BEHANDLING_ID)).thenReturn(lagBehandling());
         when(mockRepository.hentMottattDokument(BEHANDLING_ID)).thenReturn(lagDokument());
 
@@ -67,7 +67,7 @@ public class BehandlingTjenesteTest {
     }
 
     @Test
-    public void skalIkkeLageLenkerSøknadSomIkkeFinnes() {
+    void skalIkkeLageLenkerSøknadSomIkkeFinnes() {
         when(mockRepository.hentBehandling(BEHANDLING_ID)).thenReturn(lagBehandling());
         when(mockRepository.hentMottattDokument(BEHANDLING_ID)).thenReturn(Collections.emptyList());
 
@@ -78,7 +78,7 @@ public class BehandlingTjenesteTest {
     }
 
     @Test
-    public void skalIkkeLageLenkeTilSøknadSomIkkeErRelevant() {
+    void skalIkkeLageLenkeTilSøknadSomIkkeErRelevant() {
         when(mockRepository.hentBehandling(BEHANDLING_ID)).thenReturn(lagBehandling());
         when(mockRepository.hentMottattDokument(BEHANDLING_ID)).thenReturn(
                 lagDokument(DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD));

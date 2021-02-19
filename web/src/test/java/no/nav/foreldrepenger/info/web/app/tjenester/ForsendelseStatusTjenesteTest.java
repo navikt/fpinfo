@@ -29,7 +29,7 @@ import no.nav.foreldrepenger.info.web.app.tjenester.dto.ForsendelseStatusDto;
 import no.nav.vedtak.exception.TekniskException;
 
 @ExtendWith(MockitoExtension.class)
-public class ForsendelseStatusTjenesteTest {
+class ForsendelseStatusTjenesteTest {
     private static final Long BEHANDLING_ID = 123L;
     private static final String BEHANDLING_STATUS = "FVED";
     private static final String FAGSAK_YTELSE_TYPE = FagsakYtelseType.FP.getVerdi();
@@ -50,7 +50,7 @@ public class ForsendelseStatusTjenesteTest {
     }
 
     @Test
-    public void skalReturnereTomtResultat() {
+    void skalReturnereTomtResultat() {
         UUID fid = UUID.randomUUID();
 
         when(mockRepository.hentMottatteDokumenter(any(UUID.class))).thenReturn(lagDokumenter(fid, 0, true));
@@ -61,7 +61,7 @@ public class ForsendelseStatusTjenesteTest {
     }
 
     @Test
-    public void skalReturnereMottatNårBehandlingForForsendelseIkkeFinnes() {
+    void skalReturnereMottatNårBehandlingForForsendelseIkkeFinnes() {
         UUID fid = UUID.randomUUID();
 
         when(mockRepository.hentMottatteDokumenter(any(UUID.class))).thenReturn(lagDokumenter(fid, 1, false));
@@ -72,7 +72,7 @@ public class ForsendelseStatusTjenesteTest {
     }
 
     @Test
-    public void skalReturnereStatusInformasjon() {
+    void skalReturnereStatusInformasjon() {
         UUID fid = UUID.randomUUID();
 
         when(mockRepository.hentMottatteDokumenter(any(UUID.class))).thenReturn(lagDokumenter(fid, 1, true));
@@ -85,7 +85,7 @@ public class ForsendelseStatusTjenesteTest {
     }
 
     @Test
-    public void skalKasteFeilVedFlereBehandlingerKnyttetTilForsendelseId() {
+    void skalKasteFeilVedFlereBehandlingerKnyttetTilForsendelseId() {
         UUID fid = UUID.randomUUID();
 
         when(mockRepository.hentMottatteDokumenter(any(UUID.class))).thenReturn(lagDokumenter(fid, 2, true));

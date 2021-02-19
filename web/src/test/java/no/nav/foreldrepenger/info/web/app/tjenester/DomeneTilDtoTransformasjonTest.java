@@ -1,12 +1,12 @@
 package no.nav.foreldrepenger.info.web.app.tjenester;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.info.domene.Behandling;
@@ -29,7 +29,7 @@ import no.nav.foreldrepenger.info.web.app.tjenester.dto.SøknadXmlDto;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.UttaksPeriodeDto;
 import no.nav.vedtak.exception.TekniskException;
 
-public class DomeneTilDtoTransformasjonTest {
+class DomeneTilDtoTransformasjonTest {
     private static Long BEHANDLING_ID = 1234L;
     private static String SAKSNUMMER = "4567";
     private static String BEHANDLENDE_ENHET = "4052";
@@ -51,8 +51,8 @@ public class DomeneTilDtoTransformasjonTest {
     String DOKUMENT_TYPE_ID = DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL.getVerdi();
 
     @Test
-    public void skalTransformereBehandlingTilBehandlingDto() {
-        Behandling behandling = Behandling.builder()
+    void skalTransformereBehandlingTilBehandlingDto() {
+        var behandling = Behandling.builder()
                 .medBehandlingId(BEHANDLING_ID)
                 .medBehandlingResultatType(RESULTAT_TYPE)
                 .medBehandlingStatus(BEHANDLING_STATUS)
@@ -64,7 +64,7 @@ public class DomeneTilDtoTransformasjonTest {
 
         String forventetBehandlingTema = BehandlingTema.fraYtelse(FAGSAK_YTELSE_TYPE, FAMILIEHENDELSE_TYPE);
 
-        BehandlingDto dto = BehandlingDto.fraDomene(behandling);
+        var dto = BehandlingDto.fraDomene(behandling);
         assertThat(dto.getStatus()).isEqualTo(BEHANDLING_STATUS);
         assertThat(dto.getTema()).isEqualTo(forventetBehandlingTema);
         assertThat(dto.getType()).isEqualTo(FAGSAK_YTELSE_TYPE);
@@ -79,7 +79,7 @@ public class DomeneTilDtoTransformasjonTest {
     }
 
     @Test
-    public void skalTransformereSakStatusTilSakStatusDto() {
+    void skalTransformereSakStatusTilSakStatusDto() {
         var sak = Sak.builder()
                 .medFagsakStatus(FAGSAK_STATUS)
                 .medAktørId(AKTØR_ID)
@@ -104,36 +104,36 @@ public class DomeneTilDtoTransformasjonTest {
     }
 
     @Test
-    public void skalTransformereFullstendigMottattDokumentTilSøknadXmlDto() {
-        MottattDokument dokument = lagDokument(BEHANDLING_ID, JOURNALPOST_ID, XML_PAYLOAD);
+    void skalTransformereFullstendigMottattDokumentTilSøknadXmlDto() {
+        var dokument = lagDokument(BEHANDLING_ID, JOURNALPOST_ID, XML_PAYLOAD);
 
-        SøknadXmlDto dto = SøknadXmlDto.fraDomene(dokument);
+        var dto = SøknadXmlDto.fraDomene(dokument);
         assertThat(dto.getJournalpostId()).isEqualTo(JOURNALPOST_ID);
         assertThat(dto.getXml()).isEqualTo(XML_PAYLOAD);
     }
 
     @Test
-    public void skalKasteFeilmeldingNårVedForsøkPåSammenslåingAvToUrelaterteDokumenter() {
-        MottattDokument dokument1 = lagDokument(1L, JOURNALPOST_ID, XML_PAYLOAD);
-        MottattDokument dokument2 = lagDokument(2L, JOURNALPOST_ID, XML_PAYLOAD);
-        Assertions.assertThrows(TekniskException.class, () -> SøknadXmlDto.fraDomene(dokument1, dokument2));
+    void skalKasteFeilmeldingNårVedForsøkPåSammenslåingAvToUrelaterteDokumenter() {
+        var dokument1 = lagDokument(1L, JOURNALPOST_ID, XML_PAYLOAD);
+        var dokument2 = lagDokument(2L, JOURNALPOST_ID, XML_PAYLOAD);
+        assertThrows(TekniskException.class, () -> SøknadXmlDto.fraDomene(dokument1, dokument2));
     }
 
     @Test
-    public void skalSammenslåToMottatteDokumentKnyttetTilSammeBehandlingTilSøknadXmlDto() {
-        MottattDokument dokument1 = lagDokument(BEHANDLING_ID, JOURNALPOST_ID, null);
-        MottattDokument dokument2 = lagDokument(BEHANDLING_ID, null, XML_PAYLOAD);
+    void skalSammenslåToMottatteDokumentKnyttetTilSammeBehandlingTilSøknadXmlDto() {
+        var dokument1 = lagDokument(BEHANDLING_ID, JOURNALPOST_ID, null);
+        var dokument2 = lagDokument(BEHANDLING_ID, null, XML_PAYLOAD);
 
-        SøknadXmlDto dto = SøknadXmlDto.fraDomene(dokument1, dokument2);
+        var dto = SøknadXmlDto.fraDomene(dokument1, dokument2);
 
         assertThat(dto.getXml()).isEqualTo(XML_PAYLOAD);
         assertThat(dto.getJournalpostId()).isEqualTo(JOURNALPOST_ID);
     }
 
     @Test
-    public void skalMappeUttakPeriodeTilUttakPeriodeDto() {
+    void skalMappeUttakPeriodeTilUttakPeriodeDto() {
         var periodeResultatÅrsak = "4005";
-        UttakPeriode uttakPeriode = UttakPeriode.builder()
+        var uttakPeriode = UttakPeriode.builder()
                 .withPeriodeResultatType("INNVILGET")
                 .withSamtidigUttak(null)
                 .withUttakUtsettelseType("-")
@@ -158,9 +158,9 @@ public class DomeneTilDtoTransformasjonTest {
                 .withArbeidsgiverAktørId(null)
                 .withArbeidsgiverAktørId("11111111")
                 .build();
-        UttaksPeriodeDto uttaksPeriodeDto = UttaksPeriodeDto.fraDomene(new Saksnummer("1"), uttakPeriode, false);
+        var uttaksPeriodeDto = UttaksPeriodeDto.fraDomene(new Saksnummer("1"), uttakPeriode, false);
 
-        assertThat(uttaksPeriodeDto.getMorsAktivitet()).isEqualTo(null);
+        assertThat(uttaksPeriodeDto.getMorsAktivitet()).isNull();
         assertThat(uttaksPeriodeDto.getGraderingAvslagAarsak()).isEqualTo("MOR_OPPFYLLER_IKKE_AKTIVITETSKRAV");
         assertThat(uttaksPeriodeDto.getPeriodeResultatÅrsak()).isEqualTo(periodeResultatÅrsak);
     }

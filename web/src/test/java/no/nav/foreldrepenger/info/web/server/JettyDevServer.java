@@ -7,12 +7,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
-import org.slf4j.LoggerFactory;
-
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.joran.JoranConfigurator;
-import ch.qos.logback.core.joran.spi.JoranException;
-import ch.qos.logback.core.util.StatusPrinter;
 import no.nav.foreldrepenger.info.dbstoette.Databaseskjemainitialisering;
 import no.nav.foreldrepenger.info.dbstoette.DatasourceConfiguration;
 
@@ -78,12 +72,6 @@ public class JettyDevServer extends JettyServer {
     }
 
     protected void konfigurer() throws Exception {
-
-        PropertiesUtils.lagPropertiesFilFraTemplate();
-        PropertiesUtils.initProperties();
-
-        konfigurerLogback();
-
         File webapproot = new File(WEBAPP_ROOT);
         if (!webapproot.exists()) {
             throw new IllegalStateException("Har du satt working dir til server prosjekt? Finner ikke " + webapproot);
@@ -101,23 +89,4 @@ public class JettyDevServer extends JettyServer {
         Databaseskjemainitialisering.migrerSkjemaer(DatasourceConfiguration.JETTY_DEV_WEB_SERVER);
     }
 
-    private static void konfigurerLogback() throws IOException {
-        new File("./logs").mkdirs();
-        System.setProperty("APP_LOG_HOME", "./logs");
-        File logbackConfig = PropertiesUtils.lagLogbackConfig();
-
-        LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
-
-        try {
-            JoranConfigurator configurator = new JoranConfigurator();
-            configurator.setContext(context);
-            // Call context.reset() to clear any previous configuration, e.g. default
-            // configuration. For multi-step configuration, omit calling context.reset().
-            context.reset();
-            configurator.doConfigure(logbackConfig.getAbsolutePath());
-        } catch (JoranException je) {
-            // StatusPrinter will handle this
-        }
-        StatusPrinter.printInCaseOfErrorsOrWarnings(context);
-    }
 }
