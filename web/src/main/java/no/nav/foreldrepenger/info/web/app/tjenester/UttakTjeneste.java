@@ -30,12 +30,12 @@ public class UttakTjeneste {
     }
 
     UttakTjeneste() {
-        //CDI
+        // CDI
     }
 
     public List<UttaksPeriodeDto> hentFellesUttaksplan(Saksnummer saksnummer, boolean erAnnenPart) {
         LOG.info("Henter felles uttaksplan basert på {}", saksnummer);
-        var fagsakRelasjonOptional = repository.hentFagsakRelasjon(saksnummer.asString());
+        var fagsakRelasjonOptional = repository.hentFagsakRelasjon(saksnummer.saksnummer());
         if (fagsakRelasjonOptional.isEmpty()) {
             LOG.info("Fant ingen uttaksplan for {}", saksnummer);
             return Collections.emptyList();
@@ -54,7 +54,7 @@ public class UttakTjeneste {
                 fellesPlan.add(uttaksPeriodeDto);
             }
         }
-        LOG.info("Returnererer uttaksplan med {} perioder for saksnummer {}", fellesPlan.size(), saksnummer.asString());
+        LOG.info("Returnererer uttaksplan med {} perioder for saksnummer {}", fellesPlan.size(), saksnummer.saksnummer());
         return fellesPlan;
     }
 

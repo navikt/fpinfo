@@ -4,13 +4,15 @@ import no.nav.vedtak.exception.TekniskException;
 
 class OppstartFeil {
 
-    static TekniskException uventetExceptionVedOppstart(Exception e) {
-        return new TekniskException("FP-753407", "Uventet exception ved oppstart");
+    private OppstartFeil() {
 
     }
 
-    static TekniskException selftestStatus(String status, String description, String endpoint) {
-        return new TekniskException("FP-753409", String.format("Selftest %s: %s. Endpoint: %s", status, description));
+    static TekniskException uventetExceptionVedOppstart(Exception e) {
+        return new TekniskException("FP-753407", "Uventet exception ved oppstart", e);
+    }
 
+    static TekniskException selftestStatus(String status, String description, String endpoint) {
+        return new TekniskException("FP-753409", String.format("Selftest %s: %s. Endpoint: %s", status, description, endpoint));
     }
 }

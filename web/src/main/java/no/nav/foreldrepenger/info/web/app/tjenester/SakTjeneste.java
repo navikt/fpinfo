@@ -34,7 +34,6 @@ public class SakTjeneste {
     }
 
     public SakTjeneste() {
-        //CDI
     }
 
     public List<SakDto> hentSak(AktørIdDto aktørIdDto, String linkPathBehandling, String linkPathUttaksplan) {
@@ -46,31 +45,33 @@ public class SakTjeneste {
     }
 
     private List<SakDto> mapTilSakStatusDtoListe(List<Sak> sakListe,
-                                                 String linkPathBehandling,
-                                                 String linkPathUttaksplan) {
-        return sakListe.stream().filter(distinct(Sak::getSaksnummer)).map(sak -> {
-            var dto = SakDto.fraDomene(sak, harMottattEndringssøknad(sak));
+            String linkPathBehandling,
+            String linkPathUttaksplan) {
+        return sakListe.stream()
+                .filter(distinct(Sak::getSaksnummer))
+                .map(sak -> {
+                    var dto = SakDto.fraDomene(sak, harMottattEndringssøknad(sak));
 
-            // Alle barn som gjelder denne saken, kan spenne over flere behandlinger uansett
-            // status
-            sakListe.stream()
-                    .filter(e -> sak.getSaksnummer().equals(e.getSaksnummer()))
-                    .forEach(e -> dto.leggTilBarn(e.getAktørIdBarn()));
+                    // Alle barn som gjelder denne saken, kan spenne over flere behandlinger uansett
+                    // status
+                    sakListe.stream()
+                            .filter(e -> sak.getSaksnummer().equals(e.getSaksnummer()))
+                            .forEach(e -> dto.leggTilBarn(e.getAktørIdBarn()));
 
-            repository.hentTilknyttedeBehandlinger(sak.getSaksnummer())
-                    .stream()
+                    repository.hentTilknyttedeBehandlinger(sak.getSaksnummer())
+                            .stream()
 //                    .filter(this::erRelevant) //TODO må brukes ved omskriving.
-                    .forEach(elem -> {
-                        String href = linkPathBehandling + elem.getBehandlingId();
-                        dto.leggTilLenke(href, "behandlinger");
-                    });
+                            .forEach(elem -> {
+                                String href = linkPathBehandling + elem.getBehandlingId();
+                                dto.leggTilLenke(href, "behandlinger");
+                            });
 
-            repository.hentFagsakRelasjon(sak.getSaksnummer()).ifPresent(up -> {
-                var href = linkPathUttaksplan + sak.getSaksnummer();
-                dto.leggTilLenke(href, "uttaksplan");
-            });
-            return dto;
-        }).collect(Collectors.toList());
+                    repository.hentFagsakRelasjon(sak.getSaksnummer()).ifPresent(up -> {
+                        var href = linkPathUttaksplan + sak.getSaksnummer();
+                        dto.leggTilLenke(href, "uttaksplan");
+                    });
+                    return dto;
+                }).collect(Collectors.toList());
     }
 
     private boolean erRelevant(Behandling behandling) {

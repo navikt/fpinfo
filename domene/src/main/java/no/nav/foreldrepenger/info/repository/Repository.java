@@ -66,7 +66,7 @@ public class Repository {
     public Optional<Long> hentGjeldendeBehandling(Saksnummer saksnummer) {
         var query = entityManager
                 .createNativeQuery("SELECT b.behandling_id from GJELDENDE_VEDTATT_BEHANDLING b where b.saksnummer=?1");
-        query.setParameter(1, saksnummer.asString());
+        query.setParameter(1, saksnummer.saksnummer());
         query.setHint(QueryHints.HINT_CACHE_MODE, CacheMode.IGNORE);
         var result = query.getResultList();
         if (result.isEmpty()) {

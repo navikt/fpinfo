@@ -35,7 +35,6 @@ public class ForsendelseStatusTjeneste {
     }
 
     public ForsendelseStatusTjeneste() {
-        // CDI
     }
 
     public Optional<ForsendelseStatusDto> hentForsendelseStatus(ForsendelseIdDto forsendelseIdDto) {

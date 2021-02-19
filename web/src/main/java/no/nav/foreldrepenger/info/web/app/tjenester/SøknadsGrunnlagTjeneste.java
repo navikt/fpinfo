@@ -21,15 +21,14 @@ public class SøknadsGrunnlagTjeneste {
 
     @Inject
     public SøknadsGrunnlagTjeneste(BehandlingTjeneste behandlingTjeneste,
-                                   UttakTjeneste uttakTjeneste,
-                                   Repository repository) {
+            UttakTjeneste uttakTjeneste,
+            Repository repository) {
         this.behandlingTjeneste = behandlingTjeneste;
         this.uttakTjeneste = uttakTjeneste;
         this.repository = repository;
     }
 
     public SøknadsGrunnlagTjeneste() {
-        //CDI
     }
 
     public Optional<SøknadsGrunnlagDto> hentSøknadsgrunnlag(SaksnummerDto saksnummerDto, boolean erAnnenPart) {
@@ -43,7 +42,7 @@ public class SøknadsGrunnlagTjeneste {
     }
 
     public Optional<SøknadsGrunnlagDto> hentSøknadAnnenPart(AktørIdDto aktørIdBrukerDto,
-                                                            AktørAnnenPartDto aktørAnnenPartDto) {
+            AktørAnnenPartDto aktørAnnenPartDto) {
         var sakAnnenPart = repository.finnNyesteSakForAnnenPart(aktørIdBrukerDto.getAktørId(),
                 aktørAnnenPartDto.getAnnenPartAktørId());
         var søknadsgrunnlag = sakAnnenPart.flatMap(

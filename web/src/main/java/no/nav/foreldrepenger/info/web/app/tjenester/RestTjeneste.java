@@ -50,10 +50,10 @@ public class RestTjeneste {
 
     @Inject
     public RestTjeneste(BehandlingTjeneste behandlingTjeneste,
-                        SøknadTjeneste søknadTjeneste,
-                        ForsendelseStatusTjeneste forsendelseStatusTjeneste,
-                        SøknadsGrunnlagTjeneste søknadsGrunnlagTjeneste,
-                        SakTjeneste sakTjeneste) {
+            SøknadTjeneste søknadTjeneste,
+            ForsendelseStatusTjeneste forsendelseStatusTjeneste,
+            SøknadsGrunnlagTjeneste søknadsGrunnlagTjeneste,
+            SakTjeneste sakTjeneste) {
         this.behandlingTjeneste = behandlingTjeneste;
         this.søknadTjeneste = søknadTjeneste;
         this.forsendelseStatusTjeneste = forsendelseStatusTjeneste;
@@ -68,14 +68,8 @@ public class RestTjeneste {
     @GET
     @Path("/behandling")
     @BeskyttetRessurs(action = READ, resource = BeskyttetRessursAttributt.FAGSAK)
-    @Operation(description = "Url for å hente Behandling",
-            summary = "Returnerer Behandling",
-            responses = {@ApiResponse(content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = BehandlingDto.class)),
-                    responseCode = "200",
-                    description = "Returnerer søknad XML"
-            )
+    @Operation(description = "Url for å hente Behandling", summary = "Returnerer Behandling", responses = {
+            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = BehandlingDto.class)), responseCode = "200", description = "Returnerer søknad XML")
     })
     public BehandlingDto hentBehandling(
             @NotNull @QueryParam("behandlingId") @Parameter(name = "behandlingId") @Valid BehandlingIdDto behandlingIdDto) {
@@ -87,14 +81,8 @@ public class RestTjeneste {
     @Path("/status")
     @Produces(MediaType.APPLICATION_JSON)
     @BeskyttetRessurs(action = READ, resource = BeskyttetRessursAttributt.FAGSAK)
-    @Operation(description = "Søker om status på prossesseringen av et mottatt dokument",
-            summary = "status på prossesseringen av et mottatt dokument",
-            responses = {
-            @ApiResponse(content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = ForsendelseStatusDto.class)),
-                    responseCode = "200",
-                    description = "Status og Periode"),
+    @Operation(description = "Søker om status på prossesseringen av et mottatt dokument", summary = "status på prossesseringen av et mottatt dokument", responses = {
+            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = ForsendelseStatusDto.class)), responseCode = "200", description = "Status og Periode"),
             @ApiResponse(responseCode = "404", description = "Forsendelse ikke funnet")
     })
     public Response getForsendelseStatus(
@@ -107,14 +95,8 @@ public class RestTjeneste {
     @GET
     @Path("/sak")
     @BeskyttetRessurs(action = READ, resource = BeskyttetRessursAttributt.FAGSAK)
-    @Operation(description = "Url for å hente sak status informasjon som er relevant til aktør",
-            summary = ("Returnerer Sak Status Informasjon"),
-            responses = {
-            @ApiResponse(content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = SakDto.class)),
-                    responseCode = "200",
-                    description = "Returnerer Sak Status Informasjon")
+    @Operation(description = "Url for å hente sak status informasjon som er relevant til aktør", summary = ("Returnerer Sak Status Informasjon"), responses = {
+            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SakDto.class)), responseCode = "200", description = "Returnerer Sak Status Informasjon")
     })
     public List<SakDto> hentSak(
             @NotNull @QueryParam("aktorId") @Parameter(name = "aktorId") @Valid AktørIdDto aktørIdDto) {
@@ -126,13 +108,8 @@ public class RestTjeneste {
     @GET
     @Path("/soknad")
     @BeskyttetRessurs(action = READ, resource = BeskyttetRessursAttributt.FAGSAK)
-    @Operation(description = "Url for å hente søknad XML og journalpostId",
-            summary = "Returnerer søknad XML og Journalpost ID",
-            responses = {@ApiResponse(content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = SøknadXmlDto.class)),
-                    responseCode = "200",
-                    description = "Returnerer søknad XML")
+    @Operation(description = "Url for å hente søknad XML og journalpostId", summary = "Returnerer søknad XML og Journalpost ID", responses = {
+            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SøknadXmlDto.class)), responseCode = "200", description = "Returnerer søknad XML")
     })
     public Response hentSøknadXml(
             @NotNull @QueryParam("behandlingId") @Parameter(name = "behandlingId") @Valid BehandlingIdDto behandlingIdDto) {
@@ -144,36 +121,30 @@ public class RestTjeneste {
     @GET
     @Path("/uttaksplan")
     @BeskyttetRessurs(action = READ, resource = BeskyttetRessursAttributt.UTTAKSPLAN)
-    @Operation(description = "Url for å hente søknadsgrunnlag og felles uttaksplan",
-            summary = "Returnerer grunnlagsinfo og liste av uttaksperioder for begge parter",
-            responses = {@ApiResponse(content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = SøknadsGrunnlagDto.class)),
-                    responseCode = "200",
-                    description = "Returnerer søknad XML")
+    @Operation(description = "Url for å hente søknadsgrunnlag og felles uttaksplan", summary = "Returnerer grunnlagsinfo og liste av uttaksperioder for begge parter", responses = {
+            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SøknadsGrunnlagDto.class)), responseCode = "200", description = "Returnerer søknad XML")
     })
     public Response hentSøknadsgrunnlag(
             @NotNull @QueryParam("saksnummer") @Parameter(name = "saksnummer") @Valid SaksnummerDto saksnummerDto) {
         var dto = søknadsGrunnlagTjeneste.hentSøknadsgrunnlag(saksnummerDto, false);
-        return dto.map(d -> Response.ok(d).build()).orElse(Response.noContent().build());
+        return dto
+                .map(d -> Response.ok(d).build())
+                .orElse(Response.noContent().build());
     }
 
     @GET
     @Path("/annenforelderplan")
     @BeskyttetRessurs(action = READ, resource = BeskyttetRessursAttributt.UTTAKSPLAN)
-    @Operation(description = "Url for å hente søknadsgrunnlag og felles uttaksplan",
-            summary = "Returnerer grunnlagsinfo og liste av uttaksperioder for begge parter",
-            responses = {@ApiResponse(
-                    content = @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = SøknadsGrunnlagDto.class)),
-                    responseCode = "200",
-                    description = "Returnerer søknad XML")
+    @Operation(description = "Url for å hente søknadsgrunnlag og felles uttaksplan", summary = "Returnerer grunnlagsinfo og liste av uttaksperioder for begge parter", responses = {
+            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SøknadsGrunnlagDto.class)), responseCode = "200", description = "Returnerer søknad XML")
     })
     public Response hentGrunnlagForAnnenPart(
             @NotNull @QueryParam("aktorIdBruker") @Parameter(name = "aktorId") @Valid AktørIdDto aktørIdBrukerDto,
             @NotNull @QueryParam("aktorIdAnnenPart") @Parameter(name = "aktorId") @Valid AktørAnnenPartDto aktørAnnenPartDto) {
         var søknadsGrunnlagDto = søknadsGrunnlagTjeneste.hentSøknadAnnenPart(aktørIdBrukerDto, aktørAnnenPartDto);
-        return søknadsGrunnlagDto.map(d -> Response.ok(d).build()).orElse(Response.noContent().build());
+        return søknadsGrunnlagDto
+                .map(d -> Response.ok(d).build())
+                .orElse(Response.noContent().build());
     }
 
 }

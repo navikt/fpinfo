@@ -1,37 +1,20 @@
 package no.nav.foreldrepenger.info.web.app.exceptions;
 
-import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
-public class FeilDto implements Serializable {
+record FeilDto(String feilmelding, Collection<FeltFeilDto> feltFeil, FeilType type) {
 
-    private String feilmelding;
-    private Collection<FeltFeilDto> feltFeil;
-    private FeilType type;
-
-    public FeilDto(String feilmelding) {
-        this.feilmelding = feilmelding;
+    FeilDto(String msg, Collection<FeltFeilDto> feil) {
+        this(msg, feil, null);
     }
 
-    public FeilDto(String feilmelding, Collection<FeltFeilDto> feltFeil) {
-        this.feilmelding = feilmelding;
-        this.feltFeil = feltFeil;
+    FeilDto(String msg, FeilType feilType) {
+        this(msg, List.of(), feilType);
     }
 
-    public FeilDto(FeilType type, String feilmelding) {
-        this.type = type;
-        this.feilmelding = feilmelding;
+    FeilDto(String msg) {
+        this(msg, List.of(), null);
     }
 
-    public String getFeilmelding() {
-        return feilmelding;
-    }
-
-    public Collection<FeltFeilDto> getFeltFeil() {
-        return feltFeil;
-    }
-
-    public FeilType getType() {
-        return type;
-    }
 }

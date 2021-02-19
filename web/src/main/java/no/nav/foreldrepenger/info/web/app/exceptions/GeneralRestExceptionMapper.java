@@ -57,7 +57,7 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
     }
 
     private static Response handleValideringsfeil(ValideringsfeilException valideringsfeil) {
-        List<String> feltNavn = valideringsfeil.getFeltFeil().stream().map(felt -> felt.getNavn())
+        List<String> feltNavn = valideringsfeil.getFeltFeil().stream().map(FeltFeilDto::navn)
                 .collect(Collectors.toList());
         return Response
                 .status(Response.Status.BAD_REQUEST)
@@ -81,7 +81,7 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
         String feilmelding = getVLExceptionFeilmelding(callId, feil);
         FeilType feilType = FeilType.GENERELL_FEIL;
         return Response.serverError()
-                .entity(new FeilDto(feilType, feilmelding))
+                .entity(new FeilDto(feilmelding, feilType))
                 .type(MediaType.APPLICATION_JSON)
                 .build();
     }
@@ -90,15 +90,15 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
         String feilmelding = feil.getFeilmelding();
         FeilType feilType = FeilType.MANGLER_TILGANG_FEIL;
         return Response.status(Response.Status.FORBIDDEN)
-                .entity(new FeilDto(feilType, feilmelding))
+                .entity(new FeilDto(feilmelding, feilType))
                 .type(MediaType.APPLICATION_JSON)
                 .build();
     }
 
     private static String getVLExceptionFeilmelding(String callId, Feil feil) {
         String feilbeskrivelse = feil.getKode() + ": " + feil.getFeilmelding(); //$NON-NLS-1$
-        if (feil instanceof FunksjonellFeil) {
-            String løsningsforslag = ((FunksjonellFeil) feil).getLøsningsforslag();
+        if (feil instanceof FunksjonellFeil f) {
+            String løsningsforslag = f.getLøsningsforslag();
             return "Det oppstod en feil: "
                     + avsluttMedPunktum(feilbeskrivelse)
                     + avsluttMedPunktum(løsningsforslag)
@@ -114,7 +114,7 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
         String generellFeilmelding = "Det oppstod en serverfeil: " + cause.getMessage()
                 + ". Meld til support med referanse-id: " + callId;
         return Response.serverError()
-                .entity(new FeilDto(FeilType.GENERELL_FEIL, generellFeilmelding))
+                .entity(new FeilDto(generellFeilmelding, FeilType.GENERELL_FEIL))
                 .type(MediaType.APPLICATION_JSON)
                 .build();
     }

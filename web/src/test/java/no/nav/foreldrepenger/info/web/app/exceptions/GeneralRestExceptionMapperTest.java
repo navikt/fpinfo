@@ -31,10 +31,10 @@ class GeneralRestExceptionMapperTest {
         assertThat(response.getEntity()).isInstanceOf(FeilDto.class);
         FeilDto feilDto = (FeilDto) response.getEntity();
 
-        assertThat(feilDto.getFeilmelding()).contains(
+        assertThat(feilDto.feilmelding()).contains(
                 "Det oppstod en valideringsfeil på felt [feltnavn]. Vennligst kontroller at alle feltverdier er korrekte.");
-        assertThat(feilDto.getFeltFeil()).hasSize(1);
-        assertThat(feilDto.getFeltFeil().iterator().next()).isEqualTo(feltFeilDto);
+        assertThat(feilDto.feltFeil()).hasSize(1);
+        assertThat(feilDto.feltFeil().iterator().next()).isEqualTo(feltFeilDto);
     }
 
     @Test
@@ -47,10 +47,10 @@ class GeneralRestExceptionMapperTest {
         assertThat(response.getEntity()).isInstanceOf(FeilDto.class);
         var feilDto = (FeilDto) response.getEntity();
 
-        assertThat(feilDto.getFeilmelding()).contains(
+        assertThat(feilDto.feilmelding()).contains(
                 "Det oppstod en valideringsfeil på felt [feltnavn]. Vennligst kontroller at alle feltverdier er korrekte.");
-        assertThat(feilDto.getFeltFeil()).hasSize(1);
-        assertThat(feilDto.getFeltFeil().iterator().next()).isEqualTo(feltFeilDto);
+        assertThat(feilDto.feltFeil()).hasSize(1);
+        assertThat(feilDto.feltFeil().iterator().next()).isEqualTo(feltFeilDto);
     }
 
     @Test
@@ -62,8 +62,8 @@ class GeneralRestExceptionMapperTest {
         assertThat(response.getEntity()).isInstanceOf(FeilDto.class);
         var feilDto = (FeilDto) response.getEntity();
 
-        assertThat(feilDto.getType()).isEqualTo(FeilType.MANGLER_TILGANG_FEIL);
-        assertThat(feilDto.getFeilmelding()).isEqualTo("ManglerTilgangFeilmeldingKode");
+        assertThat(feilDto.type()).isEqualTo(FeilType.MANGLER_TILGANG_FEIL);
+        assertThat(feilDto.feilmelding()).isEqualTo("ManglerTilgangFeilmeldingKode");
     }
 
     @Test
@@ -75,9 +75,9 @@ class GeneralRestExceptionMapperTest {
         assertThat(response.getEntity()).isInstanceOf(FeilDto.class);
         var feilDto = (FeilDto) response.getEntity();
 
-        assertThat(feilDto.getFeilmelding()).contains("FUNK_FEIL");
-        assertThat(feilDto.getFeilmelding()).contains("en funksjonell feilmelding");
-        assertThat(feilDto.getFeilmelding()).contains("et løsningsforslag");
+        assertThat(feilDto.feilmelding()).contains("FUNK_FEIL");
+        assertThat(feilDto.feilmelding()).contains("en funksjonell feilmelding");
+        assertThat(feilDto.feilmelding()).contains("et løsningsforslag");
     }
 
     @Test
@@ -88,8 +88,8 @@ class GeneralRestExceptionMapperTest {
         assertThat(response.getEntity()).isInstanceOf(FeilDto.class);
         var feilDto = (FeilDto) response.getEntity();
 
-        assertThat(feilDto.getFeilmelding()).contains("TEK_FEIL");
-        assertThat(feilDto.getFeilmelding()).contains("en teknisk feilmelding");
+        assertThat(feilDto.feilmelding()).contains("TEK_FEIL");
+        assertThat(feilDto.feilmelding()).contains("en teknisk feilmelding");
     }
 
     @Test
@@ -102,7 +102,7 @@ class GeneralRestExceptionMapperTest {
         assertThat(response.getEntity()).isInstanceOf(FeilDto.class);
         var feilDto = (FeilDto) response.getEntity();
 
-        assertThat(feilDto.getFeilmelding()).contains(feilmelding);
+        assertThat(feilDto.feilmelding()).contains(feilmelding);
     }
 
     private static class TestFeil {

@@ -8,10 +8,10 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import no.nav.foreldrepenger.info.web.abac.AppAbacAttributtType;
 import no.nav.foreldrepenger.info.domene.Saksnummer;
 import no.nav.foreldrepenger.info.domene.SøknadsGrunnlag;
 import no.nav.foreldrepenger.info.felles.datatyper.FamilieHendelseType;
+import no.nav.foreldrepenger.info.web.abac.AppAbacAttributtType;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
 
@@ -51,7 +51,7 @@ public class SøknadsGrunnlagDto implements AbacDto {
 
     public static SøknadsGrunnlagDto fraDomene(Saksnummer saksnummer, SøknadsGrunnlag grunnlag) {
         SøknadsGrunnlagDto dto = new SøknadsGrunnlagDto();
-        dto.saksnummer = saksnummer.asString();
+        dto.saksnummer = saksnummer.saksnummer();
         dto.familieHendelseType = grunnlag.getFamilieHendelseType();
         dto.termindato = grunnlag.getTermindato();
 
