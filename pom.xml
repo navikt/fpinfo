@@ -32,7 +32,7 @@
         <felles.version>3.0.98</felles.version>
         <metrics.version>4.1.12.1</metrics.version>
         <prometheus.version>0.10.0</prometheus.version>
-        <swagger.version>2.1.7</swagger.version>
+        <swagger.version>2.1.6</swagger.version>
 
         <!-- Eksterne -->
         <assertj.version>3.19.0</assertj.version>
