@@ -62,7 +62,7 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
         return Response
                 .status(Response.Status.BAD_REQUEST)
                 .entity(new FeilDto(
-                        FeltValideringFeil.FACTORY.feltverdiKanIkkeValideres(feltNavn).getFeilmelding(),
+                        FeltValideringFeil.feltverdiKanIkkeValideres(feltNavn).getMessage(),
                         valideringsfeil.getFeltFeil()))
                 .type(MediaType.APPLICATION_JSON)
                 .build();

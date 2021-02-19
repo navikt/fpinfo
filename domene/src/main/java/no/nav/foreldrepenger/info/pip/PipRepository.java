@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 
 import no.nav.foreldrepenger.info.domene.Sak;
 import no.nav.foreldrepenger.info.domene.SøknadsGrunnlag;
@@ -31,11 +30,11 @@ public class PipRepository {
     }
 
     public List<String> hentAktørIdForBehandling(Set<Long> behandlingIder) {
-        Objects.requireNonNull(behandlingIder, "behandlingIder"); // NOSONAR
+        Objects.requireNonNull(behandlingIder, "behandlingIder");
         if (behandlingIder.isEmpty()) {
-            return Collections.emptyList();
+            return List.of();
         }
-        TypedQuery<Sak> query = entityManager.createQuery(
+        var query = entityManager.createQuery(
                 "select s from SakStatus s left join Behandling b on s.saksnummer = b.saksnummer where b.behandlingId in :behandlingIder",
                 Sak.class);
         query.setParameter("behandlingIder", behandlingIder);
@@ -43,11 +42,11 @@ public class PipRepository {
     }
 
     public List<String> hentAktørIdForSaksnummer(Set<String> saksnummre) {
-        Objects.requireNonNull(saksnummre, "saksnummre"); // NOSONAR
+        Objects.requireNonNull(saksnummre, "saksnummre");
         if (saksnummre.isEmpty()) {
             return Collections.emptyList();
         }
-        TypedQuery<Sak> query = entityManager.createQuery("from SakStatus where saksnummer in :saksnummre",
+        var query = entityManager.createQuery("from SakStatus where saksnummer in :saksnummre",
                 Sak.class);
         query.setParameter("saksnummre", saksnummre);
         return query.getResultList().stream().map(Sak::getAktørId).collect(Collectors.toList());
@@ -55,7 +54,7 @@ public class PipRepository {
 
     public Optional<String> hentAnnenPartForSaksnummer(String saksnummer) {
         Objects.requireNonNull(saksnummer, "saksnummer"); // NOSONAR
-        TypedQuery<Sak> query = entityManager.createQuery("from SakStatus where saksnummer like :saksnummer",
+        var query = entityManager.createQuery("from SakStatus where saksnummer like :saksnummer",
                 Sak.class);
         query.setParameter("saksnummer", saksnummer);
         return query.getResultList().stream().findFirst().map(Sak::getAktørIdAnnenPart);
@@ -63,7 +62,7 @@ public class PipRepository {
 
     public Optional<Boolean> hentOppgittAleneomsorgForSaksnummer(String saksnummer) {
         Objects.requireNonNull(saksnummer, "saksnummer"); // NOSONAR
-        TypedQuery<SøknadsGrunnlag> query = entityManager
+        var query = entityManager
                 .createQuery("from SøknadsGrunnlag where saksnummer like :saksnummer", SøknadsGrunnlag.class);
         query.setParameter("saksnummer", saksnummer);
         return query.getResultList().stream().reduce((first, second) -> second).map(SøknadsGrunnlag::getAleneomsorg);
@@ -75,7 +74,7 @@ public class PipRepository {
             return Collections.emptyList();
         }
 
-        TypedQuery<Sak> query = entityManager.createQuery(
+        var query = entityManager.createQuery(
                 "select s from SakStatus s " +
                         "left join MottattDokument m on s.saksnummer = m.saksnummer " +
                         "where m.forsendelseId in :dokumentforsendelseIder",
@@ -92,7 +91,7 @@ public class PipRepository {
             return Optional.empty();
         }
 
-        TypedQuery<Sak> query = entityManager.createQuery(
+        var query = entityManager.createQuery(
                 "select s from SakStatus s " +
                         "where s.aktørId like :annenForelder and s.aktørIdAnnenPart like :bruker order by s.opprettetTidspunkt desc",
                 Sak.class);
