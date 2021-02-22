@@ -109,5 +109,5 @@ jobs:
         with:
           token: ${{ secrets.NOTIFICATION }}
           repository: navikt/fpsak-autotest
-          event-type: fordel-verdikjede
+          event-type: info-verdikjede
           client-payload: '{ "trigger": "${{ github.repository }}", "version": "${{ env.TAG }}", "issue-number": "${{ steps.issue.outputs.id }}" }'
