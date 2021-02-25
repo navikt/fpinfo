@@ -11,9 +11,9 @@
     <name>fpinfo</name>
 
     <modules>
-        <module>migreringer</module>
-        <module>domene</module>
-        <module>web</module>
+        <module>info-migreringer</module>
+        <module>info-domene</module>
+        <module>info-web</module>
     </modules>
 
     <properties>
