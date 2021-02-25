@@ -21,7 +21,7 @@ public class Selftests {
     }
 
     Selftests() {
-        // for CDI proxy
+
     }
 
     public Selftests.Resultat run() {

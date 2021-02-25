@@ -1,10 +1,11 @@
 package no.nav.foreldrepenger.info.web.app.tjenester.dto;
 
+import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.BEHANDLING_ID;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.nav.foreldrepenger.info.web.abac.AppAbacAttributtType;
 import no.nav.foreldrepenger.info.domene.Behandling;
 import no.nav.foreldrepenger.info.felles.datatyper.BehandlingTema;
 import no.nav.foreldrepenger.info.web.app.ResourceLink;
@@ -96,6 +97,6 @@ public class BehandlingDto implements AbacDto {
 
     @Override
     public AbacDataAttributter abacAttributter() {
-        return AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.BEHANDLING_ID, behandlingId);
+        return AbacDataAttributter.opprett().leggTil(BEHANDLING_ID, behandlingId);
     }
 }

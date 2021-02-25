@@ -25,8 +25,7 @@ public class SøknadTjeneste {
         this.repository = repository;
     }
 
-    public SøknadTjeneste() {
-        // CDI
+    SøknadTjeneste() {
     }
 
     public Optional<SøknadXmlDto> hentSøknadXml(Long behandlingId) {

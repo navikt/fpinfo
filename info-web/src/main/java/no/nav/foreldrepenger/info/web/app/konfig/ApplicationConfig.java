@@ -20,7 +20,7 @@ import io.swagger.v3.oas.models.servers.Server;
 import no.nav.foreldrepenger.info.web.app.exceptions.ConstraintViolationMapper;
 import no.nav.foreldrepenger.info.web.app.exceptions.JsonMappingExceptionMapper;
 import no.nav.foreldrepenger.info.web.app.exceptions.JsonParseExceptionMapper;
-import no.nav.foreldrepenger.info.web.app.tjenester.RestTjeneste;
+import no.nav.foreldrepenger.info.web.app.tjenester.DokumentforsendelseTjeneste;
 
 @ApplicationPath(ApplicationConfig.API_URI)
 public class ApplicationConfig extends Application {
@@ -59,7 +59,7 @@ public class ApplicationConfig extends Application {
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> classes = new HashSet<>();
-        classes.add(RestTjeneste.class);
+        classes.add(DokumentforsendelseTjeneste.class);
         classes.add(SwaggerSerializers.class);
         classes.add(OpenApiResource.class);
         classes.add(ConstraintViolationMapper.class);

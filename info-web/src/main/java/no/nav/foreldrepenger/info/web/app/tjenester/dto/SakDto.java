@@ -1,12 +1,13 @@
 package no.nav.foreldrepenger.info.web.app.tjenester.dto;
 
+import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.AKTØR_ID;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import no.nav.foreldrepenger.info.web.abac.AppAbacAttributtType;
 import no.nav.foreldrepenger.info.domene.Sak;
 import no.nav.foreldrepenger.info.web.app.ResourceLink;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
@@ -95,6 +96,6 @@ public class SakDto implements AbacDto {
 
     @Override
     public AbacDataAttributter abacAttributter() {
-        return AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.AKTØR_ID, aktørId);
+        return AbacDataAttributter.opprett().leggTil(AKTØR_ID, aktørId);
     }
 }

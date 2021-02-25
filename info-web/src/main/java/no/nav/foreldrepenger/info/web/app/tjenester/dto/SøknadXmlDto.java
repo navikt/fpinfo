@@ -1,7 +1,8 @@
 package no.nav.foreldrepenger.info.web.app.tjenester.dto;
 
+import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.BEHANDLING_ID;
+
 import no.nav.foreldrepenger.info.domene.MottattDokument;
-import no.nav.foreldrepenger.info.web.abac.AppAbacAttributtType;
 import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
@@ -22,10 +23,6 @@ public class SøknadXmlDto implements AbacDto {
 
     public String getJournalpostId() {
         return journalpostId;
-    }
-
-    public static Builder builder() {
-        return new Builder();
     }
 
     public static SøknadXmlDto fraDomene(MottattDokument dokument) {
@@ -51,29 +48,7 @@ public class SøknadXmlDto implements AbacDto {
 
     @Override
     public AbacDataAttributter abacAttributter() {
-        return AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.BEHANDLING_ID, behandlingId);
-    }
-
-    public static class Builder {
-        private SøknadXmlDto søknadXmlDto;
-
-        public Builder() {
-            søknadXmlDto = new SøknadXmlDto();
-        }
-
-        public Builder medXml(String xml) {
-            søknadXmlDto.xml = xml;
-            return this;
-        }
-
-        public Builder medJournalpostId(String journalpostId) {
-            søknadXmlDto.journalpostId = journalpostId;
-            return this;
-        }
-
-        public SøknadXmlDto build() {
-            return this.søknadXmlDto;
-        }
+        return AbacDataAttributter.opprett().leggTil(BEHANDLING_ID, behandlingId);
     }
 
 }

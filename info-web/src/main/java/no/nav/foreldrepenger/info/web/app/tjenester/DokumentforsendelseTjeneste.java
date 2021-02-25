@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.info.web.app.tjenester;
 
-import static no.nav.foreldrepenger.info.web.app.tjenester.RestTjeneste.DOKUMENTFORSENDELSE_PATH;
+import static no.nav.foreldrepenger.info.web.app.tjenester.DokumentforsendelseTjeneste.DOKUMENTFORSENDELSE_PATH;
 import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.READ;
 
 import java.util.List;
@@ -37,7 +37,7 @@ import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 @Path(DOKUMENTFORSENDELSE_PATH)
 @Produces(MediaType.APPLICATION_JSON)
 @RequestScoped
-public class RestTjeneste {
+public class DokumentforsendelseTjeneste {
 
     public static final String DOKUMENTFORSENDELSE_PATH = "/dokumentforsendelse";
     private static final String API_PATH = "/fpinfo/api" + DOKUMENTFORSENDELSE_PATH;
@@ -49,7 +49,7 @@ public class RestTjeneste {
     private SakTjeneste sakTjeneste;
 
     @Inject
-    public RestTjeneste(BehandlingTjeneste behandlingTjeneste,
+    public DokumentforsendelseTjeneste(BehandlingTjeneste behandlingTjeneste,
             SøknadTjeneste søknadTjeneste,
             ForsendelseStatusTjeneste forsendelseStatusTjeneste,
             SøknadsGrunnlagTjeneste søknadsGrunnlagTjeneste,
@@ -61,8 +61,7 @@ public class RestTjeneste {
         this.sakTjeneste = sakTjeneste;
     }
 
-    public RestTjeneste() {
-        // For Rest-CDI
+    DokumentforsendelseTjeneste() {
     }
 
     @GET

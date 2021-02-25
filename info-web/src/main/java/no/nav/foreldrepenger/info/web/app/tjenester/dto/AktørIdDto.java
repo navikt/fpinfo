@@ -1,9 +1,10 @@
 package no.nav.foreldrepenger.info.web.app.tjenester.dto;
 
+import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.AKTØR_ID;
+
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
-import no.nav.foreldrepenger.info.web.abac.AppAbacAttributtType;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
 
@@ -30,6 +31,6 @@ public class AktørIdDto implements AbacDto {
 
     @Override
     public AbacDataAttributter abacAttributter() {
-        return AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.AKTØR_ID, aktørId);
+        return AbacDataAttributter.opprett().leggTil(AKTØR_ID, aktørId);
     }
 }

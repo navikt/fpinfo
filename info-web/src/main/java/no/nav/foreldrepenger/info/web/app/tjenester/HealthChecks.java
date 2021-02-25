@@ -15,7 +15,7 @@ import no.nav.foreldrepenger.info.web.app.selftest.Selftests;
 @Path("/health")
 @Produces(TEXT_PLAIN)
 @RequestScoped
-public class HealthCheckRestService {
+public class HealthChecks {
 
     private static final String RESPONSE_CACHE_KEY = "Cache-Control";
     private static final String RESPONSE_CACHE_VAL = "must-revalidate,no-cache,no-store";
@@ -23,12 +23,12 @@ public class HealthCheckRestService {
 
     private Selftests selftests;
 
-    public HealthCheckRestService() {
+    public HealthChecks() {
         // CDI
     }
 
     @Inject
-    public HealthCheckRestService(Selftests selftests) {
+    public HealthChecks(Selftests selftests) {
         this.selftests = selftests;
     }
 

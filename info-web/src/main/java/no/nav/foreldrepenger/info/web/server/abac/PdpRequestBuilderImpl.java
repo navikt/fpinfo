@@ -4,6 +4,9 @@ import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FEL
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_RESOURCE_TYPE;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.XACML10_ACTION_ACTION_ID;
+import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.AKTØR_ID;
+import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.BEHANDLING_ID;
+import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.SAKSNUMMER;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -18,8 +21,8 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.foreldrepenger.info.web.abac.AppAbacAttributtType;
 import no.nav.foreldrepenger.info.pip.PipRepository;
+import no.nav.foreldrepenger.info.web.abac.AppAbacAttributtType;
 import no.nav.vedtak.sikkerhet.abac.AbacAttributtSamling;
 import no.nav.vedtak.sikkerhet.abac.PdpKlient;
 import no.nav.vedtak.sikkerhet.abac.PdpRequest;
@@ -54,7 +57,7 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
         if (attributter.getVerdier(AppAbacAttributtType.ANNEN_PART).size() == 1) {
             LOG.info("abac Attributter inneholder annen part");
             Optional<String> sakAnnenPart = pipRepository.finnSakenTilAnnenForelder(
-                    attributter.getVerdier(AppAbacAttributtType.AKTØR_ID),
+                    attributter.getVerdier(AKTØR_ID),
                     attributter.getVerdier(AppAbacAttributtType.ANNEN_PART));
             if (sakAnnenPart.isPresent()) {
                 String saksnummerAnnenForelder = sakAnnenPart.get();
@@ -72,11 +75,11 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
     }
 
     private Set<String> utledAktørIdeer(AbacAttributtSamling attributter) {
-        Set<String> aktørIdSet = new HashSet<>(attributter.getVerdier(AppAbacAttributtType.AKTØR_ID));
+        Set<String> aktørIdSet = new HashSet<>(attributter.getVerdier(AKTØR_ID));
         aktørIdSet.addAll(
-                pipRepository.hentAktørIdForSaksnummer(attributter.getVerdier(AppAbacAttributtType.SAKSNUMMER)));
+                pipRepository.hentAktørIdForSaksnummer(attributter.getVerdier(SAKSNUMMER)));
         aktørIdSet.addAll(pipRepository
-                .hentAktørIdForBehandling(attributter.getVerdier(AppAbacAttributtType.BEHANDLING_ID)));
+                .hentAktørIdForBehandling(attributter.getVerdier(BEHANDLING_ID)));
         aktørIdSet.addAll(pipRepository
                 .hentAktørIdForForsendelseIder(attributter.getVerdier(AppAbacAttributtType.FORSENDELSE_UUID)));
         return aktørIdSet;

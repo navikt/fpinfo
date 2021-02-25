@@ -1,6 +1,9 @@
 package no.nav.foreldrepenger.info.web.server.abac;
 
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE;
+import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.AKTØR_ID;
+import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.BEHANDLING_ID;
+import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.SAKSNUMMER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -28,9 +31,9 @@ import no.nav.vedtak.sikkerhet.abac.PdpRequestBuilder;
 class PdpRequestBuilderImplTest {
     private static final String DUMMY_ID_TOKEN = "dummyheader.dymmypayload.dummysignaturee";
     private static final Long BEHANDLINGS_ID = 123L;
-    private static final String AKTØR_ID = "9900077";
+    private static final String AKTØRID = "9900077";
     private static final String ANNEN_PART_ID = "7700099";
-    private static final String SAKSNUMMER = "678";
+    private static final String SAKSNR = "678";
     private static final UUID FORSENDELSE_ID = UUID.randomUUID();
     @Mock
     private PipRepository pip;
@@ -45,23 +48,23 @@ class PdpRequestBuilderImplTest {
 
     @Test
     void skal_utlede_aktørid_fra_behandlingid() {
-        attributter.leggTil(AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.BEHANDLING_ID, BEHANDLINGS_ID));
+        attributter.leggTil(AbacDataAttributter.opprett().leggTil(BEHANDLING_ID, BEHANDLINGS_ID));
         when(pip.hentAktørIdForBehandling(Collections.singleton(BEHANDLINGS_ID)))
-                .thenReturn(List.of(AKTØR_ID));
+                .thenReturn(List.of(AKTØRID));
 
         var request = requestBuilder.lagPdpRequest(attributter);
-        assertThat(request.getListOfString(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE)).containsOnly(AKTØR_ID);
+        assertThat(request.getListOfString(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE)).containsOnly(AKTØRID);
     }
 
     @Test
     void skal_utlede_aktørid_fra_saksnummer() {
-        attributter.leggTil(AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.SAKSNUMMER, SAKSNUMMER));
+        attributter.leggTil(AbacDataAttributter.opprett().leggTil(SAKSNUMMER, SAKSNR));
 
-        when(pip.hentAktørIdForSaksnummer(Collections.singleton(SAKSNUMMER)))
-                .thenReturn(Collections.singletonList(AKTØR_ID));
+        when(pip.hentAktørIdForSaksnummer(Collections.singleton(SAKSNR)))
+                .thenReturn(Collections.singletonList(AKTØRID));
 
         var request = requestBuilder.lagPdpRequest(attributter);
-        assertThat(request.getListOfString(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE)).containsOnly(AKTØR_ID);
+        assertThat(request.getListOfString(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE)).containsOnly(AKTØRID);
     }
 
     @Test
@@ -70,26 +73,26 @@ class PdpRequestBuilderImplTest {
                 .leggTil(AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.FORSENDELSE_UUID, FORSENDELSE_ID));
 
         when(pip.hentAktørIdForForsendelseIder(Collections.singleton(FORSENDELSE_ID)))
-                .thenReturn(Collections.singletonList(AKTØR_ID));
+                .thenReturn(Collections.singletonList(AKTØRID));
 
         var request = requestBuilder.lagPdpRequest(attributter);
-        assertThat(request.getListOfString(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE)).containsOnly(AKTØR_ID);
+        assertThat(request.getListOfString(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE)).containsOnly(AKTØRID);
     }
 
     @Test
     void skal_legge_til_omsorg_og_annen_part() {
         attributter.leggTil(AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.ANNEN_PART, ANNEN_PART_ID));
-        attributter.leggTil(AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.AKTØR_ID, AKTØR_ID));
+        attributter.leggTil(AbacDataAttributter.opprett().leggTil(AKTØR_ID, AKTØRID));
 
-        when(pip.hentAktørIdForSaksnummer(Collections.singleton(SAKSNUMMER)))
-                .thenReturn(List.of(AKTØR_ID));
-        when(pip.finnSakenTilAnnenForelder(Collections.singleton(AKTØR_ID),
-                Collections.singleton(ANNEN_PART_ID))).thenReturn(Optional.of(SAKSNUMMER));
-        when(pip.hentAnnenPartForSaksnummer(SAKSNUMMER)).thenReturn(Optional.of(ANNEN_PART_ID));
-        when(pip.hentOppgittAleneomsorgForSaksnummer(SAKSNUMMER)).thenReturn(Optional.of(Boolean.TRUE));
+        when(pip.hentAktørIdForSaksnummer(Collections.singleton(SAKSNR)))
+                .thenReturn(List.of(AKTØRID));
+        when(pip.finnSakenTilAnnenForelder(Collections.singleton(AKTØRID),
+                Collections.singleton(ANNEN_PART_ID))).thenReturn(Optional.of(SAKSNR));
+        when(pip.hentAnnenPartForSaksnummer(SAKSNR)).thenReturn(Optional.of(ANNEN_PART_ID));
+        when(pip.hentOppgittAleneomsorgForSaksnummer(SAKSNR)).thenReturn(Optional.of(Boolean.TRUE));
 
         PdpRequest request = requestBuilder.lagPdpRequest(attributter);
-        assertThat(request.getListOfString(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE)).containsOnly(AKTØR_ID);
+        assertThat(request.getListOfString(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE)).containsOnly(AKTØRID);
         assertThat(request.getString(AppAbacAttributtType.RESOURCE_FORELDREPENGER_ANNEN_PART)).isEqualTo(ANNEN_PART_ID);
         assertThat(request.getOptional(AppAbacAttributtType.RESOURCE_FORELDREPENGER_ALENEOMSORG)).hasValue("true");
     }

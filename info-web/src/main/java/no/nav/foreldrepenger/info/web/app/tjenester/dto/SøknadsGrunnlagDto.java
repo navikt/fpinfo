@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.info.web.app.tjenester.dto;
 
+import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.SAKSNUMMER;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -163,7 +165,7 @@ public class SøknadsGrunnlagDto implements AbacDto {
         LOG.info("abac dto kalles {}", saksnummer);
 
         AbacDataAttributter abacDataAttributter = AbacDataAttributter.opprett()
-                .leggTil(AppAbacAttributtType.SAKSNUMMER, saksnummer)
+                .leggTil(SAKSNUMMER, saksnummer)
                 .leggTil(AppAbacAttributtType.OPPGITT_ALENEOMSORG, morErAleneOmOmsorg);
         if (annenPartFraSak != null) {
             abacDataAttributter.leggTil(AppAbacAttributtType.ANNEN_PART, annenPartFraSak);

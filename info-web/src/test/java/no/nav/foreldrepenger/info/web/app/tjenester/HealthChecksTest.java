@@ -14,16 +14,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import no.nav.foreldrepenger.info.web.app.selftest.Selftests;
 
 @ExtendWith(MockitoExtension.class)
-class HealthCheckRestServiceTest {
+class HealthChecksTest {
 
-    private HealthCheckRestService restTjeneste;
+    private HealthChecks restTjeneste;
 
     @Mock
     private Selftests selftests;
 
     @BeforeEach
     void setup() {
-        restTjeneste = new HealthCheckRestService(selftests);
+        restTjeneste = new HealthChecks(selftests);
     }
 
     @Test

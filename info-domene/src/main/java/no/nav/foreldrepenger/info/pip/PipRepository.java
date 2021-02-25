@@ -20,8 +20,8 @@ public class PipRepository {
 
     private EntityManager entityManager;
 
-    public PipRepository() {
-        // CDI
+    PipRepository() {
+
     }
 
     @Inject
@@ -71,13 +71,15 @@ public class PipRepository {
     public List<String> hentAktørIdForForsendelseIder(Set<UUID> dokumentforsendelseIder) {
         Objects.requireNonNull(dokumentforsendelseIder, "dokumentforsendelseIder"); // NOSONAR
         if (dokumentforsendelseIder.isEmpty()) {
-            return Collections.emptyList();
+            return List.of();
         }
 
         var query = entityManager.createQuery(
-                "select s from SakStatus s " +
-                        "left join MottattDokument m on s.saksnummer = m.saksnummer " +
-                        "where m.forsendelseId in :dokumentforsendelseIder",
+                """
+                select s from SakStatus s
+                        left join MottattDokument m on s.saksnummer = m.saksnummer
+                        "where m.forsendelseId in :dokumentforsendelseIder
+                """,
                 Sak.class);
         query.setParameter("dokumentforsendelseIder", dokumentforsendelseIder);
 
@@ -92,12 +94,16 @@ public class PipRepository {
         }
 
         var query = entityManager.createQuery(
-                "select s from SakStatus s " +
-                        "where s.aktørId like :annenForelder and s.aktørIdAnnenPart like :bruker order by s.opprettetTidspunkt desc",
+                """
+                  select s from SakStatus s
+                        where s.aktørId like :annenForelder and s.aktørIdAnnenPart like :bruker order by s.opprettetTidspunkt desc
+                """,
                 Sak.class);
-        query.setParameter("annenForelder", annenForelder.stream().findFirst().get());// NOSONAR
-        query.setParameter("bruker", bruker.stream().findFirst().get());// NOSONAR
+        query.setParameter("annenForelder", annenForelder.stream().findFirst().get());
+        query.setParameter("bruker", bruker.stream().findFirst().get());
 
-        return query.getResultList().stream().findFirst().map(Sak::getSaksnummer);
+        return query.getResultList().stream()
+                .findFirst()
+                .map(Sak::getSaksnummer);
     }
 }

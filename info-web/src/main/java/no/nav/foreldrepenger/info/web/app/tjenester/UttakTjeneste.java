@@ -30,7 +30,6 @@ public class UttakTjeneste {
     }
 
     UttakTjeneste() {
-        // CDI
     }
 
     public List<UttaksPeriodeDto> hentFellesUttaksplan(Saksnummer saksnummer, boolean erAnnenPart) {

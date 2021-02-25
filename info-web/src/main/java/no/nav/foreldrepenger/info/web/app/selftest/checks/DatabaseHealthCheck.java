@@ -76,7 +76,7 @@ public class DatabaseHealthCheck {
                 }
                 result = url;
             }
-        } catch (SQLException e) { //NOSONAR
+        } catch (SQLException e) {
             // ikke fatalt
         }
         return result;

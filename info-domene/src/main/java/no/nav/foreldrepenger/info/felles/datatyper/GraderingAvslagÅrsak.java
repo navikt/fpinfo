@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.info.felles.datatyper;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,10 +16,10 @@ public enum GraderingAvslagÅrsak {
 
     static {
         Map<String, GraderingAvslagÅrsak> map = new ConcurrentHashMap<>();
-        for (GraderingAvslagÅrsak graderingAvslagÅrsak : GraderingAvslagÅrsak.values()) {
+        for (var graderingAvslagÅrsak : GraderingAvslagÅrsak.values()) {
             map.put(graderingAvslagÅrsak.getVerdi(), graderingAvslagÅrsak);
         }
-        GRADERING_AVSLAG_ÅRSAK_MAP_MAP = Collections.unmodifiableMap(map);
+        GRADERING_AVSLAG_ÅRSAK_MAP_MAP = Map.copyOf(map);
     }
 
     private String verdi;

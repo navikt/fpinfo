@@ -14,7 +14,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.servers.Server;
 import no.nav.foreldrepenger.info.web.app.metrics.PrometheusRestService;
-import no.nav.foreldrepenger.info.web.app.tjenester.HealthCheckRestService;
+import no.nav.foreldrepenger.info.web.app.tjenester.HealthChecks;
 
 @ApplicationPath(InternalApplication.API_URL)
 public class InternalApplication extends Application {
@@ -51,7 +51,7 @@ public class InternalApplication extends Application {
 
     @Override
     public Set<Class<?>> getClasses() {
-        return Set.of(PrometheusRestService.class, HealthCheckRestService.class);
+        return Set.of(PrometheusRestService.class, HealthChecks.class);
     }
 
 }
