@@ -30,28 +30,28 @@ import no.nav.foreldrepenger.info.web.app.tjenester.dto.UttaksPeriodeDto;
 import no.nav.vedtak.exception.TekniskException;
 
 class DomeneTilDtoTransformasjonTest {
-    private static Long BEHANDLING_ID = 1234L;
-    private static String SAKSNUMMER = "4567";
-    private static String BEHANDLENDE_ENHET = "4052";
-    private static String BEHANDLENDE_ENHET_NAVN = "NAV enhet";
-    private static String RESULTAT_TYPE = BehandlingResultatType.IKKE_FASTSATT.getVerdi();
-    private static String BEHANDLING_STATUS = BehandlingStatus.UTREDES.getVerdi();
-    private static String FAGSAK_YTELSE_TYPE = FagsakYtelseType.FP.getVerdi();
-    private static String FAMILIEHENDELSE_TYPE = FamilieHendelseType.FØDSEL.getVerdi();
-    private static String TEST_LENKE = "test-lenke";
-    private static String TEST_REL = "test-rel";
-    private static String FAGSAK_STATUS = "OPPR";
-    private static String AKTØR_ID = "1234";
-    private static String AKTØR_ID_ANNEN_PART = "5678";
-    private static String JOURNALPOST_ID = "123456789";
-    private static String XML_PAYLOAD = "xml";
-    private static ResourceLink EXPECTED_RESOURCE_LINK = ResourceLink.get(TEST_LENKE, TEST_REL, null);
-    String DOKUMENT_ID = "123";
-    UUID FORSENDELSE_ID = UUID.randomUUID();
-    String DOKUMENT_TYPE_ID = DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL.getVerdi();
+    private static final Long BEHANDLING_ID = 1234L;
+    private static final String SAKSNUMMER = "4567";
+    private static final String BEHANDLENDE_ENHET = "4052";
+    private static final String BEHANDLENDE_ENHET_NAVN = "NAV enhet";
+    private static final String RESULTAT_TYPE = BehandlingResultatType.IKKE_FASTSATT.getVerdi();
+    private static final String BEHANDLING_STATUS = BehandlingStatus.UTREDES.getVerdi();
+    private static final String FAGSAK_YTELSE_TYPE = FagsakYtelseType.FP.getVerdi();
+    private static final String FAMILIEHENDELSE_TYPE = FamilieHendelseType.FØDSEL.getVerdi();
+    private static final String TEST_LENKE = "test-lenke";
+    private static final String TEST_REL = "test-rel";
+    private static final String FAGSAK_STATUS = "OPPR";
+    private static final String AKTØR_ID = "1234";
+    private static final String AKTØR_ID_ANNEN_PART = "5678";
+    private static final String JOURNALPOST_ID = "123456789";
+    private static final String XML_PAYLOAD = "xml";
+    private static final ResourceLink EXPECTED_RESOURCE_LINK = ResourceLink.get(TEST_LENKE, TEST_REL, null);
+    private static final String DOKUMENT_ID = "123";
+    private static final UUID FORSENDELSE_ID = UUID.randomUUID();
+    private static final String DOKUMENT_TYPE_ID = DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL.getVerdi();
 
     @Test
-    void skalTransformereBehandlingTilBehandlingDto() {
+    void behandlingTilBehandlingDto() {
         var behandling = Behandling.builder()
                 .medBehandlingId(BEHANDLING_ID)
                 .medBehandlingResultatType(RESULTAT_TYPE)
@@ -79,7 +79,7 @@ class DomeneTilDtoTransformasjonTest {
     }
 
     @Test
-    void skalTransformereSakStatusTilSakStatusDto() {
+    void sakStatusTilSakStatusDto() {
         var sak = Sak.builder()
                 .medFagsakStatus(FAGSAK_STATUS)
                 .medAktørId(AKTØR_ID)
@@ -104,7 +104,24 @@ class DomeneTilDtoTransformasjonTest {
     }
 
     @Test
-    void skalTransformereFullstendigMottattDokumentTilSøknadXmlDto() {
+    void sakStatusTilSakStatusDtoHåndtereNullFamiliehendelse() {
+        var sak = Sak.builder()
+                .medFagsakStatus(FAGSAK_STATUS)
+                .medAktørId(AKTØR_ID)
+                .medAktørIdAnnenPart(AKTØR_ID_ANNEN_PART)
+                .medFagsakYtelseType(FAGSAK_YTELSE_TYPE)
+                .medFamilieHendelseType(null)
+                .medSaksnummer(SAKSNUMMER)
+                .medAktørIdBarn(null)
+                .build();
+
+        var dto = SakDto.fraDomene(sak, true);
+        assertThat(dto.getBehandlingTema()).isEqualTo(BehandlingTema.FORELDREPENGER);
+        assertThat(dto.getAktørIdBarna()).isEmpty();
+    }
+
+    @Test
+    void fullstendigMottattDokumentTilSøknadXmlDto() {
         var dokument = lagDokument(BEHANDLING_ID, JOURNALPOST_ID, XML_PAYLOAD);
 
         var dto = SøknadXmlDto.fraDomene(dokument);

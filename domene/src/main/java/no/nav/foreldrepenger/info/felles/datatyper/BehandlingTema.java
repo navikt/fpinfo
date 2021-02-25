@@ -68,11 +68,11 @@ public class BehandlingTema {
     }
 
     protected static boolean gjelderAdopsjon(String hendelse) {
-        return HENDELSER.get(KEY_ADOPSJON).contains(hendelse);
+        return hendelse != null && HENDELSER.get(KEY_ADOPSJON).contains(hendelse);
     }
 
     protected static boolean gjelderFødsel(String hendelse) {
-        return HENDELSER.get(KEY_FØDSEL).contains(hendelse);
+        return hendelse != null && HENDELSER.get(KEY_FØDSEL).contains(hendelse);
     }
 
     protected static boolean gjelderEngangstønad(String ytelseType) {
