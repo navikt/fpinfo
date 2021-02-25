@@ -61,7 +61,7 @@ public class DokumentforsendelseTjeneste {
         this.sakTjeneste = sakTjeneste;
     }
 
-    DokumentforsendelseTjeneste() {
+    public DokumentforsendelseTjeneste() {
     }
 
     @GET
