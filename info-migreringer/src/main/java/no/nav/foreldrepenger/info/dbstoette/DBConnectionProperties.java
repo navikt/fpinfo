@@ -224,9 +224,6 @@ public final class DBConnectionProperties {
     private static DBConnectionProperties read(JsonObject db) {
 
         DBConnectionProperties raw = readRaw(db);
-
-        // FIXME (GS): dumt å fange opp runtimeexception
-        // Håndtering av verdier som kan inneholde placeholdere
         String schema;
         String defaultSchema;
         String user;
