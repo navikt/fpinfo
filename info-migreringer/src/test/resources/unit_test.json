@@ -13,7 +13,7 @@
       "datasource": "vl_dba",
       "schema": "vl_dba",
       "url": "jdbc:oracle:thin:@localhost:1521:XE",
-      "migrationScriptsFilesystemRoot": "migreringer/src/test/resources/db/migration/",
+      "migrationScriptsFilesystemRoot": "info-migreringer/src/test/resources/db/migration/",
       "migrateClean": false
     },
     {
@@ -22,7 +22,7 @@
       "schema": "${flyway.placeholders.fpinfoschema.schema.navn}",
       "url": "jdbc:oracle:thin:@localhost:1521:XE",
       "default": false,
-      "migrationScriptsFilesystemRoot": "migreringer/src/main/resources/db/migration/",
+      "migrationScriptsFilesystemRoot": "info-migreringer/src/main/resources/db/migration/",
       "migrateClean": false
     },
     {
@@ -32,7 +32,7 @@
       "url": "jdbc:oracle:thin:@localhost:1521:XE",
       "default": true,
       "effective_schema": "${flyway.placeholders.fpinfoschema.schema.navn}",
-      "migrationScriptsFilesystemRoot": "migreringer/src/main/resources/db/migration/",
+      "migrationScriptsFilesystemRoot": "info-migreringer/src/main/resources/db/migration/",
       "migrateClean": false
     }
   ]
