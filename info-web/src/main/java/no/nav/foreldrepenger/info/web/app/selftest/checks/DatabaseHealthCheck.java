@@ -58,7 +58,7 @@ public class DatabaseHealthCheck {
                 }
             }
         } catch (SQLException e) {
-            LOG.warn("Feil ved SQL-spørring {} mot databasen", SQL_QUERY);
+            LOG.warn("Feil ved SQL-spørring {} mot databasen", SQL_QUERY, e);
             return false;
         }
 
