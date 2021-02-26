@@ -55,10 +55,11 @@ class AppStartupInfoLogger {
     }
 
     private static void log(Selftests.Resultat result) {
-        OppstartFeil.selftestStatus(
-                getStatus(result.isReady()),
-                result.getDescription(),
-                result.getEndpoint()).log(LOG);
+        if (result.isReady()) {
+            LOG.info("Selftest {}: {}. Endpoint: {}", getStatus(result.isReady()), result.getDescription(), result.getEndpoint());
+        } else {
+            LOG.warn("Selftest {}: {}. Endpoint: {}", getStatus(result.isReady()), result.getDescription(), result.getEndpoint());
+        }
     }
 
     private static String getStatus(boolean isHealthy) {

@@ -78,7 +78,7 @@ public class PipRepository {
                 """
                 select s from SakStatus s
                         left join MottattDokument m on s.saksnummer = m.saksnummer
-                        "where m.forsendelseId in :dokumentforsendelseIder
+                        where m.forsendelseId in :dokumentforsendelseIder
                 """,
                 Sak.class);
         query.setParameter("dokumentforsendelseIder", dokumentforsendelseIder);
