@@ -38,10 +38,9 @@ public class SakTjeneste {
 
     public List<SakDto> hentSak(AktørIdDto aktørIdDto, String linkPathBehandling, String linkPathUttaksplan) {
         LOG.info("Henter sakstatus");
-        var sakListe = repository.hentSak(aktørIdDto.getAktørId());
-        var statusListe = mapTilSakStatusDtoListe(sakListe, linkPathBehandling, linkPathUttaksplan);
-        LOG.info("Fant {} statuser", statusListe.size());
-        return statusListe;
+        var saker = mapTilSakStatusDtoListe(repository.hentSak(aktørIdDto.getAktørId()), linkPathBehandling, linkPathUttaksplan);
+        LOG.info("Fant {} statuser", saker.size());
+        return saker;
     }
 
     private List<SakDto> mapTilSakStatusDtoListe(List<Sak> sakListe,
@@ -67,8 +66,7 @@ public class SakTjeneste {
                             });
 
                     repository.hentFagsakRelasjon(sak.getSaksnummer()).ifPresent(up -> {
-                        var href = linkPathUttaksplan + sak.getSaksnummer();
-                        dto.leggTilLenke(href, "uttaksplan");
+                        dto.leggTilLenke(linkPathUttaksplan + sak.getSaksnummer(), "uttaksplan");
                     });
                     return dto;
                 }).collect(Collectors.toList());
