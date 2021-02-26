@@ -63,7 +63,7 @@ public final class DBConnectionProperties {
     private String migrationScriptsClasspathRoot;
 
     private String versjonstabell;
-    private boolean defaultDataSource;
+    private boolean isDefault;
     private boolean sqlLoggable;
     private boolean migrateClean;
 
@@ -82,7 +82,7 @@ public final class DBConnectionProperties {
         this.migrationScriptsFilesystemRoot = builder.migrationScriptsFilesystemRoot;
         this.migrationScriptsClasspathRoot = builder.migrationScriptsClasspathRoot;
         this.versjonstabell = builder.versjonstabell;
-        this.defaultDataSource = builder.defaultDataSource;
+        this.isDefault = builder.isDefault;
         this.sqlLoggable = builder.sqlLoggable;
         this.migrateClean = builder.migrateClean;
     }
@@ -92,7 +92,7 @@ public final class DBConnectionProperties {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((datasource == null) ? 0 : datasource.hashCode());
-        result = prime * result + (defaultDataSource ? 1231 : 1237);
+        result = prime * result + (isDefault ? 1231 : 1237);
         result = prime * result + ((defaultSchema == null) ? 0 : defaultSchema.hashCode());
         result = prime * result + ((effectiveSchema == null) ? 0 : effectiveSchema.hashCode());
         result = prime * result + (migrateClean ? 1231 : 1237);
@@ -122,7 +122,7 @@ public final class DBConnectionProperties {
                 return false;
         } else if (!datasource.equals(other.datasource))
             return false;
-        if (defaultDataSource != other.defaultDataSource)
+        if (isDefault != other.isDefault)
             return false;
         if (defaultSchema == null) {
             if (other.defaultSchema != null)
@@ -192,7 +192,7 @@ public final class DBConnectionProperties {
             }
         }
 
-        if (dbProperties.stream().filter(DBConnectionProperties::isDefaultDataSource).count() > 1L) {
+        if (dbProperties.stream().filter(DBConnectionProperties::isDefault).count() > 1L) {
             throw new IllegalStateException("Kun en dataSource kan være default");
         }
 
@@ -210,7 +210,7 @@ public final class DBConnectionProperties {
             }
         }
 
-        if (dbProperties.stream().filter(DBConnectionProperties::isDefaultDataSource).count() > 1L) {
+        if (dbProperties.stream().filter(DBConnectionProperties::isDefault).count() > 1L) {
             throw new IllegalStateException("Kun en dataSource kan være default");
         }
 
@@ -218,7 +218,7 @@ public final class DBConnectionProperties {
     }
 
     public static Optional<DBConnectionProperties> finnDefault(List<DBConnectionProperties> connectionProperties) {
-        return connectionProperties.stream().filter(DBConnectionProperties::isDefaultDataSource).findFirst();
+        return connectionProperties.stream().filter(DBConnectionProperties::isDefault).findFirst();
     }
 
     private static DBConnectionProperties read(JsonObject db) {
@@ -275,7 +275,7 @@ public final class DBConnectionProperties {
                 .testdataClasspathRoot(testdataClasspathRoot)
                 .versjonstabell(tabell)
                 .url(db.getString("url"))
-                .defaultDataSource(db.getBoolean("default", false))
+                .defaultDataSource(db.getBoolean("isDefault", false))
                 .sqlLoggable(db.getBoolean("sqlLoggable", false))
                 .migrateClean(db.getBoolean("migrateClean", false))
                 .effectiveSchema(db.getString("effective_schema", schema))
@@ -324,12 +324,12 @@ public final class DBConnectionProperties {
                 + effectiveSchema + ", defaultSchema=" + defaultSchema + ", url=" + url + ", user=" + user
                 + ", testdataClasspathRoot=" + testdataClasspathRoot + ", migrationScriptsFilesystemRoot="
                 + migrationScriptsFilesystemRoot + ", migrationScriptsClasspathRoot=" + migrationScriptsClasspathRoot
-                + ", versjonstabell=" + versjonstabell + ", defaultDataSource=" + defaultDataSource + ", sqlLoggable="
+                + ", versjonstabell=" + versjonstabell + ", isDefault=" + isDefault + ", sqlLoggable="
                 + sqlLoggable + ", migrateClean=" + migrateClean + "]";
     }
 
-    public boolean isDefaultDataSource() {
-        return defaultDataSource;
+    public boolean isDefault() {
+        return isDefault;
     }
 
     public boolean isSqlLoggable() {
@@ -360,7 +360,7 @@ public final class DBConnectionProperties {
         private String migrationScriptsFilesystemRoot;
         private String migrationScriptsClasspathRoot;
         private String versjonstabell;
-        private boolean defaultDataSource;
+        private boolean isDefault;
         private boolean sqlLoggable;
         private boolean migrateClean;
 
@@ -414,8 +414,8 @@ public final class DBConnectionProperties {
             return this;
         }
 
-        public Builder defaultDataSource(boolean defaultDataSource) {
-            this.defaultDataSource = defaultDataSource;
+        public Builder defaultDataSource(boolean isDefault) {
+            this.isDefault = isDefault;
             return this;
         }
 
@@ -445,7 +445,7 @@ public final class DBConnectionProperties {
             migrationScriptsFilesystemRoot = prototype.migrationScriptsFilesystemRoot;
             migrationScriptsClasspathRoot = prototype.migrationScriptsClasspathRoot;
             versjonstabell = prototype.versjonstabell;
-            defaultDataSource = prototype.defaultDataSource;
+            isDefault = prototype.isDefault;
             sqlLoggable = prototype.sqlLoggable;
             migrateClean = prototype.migrateClean;
             this.effectiveSchema = prototype.effectiveSchema;
