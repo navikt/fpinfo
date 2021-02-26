@@ -66,19 +66,17 @@ public class DatabaseHealthCheck {
     }
 
     private String extractEndpoint(Connection connection) {
-        String result = "?";
         try {
             DatabaseMetaData metaData = connection.getMetaData();
             String url = metaData.getURL();
             if (url != null) {
                 if (!url.toUpperCase(Locale.US).contains("SERVICE_NAME=")) { // don't care about Norwegian letters here
-                    url = url + "/" + connection.getSchema();
+                    return url + "/" + connection.getSchema();
                 }
-                result = url;
             }
         } catch (SQLException e) {
-            // ikke fatalt
+            LOG.warn("Extract endpoint feil", e);
         }
-        return result;
+        throw new IllegalArgumentException("extract endpoint " + connection);
     }
 }
