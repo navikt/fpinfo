@@ -45,6 +45,7 @@ public class DatabaseHealthCheck {
         try {
             dataSource = (DataSource) new InitialContext().lookup(jndiName);
         } catch (NamingException e) {
+            LOG.warn("Feil ved datasource jndi oppslag {}", jndiName, e);
             return false;
         }
 
