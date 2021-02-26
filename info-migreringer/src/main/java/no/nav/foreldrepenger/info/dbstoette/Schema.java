@@ -10,6 +10,7 @@ public class Schema {
     public String schema;
     public String effective_schema;
     public String url;
+    public boolean isdefault;
     public boolean defaultDataSource;
     public String migrationScriptsClasspathRoot;
     public String migrationScriptsFilesystemRoot;

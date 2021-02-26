@@ -6,7 +6,7 @@
       "password": "${fpinfoschema.password}",
       "schema": "${flyway.placeholders.fpinfoschema.schema.navn}",
       "url": "${fpinfoschema.url}",
-      "default": false,
+      "isdefault": false,
       "migrationScriptsClasspathRoot": "classpath:/db/migration/fpinfoSchema"
     },
     {
@@ -15,7 +15,7 @@
       "schema": "${flyway.placeholders.fpinfo.schema.navn}",
       "password": "${defaultds.password}",
       "url": "${defaultds.url}",
-      "default": true,
+      "isdefault": true,
       "effective_schema": "${flyway.placeholders.fpinfoschema.schema.navn}",
       "migrationScriptsClasspathRoot": "classpath:/db/migration/defaultDS"
     }
