@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.info.web.app.tjenester;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +36,7 @@ public class UttakTjeneste {
         var fagsakRelasjonOptional = repository.hentFagsakRelasjon(saksnummer.saksnummer());
         if (fagsakRelasjonOptional.isEmpty()) {
             LOG.info("Fant ingen uttaksplan for {}", saksnummer);
-            return Collections.emptyList();
+            return List.of();
         }
 
         var fagsakRelasjon = fagsakRelasjonOptional.get();
@@ -58,7 +57,8 @@ public class UttakTjeneste {
     }
 
     private List<UttakPeriode> hentUttakPerioder(Saksnummer saksnummer) {
-        return behandlingTjeneste.getGjeldendeBehandlingId(saksnummer).map(gb -> repository.hentUttakPerioder(gb))
-                .orElse(Collections.emptyList());
+        return behandlingTjeneste.getGjeldendeBehandlingId(saksnummer)
+                .map(gb -> repository.hentUttakPerioder(gb))
+                .orElse(List.of());
     }
 }

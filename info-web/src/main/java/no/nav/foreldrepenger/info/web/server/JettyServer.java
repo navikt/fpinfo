@@ -16,6 +16,7 @@ import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.MetaData;
+import org.eclipse.jetty.webapp.WebAppConfiguration;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebInfConfiguration;
 import org.eclipse.jetty.webapp.WebXmlConfiguration;
@@ -46,6 +47,7 @@ public class JettyServer {
      */
     private static final Configuration[] CONFIGURATIONS = new Configuration[] {
             new WebXmlConfiguration(),
+            new WebAppConfiguration(),
             new AnnotationConfiguration(),
             new WebInfConfiguration(),
             new PlusConfiguration(),
@@ -133,7 +135,7 @@ public class JettyServer {
 
     private void updateMetaData(MetaData metaData) {
         // Find path to class-files while starting jetty from development environment.
-        metaData.setWebInfClassesDirs(getApplicationClasses().stream()
+        metaData.setWebInfClassesResources(getApplicationClasses().stream()
                 .map(c -> Resource.newResource(c.getProtectionDomain().getCodeSource().getLocation()))
                 .collect(Collectors.toList()));
     }

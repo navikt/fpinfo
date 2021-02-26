@@ -25,7 +25,7 @@ public class SøknadTjeneste {
         this.repository = repository;
     }
 
-    SøknadTjeneste() {
+    public SøknadTjeneste() {
     }
 
     public Optional<SøknadXmlDto> hentSøknadXml(Long behandlingId) {
@@ -34,7 +34,8 @@ public class SøknadTjeneste {
                 .stream()
                 .filter(MottattDokument::erSøknad)
                 .collect(Collectors.toList());
-        return Optional.of(mottatteDokumenter).flatMap(this::mapTilSøknadXml);
+        return Optional.of(mottatteDokumenter)
+                .flatMap(this::mapTilSøknadXml);
     }
 
     public boolean harSøknad(Long behandlingId) {

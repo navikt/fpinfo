@@ -1,9 +1,5 @@
 package no.nav.foreldrepenger.info.dbstoette;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Schema {
 
     String user;
@@ -14,7 +10,6 @@ public class Schema {
     String schema;
     String effective_schema;
     String url;
-    @JsonProperty("default")
     boolean defaultDataSource;
     String migrationScriptsClasspathRoot;
     String migrationScriptsFilesystemRoot;

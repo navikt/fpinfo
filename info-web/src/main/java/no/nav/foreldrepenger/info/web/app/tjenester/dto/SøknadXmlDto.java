@@ -26,7 +26,7 @@ public class SøknadXmlDto implements AbacDto {
     }
 
     public static SøknadXmlDto fraDomene(MottattDokument dokument) {
-        SøknadXmlDto dto = new SøknadXmlDto();
+        var dto = new SøknadXmlDto();
         dto.xml = dokument.getSøknadXml();
         dto.journalpostId = dokument.getJournalpostId();
         dto.behandlingId = dokument.getBehandlingId();
@@ -37,7 +37,7 @@ public class SøknadXmlDto implements AbacDto {
         if (!dokument1.getBehandlingId().equals(dokument2.getBehandlingId())) {
             throw new TekniskException("FP-241631", "Dokumentene gjelder ikke samme behandling");
         }
-        SøknadXmlDto dto = new SøknadXmlDto();
+        var dto = new SøknadXmlDto();
         dto.xml = dokument1.getSøknadXml() != null ? dokument1.getSøknadXml() : dokument2.getSøknadXml();
         dto.journalpostId = dokument1.getJournalpostId() != null ? dokument1.getJournalpostId()
                 : dokument2.getJournalpostId();

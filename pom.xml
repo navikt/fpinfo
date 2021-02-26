@@ -29,7 +29,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <felles.version>3.0.98</felles.version>
+        <felles.version>3.1.4</felles.version>
         <prometheus.version>0.10.0</prometheus.version>
         <swagger.version>2.1.7</swagger.version>
 
@@ -227,18 +227,15 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
     <dependencies>
-       
         <dependency>
             <groupId>com.oracle.ojdbc</groupId>
             <artifactId>ojdbc8</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- Avhengigeter som fjernes fra JDK11 som er del av JavaSE. Legger til her framfor med add-modules. -->
         <dependency>
-            <groupId>javax.json</groupId>
-            <artifactId>javax.json-api</artifactId>
+            <groupId>jakarta.json</groupId>
+            <artifactId>jakarta.json-api</artifactId>
         </dependency>
     </dependencies>
     <build>
@@ -428,22 +425,12 @@
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
-                                    <version>[1.8,)</version>
+                                    <version>[11,)</version>
                                 </requireJavaVersion>
                                 <requireMavenVersion>
                                     <version>[3.5.3,)</version>
                                 </requireMavenVersion>
-                                <bannedDependencies>
-                                    <excludes>
-                                        <exclude>commons-logging:commons-logging</exclude>
-                                    </excludes>
-                                </bannedDependencies>
-                                <!-- <dependencyConvergence /> -->
-                                <!-- Ikke kommenter inn denne. Det brekker
-                                    muligheten til å bygge bare deler av prosjektet https://issues.apache.org/jira/browse/MENFORCER-189
-                                    -> "ReactorModuleConvergence is not compatible with 'advanced' reactor options:
-                                    -pl, -rf" <reactorModuleConvergence /> -->
-                            </rules>
+                                 </rules>
                         </configuration>
                     </execution>
                 </executions>
