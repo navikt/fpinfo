@@ -2,21 +2,21 @@ package no.nav.foreldrepenger.info.dbstoette;
 
 public class Schema {
 
-    String user;
-    String effectiveSchema;
-    String datasource;
-    String defaultSchema;
-    String password;
-    String schema;
-    String effective_schema;
-    String url;
-    boolean defaultDataSource;
-    String migrationScriptsClasspathRoot;
-    String migrationScriptsFilesystemRoot;
-    String versjonstabell;
-    boolean sqlLoggable;
-    boolean migrateClean;
-    String testdataClasspathRoot;
+    public String user;
+    public String effectiveSchema;
+    public String datasource;
+    public String defaultSchema;
+    public String password;
+    public String schema;
+    public String effective_schema;
+    public String url;
+    public boolean defaultDataSource;
+    public String migrationScriptsClasspathRoot;
+    public String migrationScriptsFilesystemRoot;
+    public String versjonstabell;
+    public boolean sqlLoggable;
+    public boolean migrateClean;
+    public String testdataClasspathRoot;
 
     @Override
     public String toString() {
