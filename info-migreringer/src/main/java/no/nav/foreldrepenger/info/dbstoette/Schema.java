@@ -11,7 +11,6 @@ public class Schema {
     public String effective_schema;
     public String url;
     public boolean isdefault;
-    public boolean defaultDataSource;
     public String migrationScriptsClasspathRoot;
     public String migrationScriptsFilesystemRoot;
     public String versjonstabell;
@@ -22,8 +21,8 @@ public class Schema {
     @Override
     public String toString() {
         return "Schema [user=" + user + ", effectiveSchema=" + effectiveSchema + ", datasource=" + datasource + ", defaultSchema=" + defaultSchema
-                + ", password=" + password + ", schema=" + schema + ", effective_schema=" + effective_schema + ", url=" + url + ", defaultDataSource="
-                + defaultDataSource + ", migrationScriptsClasspathRoot=" + migrationScriptsClasspathRoot + ", migrationScriptsFilesystemRoot="
+                + ", password=" + password + ", schema=" + schema + ", effective_schema=" + effective_schema + ", url=" + url + ", isdefault="
+                + isdefault + ", migrationScriptsClasspathRoot=" + migrationScriptsClasspathRoot + ", migrationScriptsFilesystemRoot="
                 + migrationScriptsFilesystemRoot + ", versjonstabell=" + versjonstabell + ", sqlLoggable=" + sqlLoggable + ", migrateClean="
                 + migrateClean + ", testdataClasspathRoot=" + testdataClasspathRoot + "]";
     }

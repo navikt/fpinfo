@@ -275,7 +275,7 @@ public final class DBConnectionProperties {
                 .testdataClasspathRoot(testdataClasspathRoot)
                 .versjonstabell(tabell)
                 .url(db.getString("url"))
-                .defaultDataSource(db.getBoolean("isDefault", false))
+                .defaultDataSource(db.getBoolean("isdefault", false))
                 .sqlLoggable(db.getBoolean("sqlLoggable", false))
                 .migrateClean(db.getBoolean("migrateClean", false))
                 .effectiveSchema(db.getString("effective_schema", schema))
@@ -472,6 +472,7 @@ public final class DBConnectionProperties {
         String effectiveSchema;
         String url = p.url;
         String versjonstabell = "schema_version";
+
         try {
             url = VariablePlaceholderReplacer.replacePlaceholders(p.url);
             schema = VariablePlaceholderReplacer.replacePlaceholders(p.schema);
@@ -487,7 +488,7 @@ public final class DBConnectionProperties {
                 .migrationScriptsFilesystemRoot(p.migrationScriptsFilesystemRoot)
                 .migrationScriptsClasspathRoot(p.migrationScriptsClasspathRoot)
                 .defaultSchema(defaultSchema)
-                .defaultDataSource(p.defaultDataSource)
+                .defaultDataSource(p.isdefault)
                 .datasource(VariablePlaceholderReplacer.replacePlaceholders(p.datasource))
                 .schema(schema)
                 .user(user)
