@@ -29,7 +29,10 @@ public final class DatabaseStøtte {
     public static void settOppJndiForDefaultDataSource(List<DBConnectionProperties> allDbConnectionProperties) {
         Optional<DBConnectionProperties> defaultDataSource = DBConnectionProperties
                 .finnDefault(allDbConnectionProperties);
-        defaultDataSource.ifPresent(DatabaseStøtte::settOppJndiDataSource);
+        defaultDataSource.ifPresentOrElse(DatabaseStøtte::settOppJndiDataSource,
+                () -> {
+                    throw new IllegalStateException("Ingen default DS i " + allDbConnectionProperties);
+                });
     }
 
     private static void kjørerMigreringFor(DBConnectionProperties connectionProperties) {
