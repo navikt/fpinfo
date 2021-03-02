@@ -267,11 +267,6 @@
             <artifactId>felles-testutilities</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- Annet -->
-        <dependency>
-            <groupId>org.owasp.encoder</groupId>
-            <artifactId>encoder</artifactId>
-        </dependency>
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>

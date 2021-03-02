@@ -29,7 +29,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <felles.version>3.1.4</felles.version>
+        <felles.version>3.1.8</felles.version>
         <prometheus.version>0.10.0</prometheus.version>
         <swagger.version>2.1.7</swagger.version>
 
@@ -42,12 +42,6 @@
         <logstash.version>6.6</logstash.version>
         <mockito.version>3.8.0</mockito.version>
         <ojdbc.version>19.3.0.0</ojdbc.version>
-
-        <!-- Transitive avh. versjoner for å sikre unikhet (enforcer dependencyConvergence).
-            Skal ikke benyttes direkte av vår egen kode. -->
-        <owaspencoder.version>1.2.3</owaspencoder.version>
-        <javaslang.version>2.0.6</javaslang.version>
-
     </properties>
 
     <dependencyManagement>
@@ -142,33 +136,15 @@
                 <artifactId>mockito-core</artifactId>
                 <version>${mockito.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>net.logstash.logback</groupId>
                 <artifactId>logstash-logback-encoder</artifactId>
                 <version>${logstash.version}</version>
-            </dependency>
-
-            <!-- Sikkerhet: Geronimo -->
-            <dependency>
-                <groupId>org.apache.geronimo.components</groupId>
-                <artifactId>geronimo-jaspi</artifactId>
-                <version>${geronimo.jaspi.version}</version>
-            </dependency>
+            </dependency>         
             <dependency>
                 <groupId>org.apache.geronimo.specs</groupId>
                 <artifactId>geronimo-osgi-locator</artifactId>
                 <version>${geronimo.osgi.version}</version>
-            </dependency>
-
-            <!-- Transitive avh. versjoner for å sikre unikhet (enforcer
-                dependencyConvergence). Skal ikke benyttes direkte av vår egen kode. -->
-            <dependency>
-                <!-- Transitive avhengighet resolution for å sikre bestemt
-                    versjon -->
-                <groupId>org.owasp.encoder</groupId>
-                <artifactId>encoder</artifactId>
-                <version>${owaspencoder.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.swagger</groupId>
@@ -196,11 +172,6 @@
                 <version>1.1.2</version>
             </dependency>
             <dependency>
-                <groupId>io.javaslang</groupId>
-                <artifactId>javaslang</artifactId>
-                <version>${javaslang.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.papertrailapp</groupId>
                 <artifactId>logback-syslog4j</artifactId>
                 <version>1.0.0</version>
@@ -212,18 +183,6 @@
                 <groupId>com.oracle.ojdbc</groupId>
                 <artifactId>ojdbc8</artifactId>
                 <version>${ojdbc.version}</version>
-            </dependency>
-
-            <!-- Systemdokumentasjon -->
-            <dependency>
-                <groupId>com.fasterxml.woodstox</groupId>
-                <artifactId>woodstox-core</artifactId>
-                <version>6.2.4</version>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.woodstox</groupId>
-                <artifactId>stax2-api</artifactId>
-                <version>4.2.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
