@@ -5,7 +5,7 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <charset>UTF-8</charset>
-            <pattern>%d [%-5level] [%thread] %logger{5} - [%X{consumerId}, %X{callId}, %X{userId}, %X{prosess}] - %m%n
+            <pattern>%d [%-5level] [%thread] %logger{5} - [%X{consumerId}, %X{callId}, %X{prosess}] - %m%n
             </pattern>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -18,7 +18,7 @@
         <File>${APP_LOG_HOME}/fpinfo.log</File>
         <encoder>
             <charset>UTF-8</charset>
-            <pattern>%d [%-5level] [%thread] %logger{5} - [%X{consumerId}, %X{callId}, %X{userId}, %X{prosess}] - %m%n
+            <pattern>%d [%-5level] [%thread] %logger{5} - [%X{consumerId}, %X{callId}, %X{prosess}] - %m%n
             </pattern>
             <!--
             <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %class %mdc %m\n</pattern>
@@ -41,8 +41,7 @@
         <File>${APP_LOG_HOME}/fpinfo_sporing.log</File>
         <encoder>
             <charset>UTF-8</charset>
-            <pattern>%d{MMM dd yyyy HH:mm:ss.SSS} [%-5level] consumerId=%X{consumerId} callId=%X{callId}
-                userId=%X{userId} %m%n
+            <pattern>%d{MMM dd yyyy HH:mm:ss.SSS} [%-5level] consumerId=%X{consumerId} callId=%X{callId} %m%n
             </pattern>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -62,7 +61,7 @@
         <File>${APP_LOG_HOME}/fpinfo_sikkerhet.log</File>
         <encoder>
             <charset>UTF-8</charset>
-            <pattern>%d [%-5level] [%thread] %logger{5} - [%X{consumerId}, %X{callId}, %X{userId}] - %m%n</pattern>
+            <pattern>%d [%-5level] [%thread] %logger{5} - [%X{consumerId}, %X{callId}] - %m%n</pattern>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>ERROR</level>
