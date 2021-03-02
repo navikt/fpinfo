@@ -16,6 +16,8 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
+import no.nav.vedtak.felles.integrasjon.rest.DefaultJsonMapper;
+
 @Provider
 public class JacksonJsonConfig implements ContextResolver<ObjectMapper> {
 
@@ -23,7 +25,7 @@ public class JacksonJsonConfig implements ContextResolver<ObjectMapper> {
     private final ObjectMapper objectMapper;
 
     public JacksonJsonConfig() {
-        objectMapper = new ObjectMapper();
+        objectMapper = DefaultJsonMapper.MAPPER.copy();
         objectMapper.registerModule(SER_DESER);
     }
 
