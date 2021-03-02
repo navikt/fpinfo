@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.info.web.app.exceptions;
 
+import static no.nav.vedtak.log.util.LoggerUtils.removeLineBreaks;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,7 +20,7 @@ import no.nav.vedtak.exception.ManglerTilgangException;
 import no.nav.vedtak.exception.VLException;
 import no.nav.vedtak.felles.jpa.TomtResultatException;
 import no.nav.vedtak.log.mdc.MDCOperations;
-import no.nav.vedtak.log.util.LoggerUtils;
+import no.nav.vedtak.sikkerhet.abac.PepNektetTilgangException;
 
 @Provider
 public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationException> {
@@ -118,11 +120,11 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
     }
 
     private static void loggTilApplikasjonslogg(Throwable cause) {
-        if (cause instanceof VLException v) {
-            LOG.warn(v.getMessage(), v);
+        var message = removeLineBreaks(cause.getMessage());
+        if (cause instanceof PepNektetTilgangException) {
+            LOG.info(message, cause);
         } else {
-            String message = cause.getMessage() != null ? LoggerUtils.removeLineBreaks(cause.getMessage()) : "";
-            LOG.error("Fikk uventet feil:" + message, cause);
+            LOG.warn(message, cause);
         }
 
         // key for å tracke prosess -- nullstill denne
