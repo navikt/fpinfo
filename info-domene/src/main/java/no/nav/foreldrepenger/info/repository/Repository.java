@@ -123,8 +123,7 @@ public class Repository {
     }
 
     public List<MottattDokument> hentMottattDokument(Long behandlingId) {
-        var query = em
-                .createQuery("from MottattDokument where behandling_id=:behandlingId", MottattDokument.class);
+        var query = em.createQuery("from MottattDokument where behandling_id=:behandlingId", MottattDokument.class);
         query.setParameter("behandlingId", behandlingId);
         return query.getResultList();
     }

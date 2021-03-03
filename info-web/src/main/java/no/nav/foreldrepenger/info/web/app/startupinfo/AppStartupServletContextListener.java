@@ -29,7 +29,6 @@ public class AppStartupServletContextListener implements ServletContextListener 
             appStartupInfoLogger.logAppStartupInfo();
         } catch (Exception e) {
             LOG.warn("Uventet exception ved oppstart", e);
-            // men ikke re-throw - vi ønsker ikke at oppstart skal feile pga. feil i logging
         } finally {
             if (appStartupInfoLogger != null) {
                 CDI.current().destroy(appStartupInfoLogger);
