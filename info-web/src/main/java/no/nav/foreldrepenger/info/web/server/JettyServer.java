@@ -4,14 +4,20 @@ import static no.nav.vedtak.util.env.Cluster.NAIS_CLUSTER_NAME;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.servlet.DispatcherType;
 
 import org.eclipse.jetty.annotations.AnnotationConfiguration;
 import org.eclipse.jetty.plus.webapp.EnvConfiguration;
 import org.eclipse.jetty.plus.webapp.PlusConfiguration;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.webapp.Configuration;
@@ -27,6 +33,9 @@ import no.nav.foreldrepenger.info.dbstoette.DBConnectionProperties;
 import no.nav.foreldrepenger.info.dbstoette.DatabaseStøtte;
 import no.nav.foreldrepenger.info.web.app.konfig.ApplicationConfig;
 import no.nav.foreldrepenger.info.web.server.sikkerhet.JettySikkerhetKonfig;
+import no.nav.security.token.support.core.configuration.IssuerProperties;
+import no.nav.security.token.support.core.configuration.MultiIssuerConfiguration;
+import no.nav.security.token.support.jaxrs.servlet.JaxrsJwtTokenValidationFilter;
 import no.nav.vedtak.isso.IssoApplication;
 import no.nav.vedtak.util.env.Environment;
 
@@ -91,9 +100,21 @@ public class JettyServer {
         connector.setPort(getServerPort());
         connector.setHost(SERVER_HOST);
         server.addConnector(connector);
-        server.setHandler(createContext());
+        WebAppContext ctx = createContext();
+        addFilters(ctx);
+        server.setHandler(ctx);
         server.start();
         server.join();
+    }
+
+    private void addFilters(WebAppContext ctx) {
+        var audience = ENV.getRequiredProperty("loginservice.idporten.audience");
+        var discoveryURL = ENV.getRequiredProperty("loginservice.idporten.discovery.url", URL.class);
+        var props = new IssuerProperties(discoveryURL, List.of(audience), "selvbetjening-idtoken");
+
+        var cfg = new MultiIssuerConfiguration(Map.of("selvbetjening", props));
+        FilterHolder filterHolder = new FilterHolder(new JaxrsJwtTokenValidationFilter(cfg));
+        ctx.addFilter(filterHolder, CONTEXT_PATH + "/*", EnumSet.of(DispatcherType.REQUEST));
     }
 
     protected int getServerPort() {

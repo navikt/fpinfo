@@ -33,8 +33,7 @@ public class JettyLoginModule implements LoginModule {
 
     @Override
     public boolean abort() throws LoginException {
-        getSubjectHandler().removeSubject();
-        return true;
+        return logout();
     }
 
     @Override
