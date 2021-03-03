@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import no.nav.foreldrepenger.info.dbstoette.DBConnectionProperties;
 import no.nav.foreldrepenger.info.dbstoette.DatabaseStøtte;
 import no.nav.foreldrepenger.info.web.app.konfig.ApplicationConfig;
-import no.nav.foreldrepenger.info.web.server.sikkerhet.JettySikkerhetKonfig;
 import no.nav.security.token.support.core.configuration.IssuerProperties;
 import no.nav.security.token.support.core.configuration.MultiIssuerConfiguration;
 import no.nav.security.token.support.jaxrs.servlet.JaxrsJwtTokenValidationFilter;
@@ -113,7 +112,7 @@ public class JettyServer {
             var audience = ENV.getRequiredProperty("loginservice.idporten.audience");
             var discoveryURL = ENV.getRequiredProperty("loginservice.idporten.discovery.url", URL.class);
             var props = new IssuerProperties(discoveryURL, List.of(audience), "selvbetjening-idtoken");
-            LOG.info("Hentet properties");
+            LOG.info("Hentet properties {} {}", audience, discoveryURL);
             var cfg = new MultiIssuerConfiguration(Map.of("selvbetjening", props));
             FilterHolder filterHolder = new FilterHolder(new JaxrsJwtTokenValidationFilter(cfg));
             ctx.addFilter(filterHolder, CONTEXT_PATH + "/*", EnumSet.of(DispatcherType.REQUEST));
@@ -156,7 +155,7 @@ public class JettyServer {
         webAppContext.setConfigurations(CONFIGURATIONS);
         webAppContext.setAttribute("org.eclipse.jetty.server.webapp.WebInfIncludeJarPattern",
                 "^.*resteasy-.*.jar$|^.*felles-.*.jar$");
-        new JettySikkerhetKonfig().konfigurer(webAppContext);
+        // new JettySikkerhetKonfig().konfigurer(webAppContext);
         updateMetaData(webAppContext.getMetaData());
         return webAppContext;
     }
