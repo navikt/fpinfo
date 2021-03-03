@@ -108,16 +108,20 @@ public class JettyServer {
     }
 
     private void addFilters(WebAppContext ctx) {
-        LOG.info("Registrerer filter");
-        var audience = ENV.getRequiredProperty("loginservice.idporten.audience");
-        var discoveryURL = ENV.getRequiredProperty("loginservice.idporten.discovery.url", URL.class);
-        var props = new IssuerProperties(discoveryURL, List.of(audience), "selvbetjening-idtoken");
+        try {
+            LOG.info("Registrerer filter");
+            var audience = ENV.getRequiredProperty("loginservice.idporten.audience");
+            var discoveryURL = ENV.getRequiredProperty("loginservice.idporten.discovery.url", URL.class);
+            var props = new IssuerProperties(discoveryURL, List.of(audience), "selvbetjening-idtoken");
+            LOG.info("Hentet properties");
+            var cfg = new MultiIssuerConfiguration(Map.of("selvbetjening", props));
+            FilterHolder filterHolder = new FilterHolder(new JaxrsJwtTokenValidationFilter(cfg));
+            ctx.addFilter(filterHolder, CONTEXT_PATH + "/*", EnumSet.of(DispatcherType.REQUEST));
+            LOG.info("Registrerert filter {} OK", filterHolder);
+        } catch (Exception e) {
+            LOG.info("Registrerer filter feilet", e);
 
-        var cfg = new MultiIssuerConfiguration(Map.of("selvbetjening", props));
-        FilterHolder filterHolder = new FilterHolder(new JaxrsJwtTokenValidationFilter(cfg));
-        ctx.addFilter(filterHolder, CONTEXT_PATH + "/*", EnumSet.of(DispatcherType.REQUEST));
-        LOG.info("Registrerert filter {} OK", filterHolder);
-
+        }
     }
 
     protected int getServerPort() {
