@@ -108,6 +108,7 @@ public class JettyServer {
     }
 
     private void addFilters(WebAppContext ctx) {
+        LOG.info("Registrerer filter");
         var audience = ENV.getRequiredProperty("loginservice.idporten.audience");
         var discoveryURL = ENV.getRequiredProperty("loginservice.idporten.discovery.url", URL.class);
         var props = new IssuerProperties(discoveryURL, List.of(audience), "selvbetjening-idtoken");
@@ -115,6 +116,8 @@ public class JettyServer {
         var cfg = new MultiIssuerConfiguration(Map.of("selvbetjening", props));
         FilterHolder filterHolder = new FilterHolder(new JaxrsJwtTokenValidationFilter(cfg));
         ctx.addFilter(filterHolder, CONTEXT_PATH + "/*", EnumSet.of(DispatcherType.REQUEST));
+        LOG.info("Registrerert filter OK");
+
     }
 
     protected int getServerPort() {
