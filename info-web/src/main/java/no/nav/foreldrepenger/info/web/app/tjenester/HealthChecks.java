@@ -11,6 +11,7 @@ import javax.ws.rs.core.Response;
 
 import io.swagger.v3.oas.annotations.Operation;
 import no.nav.foreldrepenger.info.web.app.selftest.Selftests;
+import no.nav.security.token.support.core.api.Unprotected;
 
 @Path("/health")
 @Produces(TEXT_PLAIN)
@@ -37,6 +38,7 @@ public class HealthChecks {
      */
     @GET
     @Path("/isAlive")
+    @Unprotected
     @Operation(description = "sjekker om poden lever", tags = "nais", hidden = true)
     public Response isAlive() {
         return Response
@@ -46,10 +48,12 @@ public class HealthChecks {
     }
 
     /**
-     * Bruk annet svar enn 200 dersom man ønsker trafikk dirigert vekk (eller få nais til å oppskalere)
+     * Bruk annet svar enn 200 dersom man ønsker trafikk dirigert vekk (eller få
+     * nais til å oppskalere)
      */
     @GET
     @Path("isReady")
+    @Unprotected
     @Operation(description = "sjekker om poden er klar", tags = "nais", hidden = true)
     public Response isReady() {
         if (selftests.isReady()) {

@@ -10,9 +10,11 @@ import javax.ws.rs.core.Response;
 
 import io.prometheus.client.CollectorRegistry;
 import io.swagger.v3.oas.annotations.Operation;
+import no.nav.security.token.support.core.api.Unprotected;
 
 @Path("/metrics")
 @ApplicationScoped
+@Unprotected
 public class PrometheusRestService {
 
     @GET
