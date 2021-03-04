@@ -7,9 +7,7 @@ import javax.ws.rs.ext.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.foreldrepenger.info.web.server.sikkerhet.JettySubjectHandler;
 import no.nav.security.token.support.jaxrs.JaxrsTokenValidationContextHolder;
-import no.nav.vedtak.sikkerhet.context.SubjectHandler;
 
 @Provider
 public class ValidatorFilter implements ContainerRequestFilter {
@@ -25,9 +23,6 @@ public class ValidatorFilter implements ContainerRequestFilter {
         try {
             var token = JaxrsTokenValidationContextHolder.getHolder().getTokenValidationContext().getFirstValidToken();
             if (token.isPresent()) {
-                LOG.info("Handler {}", SubjectHandler.getSubjectHandler().getClass());
-                var h = JettySubjectHandler.class.cast(SubjectHandler.getSubjectHandler());
-
                 LOG.info("Vi har et token");
             } else {
                 LOG.info("Vi har ikke token");
