@@ -139,24 +139,23 @@ public class JettyServer {
     }
 
     protected WebAppContext createContext() throws MalformedURLException {
-        WebAppContext webAppContext = new WebAppContext();
-        webAppContext.setParentLoaderPriority(true);
-
+        WebAppContext ctx = new WebAppContext();
+        ctx.setParentLoaderPriority(true);
         // må hoppe litt bukk for å hente web.xml fra classpath i stedet for fra
         // filsystem.
         String descriptor;
         try (var resource = Resource.newClassPathResource("/WEB-INF/web.xml")) {
             descriptor = resource.getURI().toURL().toExternalForm();
         }
-        webAppContext.setDescriptor(descriptor);
-        webAppContext.setBaseResource(createResourceCollection());
-        webAppContext.setContextPath(CONTEXT_PATH);
-        webAppContext.setConfigurations(CONFIGURATIONS);
-        webAppContext.setAttribute("org.eclipse.jetty.server.webapp.WebInfIncludeJarPattern",
+        ctx.setDescriptor(descriptor);
+        ctx.setBaseResource(createResourceCollection());
+        ctx.setContextPath(CONTEXT_PATH);
+        ctx.setConfigurations(CONFIGURATIONS);
+        ctx.setAttribute("org.eclipse.jetty.server.webapp.WebInfIncludeJarPattern",
                 "^.*resteasy-.*.jar$|^.*felles-.*.jar$");
-        new JettySikkerhetKonfig().konfigurer(webAppContext);
-        updateMetaData(webAppContext.getMetaData());
-        return webAppContext;
+        new JettySikkerhetKonfig().konfigurer(ctx);
+        updateMetaData(ctx.getMetaData());
+        return ctx;
     }
 
     private void updateMetaData(MetaData metaData) {

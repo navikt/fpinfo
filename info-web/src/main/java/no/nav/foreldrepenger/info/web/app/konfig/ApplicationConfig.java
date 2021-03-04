@@ -3,8 +3,6 @@ package no.nav.foreldrepenger.info.web.app.konfig;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -43,9 +41,7 @@ public class ApplicationConfig extends Application {
                 .openAPI(oas)
                 .prettyPrint(true)
                 .scannerClass("io.swagger.v3.jaxrs2.integration.JaxrsAnnotationScanner")
-                .resourcePackages(Stream.of("no.nav")
-                        .collect(Collectors.toSet()));
-
+                .resourcePackages(Set.of("no.nav"));
         try {
             new GenericOpenApiContextBuilder<>()
                     .openApiConfiguration(oasConfig)
