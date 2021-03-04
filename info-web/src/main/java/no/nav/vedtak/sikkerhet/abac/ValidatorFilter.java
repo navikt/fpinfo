@@ -22,7 +22,6 @@ public class ValidatorFilter implements ContainerRequestFilter {
             LOG.info("Request {}", this);
             var token = JaxrsTokenValidationContextHolder.getHolder().getTokenValidationContext().getFirstValidToken();
             if (token.isPresent()) {
-
                 LOG.info("Vi har et token");
             } else {
                 LOG.info("Vi har ikke token");
