@@ -113,8 +113,8 @@ public class JettyServer {
             var props = new IssuerProperties(discoveryURL, List.of(audience), "selvbetjening-idtoken");
             LOG.info("Hentet properties {} {}", audience, discoveryURL);
             var cfg = new MultiIssuerConfiguration(Map.of("selvbetjening", props));
-            FilterHolder filterHolder = new FilterHolder(new JaxrsJwtTokenValidationFilter(cfg));
-            ctx.addFilter(filterHolder, CONTEXT_PATH + "/*", EnumSet.of(DispatcherType.REQUEST));
+            var filterHolder = new FilterHolder(new JaxrsJwtTokenValidationFilter(cfg));
+            ctx.addFilter(filterHolder, "/*", EnumSet.of(DispatcherType.REQUEST));
             LOG.info("Registrerert filter {} OK", filterHolder);
         } catch (Exception e) {
             LOG.info("Registrerer filter feilet", e);
