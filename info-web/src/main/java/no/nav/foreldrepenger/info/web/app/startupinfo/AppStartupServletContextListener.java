@@ -28,8 +28,7 @@ public class AppStartupServletContextListener implements ServletContextListener 
             appStartupInfoLogger = CDI.current().select(AppStartupInfoLogger.class).get();
             appStartupInfoLogger.logAppStartupInfo();
         } catch (Exception e) {
-            var ex = OppstartFeil.uventetExceptionVedOppstart(e);
-            LOG.warn(ex.getMessage(), ex);
+            OppstartFeil.uventetExceptionVedOppstart(e).log(LOG);
             // men ikke re-throw - vi ønsker ikke at oppstart skal feile pga. feil i logging
         } finally {
             if (appStartupInfoLogger != null) {
