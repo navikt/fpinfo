@@ -109,7 +109,7 @@ public class JettyServer {
         try {
             LOG.info("Registrerer filter");
             var audience = ENV.getRequiredProperty("loginservice.idporten.audience");
-            var discoveryURL = ENV.getRequiredProperty("loginservice.idporten.discovery.url", URL.class);
+            var discoveryURL = new URL(ENV.getRequiredProperty("loginservice.idporten.discovery.url"));
             var props = new IssuerProperties(discoveryURL, List.of(audience), "selvbetjening-idtoken");
             LOG.info("Hentet properties {} {}", audience, discoveryURL);
             var cfg = new MultiIssuerConfiguration(Map.of("selvbetjening", props));
