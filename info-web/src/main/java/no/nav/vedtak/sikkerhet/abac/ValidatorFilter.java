@@ -19,7 +19,7 @@ public class ValidatorFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) {
         try {
-            LOG.info("Request");
+            LOG.info("Request {}", this);
             var token = JaxrsTokenValidationContextHolder.getHolder().getTokenValidationContext().getFirstValidToken();
             if (token.isPresent()) {
 
