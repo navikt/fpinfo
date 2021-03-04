@@ -18,12 +18,17 @@ public class ValidatorFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) {
-        LOG.info("Request");
-        var token = JaxrsTokenValidationContextHolder.getHolder().getTokenValidationContext().getFirstValidToken();
-        if (token.isPresent()) {
-            LOG.info("Vi har et token");
-        } else {
-            LOG.info("Vi har ikke token");
+        try {
+            LOG.info("Request");
+            var token = JaxrsTokenValidationContextHolder.getHolder().getTokenValidationContext().getFirstValidToken();
+            if (token.isPresent()) {
+
+                LOG.info("Vi har et token");
+            } else {
+                LOG.info("Vi har ikke token");
+            }
+        } catch (Exception e) {
+            LOG.info("OOPS", e);
         }
     }
 }
