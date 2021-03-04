@@ -25,6 +25,7 @@ import org.eclipse.jetty.webapp.MetaData;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebInfConfiguration;
 import org.eclipse.jetty.webapp.WebXmlConfiguration;
+import org.jboss.resteasy.spi.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,7 +108,9 @@ public class JettyServer {
 
     private void addFilters(WebAppContext ctx) {
         try {
-            LOG.info("Registrerer filter");
+            Registry registry = (Registry) ctx.getAttribute(Registry.class.getName());
+            // registry.addSingletonResource(registry);
+            LOG.info("Registrerer filter " + registry);
             var audience = ENV.getRequiredProperty("loginservice.idporten.audience");
             var discoveryURL = new URL(ENV.getRequiredProperty("loginservice.idporten.discovery.url"));
             var props = new IssuerProperties(discoveryURL, List.of(audience), "selvbetjening-idtoken");
