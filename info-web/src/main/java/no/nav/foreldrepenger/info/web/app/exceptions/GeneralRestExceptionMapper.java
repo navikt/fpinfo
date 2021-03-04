@@ -13,9 +13,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import no.nav.vedtak.exception.FunksjonellException;
 import no.nav.vedtak.exception.ManglerTilgangException;
 import no.nav.vedtak.exception.VLException;
+import no.nav.vedtak.feil.Feil;
+import no.nav.vedtak.feil.FunksjonellFeil;
 import no.nav.vedtak.felles.jpa.TomtResultatException;
 import no.nav.vedtak.log.mdc.MDCOperations;
 import no.nav.vedtak.log.util.LoggerUtils;
@@ -65,14 +66,15 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
     }
 
     private static Response handleVLException(VLException vlException, String callId) {
-        if (vlException instanceof ManglerTilgangException m) {
-            return ikkeTilgang(m);
+        Feil feil = vlException.getFeil();
+        if (vlException instanceof ManglerTilgangException) {
+            return ikkeTilgang(feil);
         } else {
-            return serverError(callId, vlException);
+            return serverError(callId, feil);
         }
     }
 
-    private static Response serverError(String callId, VLException feil) {
+    private static Response serverError(String callId, Feil feil) {
         String feilmelding = getVLExceptionFeilmelding(callId, feil);
         FeilType feilType = FeilType.GENERELL_FEIL;
         return Response.serverError()
@@ -81,8 +83,8 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
                 .build();
     }
 
-    private static Response ikkeTilgang(ManglerTilgangException feil) {
-        String feilmelding = feil.getMessage();
+    private static Response ikkeTilgang(Feil feil) {
+        String feilmelding = feil.getFeilmelding();
         FeilType feilType = FeilType.MANGLER_TILGANG_FEIL;
         return Response.status(Response.Status.FORBIDDEN)
                 .entity(new FeilDto(feilmelding, feilType))
@@ -90,9 +92,9 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
                 .build();
     }
 
-    private static String getVLExceptionFeilmelding(String callId, VLException feil) {
-        String feilbeskrivelse = feil.getMessage(); // $NON-NLS-1$
-        if (feil instanceof FunksjonellException f) {
+    private static String getVLExceptionFeilmelding(String callId, Feil feil) {
+        String feilbeskrivelse = feil.getKode() + ": " + feil.getFeilmelding(); //$NON-NLS-1$
+        if (feil instanceof FunksjonellFeil f) {
             String løsningsforslag = f.getLøsningsforslag();
             return "Det oppstod en feil: "
                     + avsluttMedPunktum(feilbeskrivelse)
@@ -120,8 +122,7 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
 
     private static void loggTilApplikasjonslogg(Throwable cause) {
         if (cause instanceof VLException) {
-            LOG.warn("VLEexception", cause);
-            // ((VLException) cause).log(LOG);
+            ((VLException) cause).log(LOG);
         } else {
             String message = cause.getMessage() != null ? LoggerUtils.removeLineBreaks(cause.getMessage()) : "";
             LOG.error("Fikk uventet feil:" + message, cause);

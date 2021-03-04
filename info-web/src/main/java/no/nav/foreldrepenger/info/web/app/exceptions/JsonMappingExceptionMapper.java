@@ -18,7 +18,7 @@ public class JsonMappingExceptionMapper implements ExceptionMapper<JsonMappingEx
     @Override
     public Response toResponse(JsonMappingException exception) {
         var e = new TekniskException("FP-252294", "JSON-mapping feil", exception);
-        log.warn(e.getMessage(), e);
+        e.log(log);
         return Response
                 .status(Response.Status.BAD_REQUEST)
                 .entity(new FeilDto(e.getMessage()))
