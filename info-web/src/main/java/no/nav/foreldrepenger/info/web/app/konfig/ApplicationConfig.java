@@ -19,7 +19,7 @@ import no.nav.foreldrepenger.info.web.app.exceptions.ConstraintViolationMapper;
 import no.nav.foreldrepenger.info.web.app.exceptions.JsonMappingExceptionMapper;
 import no.nav.foreldrepenger.info.web.app.exceptions.JsonParseExceptionMapper;
 import no.nav.foreldrepenger.info.web.app.tjenester.DokumentforsendelseTjeneste;
-import no.nav.vedtak.sikkerhet.abac.ValidatorFilter;
+import no.nav.foreldrepenger.info.web.server.sikkerhet.ValidatorFilter;
 
 @ApplicationPath(ApplicationConfig.API_URI)
 public class ApplicationConfig extends Application {
