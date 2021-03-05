@@ -32,13 +32,12 @@ import no.nav.foreldrepenger.info.web.app.tjenester.dto.SakDto;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.SaksnummerDto;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.SøknadXmlDto;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.SøknadsGrunnlagDto;
-import no.nav.security.token.support.core.api.ProtectedWithClaims;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 
 @Path(DOKUMENTFORSENDELSE_PATH)
 @Produces(MediaType.APPLICATION_JSON)
 @RequestScoped
-@ProtectedWithClaims(issuer = "selvbetjening", claimMap = "acr=Level4")
+//@ProtectedWithClaims(issuer = "selvbetjening", claimMap = "acr=Level4")
 public class DokumentforsendelseTjeneste {
 
     public static final String DOKUMENTFORSENDELSE_PATH = "/dokumentforsendelse";
