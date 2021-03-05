@@ -20,14 +20,14 @@ public class TokenSupportTokenProvider implements TokenProvider {
 
     @Override
     public String getUid() {
-        LOG.info("Henter ut uid", new RuntimeException());
+        LOG.info("Henter ut uid");
         var token = JaxrsTokenValidationContextHolder.getHolder().getTokenValidationContext().getFirstValidToken();
         return token.map(JwtToken::getSubject).orElseThrow();
     }
 
     @Override
     public String userToken() {
-        LOG.info("Henter ut token", new RuntimeException());
+        LOG.info("Henter ut token");
         var token = JaxrsTokenValidationContextHolder.getHolder().getTokenValidationContext().getFirstValidToken();
         return token.map(JwtToken::getTokenAsString).orElseThrow();
     }
