@@ -27,7 +27,7 @@ public class TokenSupportTokenProvider implements TokenProvider {
 
     @Override
     public String userToken() {
-        LOG.info("Henter ut token");
+        LOG.info("Henter ut token", new RuntimeException());
         var token = JaxrsTokenValidationContextHolder.getHolder().getTokenValidationContext().getFirstValidToken();
         return token.map(JwtToken::getTokenAsString).orElseThrow();
     }
