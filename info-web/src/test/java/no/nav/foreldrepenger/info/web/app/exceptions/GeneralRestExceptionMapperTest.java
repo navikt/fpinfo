@@ -39,7 +39,7 @@ class GeneralRestExceptionMapperTest {
 
     @Test
     void skalMapperValideringsfeilMedMetainformasjon() {
-        var feltFeilDto = new FeltFeilDto("feltnavn", "feilmelding");
+        var feltFeilDto = new FeltFeilDto("feltnavn", "feilmelding", "metainformasjon");
         var valideringsfeil = new ValideringsfeilException(List.of(feltFeilDto));
         var response = generalRestExceptionMapper.toResponse(new ApplicationException(valideringsfeil));
 
@@ -63,7 +63,7 @@ class GeneralRestExceptionMapperTest {
         var feilDto = (FeilDto) response.getEntity();
 
         assertThat(feilDto.type()).isEqualTo(FeilType.MANGLER_TILGANG_FEIL);
-        assertThat(feilDto.feilmelding()).contains("ManglerTilgangFeilmeldingKode");
+        assertThat(feilDto.feilmelding()).isEqualTo("ManglerTilgangFeilmeldingKode");
     }
 
     @Test

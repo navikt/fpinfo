@@ -18,7 +18,7 @@ public class JsonParseExceptionMapper implements ExceptionMapper<JsonParseExcept
     @Override
     public Response toResponse(JsonParseException ex) {
         var e = new TekniskException("FP-299955", String.format("JSON-parsing feil: %s", ex.getMessage()), ex);
-        log.warn(e.getMessage(), e);
+        e.log(log);
         return Response
                 .status(Response.Status.BAD_REQUEST)
                 .entity(new FeilDto(e.getMessage()))

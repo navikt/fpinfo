@@ -30,6 +30,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <felles.version>3.1.9</felles.version>
+        <felles.version>3.0.98</felles.version>
         <prometheus.version>0.10.0</prometheus.version>
         <swagger.version>2.1.7</swagger.version>
 
@@ -434,11 +435,9 @@
                                     <version>[3.5.3,)</version>
                                 </requireMavenVersion>
                                 <bannedDependencies>
-<!--
                                     <excludes>
                                         <exclude>commons-logging:commons-logging</exclude>
                                     </excludes>
--->
                                 </bannedDependencies>
                                 <!-- <dependencyConvergence /> -->
                                 <!-- Ikke kommenter inn denne. Det brekker
