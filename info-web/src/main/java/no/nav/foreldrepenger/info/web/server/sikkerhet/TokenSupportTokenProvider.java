@@ -13,17 +13,16 @@ import no.nav.vedtak.sikkerhet.abac.TokenProvider;
 
 @Alternative
 @Dependent
-@Priority(1)
+@Priority(100)
 public class TokenSupportTokenProvider implements TokenProvider {
 
     private static final Logger LOG = LoggerFactory.getLogger(TokenSupportTokenProvider.class);
 
     @Override
     public String getUid() {
-        LOG.info("Henter ut uid");
+        LOG.info("Henter ut uid", new RuntimeException());
         var token = JaxrsTokenValidationContextHolder.getHolder().getTokenValidationContext().getFirstValidToken();
         return token.map(JwtToken::getSubject).orElseThrow();
-
     }
 
     @Override
@@ -32,5 +31,4 @@ public class TokenSupportTokenProvider implements TokenProvider {
         var token = JaxrsTokenValidationContextHolder.getHolder().getTokenValidationContext().getFirstValidToken();
         return token.map(JwtToken::getTokenAsString).orElseThrow();
     }
-
 }
