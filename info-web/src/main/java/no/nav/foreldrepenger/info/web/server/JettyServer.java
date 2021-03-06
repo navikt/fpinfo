@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import no.nav.foreldrepenger.info.dbstoette.DBConnectionProperties;
 import no.nav.foreldrepenger.info.dbstoette.DatabaseStøtte;
 import no.nav.foreldrepenger.info.web.app.konfig.ApplicationConfig;
-import no.nav.foreldrepenger.info.web.server.sikkerhet.JettySikkerhetKonfig;
 import no.nav.security.token.support.core.configuration.IssuerProperties;
 import no.nav.security.token.support.core.configuration.MultiIssuerConfiguration;
 import no.nav.security.token.support.jaxrs.servlet.JaxrsJwtTokenValidationFilter;
@@ -154,7 +153,7 @@ public class JettyServer {
         ctx.setConfigurations(CONFIGURATIONS);
         ctx.setAttribute("org.eclipse.jetty.server.webapp.WebInfIncludeJarPattern",
                 "^.*resteasy-.*.jar$|^.*felles-.*.jar$");
-        new JettySikkerhetKonfig().konfigurer(ctx);
+        // new JettySikkerhetKonfig().konfigurer(ctx);
         updateMetaData(ctx.getMetaData());
         return ctx;
     }
