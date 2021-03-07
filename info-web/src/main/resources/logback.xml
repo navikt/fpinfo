@@ -45,12 +45,12 @@
 			<maxMessageLength>128000</maxMessageLength>
 		</syslogConfig>
 	</appender>
-	<logger name="no.nav" level="info" />
+   <logger name="no.nav.sikkerhet" level="trace" />
 	<root level="info">
 		<appender-ref ref="STDOUT_JSON" />
 	</root>
 
-	<logger level="INFO" name="sporing" additivity="false">
+	<logger level="info" name="sporing" additivity="false">
 		<appender-ref ref="SPORING_LOG" />
 	</logger>
 	
