@@ -104,10 +104,6 @@
                     <artifactId>woodstox-core-asl</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>ca.szc.thirdparty.nl.jworks.markdown_to_asciidoc</groupId>
-                    <artifactId>markdown_to_asciidoc</artifactId>
-                </exclusion>
-                <exclusion>
                     <groupId>jakarta.xml.soap</groupId>
                     <artifactId>jakarta.xml.soap-api</artifactId>
                 </exclusion>
@@ -118,22 +114,10 @@
         <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
             <artifactId>felles-util</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>ca.szc.thirdparty.nl.jworks.markdown_to_asciidoc</groupId>
-                    <artifactId>markdown_to_asciidoc</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
             <artifactId>felles-feil</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>ca.szc.thirdparty.nl.jworks.markdown_to_asciidoc</groupId>
-                    <artifactId>markdown_to_asciidoc</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
 

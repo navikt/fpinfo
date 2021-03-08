@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.info.web.server.sikkerhet;
+package no.nav.foreldrepenger.info.web.server;
 
 import javax.annotation.Priority;
 import javax.enterprise.context.Dependent;
