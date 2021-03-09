@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.info.web.server;
 
 import static no.nav.vedtak.util.env.Cluster.NAIS_CLUSTER_NAME;
+import static org.eclipse.jetty.webapp.MetaInfConfiguration.WEBINF_JAR_PATTERN;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -114,7 +115,7 @@ public class JettyServer {
             LOG.info("Hentet properties {} {}", audience, discoveryURL);
             var cfg = new MultiIssuerConfiguration(Map.of("selvbetjening", props));
             var filterHolder = new FilterHolder(new JaxrsJwtTokenValidationFilter(cfg));
-            ctx.addFilter(filterHolder, "/*", EnumSet.of(DispatcherType.REQUEST));
+            ctx.addFilter(filterHolder, "/**", EnumSet.of(DispatcherType.REQUEST));
             LOG.info("Registrerert filter {} OK", filterHolder);
         } catch (Exception e) {
             LOG.info("Registrerer filter feilet", e);
@@ -151,8 +152,7 @@ public class JettyServer {
         ctx.setBaseResource(createResourceCollection());
         ctx.setContextPath(CONTEXT_PATH);
         ctx.setConfigurations(CONFIGURATIONS);
-        ctx.setAttribute("org.eclipse.jetty.server.webapp.WebInfIncludeJarPattern",
-                "^.*resteasy-.*.jar$|^.*felles-.*.jar$");
+        ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*resteasy-.*.jar$|^.*felles-.*.jar$");
         // new JettySikkerhetKonfig().konfigurer(ctx);
         updateMetaData(ctx.getMetaData());
         return ctx;
