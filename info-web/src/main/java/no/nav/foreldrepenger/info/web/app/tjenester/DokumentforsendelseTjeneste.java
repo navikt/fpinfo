@@ -38,7 +38,7 @@ import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 @Path(DOKUMENTFORSENDELSE_PATH)
 @Produces(MediaType.APPLICATION_JSON)
 @RequestScoped
-@ProtectedWithClaims(issuer = "selvbetjening", claimMap = "acr=Level4")
+@ProtectedWithClaims(issuer = "selvbetjening", claimMap = { "acr=Level4" })
 public class DokumentforsendelseTjeneste {
 
     public static final String DOKUMENTFORSENDELSE_PATH = "/dokumentforsendelse";
