@@ -32,13 +32,12 @@ import no.nav.foreldrepenger.info.web.app.tjenester.dto.SakDto;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.SaksnummerDto;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.SøknadXmlDto;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.SøknadsGrunnlagDto;
-import no.nav.security.token.support.core.api.ProtectedWithClaims;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 
 @Path(DOKUMENTFORSENDELSE_PATH)
 @Produces(MediaType.APPLICATION_JSON)
 @RequestScoped
-@ProtectedWithClaims(issuer = "selvbetjening", claimMap = { "acr=Level4" })
+//@ProtectedWithClaims(issuer = "selvbetjening", claimMap = { "acr=Level4" })
 public class DokumentforsendelseTjeneste {
 
     public static final String DOKUMENTFORSENDELSE_PATH = "/dokumentforsendelse";
@@ -80,7 +79,6 @@ public class DokumentforsendelseTjeneste {
 
     @GET
     @Path("/status")
-    @Produces(MediaType.APPLICATION_JSON)
     @BeskyttetRessurs(action = READ, resource = BeskyttetRessursAttributt.FAGSAK)
     @Operation(description = "Søker om status på prossesseringen av et mottatt dokument", summary = "status på prossesseringen av et mottatt dokument", responses = {
             @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = ForsendelseStatusDto.class)), responseCode = "200", description = "Status og Periode"),
