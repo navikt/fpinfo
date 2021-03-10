@@ -115,7 +115,7 @@ public class JettyServer {
             LOG.info("Hentet properties {} {}", audience, discoveryURL);
             var cfg = new MultiIssuerConfiguration(Map.of("selvbetjening", props));
             var filterHolder = new FilterHolder(new JaxrsJwtTokenValidationFilter(cfg));
-            ctx.addFilter(filterHolder, "/*", EnumSet.of(DispatcherType.REQUEST));
+            ctx.addFilter(filterHolder, "/**", EnumSet.of(DispatcherType.REQUEST));
             LOG.info("Registrerert filter {} OK", filterHolder);
         } catch (Exception e) {
             LOG.info("Registrerer filter feilet", e);
