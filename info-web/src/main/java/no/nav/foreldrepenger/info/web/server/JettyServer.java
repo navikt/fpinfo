@@ -33,9 +33,9 @@ import org.slf4j.LoggerFactory;
 import no.nav.foreldrepenger.info.dbstoette.DBConnectionProperties;
 import no.nav.foreldrepenger.info.dbstoette.DatabaseStøtte;
 import no.nav.foreldrepenger.info.web.app.konfig.ApplicationConfig;
+import no.nav.foreldrepenger.info.web.server.sikkerhet.LoggingJaxrsJwtTokenValidationFilter;
 import no.nav.security.token.support.core.configuration.IssuerProperties;
 import no.nav.security.token.support.core.configuration.MultiIssuerConfiguration;
-import no.nav.security.token.support.jaxrs.servlet.JaxrsJwtTokenValidationFilter;
 import no.nav.vedtak.isso.IssoApplication;
 import no.nav.vedtak.util.env.Environment;
 
@@ -114,8 +114,8 @@ public class JettyServer {
             var props = new IssuerProperties(discoveryURL, List.of(audience), "selvbetjening-idtoken");
             LOG.info("Hentet properties {} {}", audience, discoveryURL);
             var cfg = new MultiIssuerConfiguration(Map.of("selvbetjening", props));
-            var filterHolder = new FilterHolder(new JaxrsJwtTokenValidationFilter(cfg));
-            ctx.addFilter(filterHolder, "/**", EnumSet.of(DispatcherType.REQUEST));
+            var filterHolder = new FilterHolder(new LoggingJaxrsJwtTokenValidationFilter(cfg));
+            ctx.addFilter(filterHolder, "/*", EnumSet.of(DispatcherType.REQUEST));
             LOG.info("Registrerert filter {} OK", filterHolder);
         } catch (Exception e) {
             LOG.info("Registrerer filter feilet", e);
