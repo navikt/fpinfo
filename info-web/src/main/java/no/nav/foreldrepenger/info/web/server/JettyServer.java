@@ -147,7 +147,6 @@ public class JettyServer {
         ctx.setContextPath(CONTEXT_PATH);
         ctx.setConfigurations(CONFIGURATIONS);
         ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*resteasy-.*.jar$|^.*felles-.*.jar$");
-        // new JettySikkerhetKonfig().konfigurer(ctx);
         updateMetaData(ctx.getMetaData());
         return ctx;
     }
