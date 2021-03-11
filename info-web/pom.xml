@@ -27,7 +27,7 @@
                 <artifactId>cxf-rt-transports-http-jetty</artifactId>
                 <version>3.4.2</version>
             </dependency>
-            <!-- Sikkerhet: Geronimo -->
+            <!-- Sikkerhet: Geronimo 
             <dependency>
                 <groupId>org.apache.geronimo.components</groupId>
                 <artifactId>geronimo-jaspi</artifactId>
@@ -43,6 +43,7 @@
                 <artifactId>swagger-ui</artifactId>
                 <version>${swagger-ui.version}</version>
             </dependency>
+            -->
         </dependencies>
     </dependencyManagement>
 
