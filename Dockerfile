@@ -9,9 +9,9 @@ RUN mkdir /app/lib
 RUN mkdir /app/conf
 
 # Config
-#COPY info-web/target/classes/logback*.xml /app/conf/
-COPY info-web/target/classes/jetty/jaspi-conf.xml /app/conf/
-COPY info-web/target/classes/jetty/login.conf /app/conf/
+COPY info-web/target/classes/logback*.xml /app/conf/
+#COPY info-web/target/classes/jetty/jaspi-conf.xml /app/conf/
+#COPY info-web/target/classes/jetty/login.conf /app/conf/
 
 # Application Container (Jetty)
 COPY info-web/target/app.jar /app/
