@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.info.web.server;
 
+import static javax.servlet.DispatcherType.REQUEST;
 import static no.nav.vedtak.util.env.Cluster.NAIS_CLUSTER_NAME;
 import static org.eclipse.jetty.webapp.MetaInfConfiguration.WEBINF_JAR_PATTERN;
 
@@ -10,8 +11,6 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import javax.servlet.DispatcherType;
 
 import org.eclipse.jetty.annotations.AnnotationConfiguration;
 import org.eclipse.jetty.plus.webapp.EnvConfiguration;
@@ -33,9 +32,9 @@ import org.slf4j.LoggerFactory;
 import no.nav.foreldrepenger.info.dbstoette.DBConnectionProperties;
 import no.nav.foreldrepenger.info.dbstoette.DatabaseStøtte;
 import no.nav.foreldrepenger.info.web.app.konfig.ApplicationConfig;
-import no.nav.foreldrepenger.info.web.server.sikkerhet.LoggingJaxrsJwtTokenValidationFilter;
 import no.nav.security.token.support.core.configuration.IssuerProperties;
 import no.nav.security.token.support.core.configuration.MultiIssuerConfiguration;
+import no.nav.security.token.support.jaxrs.servlet.JaxrsJwtTokenValidationFilter;
 import no.nav.vedtak.isso.IssoApplication;
 import no.nav.vedtak.util.env.Environment;
 
@@ -101,26 +100,21 @@ public class JettyServer {
         connector.setHost(SERVER_HOST);
         server.addConnector(connector);
         WebAppContext ctx = createContext();
-        addFilters(ctx);
+        addTokenValidationFilter(ctx);
         server.setHandler(ctx);
         server.start();
         server.join();
     }
 
-    private void addFilters(WebAppContext ctx) {
-        try {
-            var audience = ENV.getRequiredProperty("loginservice.idporten.audience");
-            var discoveryURL = new URL(ENV.getRequiredProperty("loginservice.idporten.discovery.url"));
-            var props = new IssuerProperties(discoveryURL, List.of(audience), "selvbetjening-idtoken");
-            LOG.info("Hentet properties {} {}", audience, discoveryURL);
-            var cfg = new MultiIssuerConfiguration(Map.of("selvbetjening", props));
-            var filterHolder = new FilterHolder(new LoggingJaxrsJwtTokenValidationFilter(cfg));
-            ctx.addFilter(filterHolder, "/*", EnumSet.of(DispatcherType.REQUEST));
-            LOG.info("Registrerert filter {} OK", filterHolder);
-        } catch (Exception e) {
-            LOG.info("Registrerer filter feilet", e);
-
-        }
+    private void addTokenValidationFilter(WebAppContext ctx) throws MalformedURLException {
+        LOG.info("Registrererer JaxrsJwtTokenValidationFilter");
+        ctx.addFilter(
+                new FilterHolder(new JaxrsJwtTokenValidationFilter(new MultiIssuerConfiguration(Map.of("selvbetjening",
+                        new IssuerProperties(new URL(ENV.getRequiredProperty("loginservice.idporten.discovery.url")),
+                                List.of(ENV.getRequiredProperty("loginservice.idporten.audience")), "selvbetjening-idtoken"))))),
+                "/*",
+                EnumSet.of(REQUEST));
+        LOG.info("Registrerert JaxrsJwtTokenValidationFilter OK");
     }
 
     protected int getServerPort() {

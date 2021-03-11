@@ -24,13 +24,11 @@ public class LoggingJaxrsJwtTokenValidationFilter extends JaxrsJwtTokenValidatio
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        LOG.trace("Setter opp context");
         super.doFilter(request, response, chain);
     }
 
     @Override
     public void init(FilterConfig filterConfig) {
-        LOG.trace("Setter opp filter");
         super.init(filterConfig);
     }
 
