@@ -29,7 +29,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <felles.version>3.2.0</felles.version>
+        <felles.version>3.2.1</felles.version>
         <prometheus.version>0.10.0</prometheus.version>
         <swagger.version>2.1.7</swagger.version>
 
@@ -234,11 +234,6 @@
             <groupId>com.oracle.ojdbc</groupId>
             <artifactId>ojdbc8</artifactId>
             <scope>test</scope>
-        </dependency>
-        <!-- Avhengigeter som fjernes fra JDK11 som er del av JavaSE. Legger til her framfor med add-modules. -->
-        <dependency>
-            <groupId>javax.json</groupId>
-            <artifactId>javax.json-api</artifactId>
         </dependency>
     </dependencies>
     <build>
