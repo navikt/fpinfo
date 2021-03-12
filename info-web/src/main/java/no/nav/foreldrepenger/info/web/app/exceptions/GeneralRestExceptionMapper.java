@@ -16,7 +16,6 @@ import org.slf4j.MDC;
 import no.nav.vedtak.exception.FunksjonellException;
 import no.nav.vedtak.exception.ManglerTilgangException;
 import no.nav.vedtak.exception.VLException;
-import no.nav.vedtak.felles.jpa.TomtResultatException;
 import no.nav.vedtak.log.mdc.MDCOperations;
 import no.nav.vedtak.log.util.LoggerUtils;
 
@@ -31,8 +30,6 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
 
         if (cause instanceof ValideringsfeilException c) {
             return handleValideringsfeil(c);
-        } else if (cause instanceof TomtResultatException) {
-            return handleTomtResultatFeil();
         }
 
         loggTilApplikasjonslogg(cause);
@@ -43,13 +40,6 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
         }
 
         return handleGenerellFeil(cause, callId);
-    }
-
-    private static Response handleTomtResultatFeil() {
-        return Response
-                .status(Response.Status.OK)
-                .type(MediaType.APPLICATION_JSON)
-                .build();
     }
 
     private static Response handleValideringsfeil(ValideringsfeilException valideringsfeil) {
