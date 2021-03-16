@@ -8,21 +8,17 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import no.nav.foreldrepenger.info.domene.Sak;
 import no.nav.foreldrepenger.info.domene.SøknadsGrunnlag;
 
-@ApplicationScoped
+@Dependent
 public class PipRepository {
 
-    private EntityManager entityManager;
-
-    PipRepository() {
-
-    }
+    private final EntityManager entityManager;
 
     @Inject
     public PipRepository(EntityManager entityManager) {
@@ -53,7 +49,7 @@ public class PipRepository {
     }
 
     public Optional<String> hentAnnenPartForSaksnummer(String saksnummer) {
-        Objects.requireNonNull(saksnummer, "saksnummer"); // NOSONAR
+        Objects.requireNonNull(saksnummer, "saksnummer");
         var query = entityManager.createQuery("from SakStatus where saksnummer like :saksnummer",
                 Sak.class);
         query.setParameter("saksnummer", saksnummer);

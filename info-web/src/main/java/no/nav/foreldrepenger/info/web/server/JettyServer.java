@@ -4,7 +4,6 @@ import static javax.servlet.DispatcherType.REQUEST;
 import static no.nav.vedtak.util.env.Cluster.NAIS_CLUSTER_NAME;
 import static org.eclipse.jetty.webapp.MetaInfConfiguration.WEBINF_JAR_PATTERN;
 
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.EnumSet;
@@ -35,7 +34,6 @@ import no.nav.foreldrepenger.info.web.app.konfig.ApplicationConfig;
 import no.nav.security.token.support.core.configuration.IssuerProperties;
 import no.nav.security.token.support.core.configuration.MultiIssuerConfiguration;
 import no.nav.security.token.support.jaxrs.servlet.JaxrsJwtTokenValidationFilter;
-import no.nav.vedtak.isso.IssoApplication;
 import no.nav.vedtak.util.env.Environment;
 
 public class JettyServer {
@@ -43,8 +41,6 @@ public class JettyServer {
     private static final Environment ENV = Environment.current();
 
     private static final Logger LOG = LoggerFactory.getLogger(JettyServer.class);
-
-    private static final String DB_SCHEMAS = "jetty_web_server.json";
 
     static {
         System.setProperty(NAIS_CLUSTER_NAME, ENV.clusterName());
@@ -71,22 +67,16 @@ public class JettyServer {
     }
 
     public static void main(String[] args) throws Exception {
-        JettyServer jettyServer = new JettyServer(8080);
+        var jettyServer = new JettyServer(8080);
         jettyServer.migrerDatabaseScript();
         jettyServer.start();
     }
 
     private static List<DBConnectionProperties> getDBConnectionProperties() {
-        InputStream in = JettyServer.class.getResourceAsStream("/" + DB_SCHEMAS);
-        var props = DBConnectionProperties.fraStream(in);
-        LOG.info("DB connection properties {}", props);
-        try {
-            InputStream in1 = JettyServer.class.getResourceAsStream("/jetty_web_server1.json");
-            var props1 = DBConnectionProperties.fraStream1(in1);
-            LOG.info("DB connection properties 1{}", props1);
-            LOG.info("DB connection properties sammenlignet {}", props.equals(props1));
-            return props1;
-
+        try (var in = JettyServer.class.getResourceAsStream("/jetty_web_server.json");) {
+            var props = DBConnectionProperties.fraStream1(in);
+            LOG.info("DB connection properties {}", props);
+            return props;
         } catch (Exception e) {
             LOG.info("DB connection properties feilet", e);
             throw new RuntimeException(e);
@@ -94,23 +84,22 @@ public class JettyServer {
     }
 
     protected void start() throws Exception {
-        Server server = new Server();
-        ServerConnector connector = new ServerConnector(server);
+        var server = new Server();
+        var connector = new ServerConnector(server);
         connector.setPort(getServerPort());
         connector.setHost(SERVER_HOST);
         server.addConnector(connector);
-        WebAppContext ctx = createContext();
-        addTokenValidationFilter(ctx);
+        var ctx = createContext();
         server.setHandler(ctx);
         server.start();
         server.join();
     }
 
-    private void addTokenValidationFilter(WebAppContext ctx) throws MalformedURLException {
+    private void addTokenValidationFilter(WebAppContext ctx) {
         LOG.info("Registrererer JaxrsJwtTokenValidationFilter");
         ctx.addFilter(
                 new FilterHolder(new JaxrsJwtTokenValidationFilter(new MultiIssuerConfiguration(Map.of("selvbetjening",
-                        new IssuerProperties(new URL(ENV.getRequiredProperty("loginservice.idporten.discovery.url")),
+                        new IssuerProperties(ENV.getRequiredProperty("loginservice.idporten.discovery.url", URL.class),
                                 List.of(ENV.getRequiredProperty("loginservice.idporten.audience")), "selvbetjening-idtoken"))))),
                 "/*",
                 EnumSet.of(REQUEST));
@@ -134,7 +123,7 @@ public class JettyServer {
     }
 
     protected WebAppContext createContext() throws MalformedURLException {
-        WebAppContext ctx = new WebAppContext();
+        var ctx = new WebAppContext();
         ctx.setParentLoaderPriority(true);
         // må hoppe litt bukk for å hente web.xml fra classpath i stedet for fra
         // filsystem.
@@ -148,6 +137,7 @@ public class JettyServer {
         ctx.setConfigurations(CONFIGURATIONS);
         ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*resteasy-.*.jar$|^.*felles-.*.jar$");
         updateMetaData(ctx.getMetaData());
+        addTokenValidationFilter(ctx);
         return ctx;
     }
 
@@ -159,7 +149,7 @@ public class JettyServer {
     }
 
     protected List<Class<?>> getApplicationClasses() {
-        return List.of(ApplicationConfig.class, IssoApplication.class);
+        return List.of(ApplicationConfig.class);
     }
 
     protected Resource createResourceCollection() {
@@ -167,5 +157,4 @@ public class JettyServer {
                 Resource.newClassPathResource("META-INF/resources/webjars/"),
                 Resource.newClassPathResource("/web"));
     }
-
 }
