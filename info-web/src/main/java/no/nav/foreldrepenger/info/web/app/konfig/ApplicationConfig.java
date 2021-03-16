@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.info.web.app.konfig;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.ws.rs.ApplicationPath;
@@ -16,54 +14,48 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.servers.Server;
 import no.nav.foreldrepenger.info.web.app.exceptions.ConstraintViolationMapper;
+import no.nav.foreldrepenger.info.web.app.exceptions.GeneralRestExceptionMapper;
 import no.nav.foreldrepenger.info.web.app.exceptions.JsonMappingExceptionMapper;
 import no.nav.foreldrepenger.info.web.app.exceptions.JsonParseExceptionMapper;
+import no.nav.foreldrepenger.info.web.app.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.info.web.app.tjenester.DokumentforsendelseTjeneste;
 import no.nav.security.token.support.jaxrs.JwtTokenContainerRequestFilter;
 
 @ApplicationPath(ApplicationConfig.API_URI)
 public class ApplicationConfig extends Application {
 
-    public static final String API_URI = "/api";
+    static final String API_URI = "/api";
 
-    public ApplicationConfig() {
+    public ApplicationConfig() throws OpenApiConfigurationException {
 
-        OpenAPI oas = new OpenAPI();
-        Info info = new Info()
-                .title("Vedtaksløsningen - Info")
-                .version("1.0")
-                .description("REST grensesnitt for Vedtaksløsningen.");
-
-        oas.info(info)
-                .addServersItem(new Server()
-                        .url("/fpinfo" + API_URI));
-        SwaggerConfiguration oasConfig = new SwaggerConfiguration()
-                .openAPI(oas)
-                .prettyPrint(true)
-                .scannerClass("io.swagger.v3.jaxrs2.integration.JaxrsAnnotationScanner")
-                .resourcePackages(Set.of("no.nav"));
-        try {
-            new GenericOpenApiContextBuilder<>()
-                    .openApiConfiguration(oasConfig)
-                    .buildContext(true)
-                    .read();
-        } catch (OpenApiConfigurationException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        new GenericOpenApiContextBuilder<>()
+                .openApiConfiguration(new SwaggerConfiguration()
+                        .openAPI(new OpenAPI()
+                                .info(new Info()
+                                        .title("Vedtaksløsningen - Info")
+                                        .version("1.0")
+                                        .description("REST grensesnitt for Vedtaksløsningen."))
+                                .addServersItem(new Server()
+                                        .url("/fpinfo" + API_URI)))
+                        .prettyPrint(true)
+                        .scannerClass("io.swagger.v3.jaxrs2.integration.JaxrsAnnotationScanner")
+                        .resourcePackages(Set.of("no.nav")))
+                .buildContext(true)
+                .read();
 
     }
 
     @Override
     public Set<Class<?>> getClasses() {
-        Set<Class<?>> classes = new HashSet<>();
-        classes.add(JwtTokenContainerRequestFilter.class);
-        classes.add(DokumentforsendelseTjeneste.class);
-        classes.add(SwaggerSerializers.class);
-        classes.add(OpenApiResource.class);
-        classes.add(ConstraintViolationMapper.class);
-        classes.add(JsonMappingExceptionMapper.class);
-        classes.add(JsonParseExceptionMapper.class);
-        classes.addAll(FellesKlasserForRest.getClasses());
-        return Collections.unmodifiableSet(classes);
+        return Set.of(
+                JwtTokenContainerRequestFilter.class,
+                DokumentforsendelseTjeneste.class,
+                SwaggerSerializers.class,
+                OpenApiResource.class,
+                ConstraintViolationMapper.class,
+                JsonMappingExceptionMapper.class,
+                JsonParseExceptionMapper.class,
+                JacksonJsonConfig.class,
+                GeneralRestExceptionMapper.class);
     }
 }
