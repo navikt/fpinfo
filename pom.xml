@@ -260,6 +260,7 @@
                 <configuration>
                     <compilerArgs>
                         <arg>--enable-preview</arg>
+                        <arg>--illegal-access=permit</arg>
                     </compilerArgs>
                     <parameters>true</parameters>
                     <release>15</release>
