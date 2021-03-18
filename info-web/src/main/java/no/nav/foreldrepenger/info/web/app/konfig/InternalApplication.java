@@ -28,7 +28,7 @@ public class InternalApplication extends Application {
                                         .version("1.0")
                                         .description("REST grensesnitt for FPInfo."))
                                 .addServersItem(new Server()
-                                        .url("/fpinfo" + API_URL)))
+                                        .url(API_URL)))
                         .prettyPrint(true)
                         .scannerClass("io.swagger.v3.jaxrs2.integration.JaxrsAnnotationScanner")
                         .resourcePackages(Set.of("no.nav")))
