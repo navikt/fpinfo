@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import no.nav.foreldrepenger.info.dbstoette.DBConnectionProperties;
 import no.nav.foreldrepenger.info.dbstoette.DatabaseStøtte;
 import no.nav.foreldrepenger.info.web.app.konfig.ApplicationConfig;
+import no.nav.foreldrepenger.info.web.app.konfig.InternalApplication;
 import no.nav.security.token.support.core.configuration.IssuerProperties;
 import no.nav.security.token.support.core.configuration.MultiIssuerConfiguration;
 import no.nav.security.token.support.jaxrs.servlet.JaxrsJwtTokenValidationFilter;
@@ -149,7 +150,7 @@ public class JettyServer {
     }
 
     protected List<Class<?>> getApplicationClasses() {
-        return List.of(ApplicationConfig.class);
+        return List.of(ApplicationConfig.class, InternalApplication.class);
     }
 
     protected Resource createResourceCollection() {
