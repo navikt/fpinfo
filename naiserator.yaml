@@ -11,7 +11,7 @@ spec:
   accessPolicy:
     inbound:
       rules:
-        - application: fosoknad-mottak
+        - application: fpsoknad-mottak
   envFrom:
     - configmap: loginservice-idporten
   env:
