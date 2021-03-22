@@ -6,6 +6,12 @@ metadata:
   labels:
     team: teamforeldrepenger
 spec:
+  tokenx:
+    enabled: true
+  accessPolicy:
+    inbound:
+      rules:
+        - application: fosoknad-mottak
   envFrom:
     - configmap: loginservice-idporten
   env:

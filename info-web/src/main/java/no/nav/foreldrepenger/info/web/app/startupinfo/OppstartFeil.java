@@ -7,8 +7,4 @@ class OppstartFeil {
     private OppstartFeil() {
 
     }
-
-    static TekniskException uventetExceptionVedOppstart(Exception e) {
-        return new TekniskException("FP-753407", "Uventet exception ved oppstart", e);
-    }
 }

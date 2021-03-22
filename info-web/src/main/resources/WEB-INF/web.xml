@@ -7,7 +7,6 @@
         <param-name>resteasy.injector.factory</param-name>
         <param-value>org.jboss.resteasy.cdi.CdiInjectorFactory</param-value>
     </context-param>
-
 </web-app>
 
 
