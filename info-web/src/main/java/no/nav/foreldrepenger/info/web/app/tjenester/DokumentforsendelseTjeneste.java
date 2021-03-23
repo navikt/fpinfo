@@ -16,6 +16,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.slf4j.LoggerFactory;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,7 +35,10 @@ import no.nav.foreldrepenger.info.web.app.tjenester.dto.SaksnummerDto;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.SøknadXmlDto;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.SøknadsGrunnlagDto;
 import no.nav.security.token.support.core.api.ProtectedWithClaims;
+import no.nav.security.token.support.core.jwt.JwtToken;
+import no.nav.security.token.support.jaxrs.JaxrsTokenValidationContextHolder;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
+import no.nav.vedtak.util.env.Environment;
 
 @Path(DOKUMENTFORSENDELSE_PATH)
 @Produces(MediaType.APPLICATION_JSON)
@@ -41,6 +46,7 @@ import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 @ProtectedWithClaims(issuer = "selvbetjening", claimMap = { "acr=Level4" })
 public class DokumentforsendelseTjeneste {
 
+    private static final Logger LOG = LoggerFactory.getLogger(DokumentforsendelseTjeneste.class);
     public static final String DOKUMENTFORSENDELSE_PATH = "/dokumentforsendelse";
     private static final String API_PATH = "/fpinfo/api" + DOKUMENTFORSENDELSE_PATH;
 
@@ -87,6 +93,13 @@ public class DokumentforsendelseTjeneste {
     })
     public Response getForsendelseStatus(
             @NotNull @QueryParam("forsendelseId") @Parameter(name = "forsendelseId") @Valid ForsendelseIdDto forsendelseIdDto) {
+
+        if (Environment.current().isDev()) {
+            var token = JaxrsTokenValidationContextHolder.getHolder().getTokenValidationContext().getFirstValidToken()
+                    .map(JwtToken::getTokenAsString);
+            LOG.info("TOKEN " + token);
+        }
+
         var dto = forsendelseStatusTjeneste.hentForsendelseStatus(forsendelseIdDto);
         return dto.map(forsendelseStatusDto -> Response.ok(forsendelseStatusDto).build())
                 .orElseGet(() -> Response.status(Response.Status.NOT_FOUND).build());
