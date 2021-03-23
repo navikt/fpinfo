@@ -110,7 +110,9 @@ public class JettyServer {
     }
 
     private static IssuerProperties issuerProperties(String wellKnownUrl, String clientId) {
-        return new IssuerProperties(ENV.getRequiredProperty(wellKnownUrl, URL.class), List.of(ENV.getRequiredProperty(clientId)));
+        var props = new IssuerProperties(ENV.getRequiredProperty(wellKnownUrl, URL.class), List.of(ENV.getRequiredProperty(clientId)));
+        LOG.info("Config {}, {}", props.getDiscoveryUrl(), props.getAcceptedAudience());
+        return props;
     }
 
     protected int getServerPort() {
