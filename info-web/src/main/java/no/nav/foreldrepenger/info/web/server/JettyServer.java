@@ -97,14 +97,20 @@ public class JettyServer {
     }
 
     private void addTokenValidationFilter(WebAppContext ctx) {
-        LOG.info("Registrererer JaxrsJwtTokenValidationFilter");
-        ctx.addFilter(
-                new FilterHolder(new JaxrsJwtTokenValidationFilter(new MultiIssuerConfiguration(Map.of("selvbetjening",
-                        new IssuerProperties(ENV.getRequiredProperty("loginservice.idporten.discovery.url", URL.class),
-                                List.of(ENV.getRequiredProperty("loginservice.idporten.audience")), "selvbetjening-idtoken"))))),
+        ctx.addFilter(new FilterHolder(new JaxrsJwtTokenValidationFilter(config())),
                 "/*",
                 EnumSet.of(REQUEST));
-        LOG.info("Registrerert JaxrsJwtTokenValidationFilter OK");
+    }
+
+    private static MultiIssuerConfiguration config() {
+        return new MultiIssuerConfiguration(
+                Map.of(
+                        "tokenx", issuerProperties("token.x.well.known.url", "token.x.client.id"),
+                        "selvbetjening", issuerProperties("loginservice.idporten.discovery.url", "loginservice.idporten.audience")));
+    }
+
+    private static IssuerProperties issuerProperties(String wellKnownUrl, String clientId) {
+        return new IssuerProperties(ENV.getRequiredProperty(wellKnownUrl, URL.class), List.of(ENV.getRequiredProperty(clientId)));
     }
 
     protected int getServerPort() {
