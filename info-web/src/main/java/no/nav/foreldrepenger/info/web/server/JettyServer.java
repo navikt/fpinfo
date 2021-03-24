@@ -96,9 +96,9 @@ public class JettyServer {
     }
 
     private void addTokenValidationFilter(WebAppContext ctx) {
-        LOG.trace("Installerer JaxrsJwtTokenValidationFilter");
+        LOG.trace("Installerer Logging filter");
         ctx.addFilter(new FilterHolder(new LoggingFilter(config())),
-                "/",
+                "/api/*",
                 EnumSet.of(REQUEST));
     }
 
