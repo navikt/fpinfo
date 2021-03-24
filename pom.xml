@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -43,8 +42,8 @@
         <mockito.version>3.8.0</mockito.version>
         <ojdbc.version>19.3.0.0</ojdbc.version>
 
-        <!-- Transitive avh. versjoner for å sikre unikhet (enforcer dependencyConvergence).
-            Skal ikke benyttes direkte av vår egen kode. -->
+        <!-- Transitive avh. versjoner for å sikre unikhet (enforcer dependencyConvergence). Skal ikke benyttes direkte av 
+            vår egen kode. -->
         <owaspencoder.version>1.2.3</owaspencoder.version>
         <javaslang.version>2.0.6</javaslang.version>
 
@@ -52,6 +51,13 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.felles</groupId>
+                <artifactId>felles</artifactId>
+                <version>${felles.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.info</groupId>
                 <artifactId>domene</artifactId>
@@ -106,7 +112,7 @@
                 <!-- for Bean validation -->
                 <groupId>org.hibernate.validator</groupId>
                 <artifactId>hibernate-validator</artifactId>
-                <version>6.1.7.Final</version>	
+                <version>6.1.7.Final</version>
             </dependency>
 
             <!-- Eksterne -->
@@ -161,11 +167,10 @@
                 <version>${geronimo.osgi.version}</version>
             </dependency>
 
-            <!-- Transitive avh. versjoner for å sikre unikhet (enforcer
-                dependencyConvergence). Skal ikke benyttes direkte av vår egen kode. -->
+            <!-- Transitive avh. versjoner for å sikre unikhet (enforcer dependencyConvergence). Skal ikke benyttes direkte 
+                av vår egen kode. -->
             <dependency>
-                <!-- Transitive avhengighet resolution for å sikre bestemt
-                    versjon -->
+                <!-- Transitive avhengighet resolution for å sikre bestemt versjon -->
                 <groupId>org.owasp.encoder</groupId>
                 <artifactId>encoder</artifactId>
                 <version>${owaspencoder.version}</version>
@@ -229,7 +234,7 @@
     </dependencyManagement>
 
     <dependencies>
-       
+
         <dependency>
             <groupId>com.oracle.ojdbc</groupId>
             <artifactId>ojdbc8</artifactId>
@@ -255,16 +260,16 @@
                     <version>3.1.0</version>
                 </plugin>
                 <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <compilerArgs>
-                        <arg>--enable-preview</arg>
-                    </compilerArgs>
-                    <parameters>true</parameters>
-                    <release>16</release>
-                </configuration>
-            </plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <compilerArgs>
+                            <arg>--enable-preview</arg>
+                        </compilerArgs>
+                        <parameters>true</parameters>
+                        <release>16</release>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
@@ -295,14 +300,14 @@
                     <artifactId>maven-release-plugin</artifactId>
                     <version>2.5.3</version>
                 </plugin>
-                 <plugin>
-                   <groupId>org.apache.maven.plugins</groupId>
-                   <artifactId>maven-surefire-plugin</artifactId>
-                   <version>2.22.2</version>
-                   <configuration>
-                     <argLine>--enable-preview</argLine>
-                 </configuration>
-            </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.22.2</version>
+                    <configuration>
+                        <argLine>--enable-preview</argLine>
+                    </configuration>
+                </plugin>
 
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -429,14 +434,13 @@
                                     <version>[3.5.3,)</version>
                                 </requireMavenVersion>
                                 <bannedDependencies>
-                                    <excludes>
-                                    </excludes>
+                                    <excludes />
+
                                 </bannedDependencies>
                                 <!-- <dependencyConvergence /> -->
-                                <!-- Ikke kommenter inn denne. Det brekker
-                                    muligheten til å bygge bare deler av prosjektet https://issues.apache.org/jira/browse/MENFORCER-189
-                                    -> "ReactorModuleConvergence is not compatible with 'advanced' reactor options:
-                                    -pl, -rf" <reactorModuleConvergence /> -->
+                                <!-- Ikke kommenter inn denne. Det brekker muligheten til å bygge bare deler av prosjektet 
+                                    https://issues.apache.org/jira/browse/MENFORCER-189 -> "ReactorModuleConvergence is not compatible with 'advanced' reactor 
+                                    options: -pl, -rf" <reactorModuleConvergence /> -->
                             </rules>
                         </configuration>
                     </execution>
@@ -444,7 +448,7 @@
             </plugin>
         </plugins>
     </build>
-   <scm>
+    <scm>
         <connection>scm:git:ssh://git@github.com:navikt/fpinfo.git</connection>
         <developerConnection>scm:git:ssh://git@github.com:navikt/fpinfo.git</developerConnection>
         <url>https://github.com/navikt/fpinfo</url>
