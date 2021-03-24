@@ -22,7 +22,6 @@ public class TokenSupportTokenProvider implements TokenProvider {
 
     @Override
     public String getUid() {
-        LOG.trace("Henter uid fra context");
         return firstToken()
                 .map(JwtToken::getSubject)
                 .orElseThrow();
@@ -30,7 +29,6 @@ public class TokenSupportTokenProvider implements TokenProvider {
 
     @Override
     public String userToken() {
-        LOG.trace("Henter token fra context");
         return firstToken()
                 .map(JwtToken::getTokenAsString)
                 .orElseThrow();

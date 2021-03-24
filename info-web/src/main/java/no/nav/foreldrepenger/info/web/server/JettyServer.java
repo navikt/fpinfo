@@ -141,8 +141,9 @@ public class JettyServer {
     private static MultiIssuerConfiguration config() {
         return new MultiIssuerConfiguration(
                 Map.of(
-                        "tokenx", issuerProperties("token.x.well.known.url", "token.x.client.id"),
-                        "selvbetjening", issuerProperties("loginservice.idporten.discovery.url", "loginservice.idporten.audience")));
+                        "tokenx", issuerProperties("token.x.well.known.url", "token.x.client.id")));
+        // "selvbetjening", issuerProperties("loginservice.idporten.discovery.url",
+        // "loginservice.idporten.audience")));
     }
 
     private static IssuerProperties issuerProperties(String wellKnownUrl, String clientId) {
