@@ -106,7 +106,7 @@ public class JettyServer {
     private static MultiIssuerConfiguration config() {
         var config = new MultiIssuerConfiguration(
                 Map.of(
-                        "tokenx", issuerProperties("token.x.well.known.url", "token.x.client.id"),
+                        // "tokenx", issuerProperties("token.x.well.known.url", "token.x.client.id"),
                         "selvbetjening", issuerProperties("loginservice.idporten.discovery.url", "loginservice.idporten.audience")));
         LOG.trace("Konfig {}", config);
         return config;
