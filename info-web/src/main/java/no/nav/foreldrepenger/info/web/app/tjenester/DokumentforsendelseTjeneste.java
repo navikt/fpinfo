@@ -44,7 +44,7 @@ import no.nav.vedtak.util.env.Environment;
 @Path(DOKUMENTFORSENDELSE_PATH)
 @Produces(MediaType.APPLICATION_JSON)
 @RequestScoped
-@ProtectedWithClaims(issuer = "selvbetjening", claimMap = { "acr=Level4" })
+@ProtectedWithClaims(issuer = "tokenx", claimMap = { "acr=Level4" })
 public class DokumentforsendelseTjeneste {
 
     private static final Logger LOG = LoggerFactory.getLogger(DokumentforsendelseTjeneste.class);
