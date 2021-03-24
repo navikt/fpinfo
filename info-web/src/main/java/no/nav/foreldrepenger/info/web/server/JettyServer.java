@@ -108,13 +108,13 @@ public class JettyServer {
                 Map.of(
                         "tokenx", issuerProperties("token.x.well.known.url", "token.x.client.id"),
                         "selvbetjening", issuerProperties("loginservice.idporten.discovery.url", "loginservice.idporten.audience")));
-        LOG.info("Config {}", config);
+        LOG.trace("Konfig {}", config);
         return config;
     }
 
     private static IssuerProperties issuerProperties(String wellKnownUrl, String clientId) {
         var props = new IssuerProperties(ENV.getRequiredProperty(wellKnownUrl, URL.class), List.of(ENV.getRequiredProperty(clientId)));
-        LOG.info("Properties {}, {}", props.getDiscoveryUrl(), props.getAcceptedAudience());
+        LOG.trace("Properties {}, {}", props.getDiscoveryUrl(), props.getAcceptedAudience());
         return props;
     }
 
