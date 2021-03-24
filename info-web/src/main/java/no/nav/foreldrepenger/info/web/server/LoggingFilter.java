@@ -27,6 +27,7 @@ public class LoggingFilter implements Filter {
     private static final Logger LOG = LoggerFactory.getLogger(LoggingFilter.class);
 
     public LoggingFilter(MultiIssuerConfiguration oidcConfig) {
+        LOG.info("CONSTRUCT");
         this.jwtTokenValidationHandler = new JwtTokenValidationHandler(oidcConfig);
         this.contextHolder = JaxrsTokenValidationContextHolder.getHolder();
     }
@@ -43,6 +44,7 @@ public class LoggingFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) {
+        LOG.info("INIT");
 
     }
 
