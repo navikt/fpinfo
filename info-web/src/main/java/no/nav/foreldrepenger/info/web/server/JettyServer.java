@@ -96,28 +96,6 @@ public class JettyServer {
         server.join();
     }
 
-    private void addTokenValidationFilter(WebAppContext ctx) {
-        LOG.trace("Installerer JaxrsJwtTokenValidationFilter");
-        ctx.addFilter(new FilterHolder(new JaxrsJwtTokenValidationFilter(config())),
-                "/api/*",
-                EnumSet.of(REQUEST));
-    }
-
-    private static MultiIssuerConfiguration config() {
-        var config = new MultiIssuerConfiguration(
-                Map.of(
-                        "tokenx", issuerProperties("token.x.well.known.url", "token.x.client.id"),
-                        "selvbetjening", issuerProperties("loginservice.idporten.discovery.url", "loginservice.idporten.audience")));
-        LOG.trace("Konfig {}", config);
-        return config;
-    }
-
-    private static IssuerProperties issuerProperties(String wellKnownUrl, String clientId) {
-        var props = new IssuerProperties(ENV.getRequiredProperty(wellKnownUrl, URL.class), List.of(ENV.getRequiredProperty(clientId)));
-        LOG.trace("Properties {}, {}", props.getDiscoveryUrl(), props.getAcceptedAudience());
-        return props;
-    }
-
     protected int getServerPort() {
         return hostPort;
     }
@@ -151,6 +129,26 @@ public class JettyServer {
         updateMetaData(ctx.getMetaData());
         addTokenValidationFilter(ctx);
         return ctx;
+    }
+
+    private void addTokenValidationFilter(WebAppContext ctx) {
+        LOG.trace("Installerer JaxrsJwtTokenValidationFilter");
+        ctx.addFilter(new FilterHolder(new JaxrsJwtTokenValidationFilter(config())),
+                "/api/*",
+                EnumSet.of(REQUEST));
+    }
+
+    private static MultiIssuerConfiguration config() {
+        return new MultiIssuerConfiguration(
+                Map.of(
+                        "tokenx", issuerProperties("token.x.well.known.url", "token.x.client.id"),
+                        "selvbetjening", issuerProperties("loginservice.idporten.discovery.url", "loginservice.idporten.audience")));
+    }
+
+    private static IssuerProperties issuerProperties(String wellKnownUrl, String clientId) {
+        var props = new IssuerProperties(ENV.getRequiredProperty(wellKnownUrl, URL.class), List.of(ENV.getRequiredProperty(clientId)));
+        LOG.trace("Properties {}, {}", props.getDiscoveryUrl(), props.getAcceptedAudience());
+        return props;
     }
 
     private void updateMetaData(MetaData metaData) {
