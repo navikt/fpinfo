@@ -97,6 +97,7 @@ public class JettyServer {
     }
 
     private void addTokenValidationFilter(WebAppContext ctx) {
+        LOG.trace("Installerer JaxrsJwtTokenValidationFilter");
         ctx.addFilter(new FilterHolder(new JaxrsJwtTokenValidationFilter(config())),
                 "/*",
                 EnumSet.of(REQUEST));
@@ -105,7 +106,7 @@ public class JettyServer {
     private static MultiIssuerConfiguration config() {
         var config = new MultiIssuerConfiguration(
                 Map.of(
-                        // "tokenx", issuerProperties("token.x.well.known.url", "token.x.client.id"),
+                        "tokenx", issuerProperties("token.x.well.known.url", "token.x.client.id"),
                         "selvbetjening", issuerProperties("loginservice.idporten.discovery.url", "loginservice.idporten.audience")));
         LOG.info("Config {}", config);
         return config;

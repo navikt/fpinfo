@@ -52,13 +52,6 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>no.nav.foreldrepenger.felles</groupId>
-                <artifactId>felles</artifactId>
-                <version>${felles.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-            <dependency>
                 <groupId>no.nav.foreldrepenger.info</groupId>
                 <artifactId>domene</artifactId>
                 <version>${project.version}</version>
