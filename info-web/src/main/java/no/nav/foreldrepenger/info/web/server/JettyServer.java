@@ -146,9 +146,7 @@ public class JettyServer {
     }
 
     private static IssuerProperties issuerProperties(String wellKnownUrl, String clientId) {
-        var props = new IssuerProperties(ENV.getRequiredProperty(wellKnownUrl, URL.class), List.of(ENV.getRequiredProperty(clientId)));
-        LOG.trace("Properties {}, {}", props.getDiscoveryUrl(), props.getAcceptedAudience());
-        return props;
+        return new IssuerProperties(ENV.getRequiredProperty(wellKnownUrl, URL.class), List.of(ENV.getRequiredProperty(clientId)));
     }
 
     private void updateMetaData(MetaData metaData) {
