@@ -1,4 +1,5 @@
 <included>
+   <logger name="no.nav" level="trace" />
    <logger name="no.nav.foreldrepenger.info" level="trace" />
    <logger name="no.nav.sikkerhet" level="trace" />
 </included>
