@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.info.web.abac;
 
-import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.ENVIRONMENT_FELLES_SUBJECT_TYPE;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_DOMENE;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_RESOURCE_TYPE;
+import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.SUBJECT_TYPE;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.XACML10_ACTION_ACTION_ID;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.XACML10_SUBJECT_ID;
 import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.AKTØR_ID;
@@ -62,7 +62,7 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
         if (attributter.getIdToken().getTokenType().equals(TokenType.TOKENX)) {
             LOG.trace("Legger til ekstra tokenX attributter");
             pdpRequest.put(XACML10_SUBJECT_ID, subject(attributter.getIdToken().getToken()));
-            pdpRequest.put(ENVIRONMENT_FELLES_SUBJECT_TYPE, "EksternBruker");
+            pdpRequest.put(SUBJECT_TYPE, "EksternBruker");
         }
 
         if (attributter.getVerdier(AppAbacAttributtType.ANNEN_PART).size() == 1) {
