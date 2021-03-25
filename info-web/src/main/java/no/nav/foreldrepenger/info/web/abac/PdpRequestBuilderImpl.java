@@ -47,6 +47,7 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
 
     @Override
     public PdpRequest lagPdpRequest(AbacAttributtSamling attributter) {
+        LOG.trace("Lager PDP request");
         PdpRequest pdpRequest = new PdpRequest();
         pdpRequest.put(RESOURCE_FELLES_DOMENE, ABAC_DOMAIN);
         pdpRequest.put(PdpKlient.ENVIRONMENT_AUTH_TOKEN, attributter.getIdToken());

@@ -28,7 +28,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <felles.version>3.2.4</felles.version>
+        <felles.version>3.2.5</felles.version>
         <prometheus.version>0.10.0</prometheus.version>
         <swagger.version>2.1.7</swagger.version>
 
