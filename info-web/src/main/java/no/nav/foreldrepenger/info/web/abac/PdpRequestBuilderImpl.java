@@ -1,13 +1,16 @@
 package no.nav.foreldrepenger.info.web.abac;
 
+import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.ENVIRONMENT_FELLES_SUBJECT_TYPE;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_DOMENE;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_RESOURCE_TYPE;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.XACML10_ACTION_ACTION_ID;
+import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.XACML10_SUBJECT_ID;
 import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.AKTØR_ID;
 import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.BEHANDLING_ID;
 import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.SAKSNUMMER;
 
+import java.text.ParseException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
@@ -21,8 +24,11 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.nimbusds.jwt.SignedJWT;
+
 import no.nav.foreldrepenger.info.pip.PipRepository;
 import no.nav.vedtak.sikkerhet.abac.AbacAttributtSamling;
+import no.nav.vedtak.sikkerhet.abac.AbacIdToken.TokenType;
 import no.nav.vedtak.sikkerhet.abac.PdpKlient;
 import no.nav.vedtak.sikkerhet.abac.PdpRequest;
 import no.nav.vedtak.sikkerhet.abac.PdpRequestBuilder;
@@ -53,6 +59,11 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
         pdpRequest.put(PdpKlient.ENVIRONMENT_AUTH_TOKEN, attributter.getIdToken());
         pdpRequest.put(XACML10_ACTION_ACTION_ID, attributter.getActionType().getEksternKode());
         pdpRequest.put(RESOURCE_FELLES_RESOURCE_TYPE, attributter.getResource());
+        if (attributter.getIdToken().getTokenType().equals(TokenType.TOKENX)) {
+            LOG.trace("Legger til ekstra tokenX attributter");
+            pdpRequest.put(XACML10_SUBJECT_ID, subject(attributter.getIdToken().getToken()));
+            pdpRequest.put(ENVIRONMENT_FELLES_SUBJECT_TYPE, "EksternBruker");
+        }
 
         if (attributter.getVerdier(AppAbacAttributtType.ANNEN_PART).size() == 1) {
             LOG.info("abac Attributter inneholder annen part");
@@ -71,7 +82,16 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
         } else {
             pdpRequest.put(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, utledAktørIdeer(attributter));
         }
+        LOG.trace("Laget PDP request OK");
         return pdpRequest;
+    }
+
+    private String subject(String token) {
+        try {
+            return String.class.cast(SignedJWT.parse(token).getJWTClaimsSet().getClaim("pid"));
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("Fant ikke pid i token", e);
+        }
     }
 
     private Set<String> utledAktørIdeer(AbacAttributtSamling attributter) {

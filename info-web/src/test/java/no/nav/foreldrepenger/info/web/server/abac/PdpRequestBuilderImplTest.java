@@ -24,6 +24,7 @@ import no.nav.foreldrepenger.info.web.abac.BeskyttetRessursAttributt;
 import no.nav.foreldrepenger.info.web.abac.PdpRequestBuilderImpl;
 import no.nav.vedtak.sikkerhet.abac.AbacAttributtSamling;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
+import no.nav.vedtak.sikkerhet.abac.AbacIdToken.TokenType;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt;
 import no.nav.vedtak.sikkerhet.abac.PdpRequest;
 import no.nav.vedtak.sikkerhet.abac.PdpRequestBuilder;
@@ -99,7 +100,7 @@ class PdpRequestBuilderImplTest {
     }
 
     private static AbacAttributtSamling byggAbacAttributtSamling() {
-        var s = AbacAttributtSamling.medJwtToken(DUMMY_ID_TOKEN);
+        var s = AbacAttributtSamling.medJwtToken(DUMMY_ID_TOKEN, TokenType.TOKENX);
         s.setActionType(BeskyttetRessursActionAttributt.READ);
         s.setResource(BeskyttetRessursAttributt.FAGSAK);
         return s;
