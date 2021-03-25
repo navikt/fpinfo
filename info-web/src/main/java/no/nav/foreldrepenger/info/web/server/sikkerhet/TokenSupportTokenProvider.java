@@ -22,21 +22,21 @@ public class TokenSupportTokenProvider implements TokenProvider {
 
     @Override
     public String getUid() {
-        return firstToken()
+        return firstToken("UID")
                 .map(JwtToken::getSubject)
                 .orElseThrow();
     }
 
     @Override
     public String userToken() {
-        return firstToken()
+        return firstToken("USER")
                 .map(JwtToken::getTokenAsString)
                 .orElseThrow();
     }
 
-    private Optional<JwtToken> firstToken() {
+    private Optional<JwtToken> firstToken(String type) {
         var token = JaxrsTokenValidationContextHolder.getHolder().getTokenValidationContext().getFirstValidToken();
-        token.ifPresent(t -> LOG.trace("Issuer {}", t.getIssuer()));
+        token.ifPresent(t -> LOG.trace("{} Issuer {}", type, t.getIssuer()));
         return token;
     }
 }
