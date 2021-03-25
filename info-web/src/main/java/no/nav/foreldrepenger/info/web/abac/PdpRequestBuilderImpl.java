@@ -88,9 +88,10 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
 
     private String subject(String token) {
         try {
-            return String.class.cast(SignedJWT.parse(token).getJWTClaimsSet().getClaim("pid"));
+            var claims = SignedJWT.parse(token).getJWTClaimsSet();
+            return String.class.cast(claims.getClaim("sub"));
         } catch (ParseException e) {
-            throw new IllegalArgumentException("Fant ikke pid i token", e);
+            throw new IllegalArgumentException("Fant ikke sub i token", e);
         }
     }
 
