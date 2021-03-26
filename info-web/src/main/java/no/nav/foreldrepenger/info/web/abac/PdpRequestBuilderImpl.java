@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.info.web.abac;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_DOMENE;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_RESOURCE_TYPE;
+import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.SUBJECT_LEVEL;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.SUBJECT_TYPE;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.XACML10_ACTION_ACTION_ID;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.XACML10_SUBJECT_ID;
@@ -61,7 +62,8 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
         pdpRequest.put(RESOURCE_FELLES_RESOURCE_TYPE, attributter.getResource());
         if (attributter.getIdToken().getTokenType().equals(TokenType.TOKENX)) {
             LOG.trace("Legger til ekstra tokenX attributter");
-            pdpRequest.put(XACML10_SUBJECT_ID, subject(attributter.getIdToken().getToken()));
+            pdpRequest.put(XACML10_SUBJECT_ID, claim(attributter.getIdToken().getToken(), "sub"));
+            pdpRequest.put(SUBJECT_LEVEL, claim(attributter.getIdToken().getToken(), "acr"));
             pdpRequest.put(SUBJECT_TYPE, "EksternBruker");
         }
 
@@ -86,12 +88,12 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
         return pdpRequest;
     }
 
-    private String subject(String token) {
+    private String claim(String token, String claim) {
         try {
             var claims = SignedJWT.parse(token).getJWTClaimsSet();
-            return String.class.cast(claims.getClaim("sub"));
+            return String.class.cast(claims.getClaim(claim));
         } catch (ParseException e) {
-            throw new IllegalArgumentException("Fant ikke sub i token", e);
+            throw new IllegalArgumentException("Fant ikke claim" + claim + " i token", e);
         }
     }
 

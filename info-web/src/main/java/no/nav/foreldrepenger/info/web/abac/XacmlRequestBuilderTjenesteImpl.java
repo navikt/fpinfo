@@ -4,6 +4,7 @@ import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FEL
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_PERSON_FNR;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_RESOURCE_TYPE;
+import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.SUBJECT_LEVEL;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.SUBJECT_TYPE;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.XACML10_ACTION_ACTION_ID;
 import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.XACML10_SUBJECT_ID;
@@ -61,6 +62,11 @@ public class XacmlRequestBuilderTjenesteImpl implements XacmlRequestBuilderTjene
 
         if (pdpRequest.get(XACML10_SUBJECT_ID) != null) {
             attrs.addAttribute(XACML10_SUBJECT_ID, pdpRequest.getString(XACML10_SUBJECT_ID));
+            found = true;
+        }
+
+        if (pdpRequest.get(SUBJECT_LEVEL) != null) {
+            attrs.addAttribute(SUBJECT_LEVEL, pdpRequest.getString(SUBJECT_LEVEL));
             found = true;
         }
         if (pdpRequest.get(SUBJECT_TYPE) != null) {
