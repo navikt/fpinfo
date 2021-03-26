@@ -65,8 +65,10 @@ public class XacmlRequestBuilderTjenesteImpl implements XacmlRequestBuilderTjene
             found = true;
         }
 
-        if (pdpRequest.get(SUBJECT_LEVEL) != null) {
-            attrs.addAttribute(SUBJECT_LEVEL, pdpRequest.getString(SUBJECT_LEVEL));
+        var level = pdpRequest.getString(SUBJECT_LEVEL);
+        if (level != null) {
+            String l = level.substring(level.length() - 1);
+            attrs.addAttribute(SUBJECT_LEVEL, l);
             found = true;
         }
         if (pdpRequest.get(SUBJECT_TYPE) != null) {
