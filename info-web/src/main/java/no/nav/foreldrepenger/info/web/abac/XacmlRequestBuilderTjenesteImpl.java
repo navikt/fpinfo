@@ -50,7 +50,7 @@ public class XacmlRequestBuilderTjenesteImpl implements XacmlRequestBuilderTjene
             }
         }
 
-        // populerSubjects(pdpRequest, xacmlBuilder);
+        populerSubjects(pdpRequest, xacmlBuilder);
 
         return xacmlBuilder;
     }
