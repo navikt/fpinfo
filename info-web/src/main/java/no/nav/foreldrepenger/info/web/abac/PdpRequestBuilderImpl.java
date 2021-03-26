@@ -82,7 +82,7 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
         } else {
             pdpRequest.put(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, utledAktørIdeer(attributter));
         }
-        LOG.trace("Laget PDP request OK");
+        LOG.trace("Laget PDP request OK {}", pdpRequest);
         return pdpRequest;
     }
 
