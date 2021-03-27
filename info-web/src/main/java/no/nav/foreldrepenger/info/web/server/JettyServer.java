@@ -34,7 +34,6 @@ import no.nav.foreldrepenger.info.web.app.konfig.ApplicationConfig;
 import no.nav.foreldrepenger.info.web.app.konfig.InternalApplication;
 import no.nav.security.token.support.core.configuration.IssuerProperties;
 import no.nav.security.token.support.core.configuration.MultiIssuerConfiguration;
-import no.nav.security.token.support.jaxrs.servlet.JaxrsJwtTokenValidationFilter;
 import no.nav.vedtak.util.env.Environment;
 
 public class JettyServer {
@@ -133,7 +132,7 @@ public class JettyServer {
 
     private void addTokenValidationFilter(WebAppContext ctx) {
         LOG.trace("Installerer JaxrsJwtTokenValidationFilter");
-        ctx.addFilter(new FilterHolder(new JaxrsJwtTokenValidationFilter(config())),
+        ctx.addFilter(new FilterHolder(new LoggingTokenValidationFilter(config())),
                 "/api/*",
                 EnumSet.of(REQUEST));
     }
