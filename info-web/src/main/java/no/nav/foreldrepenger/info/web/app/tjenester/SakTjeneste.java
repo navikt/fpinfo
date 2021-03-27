@@ -7,7 +7,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -21,19 +21,16 @@ import no.nav.foreldrepenger.info.repository.Repository;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.AktørIdDto;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.SakDto;
 
-@ApplicationScoped
+@Dependent
 public class SakTjeneste {
 
     private static final Logger LOG = LoggerFactory.getLogger(SakTjeneste.class);
 
-    private Repository repository;
+    private final Repository repository;
 
     @Inject
     public SakTjeneste(Repository repository) {
         this.repository = repository;
-    }
-
-    public SakTjeneste() {
     }
 
     public List<SakDto> hentSak(AktørIdDto aktørIdDto, String linkPathBehandling, String linkPathUttaksplan) {

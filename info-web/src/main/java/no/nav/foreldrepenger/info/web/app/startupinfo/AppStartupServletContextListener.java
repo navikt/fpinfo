@@ -40,6 +40,5 @@ public class AppStartupServletContextListener implements ServletContextListener 
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        // ikke noe
     }
 }

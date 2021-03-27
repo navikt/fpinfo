@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.info.web.app.tjenester;
 
 import java.util.Optional;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.info.domene.Saksnummer;
@@ -12,12 +12,12 @@ import no.nav.foreldrepenger.info.web.app.tjenester.dto.AktørIdDto;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.SaksnummerDto;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.SøknadsGrunnlagDto;
 
-@ApplicationScoped
+@Dependent
 public class SøknadsGrunnlagTjeneste {
 
-    private BehandlingTjeneste behandlingTjeneste;
-    private UttakTjeneste uttakTjeneste;
-    private Repository repository;
+    private final BehandlingTjeneste behandlingTjeneste;
+    private final UttakTjeneste uttakTjeneste;
+    private final Repository repository;
 
     @Inject
     public SøknadsGrunnlagTjeneste(BehandlingTjeneste behandlingTjeneste,
@@ -26,9 +26,6 @@ public class SøknadsGrunnlagTjeneste {
         this.behandlingTjeneste = behandlingTjeneste;
         this.uttakTjeneste = uttakTjeneste;
         this.repository = repository;
-    }
-
-    public SøknadsGrunnlagTjeneste() {
     }
 
     public Optional<SøknadsGrunnlagDto> hentSøknadsgrunnlag(SaksnummerDto saksnummerDto, boolean erAnnenPart) {

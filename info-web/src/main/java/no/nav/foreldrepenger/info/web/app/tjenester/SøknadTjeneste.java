@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -14,18 +14,15 @@ import no.nav.foreldrepenger.info.domene.MottattDokument;
 import no.nav.foreldrepenger.info.repository.Repository;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.SøknadXmlDto;
 
-@ApplicationScoped
+@Dependent
 public class SøknadTjeneste {
 
     private static final Logger LOG = LoggerFactory.getLogger(SøknadTjeneste.class);
-    private Repository repository;
+    private final Repository repository;
 
     @Inject
     public SøknadTjeneste(Repository repository) {
         this.repository = repository;
-    }
-
-    SøknadTjeneste() {
     }
 
     public Optional<SøknadXmlDto> hentSøknadXml(Long behandlingId) {
