@@ -38,6 +38,9 @@ import no.nav.vedtak.util.env.Environment;
 
 public class JettyServer {
 
+    public static final String ACR_LEVEL4 = "acr=Level4";
+    public static final String TOKENX = "tokenx";
+
     private static final Environment ENV = Environment.current();
 
     private static final Logger LOG = LoggerFactory.getLogger(JettyServer.class);
@@ -139,10 +142,7 @@ public class JettyServer {
 
     private static MultiIssuerConfiguration config() {
         return new MultiIssuerConfiguration(
-                Map.of(
-                        "tokenx", issuerProperties("token.x.well.known.url", "token.x.client.id")));
-        // "selvbetjening", issuerProperties("loginservice.idporten.discovery.url",
-        // "loginservice.idporten.audience")));
+                Map.of(TOKENX, issuerProperties("token.x.well.known.url", "token.x.client.id")));
     }
 
     private static IssuerProperties issuerProperties(String wellKnownUrl, String clientId) {
