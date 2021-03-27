@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -15,21 +15,18 @@ import no.nav.foreldrepenger.info.domene.UttakPeriode;
 import no.nav.foreldrepenger.info.repository.Repository;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.UttaksPeriodeDto;
 
-@ApplicationScoped
+@Dependent
 public class UttakTjeneste {
 
     private static final Logger LOG = LoggerFactory.getLogger(UttakTjeneste.class);
 
-    private BehandlingTjeneste behandlingTjeneste;
-    private Repository repository;
+    private final BehandlingTjeneste behandlingTjeneste;
+    private final Repository repository;
 
     @Inject
     public UttakTjeneste(BehandlingTjeneste behandlingTjeneste, Repository repository) {
         this.behandlingTjeneste = behandlingTjeneste;
         this.repository = repository;
-    }
-
-    UttakTjeneste() {
     }
 
     public List<UttaksPeriodeDto> hentFellesUttaksplan(Saksnummer saksnummer, boolean erAnnenPart) {

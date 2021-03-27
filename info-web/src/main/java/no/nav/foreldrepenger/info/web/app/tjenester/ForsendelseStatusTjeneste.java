@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -22,19 +22,16 @@ import no.nav.foreldrepenger.info.web.app.tjenester.dto.ForsendelseStatus;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.ForsendelseStatusDto;
 import no.nav.vedtak.exception.TekniskException;
 
-@ApplicationScoped
+@Dependent
 public class ForsendelseStatusTjeneste {
 
     private static final Logger LOG = LoggerFactory.getLogger(ForsendelseStatusTjeneste.class);
 
-    private Repository repository;
+    private final Repository repository;
 
     @Inject
     public ForsendelseStatusTjeneste(Repository repository) {
         this.repository = repository;
-    }
-
-    public ForsendelseStatusTjeneste() {
     }
 
     public Optional<ForsendelseStatusDto> hentForsendelseStatus(ForsendelseIdDto forsendelseIdDto) {

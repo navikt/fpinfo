@@ -94,8 +94,8 @@ public class DokumentforsendelseTjeneste {
     public Response getForsendelseStatus(
             @NotNull @QueryParam("forsendelseId") @Parameter(name = "forsendelseId") @Valid ForsendelseIdDto id) {
 
-        var dto = forsendelse.hentForsendelseStatus(id);
-        return dto.map(d -> ok(d).build())
+        return forsendelse.hentForsendelseStatus(id)
+                .map(d -> ok(d).build())
                 .orElseGet(() -> status(NOT_FOUND).build());
     }
 
