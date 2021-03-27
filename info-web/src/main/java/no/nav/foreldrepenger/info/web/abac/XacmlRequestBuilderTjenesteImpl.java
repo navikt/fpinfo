@@ -36,7 +36,7 @@ public class XacmlRequestBuilderTjenesteImpl implements XacmlRequestBuilderTjene
     public XacmlRequestBuilder lagXacmlRequestBuilder(PdpRequest pdpRequest) {
         XacmlRequestBuilder xacmlBuilder = new XacmlRequestBuilder();
 
-        XacmlAttributeSet actionAttributeSet = new XacmlAttributeSet();
+        var actionAttributeSet = new XacmlAttributeSet();
         actionAttributeSet.addAttribute(XACML10_ACTION_ACTION_ID, pdpRequest.getString(XACML10_ACTION_ACTION_ID));
         xacmlBuilder.addActionAttributeSet(actionAttributeSet);
 
@@ -68,7 +68,7 @@ public class XacmlRequestBuilderTjenesteImpl implements XacmlRequestBuilderTjene
         var level = pdpRequest.getString(SUBJECT_LEVEL);
         if (level != null) {
             String l = level.substring(level.length() - 1);
-            attrs.addAttribute(SUBJECT_LEVEL, l);
+            attrs.addAttribute(SUBJECT_LEVEL, Integer.valueOf(l));
             found = true;
         }
         if (pdpRequest.get(SUBJECT_TYPE) != null) {
