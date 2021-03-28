@@ -117,13 +117,7 @@ public class JettyServer {
     protected WebAppContext createContext() throws MalformedURLException {
         var ctx = new WebAppContext();
         ctx.setParentLoaderPriority(true);
-        // må hoppe litt bukk for å hente web.xml fra classpath i stedet for fra
-        // filsystem.
-        String descriptor;
-        try (var resource = Resource.newClassPathResource("/WEB-INF/web.xml")) {
-            descriptor = resource.getURI().toURL().toExternalForm();
-        }
-        ctx.setDescriptor(descriptor);
+        ctx.setInitParameter("resteasy.injector.factory", "org.jboss.resteasy.cdi.CdiInjectorFactory");
         ctx.setBaseResource(createResourceCollection());
         ctx.setContextPath(CONTEXT_PATH);
         ctx.setConfigurations(CONFIGURATIONS);
