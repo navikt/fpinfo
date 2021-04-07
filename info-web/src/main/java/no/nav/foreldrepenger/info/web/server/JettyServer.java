@@ -4,7 +4,6 @@ import static javax.servlet.DispatcherType.REQUEST;
 import static no.nav.vedtak.util.env.Cluster.NAIS_CLUSTER_NAME;
 import static org.eclipse.jetty.webapp.MetaInfConfiguration.WEBINF_JAR_PATTERN;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.EnumSet;
 import java.util.List;
@@ -34,6 +33,7 @@ import no.nav.foreldrepenger.info.web.app.konfig.ApplicationConfig;
 import no.nav.foreldrepenger.info.web.app.konfig.InternalApplication;
 import no.nav.security.token.support.core.configuration.IssuerProperties;
 import no.nav.security.token.support.core.configuration.MultiIssuerConfiguration;
+import no.nav.security.token.support.jaxrs.servlet.JaxrsJwtTokenValidationFilter;
 import no.nav.vedtak.util.env.Environment;
 
 public class JettyServer {
@@ -114,7 +114,7 @@ public class JettyServer {
 
     }
 
-    protected WebAppContext createContext() throws MalformedURLException {
+    protected WebAppContext createContext() {
         var ctx = new WebAppContext();
         ctx.setParentLoaderPriority(true);
         ctx.setInitParameter("resteasy.injector.factory", "org.jboss.resteasy.cdi.CdiInjectorFactory");
@@ -129,7 +129,7 @@ public class JettyServer {
 
     private void addTokenValidationFilter(WebAppContext ctx) {
         LOG.trace("Installerer JaxrsJwtTokenValidationFilter");
-        ctx.addFilter(new FilterHolder(new LoggingTokenValidationFilter(config())),
+        ctx.addFilter(new FilterHolder(new JaxrsJwtTokenValidationFilter(config())),
                 "/api/*",
                 EnumSet.of(REQUEST));
     }
