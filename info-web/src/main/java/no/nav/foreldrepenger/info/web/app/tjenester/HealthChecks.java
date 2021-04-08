@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.info.web.app.tjenester;
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -15,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import io.swagger.v3.oas.annotations.Operation;
 import no.nav.foreldrepenger.info.web.app.selftest.Selftests;
-import no.nav.foreldrepenger.info.web.server.LoggingRequestResponseFilter;
 
 @Path("/health")
 @Produces(TEXT_PLAIN)
@@ -44,7 +42,6 @@ public class HealthChecks {
     @Path("/isAlive")
     @Operation(description = "sjekker om poden lever", tags = "nais", hidden = true)
     public Response isAlive() {
-        LOG.info("XXX " + CDI.current().select(LoggingRequestResponseFilter.class).get());
         return Response
                 .ok(RESPONSE_OK)
                 .header(RESPONSE_CACHE_KEY, RESPONSE_CACHE_VAL)
