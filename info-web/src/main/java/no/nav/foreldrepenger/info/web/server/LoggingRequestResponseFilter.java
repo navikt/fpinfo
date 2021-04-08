@@ -25,11 +25,15 @@ public class LoggingRequestResponseFilter implements ContainerRequestFilter, Con
     private static final Logger LOG = LoggerFactory.getLogger(LoggingRequestResponseFilter.class);
     int i;
 
-    private final Pep pep;
-    private final AbacSporingslogg sporingslogg;
-    private final AbacAuditlogger abacAuditlogger;
+    private Pep pep;
+    private AbacSporingslogg sporingslogg;
+    private AbacAuditlogger abacAuditlogger;
     private static final Environment ENV = Environment.current();
-    private final TokenProvider tokenProvider;
+    private TokenProvider tokenProvider;
+
+    public LoggingRequestResponseFilter() {
+
+    }
 
     @Inject
     public LoggingRequestResponseFilter(Pep pep,
