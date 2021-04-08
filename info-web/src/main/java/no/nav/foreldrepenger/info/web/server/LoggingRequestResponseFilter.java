@@ -52,7 +52,7 @@ public class LoggingRequestResponseFilter implements ContainerRequestFilter, Con
     public void filter(ContainerRequestContext ctx) {
         ResourceMethodInvoker methodInvoker = (ResourceMethodInvoker) ctx.getProperty("org.jboss.resteasy.core.ResourceMethodInvoker");
         Method method = methodInvoker.getMethod();
-        LOG.info("FILTER REQUEST {} {} {}", this, i, method);
+        LOG.info("FILTER REQUEST {} {} method {}", this, i, method);
         i++;
 
     }
