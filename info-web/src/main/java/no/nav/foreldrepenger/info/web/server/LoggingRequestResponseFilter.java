@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.info.web.server;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -10,6 +11,7 @@ import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.ext.Provider;
 
+import org.jboss.resteasy.core.ResourceMethodInvoker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,8 +49,10 @@ public class LoggingRequestResponseFilter implements ContainerRequestFilter, Con
     }
 
     @Override
-    public void filter(ContainerRequestContext containerRequestContext) {
-        LOG.info("FILTER REQUEST {} {}", this, i);
+    public void filter(ContainerRequestContext ctx) {
+        ResourceMethodInvoker methodInvoker = (ResourceMethodInvoker) ctx.getProperty("org.jboss.resteasy.core.ResourceMethodInvoker");
+        Method method = methodInvoker.getMethod();
+        LOG.info("FILTER REQUEST {} {} {}", this, i, method);
         i++;
 
     }
