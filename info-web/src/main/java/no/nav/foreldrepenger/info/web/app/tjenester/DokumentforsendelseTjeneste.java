@@ -25,6 +25,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -49,6 +52,8 @@ import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 @RequestScoped
 @ProtectedWithClaims(issuer = TOKENX, claimMap = { ACR_LEVEL4 })
 public class DokumentforsendelseTjeneste {
+
+    private static final Logger LOG = LoggerFactory.getLogger(DokumentforsendelseTjeneste.class);
 
     static final String DOKUMENTFORSENDELSE_PATH = "/dokumentforsendelse";
     private static final String API_PATH = "/fpinfo/api" + DOKUMENTFORSENDELSE_PATH;

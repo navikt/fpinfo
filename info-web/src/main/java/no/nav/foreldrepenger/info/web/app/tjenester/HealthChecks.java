@@ -9,9 +9,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.swagger.v3.oas.annotations.Operation;
 import no.nav.foreldrepenger.info.web.app.selftest.Selftests;
 
@@ -23,7 +20,6 @@ public class HealthChecks {
     private static final String RESPONSE_CACHE_KEY = "Cache-Control";
     private static final String RESPONSE_CACHE_VAL = "must-revalidate,no-cache,no-store";
     private static final String RESPONSE_OK = "OK";
-    private static final Logger LOG = LoggerFactory.getLogger(Selftests.class);
     private Selftests selftests;
 
     public HealthChecks() {
