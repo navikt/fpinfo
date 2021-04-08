@@ -22,14 +22,14 @@ public class LoggingRequestResponseFilter implements ContainerRequestFilter, Con
 
     @Override
     public void filter(ContainerRequestContext containerRequestContext) {
-        LOG.info("FILTER REQUEST " + i);
+        LOG.info("FILTER REQUEST {} {}", this, i);
         i++;
 
     }
 
     @Override
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
-        LOG.info("FILTER RESPONSE " + i);
+        LOG.info("FILTER RESPONSE {} {}", this, i);
         i++;
     }
 }
