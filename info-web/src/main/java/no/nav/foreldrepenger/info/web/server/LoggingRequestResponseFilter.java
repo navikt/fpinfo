@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RequestScoped
-//@BeskyttetRessurs(action = BeskyttetRessursActionAttributt.DUMMY, resource = "")
 public class LoggingRequestResponseFilter implements ContainerRequestFilter, ContainerResponseFilter {
     private static final Logger LOG = LoggerFactory.getLogger(LoggingRequestResponseFilter.class);
     int i;
@@ -28,7 +27,7 @@ public class LoggingRequestResponseFilter implements ContainerRequestFilter, Con
 
     @Override
     public void filter(ContainerRequestContext containerRequestContext) {
-        LOG.info("FILTER REQUEST {} {} {}", this.hashCode(), i, info.getMatchedResources());
+        LOG.info("FILTER REQUEST {} {}", this.hashCode(), i);
         i++;
 
     }
