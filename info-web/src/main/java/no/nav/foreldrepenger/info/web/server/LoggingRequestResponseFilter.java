@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.info.web.server;
 
 import java.io.IOException;
 
+import javax.enterprise.context.Dependent;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -21,6 +22,7 @@ import no.nav.vedtak.util.env.Environment;
 
 @RequestScoped
 @Provider
+@Dependent
 public class LoggingRequestResponseFilter implements ContainerRequestFilter, ContainerResponseFilter {
     private static final Logger LOG = LoggerFactory.getLogger(LoggingRequestResponseFilter.class);
     int i;
