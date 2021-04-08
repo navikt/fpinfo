@@ -6,12 +6,11 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
-import javax.ws.rs.ext.Provider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Provider
+//@Provider
 public class LoggingRequestResponseFilter implements ContainerRequestFilter, ContainerResponseFilter {
     private static final Logger LOG = LoggerFactory.getLogger(LoggingRequestResponseFilter.class);
     int i;
