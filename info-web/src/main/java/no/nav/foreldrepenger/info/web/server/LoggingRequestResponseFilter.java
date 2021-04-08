@@ -13,11 +13,8 @@ import javax.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
-import no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt;
-
 @RequestScoped
-@BeskyttetRessurs(action = BeskyttetRessursActionAttributt.DUMMY, resource = "")
+//@BeskyttetRessurs(action = BeskyttetRessursActionAttributt.DUMMY, resource = "")
 public class LoggingRequestResponseFilter implements ContainerRequestFilter, ContainerResponseFilter {
     private static final Logger LOG = LoggerFactory.getLogger(LoggingRequestResponseFilter.class);
     int i;
