@@ -136,7 +136,7 @@ public class LoggingRequestResponseFilter implements ContainerRequestFilter, Con
         var parameterDecl = method.getParameters();
         for (int i = 0; i < method.getParameterCount(); i++) {
             Object parameterValue = method.getParameters()[i];
-            LOG.trace("Parameter value {} {}", i, parameterValue);
+            LOG.trace("Parameter value {} {}", i, parameterValue.getClass().getSimpleName());
             var tilpassetAnnotering = parameterDecl[i].getAnnotation(TilpassetAbacAttributt.class);
             leggTilAttributterFraParameter(attributter, parameterValue, tilpassetAnnotering);
         }
@@ -146,9 +146,11 @@ public class LoggingRequestResponseFilter implements ContainerRequestFilter, Con
     @SuppressWarnings("rawtypes")
     static void leggTilAttributterFraParameter(AbacAttributtSamling attributter, Object parameterValue, TilpassetAbacAttributt tilpassetAnnotering) {
         if (tilpassetAnnotering != null) {
+            LOG.trace("Parameter ikke tilpasset");
             leggTil(attributter, tilpassetAnnotering, parameterValue);
         } else {
             if (parameterValue instanceof AbacDto) {
+                LOG.trace("Parameter er  abacdto");
                 attributter.leggTil(((AbacDto) parameterValue).abacAttributter());
             } else if (parameterValue instanceof Collection) {
                 leggTilAbacDtoSamling(attributter, (Collection) parameterValue);
