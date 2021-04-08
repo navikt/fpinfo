@@ -25,8 +25,10 @@ import no.nav.vedtak.sikkerhet.abac.AbacAttributtSamling;
 import no.nav.vedtak.sikkerhet.abac.AbacAuditlogger;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
 import no.nav.vedtak.sikkerhet.abac.AbacSporingslogg;
+import no.nav.vedtak.sikkerhet.abac.ActionUthenter;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 import no.nav.vedtak.sikkerhet.abac.Pep;
+import no.nav.vedtak.sikkerhet.abac.PepNektetTilgangException;
 import no.nav.vedtak.sikkerhet.abac.Tilgangsbeslutning;
 import no.nav.vedtak.sikkerhet.abac.TilpassetAbacAttributt;
 import no.nav.vedtak.sikkerhet.abac.TokenProvider;
@@ -68,11 +70,12 @@ public class LoggingRequestResponseFilter implements ContainerRequestFilter, Con
         LOG.info("FILTER REQUEST {} {} method {}", this, i, method);
         i++;
         var attributter = hentAttributter(method);
-        var beslutning = pep.vurderTilgang(attributter);
-        if (beslutning.fikkTilgang()) {
-            sporingsdata = proceed(method, attributter, beslutning);
-        }
-        ikkeTilgang(attributter, beslutning);
+        LOG.info("ATTRIBUTTER " + attributter);
+        /*
+         * var beslutning = pep.vurderTilgang(attributter); if
+         * (beslutning.fikkTilgang()) { sporingsdata = proceed(method, attributter,
+         * beslutning); } ikkeTilgang(attributter, beslutning);
+         */
 
     }
 
@@ -132,7 +135,8 @@ public class LoggingRequestResponseFilter implements ContainerRequestFilter, Con
         attributter.setAction(utledAction(clazz, method));
         var parameterDecl = method.getParameters();
         for (int i = 0; i < method.getParameterCount(); i++) {
-            Object parameterValue = invocationContext.getParameters()[i];
+            Object parameterValue = method.getParameters()[i];
+            LOG.trace("Parameter value {} {}", i, parameterValue);
             var tilpassetAnnotering = parameterDecl[i].getAnnotation(TilpassetAbacAttributt.class);
             leggTilAttributterFraParameter(attributter, parameterValue, tilpassetAnnotering);
         }
