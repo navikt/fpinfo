@@ -26,12 +26,12 @@ public class LoggingRequestResponseFilter implements ContainerRequestFilter, Con
     private UriInfo info;
 
     public LoggingRequestResponseFilter() {
-        LOG.info("FILTER CONSTRUCT {}", info.getMatchedResources());
+        LOG.info("FILTER CONSTRUCT {}", this);
     }
 
     @Override
     public void filter(ContainerRequestContext containerRequestContext) {
-        LOG.info("FILTER REQUEST {} {}", this.hashCode(), i);
+        LOG.info("FILTER REQUEST {} {} {}", this.hashCode(), i, info.getMatchedResources());
         i++;
 
     }
