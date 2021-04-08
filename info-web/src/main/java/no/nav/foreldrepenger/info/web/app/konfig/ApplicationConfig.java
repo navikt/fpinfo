@@ -33,4 +33,5 @@ public class ApplicationConfig extends Application {
                 JacksonJsonConfig.class,
                 GeneralRestExceptionMapper.class);
     }
+
 }

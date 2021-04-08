@@ -93,6 +93,7 @@ public class JettyServer {
         server.addConnector(connector);
         var ctx = createContext();
         server.setHandler(ctx);
+
         server.start();
         server.join();
     }
