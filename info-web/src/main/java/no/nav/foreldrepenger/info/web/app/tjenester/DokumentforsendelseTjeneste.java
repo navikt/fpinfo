@@ -14,7 +14,6 @@ import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.READ;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -43,7 +42,6 @@ import no.nav.foreldrepenger.info.web.app.tjenester.dto.SakDto;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.SaksnummerDto;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.SøknadXmlDto;
 import no.nav.foreldrepenger.info.web.app.tjenester.dto.SøknadsGrunnlagDto;
-import no.nav.foreldrepenger.info.web.server.LoggingRequestResponseFilter;
 import no.nav.security.token.support.core.api.ProtectedWithClaims;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 
@@ -101,7 +99,6 @@ public class DokumentforsendelseTjeneste {
     public Response getForsendelseStatus(
             @NotNull @QueryParam("forsendelseId") @Parameter(name = "forsendelseId") @Valid ForsendelseIdDto id) {
 
-        LOG.info("XXX " + CDI.current().select(LoggingRequestResponseFilter.class).get());
         return forsendelse.hentForsendelseStatus(id)
                 .map(d -> ok(d).build())
                 .orElseGet(() -> status(NOT_FOUND).build());
