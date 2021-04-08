@@ -17,7 +17,7 @@ public class LoggingRequestResponseFilter implements ContainerRequestFilter, Con
     int i;
 
     public LoggingRequestResponseFilter() {
-        LOG.info("CONSTRUCT");
+        LOG.info("FILTER CONSTRUCT {}", this);
     }
 
     @Override
