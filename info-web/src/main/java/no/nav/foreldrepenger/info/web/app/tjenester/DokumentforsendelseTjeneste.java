@@ -101,7 +101,7 @@ public class DokumentforsendelseTjeneste {
     public Response getForsendelseStatus(
             @NotNull @QueryParam("forsendelseId") @Parameter(name = "forsendelseId") @Valid ForsendelseIdDto id) {
 
-        LOG.info("XXX " + CDI.current().select(LoggingRequestResponseFilter.class).isUnsatisfied());
+        LOG.info("XXX " + CDI.current().select(LoggingRequestResponseFilter.class).get());
         return forsendelse.hentForsendelseStatus(id)
                 .map(d -> ok(d).build())
                 .orElseGet(() -> status(NOT_FOUND).build());
