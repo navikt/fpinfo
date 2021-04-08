@@ -119,11 +119,12 @@ public class JettyServer {
         ctx.setInitParameter("resteasy.injector.factory", "org.jboss.resteasy.cdi.CdiInjectorFactory");
         ctx.setBaseResource(createResourceCollection());
         ctx.setContextPath(CONTEXT_PATH);
-        ctx.setConfigurations(CONFIGURATIONS);
+        //ctx.setConfigurations(CONFIGURATIONS);
         // ctx.setAttribute(WEBINF_JAR_PATTERN,
         // "^.*resteasy-.*.jar$|^.*felles-.*.jar$");
         updateMetaData(ctx.getMetaData());
         addTokenValidationFilter(ctx);
+        ctx.add
         return ctx;
     }
 
