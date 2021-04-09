@@ -145,6 +145,18 @@
                 <version>${logstash.version}</version>
             </dependency>
 
+            <!-- Sikkerhet: Geronimo -->
+            <dependency>
+                <groupId>org.apache.geronimo.components</groupId>
+                <artifactId>geronimo-jaspi</artifactId>
+                <version>${geronimo.jaspi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-osgi-locator</artifactId>
+                <version>${geronimo.osgi.version}</version>
+            </dependency>
+
             <!-- Transitive avh. versjoner for å sikre unikhet (enforcer dependencyConvergence). Skal ikke benyttes direkte 
                 av vår egen kode. -->
             <dependency>

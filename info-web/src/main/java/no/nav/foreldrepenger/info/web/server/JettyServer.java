@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.info.web.server;
 
 import static javax.servlet.DispatcherType.REQUEST;
 import static no.nav.vedtak.util.env.Cluster.NAIS_CLUSTER_NAME;
-import static org.eclipse.jetty.webapp.MetaInfConfiguration.WEBINF_JAR_PATTERN;
 
 import java.net.URL;
 import java.util.EnumSet;
@@ -19,13 +18,11 @@ import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.webapp.Configuration;
-import org.eclipse.jetty.webapp.DecoratingListener;
 import org.eclipse.jetty.webapp.MetaData;
 import org.eclipse.jetty.webapp.WebAppConfiguration;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebInfConfiguration;
 import org.eclipse.jetty.webapp.WebXmlConfiguration;
-import org.jboss.weld.environment.servlet.Listener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,9 +92,6 @@ public class JettyServer {
         connector.setHost(SERVER_HOST);
         server.addConnector(connector);
         var ctx = createContext();
-        ctx.addEventListener(new DecoratingListener(ctx));
-        ctx.addEventListener(new Listener());
-
         server.setHandler(ctx);
 
         server.start();
@@ -123,13 +117,12 @@ public class JettyServer {
     protected WebAppContext createContext() {
         var ctx = new WebAppContext();
         ctx.setParentLoaderPriority(true);
-        // ctx.setInitParameter("resteasy.injector.factory",
-        // "org.jboss.resteasy.cdi.CdiInjectorFactory");
+        ctx.setInitParameter("resteasy.injector.factory", "org.jboss.resteasy.cdi.CdiInjectorFactory");
         ctx.setBaseResource(createResourceCollection());
         ctx.setContextPath(CONTEXT_PATH);
-        ctx.setConfigurations(CONFIGURATIONS);
-        ctx.setAttribute(WEBINF_JAR_PATTERN,
-                "^.*jersey-.*.jar$|^.*felles-.*.jar$");
+        // ctx.setConfigurations(CONFIGURATIONS);
+        // ctx.setAttribute(WEBINF_JAR_PATTERN,
+        // "^.*resteasy-.*.jar$|^.*felles-.*.jar$");
         updateMetaData(ctx.getMetaData());
         addTokenValidationFilter(ctx);
         return ctx;
