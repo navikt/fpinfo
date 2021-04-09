@@ -7,17 +7,18 @@ import javax.ws.rs.ext.ExceptionMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import no.nav.vedtak.exception.TekniskException;
 
-public class JsonMappingExceptionMapper implements ExceptionMapper<JsonMappingException> {
+public class JsonProcessingExceptionMapper implements ExceptionMapper<JsonParseException> {
 
-    private static final Logger log = LoggerFactory.getLogger(JsonMappingExceptionMapper.class);
+    private static final Logger log = LoggerFactory.getLogger(JsonProcessingException.class);
 
     @Override
-    public Response toResponse(JsonMappingException exception) {
-        var e = new TekniskException("FP-252294", "JSON-mapping feil", exception);
+    public Response toResponse(JsonParseException ex) {
+        var e = new TekniskException("FP-299955", String.format("JSON-processing feil: %s", ex.getMessage()), ex);
         log.warn(e.getMessage(), e);
         return Response
                 .status(Response.Status.BAD_REQUEST)

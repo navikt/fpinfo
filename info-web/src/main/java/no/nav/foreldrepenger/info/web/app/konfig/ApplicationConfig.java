@@ -9,8 +9,7 @@ import io.swagger.v3.jaxrs2.SwaggerSerializers;
 import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 import no.nav.foreldrepenger.info.web.app.exceptions.ConstraintViolationMapper;
 import no.nav.foreldrepenger.info.web.app.exceptions.GeneralRestExceptionMapper;
-import no.nav.foreldrepenger.info.web.app.exceptions.JsonMappingExceptionMapper;
-import no.nav.foreldrepenger.info.web.app.exceptions.JsonParseExceptionMapper;
+import no.nav.foreldrepenger.info.web.app.exceptions.JsonProcessingExceptionMapper;
 import no.nav.foreldrepenger.info.web.app.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.info.web.app.tjenester.DokumentforsendelseTjeneste;
 import no.nav.security.token.support.jaxrs.JwtTokenContainerRequestFilter;
@@ -28,8 +27,7 @@ public class ApplicationConfig extends Application {
                 SwaggerSerializers.class,
                 OpenApiResource.class,
                 ConstraintViolationMapper.class,
-                JsonMappingExceptionMapper.class,
-                JsonParseExceptionMapper.class,
+                JsonProcessingExceptionMapper.class,
                 JacksonJsonConfig.class,
                 GeneralRestExceptionMapper.class);
     }
