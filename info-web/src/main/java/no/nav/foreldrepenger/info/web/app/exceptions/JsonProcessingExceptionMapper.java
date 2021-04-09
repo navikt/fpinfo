@@ -7,17 +7,16 @@ import javax.ws.rs.ext.ExceptionMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import no.nav.vedtak.exception.TekniskException;
 
-public class JsonProcessingExceptionMapper implements ExceptionMapper<JsonParseException> {
+public class JsonProcessingExceptionMapper implements ExceptionMapper<JsonProcessingException> {
 
     private static final Logger log = LoggerFactory.getLogger(JsonProcessingException.class);
 
     @Override
-    public Response toResponse(JsonParseException ex) {
+    public Response toResponse(JsonProcessingException ex) {
         var e = new TekniskException("FP-299955", String.format("JSON-processing feil: %s", ex.getMessage()), ex);
         log.warn(e.getMessage(), e);
         return Response
