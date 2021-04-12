@@ -3,5 +3,6 @@
    <logger name="no.nav.foreldrepenger.info" level="trace" />
    <logger name="no.nav.sikkerhet" level="trace" />
    <logger name="org.glassfish.jersey" level="trace" />
+      <logger name="org.jboss.weld" level="trace" />
    
 </included>
