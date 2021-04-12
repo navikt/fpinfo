@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>no.nav.foreldrepenger.info</groupId>
     <artifactId>fpinfo</artifactId>
-    <version>${revision}${sha1}${changelist}</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>fpinfo</name>
 
@@ -19,8 +19,6 @@
         <sonar.projectKey>navikt_fpinfo1</sonar.projectKey>
         <sonar.organization>navit</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <revision>1.0</revision>
-        <sha1 />
         <changelist>-SNAPSHOT</changelist>
         <java.version>16</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -143,18 +141,6 @@
                 <groupId>net.logstash.logback</groupId>
                 <artifactId>logstash-logback-encoder</artifactId>
                 <version>${logstash.version}</version>
-            </dependency>
-
-            <!-- Sikkerhet: Geronimo -->
-            <dependency>
-                <groupId>org.apache.geronimo.components</groupId>
-                <artifactId>geronimo-jaspi</artifactId>
-                <version>${geronimo.jaspi.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.geronimo.specs</groupId>
-                <artifactId>geronimo-osgi-locator</artifactId>
-                <version>${geronimo.osgi.version}</version>
             </dependency>
 
             <!-- Transitive avh. versjoner for å sikre unikhet (enforcer dependencyConvergence). Skal ikke benyttes direkte 
