@@ -18,7 +18,6 @@ import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.webapp.Configuration;
-import org.eclipse.jetty.webapp.DecoratingListener;
 import org.eclipse.jetty.webapp.MetaData;
 import org.eclipse.jetty.webapp.WebAppConfiguration;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -94,7 +93,7 @@ public class JettyServer {
         connector.setHost(SERVER_HOST);
         server.addConnector(connector);
         var ctx = createContext();
-        ctx.addEventListener(new DecoratingListener(ctx));
+        // ctx.addEventListener(new DecoratingListener(ctx));
         ctx.addEventListener(new Listener());
 
         server.setHandler(ctx);
