@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.info.web.app.tjenester.dto;
 
-import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.SAKSNUMMER;
+import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.SAKSNUMMER;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,8 +14,8 @@ import no.nav.foreldrepenger.info.domene.Saksnummer;
 import no.nav.foreldrepenger.info.domene.SøknadsGrunnlag;
 import no.nav.foreldrepenger.info.felles.datatyper.FamilieHendelseType;
 import no.nav.foreldrepenger.info.web.abac.AppAbacAttributtType;
-import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
-import no.nav.vedtak.sikkerhet.abac.AbacDto;
+import no.nav.foreldrepenger.sikkerhet.abac.AbacDto;
+import no.nav.foreldrepenger.sikkerhet.abac.domene.AbacDataAttributter;
 
 public class SøknadsGrunnlagDto implements AbacDto {
 

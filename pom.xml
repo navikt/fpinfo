@@ -27,7 +27,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <felles.version>3.2.28</felles.version> 
+        <felles.version>3.2.32</felles.version>
         <prometheus.version>0.10.0</prometheus.version>
         <swagger.version>2.1.7</swagger.version>
 
@@ -87,6 +87,11 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.felles</groupId>
+                <artifactId>felles-mapper</artifactId>
+                <version>${felles.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.felles</groupId>
                 <artifactId>felles-db</artifactId>
                 <version>${felles.version}</version>
             </dependency>
@@ -96,6 +101,13 @@
                 <version>${felles.version}</version>
                 <type>test-jar</type>
                 <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <!-- kun for DbInit - kan erstattes ved å bytte JsonUtil til Jackson ObjectMapper -->
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-json-p-provider</artifactId>
+                <version>4.6.0.Final</version>
             </dependency>
 
             <dependency>

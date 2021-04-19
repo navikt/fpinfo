@@ -1,9 +1,8 @@
 package no.nav.foreldrepenger.info.web.server.abac;
 
-import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE;
-import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.AKTØR_ID;
-import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.BEHANDLING_ID;
-import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.SAKSNUMMER;
+import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.AKTØR_ID;
+import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.BEHANDLING_ID;
+import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.SAKSNUMMER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -22,12 +21,13 @@ import no.nav.foreldrepenger.info.pip.PipRepository;
 import no.nav.foreldrepenger.info.web.abac.AppAbacAttributtType;
 import no.nav.foreldrepenger.info.web.abac.BeskyttetRessursAttributt;
 import no.nav.foreldrepenger.info.web.abac.PdpRequestBuilderImpl;
-import no.nav.vedtak.sikkerhet.abac.AbacAttributtSamling;
-import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
-import no.nav.vedtak.sikkerhet.abac.AbacIdToken.TokenType;
-import no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt;
-import no.nav.vedtak.sikkerhet.abac.PdpRequest;
-import no.nav.vedtak.sikkerhet.abac.PdpRequestBuilder;
+import no.nav.foreldrepenger.info.web.abac.TokenSupportTokenProvider;
+import no.nav.foreldrepenger.sikkerhet.abac.PdpRequestBuilder;
+import no.nav.foreldrepenger.sikkerhet.abac.domene.AbacDataAttributter;
+import no.nav.foreldrepenger.sikkerhet.abac.domene.ActionType;
+import no.nav.foreldrepenger.sikkerhet.abac.domene.BeskyttRessursAttributer;
+import no.nav.foreldrepenger.sikkerhet.abac.domene.TokenType;
+import no.nav.foreldrepenger.sikkerhet.abac.pep.PdpRequest;
 
 @ExtendWith(MockitoExtension.class)
 class PdpRequestBuilderImplTest {
@@ -39,13 +39,21 @@ class PdpRequestBuilderImplTest {
     private static final UUID FORSENDELSE_ID = UUID.randomUUID();
     @Mock
     private PipRepository pip;
+    @Mock
+    private TokenSupportTokenProvider tokenProvider;
+
     private PdpRequestBuilder requestBuilder;
-    private AbacAttributtSamling attributter;
+    private BeskyttRessursAttributer attributter;
 
     @BeforeEach
     void beforeEach() {
-        requestBuilder = new PdpRequestBuilderImpl(pip);
+        requestBuilder = new PdpRequestBuilderImpl(pip, tokenProvider);
         attributter = byggAbacAttributtSamling();
+
+        when(tokenProvider.getUid()).thenReturn("testUser");
+        when(tokenProvider.getTokeType()).thenReturn(TokenType.OIDC);
+        when(tokenProvider.userToken()).thenReturn(DUMMY_ID_TOKEN);
+
     }
 
     @Test
@@ -55,7 +63,7 @@ class PdpRequestBuilderImplTest {
                 .thenReturn(List.of(AKTØRID));
 
         var request = requestBuilder.lagPdpRequest(attributter);
-        assertThat(request.getListOfString(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE)).containsOnly(AKTØRID);
+        assertThat(request.getAktørIder()).containsOnly(AKTØRID);
     }
 
     @Test
@@ -66,7 +74,7 @@ class PdpRequestBuilderImplTest {
                 .thenReturn(Collections.singletonList(AKTØRID));
 
         var request = requestBuilder.lagPdpRequest(attributter);
-        assertThat(request.getListOfString(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE)).containsOnly(AKTØRID);
+        assertThat(request.getAktørIder()).containsOnly(AKTØRID);
     }
 
     @Test
@@ -78,7 +86,7 @@ class PdpRequestBuilderImplTest {
                 .thenReturn(Collections.singletonList(AKTØRID));
 
         var request = requestBuilder.lagPdpRequest(attributter);
-        assertThat(request.getListOfString(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE)).containsOnly(AKTØRID);
+        assertThat(request.getAktørIder()).containsOnly(AKTØRID);
     }
 
     @Test
@@ -94,15 +102,16 @@ class PdpRequestBuilderImplTest {
         when(pip.hentOppgittAleneomsorgForSaksnummer(SAKSNR)).thenReturn(Optional.of(Boolean.TRUE));
 
         PdpRequest request = requestBuilder.lagPdpRequest(attributter);
-        assertThat(request.getListOfString(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE)).containsOnly(AKTØRID);
-        assertThat(request.getString(AppAbacAttributtType.RESOURCE_FORELDREPENGER_ANNEN_PART)).isEqualTo(ANNEN_PART_ID);
-        assertThat(request.getOptional(AppAbacAttributtType.RESOURCE_FORELDREPENGER_ALENEOMSORG)).hasValue("true");
+        assertThat(request.getAktørIder()).containsOnly(AKTØRID);
+        assertThat(request.getAnnenPartAktørId()).hasValue(ANNEN_PART_ID);
+        assertThat(request.getAleneomsorg()).hasValue(true);
     }
 
-    private static AbacAttributtSamling byggAbacAttributtSamling() {
-        var s = AbacAttributtSamling.medJwtToken(DUMMY_ID_TOKEN, TokenType.TOKENX);
-        s.setActionType(BeskyttetRessursActionAttributt.READ);
+    private static BeskyttRessursAttributer byggAbacAttributtSamling() {
+        var s = new BeskyttRessursAttributer();
+        s.setActionType(ActionType.READ);
         s.setResource(BeskyttetRessursAttributt.FAGSAK);
+        s.setRequestPath("/test/path");
         return s;
     }
 }

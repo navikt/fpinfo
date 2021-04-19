@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.info.web.app.tjenester.dto;
 
-import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.AKTØR_ID;
+import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.AKTØR_ID;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,8 +10,8 @@ import java.util.Set;
 
 import no.nav.foreldrepenger.info.domene.Sak;
 import no.nav.foreldrepenger.info.web.app.ResourceLink;
-import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
-import no.nav.vedtak.sikkerhet.abac.AbacDto;
+import no.nav.foreldrepenger.sikkerhet.abac.AbacDto;
+import no.nav.foreldrepenger.sikkerhet.abac.domene.AbacDataAttributter;
 
 public class SakDto implements AbacDto {
 

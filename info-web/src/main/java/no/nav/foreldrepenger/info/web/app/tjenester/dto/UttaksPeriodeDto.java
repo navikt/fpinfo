@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.info.web.app.tjenester.dto;
 
-import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.SAKSNUMMER;
+import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.SAKSNUMMER;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,8 +10,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import no.nav.foreldrepenger.info.domene.Saksnummer;
 import no.nav.foreldrepenger.info.domene.UttakPeriode;
-import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
-import no.nav.vedtak.sikkerhet.abac.AbacDto;
+import no.nav.foreldrepenger.sikkerhet.abac.AbacDto;
+import no.nav.foreldrepenger.sikkerhet.abac.domene.AbacDataAttributter;
 
 public class UttaksPeriodeDto implements AbacDto {
 
