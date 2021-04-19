@@ -8,9 +8,6 @@ public enum AppAbacAttributtType implements AbacAttributtType {
     ANNEN_PART,
     OPPGITT_ALENEOMSORG;
 
-    public static final String RESOURCE_FORELDREPENGER_ALENEOMSORG = "no.nav.abac.attributter.resource.foreldrepenger.aleneomsorg";
-    public static final String RESOURCE_FORELDREPENGER_ANNEN_PART = "no.nav.abac.attributter.resource.foreldrepenger.annen_part";
-
     private final boolean maskerOutput;
 
     AppAbacAttributtType() {

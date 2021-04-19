@@ -4,7 +4,6 @@ import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtT
 import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.BEHANDLING_ID;
 import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.SAKSNUMMER;
 
-import java.text.ParseException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
@@ -15,8 +14,6 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.nimbusds.jwt.SignedJWT;
 
 import no.nav.foreldrepenger.info.pip.PipRepository;
 import no.nav.foreldrepenger.sikkerhet.abac.PdpRequestBuilder;
@@ -59,27 +56,18 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
             Optional<String> sakAnnenPart = pipRepository.finnSakenTilAnnenForelder(
                     attributter.getVerdier(AKTØR_ID),
                     attributter.getVerdier(AppAbacAttributtType.ANNEN_PART));
-            if (sakAnnenPart.isPresent()) {
-                String saksnummerAnnenForelder = sakAnnenPart.get();
+
+            sakAnnenPart.ifPresent(saksnummerAnnenForelder -> {
                 pdpRequest.setAktørIder(new HashSet<>(
                         pipRepository.hentAktørIdForSaksnummer(Collections.singleton(saksnummerAnnenForelder))));
                 pdpRequest.setAnnenPartAktørId(pipRepository.hentAnnenPartForSaksnummer(saksnummerAnnenForelder).orElse(null));
                 pdpRequest.setAleneomsorg(pipRepository.hentOppgittAleneomsorgForSaksnummer(saksnummerAnnenForelder).orElse(null));
-            }
+            });
         } else {
             pdpRequest.setAktørIder(utledAktørIdeer(attributter));
         }
         LOG.trace("Laget PDP request OK {}", pdpRequest);
         return pdpRequest;
-    }
-
-    private String claim(String token, String claim) {
-        try {
-            var claims = SignedJWT.parse(token).getJWTClaimsSet();
-            return String.class.cast(claims.getClaim(claim));
-        } catch (ParseException e) {
-            throw new IllegalArgumentException("Fant ikke claim" + claim + " i token", e);
-        }
     }
 
     private Set<String> utledAktørIdeer(BeskyttRessursAttributer attributter) {
@@ -92,5 +80,4 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
                 .hentAktørIdForForsendelseIder(attributter.getVerdier(AppAbacAttributtType.FORSENDELSE_UUID)));
         return aktørIdSet;
     }
-
 }
