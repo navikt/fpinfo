@@ -18,6 +18,7 @@
         "OIDC_STS_ISSUER_URL"  : "https://security-token-service.nais.adeo.no",
         "OIDC_STS_JWKS_URL" : "https://security-token-service.nais.adeo.no/rest/v1/sts/jwks",
         "OIDC_AAD_B2C_HOSTURL" : "https://NOT-USED.adeo.internal",
-        "SECURITYTOKENSERVICE_URL" :"https://sts.adeo.no/SecurityTokenServiceProvider/"
+        "SECURITYTOKENSERVICE_URL" :"https://sts.adeo.no/SecurityTokenServiceProvider/",
+        "ABAC_PDP_ENDPOINT_URL": "http://abac-foreldrepenger.default/application/authorize"
       }
 }
