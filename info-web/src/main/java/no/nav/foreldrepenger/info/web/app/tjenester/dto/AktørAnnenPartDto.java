@@ -4,8 +4,8 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
 import no.nav.foreldrepenger.info.web.abac.AppAbacAttributtType;
-import no.nav.foreldrepenger.sikkerhet.abac.AbacDto;
-import no.nav.foreldrepenger.sikkerhet.abac.domene.AbacDataAttributter;
+import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
+import no.nav.vedtak.sikkerhet.abac.AbacDto;
 
 public class AktørAnnenPartDto implements AbacDto {
     @NotNull

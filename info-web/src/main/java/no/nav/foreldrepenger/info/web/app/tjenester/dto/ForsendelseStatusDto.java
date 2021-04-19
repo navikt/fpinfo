@@ -1,11 +1,11 @@
 package no.nav.foreldrepenger.info.web.app.tjenester.dto;
 
-import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.SAKSNUMMER;
+import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.SAKSNUMMER;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import no.nav.foreldrepenger.sikkerhet.abac.AbacDto;
-import no.nav.foreldrepenger.sikkerhet.abac.domene.AbacDataAttributter;
+import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
+import no.nav.vedtak.sikkerhet.abac.AbacDto;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ForsendelseStatusDto implements AbacDto {

@@ -1,11 +1,11 @@
 package no.nav.foreldrepenger.info.web.app.tjenester.dto;
 
-import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.BEHANDLING_ID;
+import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.BEHANDLING_ID;
 
 import no.nav.foreldrepenger.info.domene.MottattDokument;
-import no.nav.foreldrepenger.sikkerhet.abac.AbacDto;
-import no.nav.foreldrepenger.sikkerhet.abac.domene.AbacDataAttributter;
 import no.nav.vedtak.exception.TekniskException;
+import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
+import no.nav.vedtak.sikkerhet.abac.AbacDto;
 
 public class SøknadXmlDto implements AbacDto {
 
