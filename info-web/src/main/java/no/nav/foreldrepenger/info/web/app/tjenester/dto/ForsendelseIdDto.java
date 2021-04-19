@@ -8,8 +8,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import no.nav.foreldrepenger.info.web.abac.AppAbacAttributtType;
-import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
-import no.nav.vedtak.sikkerhet.abac.AbacDto;
+import no.nav.foreldrepenger.sikkerhet.abac.AbacDto;
+import no.nav.foreldrepenger.sikkerhet.abac.domene.AbacDataAttributter;
 
 public class ForsendelseIdDto implements AbacDto {
 

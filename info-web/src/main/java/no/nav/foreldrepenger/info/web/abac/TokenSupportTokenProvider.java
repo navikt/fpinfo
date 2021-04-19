@@ -1,37 +1,44 @@
-package no.nav.foreldrepenger.info.web.server.sikkerhet;
+package no.nav.foreldrepenger.info.web.abac;
 
+import java.net.URI;
 import java.util.Optional;
 
-import javax.annotation.Priority;
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Alternative;
+import javax.enterprise.context.ApplicationScoped;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.nimbusds.jwt.SignedJWT;
+
+import no.nav.foreldrepenger.sikkerhet.abac.domene.TokenType;
 import no.nav.security.token.support.core.jwt.JwtToken;
 import no.nav.security.token.support.jaxrs.JaxrsTokenValidationContextHolder;
-import no.nav.vedtak.sikkerhet.abac.TokenProvider;
 
-@Alternative
-@Dependent
-@Priority(100)
-public class TokenSupportTokenProvider implements TokenProvider {
+@ApplicationScoped
+public class TokenSupportTokenProvider {
 
     private static final Logger LOG = LoggerFactory.getLogger(TokenSupportTokenProvider.class);
 
-    @Override
     public String getUid() {
         return firstToken("UID")
                 .map(JwtToken::getSubject)
                 .orElseThrow();
     }
 
-    @Override
     public String userToken() {
         return firstToken("USER")
                 .map(JwtToken::getTokenAsString)
                 .orElseThrow();
+    }
+
+    public TokenType getTokeType() {
+        try {
+            return URI.create(SignedJWT.parse(userToken())
+                    .getJWTClaimsSet().getIssuer()).getHost().contains("tokendings") ? TokenType.TOKENX : TokenType.OIDC;
+
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Ukjent token type");
+        }
     }
 
     private Optional<JwtToken> firstToken(String type) {

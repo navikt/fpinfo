@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.info.web.app.tjenester.dto;
 
-import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.BEHANDLING_ID;
+import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.BEHANDLING_ID;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,8 +9,8 @@ import java.util.List;
 import no.nav.foreldrepenger.info.domene.Behandling;
 import no.nav.foreldrepenger.info.felles.datatyper.BehandlingTema;
 import no.nav.foreldrepenger.info.web.app.ResourceLink;
-import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
-import no.nav.vedtak.sikkerhet.abac.AbacDto;
+import no.nav.foreldrepenger.sikkerhet.abac.AbacDto;
+import no.nav.foreldrepenger.sikkerhet.abac.domene.AbacDataAttributter;
 
 public class BehandlingDto implements AbacDto {
 
