@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.info.web.abac;
 
 import java.net.URI;
+import java.text.ParseException;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -32,12 +33,19 @@ public class TokenSupportTokenProvider {
     }
 
     public TokenType getTokeType() {
-        try {
-            return URI.create(SignedJWT.parse(userToken())
-                    .getJWTClaimsSet().getIssuer()).getHost().contains("tokendings") ? TokenType.TOKENX : TokenType.OIDC;
+        return firstToken("ISSUER")
+                .map(JwtToken::getIssuer)
+                .map(it -> URI.create(it).getHost())
+                .map(host -> host.contains("tokendings") ? TokenType.TOKENX : TokenType.OIDC)
+                .orElseThrow(() -> new IllegalArgumentException("Ukjent token type"));
+    }
 
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Ukjent token type");
+    public static String claim(String token, String claim) {
+        try {
+            var claims = SignedJWT.parse(token).getJWTClaimsSet();
+            return String.class.cast(claims.getClaim(claim));
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("Fant ikke claim" + claim + " i token", e);
         }
     }
 
@@ -46,4 +54,6 @@ public class TokenSupportTokenProvider {
         token.ifPresent(t -> LOG.trace("{} Issuer {}", type, t.getIssuer()));
         return token;
     }
+
+
 }

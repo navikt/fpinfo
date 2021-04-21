@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.info.web.abac;
 
+import static no.nav.foreldrepenger.info.web.abac.TokenSupportTokenProvider.claim;
 import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.AKTØR_ID;
 import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.BEHANDLING_ID;
 import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.SAKSNUMMER;
@@ -18,7 +19,9 @@ import org.slf4j.LoggerFactory;
 import no.nav.foreldrepenger.info.pip.PipRepository;
 import no.nav.foreldrepenger.sikkerhet.abac.PdpRequestBuilder;
 import no.nav.foreldrepenger.sikkerhet.abac.domene.BeskyttRessursAttributer;
+import no.nav.foreldrepenger.sikkerhet.abac.domene.IdSubject;
 import no.nav.foreldrepenger.sikkerhet.abac.domene.IdToken;
+import no.nav.foreldrepenger.sikkerhet.abac.domene.TokenType;
 import no.nav.foreldrepenger.sikkerhet.abac.pep.PdpRequest;
 
 /**
@@ -29,6 +32,7 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
 
     private static final Logger LOG = LoggerFactory.getLogger(PdpRequestBuilderImpl.class);
     private static final String ABAC_DOMAIN = "foreldrepenger";
+    protected static final String PEP_ID = "fpinfo";
 
     private final PipRepository pipRepository;
     private final TokenSupportTokenProvider tokenProvider;
@@ -40,22 +44,32 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
     }
 
     @Override
-    public PdpRequest lagPdpRequest(BeskyttRessursAttributer attributter) {
+    public PdpRequest lagPdpRequest(BeskyttRessursAttributer requestAttributer) {
         LOG.trace("Lager PDP request");
-        PdpRequest pdpRequest = PdpRequest.builder()
-                .medRequest(attributter.getRequestPath())
-                .medActionType(attributter.getActionType())
-                .medResourceType(attributter.getResource())
-                .medUserId(tokenProvider.getUid())
-                .medIdToken(IdToken.withToken(tokenProvider.userToken(), tokenProvider.getTokeType()))
-                .medDomene(ABAC_DOMAIN)
-                .build();
+        var tokeType = tokenProvider.getTokeType();
+        var subjectId = tokenProvider.getUid();
+        var token = tokenProvider.userToken();
 
-        if (attributter.getVerdier(AppAbacAttributtType.ANNEN_PART).size() == 1) {
+        PdpRequest pdpRequest = PdpRequest.builder()
+            .medRequest(requestAttributer.getRequestPath())
+            .medActionType(requestAttributer.getActionType())
+            .medResourceType(requestAttributer.getResource())
+            .medUserId(subjectId)
+            .medIdToken(IdToken.withToken(token, tokeType))
+            .medDomene(ABAC_DOMAIN)
+            .medPepId(PEP_ID)
+            .build();
+
+        if (tokeType.equals(TokenType.TOKENX)) {
+            LOG.trace("Legger til ekstra tokenX attributter");
+            pdpRequest.setIdSubject(IdSubject.with(subjectId, "EksternBruker", Integer.parseInt(claim(token, "acr").replace("Level", ""))));
+        }
+
+        if (requestAttributer.getVerdier(AppAbacAttributtType.ANNEN_PART).size() == 1) {
             LOG.info("abac Attributter inneholder annen part");
             Optional<String> sakAnnenPart = pipRepository.finnSakenTilAnnenForelder(
-                    attributter.getVerdier(AKTØR_ID),
-                    attributter.getVerdier(AppAbacAttributtType.ANNEN_PART));
+                    requestAttributer.getVerdier(AKTØR_ID),
+                    requestAttributer.getVerdier(AppAbacAttributtType.ANNEN_PART));
 
             sakAnnenPart.ifPresent(saksnummerAnnenForelder -> {
                 pdpRequest.setAktørIder(new HashSet<>(
@@ -64,7 +78,7 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
                 pdpRequest.setAleneomsorg(pipRepository.hentOppgittAleneomsorgForSaksnummer(saksnummerAnnenForelder).orElse(null));
             });
         } else {
-            pdpRequest.setAktørIder(utledAktørIdeer(attributter));
+            pdpRequest.setAktørIder(utledAktørIdeer(requestAttributer));
         }
         LOG.trace("Laget PDP request OK {}", pdpRequest);
         return pdpRequest;
