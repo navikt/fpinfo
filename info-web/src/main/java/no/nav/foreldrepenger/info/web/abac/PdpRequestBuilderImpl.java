@@ -1,103 +1,90 @@
 package no.nav.foreldrepenger.info.web.abac;
 
-import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_DOMENE;
-import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE;
-import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_RESOURCE_TYPE;
-import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.SUBJECT_LEVEL;
-import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.SUBJECT_TYPE;
-import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.XACML10_ACTION_ACTION_ID;
-import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.XACML10_SUBJECT_ID;
-import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.AKTØR_ID;
-import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.BEHANDLING_ID;
-import static no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType.SAKSNUMMER;
+import static no.nav.foreldrepenger.info.web.abac.TokenSupportTokenProvider.claim;
+import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.AKTØR_ID;
+import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.BEHANDLING_ID;
+import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.SAKSNUMMER;
 
-import java.text.ParseException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.annotation.Priority;
 import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.nimbusds.jwt.SignedJWT;
-
 import no.nav.foreldrepenger.info.pip.PipRepository;
-import no.nav.vedtak.sikkerhet.abac.AbacAttributtSamling;
-import no.nav.vedtak.sikkerhet.abac.AbacIdToken.TokenType;
-import no.nav.vedtak.sikkerhet.abac.PdpKlient;
-import no.nav.vedtak.sikkerhet.abac.PdpRequest;
-import no.nav.vedtak.sikkerhet.abac.PdpRequestBuilder;
+import no.nav.foreldrepenger.sikkerhet.abac.PdpRequestBuilder;
+import no.nav.foreldrepenger.sikkerhet.abac.domene.BeskyttRessursAttributer;
+import no.nav.foreldrepenger.sikkerhet.abac.domene.IdSubject;
+import no.nav.foreldrepenger.sikkerhet.abac.domene.IdToken;
+import no.nav.foreldrepenger.sikkerhet.abac.domene.TokenType;
+import no.nav.foreldrepenger.sikkerhet.abac.pep.PdpRequest;
 
 /**
  * Implementasjon av PDP request for denne applikasjonen.
  */
 @Dependent
-@Alternative
-@Priority(2)
 public class PdpRequestBuilderImpl implements PdpRequestBuilder {
 
     private static final Logger LOG = LoggerFactory.getLogger(PdpRequestBuilderImpl.class);
+    private static final String ABAC_DOMAIN = "foreldrepenger";
+    protected static final String PEP_ID = "fpinfo";
 
-    public static final String ABAC_DOMAIN = "foreldrepenger";
-    private PipRepository pipRepository;
+    private final PipRepository pipRepository;
+    private final TokenSupportTokenProvider tokenProvider;
 
     @Inject
-    public PdpRequestBuilderImpl(PipRepository pipRepository) {
+    public PdpRequestBuilderImpl(PipRepository pipRepository, TokenSupportTokenProvider tokenProvider) {
         this.pipRepository = pipRepository;
+        this.tokenProvider = tokenProvider;
     }
 
     @Override
-    public PdpRequest lagPdpRequest(AbacAttributtSamling attributter) {
+    public PdpRequest lagPdpRequest(BeskyttRessursAttributer requestAttributer) {
         LOG.trace("Lager PDP request");
-        PdpRequest pdpRequest = new PdpRequest();
-        pdpRequest.put(RESOURCE_FELLES_DOMENE, ABAC_DOMAIN);
-        pdpRequest.put(PdpKlient.ENVIRONMENT_AUTH_TOKEN, attributter.getIdToken());
-        pdpRequest.put(XACML10_ACTION_ACTION_ID, attributter.getActionType().getEksternKode());
-        pdpRequest.put(RESOURCE_FELLES_RESOURCE_TYPE, attributter.getResource());
-        if (attributter.getIdToken().getTokenType().equals(TokenType.TOKENX)) {
+        var tokeType = tokenProvider.getTokeType();
+        var subjectId = tokenProvider.getUid();
+        var token = tokenProvider.userToken();
+
+        PdpRequest pdpRequest = PdpRequest.builder()
+            .medRequest(requestAttributer.getRequestPath())
+            .medActionType(requestAttributer.getActionType())
+            .medResourceType(requestAttributer.getResource())
+            .medUserId(subjectId)
+            .medIdToken(IdToken.withToken(token, tokeType))
+            .medDomene(ABAC_DOMAIN)
+            .medPepId(PEP_ID)
+            .build();
+
+        if (tokeType.equals(TokenType.TOKENX)) {
             LOG.trace("Legger til ekstra tokenX attributter");
-            pdpRequest.put(XACML10_SUBJECT_ID, claim(attributter.getIdToken().getToken(), "sub"));
-            pdpRequest.put(SUBJECT_LEVEL, claim(attributter.getIdToken().getToken(), "acr"));
-            pdpRequest.put(SUBJECT_TYPE, "EksternBruker");
+            pdpRequest.setIdSubject(IdSubject.with(subjectId, "EksternBruker", Integer.parseInt(claim(token, "acr").replace("Level", ""))));
         }
 
-        if (attributter.getVerdier(AppAbacAttributtType.ANNEN_PART).size() == 1) {
+        if (requestAttributer.getVerdier(AppAbacAttributtType.ANNEN_PART).size() == 1) {
             LOG.info("abac Attributter inneholder annen part");
             Optional<String> sakAnnenPart = pipRepository.finnSakenTilAnnenForelder(
-                    attributter.getVerdier(AKTØR_ID),
-                    attributter.getVerdier(AppAbacAttributtType.ANNEN_PART));
-            if (sakAnnenPart.isPresent()) {
-                String saksnummerAnnenForelder = sakAnnenPart.get();
-                pdpRequest.put(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, new HashSet<>(
+                    requestAttributer.getVerdier(AKTØR_ID),
+                    requestAttributer.getVerdier(AppAbacAttributtType.ANNEN_PART));
+
+            sakAnnenPart.ifPresent(saksnummerAnnenForelder -> {
+                pdpRequest.setAktørIder(new HashSet<>(
                         pipRepository.hentAktørIdForSaksnummer(Collections.singleton(saksnummerAnnenForelder))));
-                pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_ANNEN_PART,
-                        pipRepository.hentAnnenPartForSaksnummer(saksnummerAnnenForelder).orElse(null));
-                pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_ALENEOMSORG,
-                        pipRepository.hentOppgittAleneomsorgForSaksnummer(saksnummerAnnenForelder).orElse(null));
-            }
+                pdpRequest.setAnnenPartAktørId(pipRepository.hentAnnenPartForSaksnummer(saksnummerAnnenForelder).orElse(null));
+                pdpRequest.setAleneomsorg(pipRepository.hentOppgittAleneomsorgForSaksnummer(saksnummerAnnenForelder).orElse(null));
+            });
         } else {
-            pdpRequest.put(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, utledAktørIdeer(attributter));
+            pdpRequest.setAktørIder(utledAktørIdeer(requestAttributer));
         }
         LOG.trace("Laget PDP request OK {}", pdpRequest);
         return pdpRequest;
     }
 
-    private String claim(String token, String claim) {
-        try {
-            var claims = SignedJWT.parse(token).getJWTClaimsSet();
-            return String.class.cast(claims.getClaim(claim));
-        } catch (ParseException e) {
-            throw new IllegalArgumentException("Fant ikke claim" + claim + " i token", e);
-        }
-    }
-
-    private Set<String> utledAktørIdeer(AbacAttributtSamling attributter) {
+    private Set<String> utledAktørIdeer(BeskyttRessursAttributer attributter) {
         Set<String> aktørIdSet = new HashSet<>(attributter.getVerdier(AKTØR_ID));
         aktørIdSet.addAll(
                 pipRepository.hentAktørIdForSaksnummer(attributter.getVerdier(SAKSNUMMER)));
@@ -107,5 +94,4 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
                 .hentAktørIdForForsendelseIder(attributter.getVerdier(AppAbacAttributtType.FORSENDELSE_UUID)));
         return aktørIdSet;
     }
-
 }
