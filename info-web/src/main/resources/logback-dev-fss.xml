@@ -1,6 +1,5 @@
 <included>
    <logger name="no.nav" level="trace" />
-   <logger name="no.nav.sikkerhet" level="trace" />
    <logger name="org.glassfish.jersey" level="trace" />
    
 </included>
