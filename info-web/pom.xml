@@ -77,9 +77,8 @@
         </dependency>
 
         <dependency>
-            <groupId>no.nav.foreldrepenger.felles</groupId>
-            <artifactId>felles-abac</artifactId>
-            <scope>compile</scope>
+            <groupId>no.nav.foreldrepenger</groupId>
+            <artifactId>abac</artifactId>
         </dependency>
 
         <dependency>

@@ -27,7 +27,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <felles.version>3.2.35</felles.version>
+        <felles.version>3.2.37</felles.version>
         <prometheus.version>0.10.0</prometheus.version>
         <swagger.version>2.1.9</swagger.version>
 
@@ -44,6 +44,7 @@
         <owaspencoder.version>1.2.3</owaspencoder.version>
         <javaslang.version>2.0.6</javaslang.version>
 
+        <abac.version>1.0.2</abac.version>
     </properties>
 
     <dependencyManagement>
@@ -213,6 +214,11 @@
                 <version>1.0.0</version>
             </dependency>
 
+            <dependency>
+                <groupId>no.nav.foreldrepenger</groupId>
+                <artifactId>abac</artifactId>
+                <version>${abac.version}</version>
+            </dependency>
 
             <!-- Database -->
             <dependency>
