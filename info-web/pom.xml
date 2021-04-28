@@ -70,7 +70,11 @@
             <groupId>no.nav.foreldrepenger.info</groupId>
             <artifactId>migreringer</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>no.nav.foreldrepenger.felles</groupId>
+            <artifactId>log</artifactId>
+            <version>1.0.1</version>
+        </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.info</groupId>
             <artifactId>domene</artifactId>
