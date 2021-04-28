@@ -28,10 +28,10 @@ public class BehandlingTema {
 
     private static final Map<String, List<String>> YTELSE_TYPER = Map.of(
             KEY_ENGANGSSTØNAD,
-            List.of(ES.getVerdi()),
+            List.of(ES.name()),
             KEY_FORELDREPENGER,
-            List.of(FP.getVerdi(),
-                    ENDRING_FP.getVerdi()));
+            List.of(FP.name(),
+                    ENDRING_FP.name()));
 
     public static final String ENGANGSTØNAD = "ENGST";
     public static final String ENGANGSTØNAD_FØDSEL = "ENGST_FODS";

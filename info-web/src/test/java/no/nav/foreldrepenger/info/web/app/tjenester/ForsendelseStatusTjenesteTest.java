@@ -32,7 +32,7 @@ import no.nav.vedtak.exception.TekniskException;
 class ForsendelseStatusTjenesteTest {
     private static final Long BEHANDLING_ID = 123L;
     private static final String BEHANDLING_STATUS = "FVED";
-    private static final String FAGSAK_YTELSE_TYPE = FagsakYtelseType.FP.getVerdi();
+    private static final String FAGSAK_YTELSE_TYPE = FagsakYtelseType.FP.name();
     private static final String BEHANDLENDE_ENHET_KODE = "4082";
     private static final String BEHANDLENDE_ENHET_NAVN = "NAV";
     private static final String SAKSNUMMER = "12345";
@@ -112,7 +112,7 @@ class ForsendelseStatusTjenesteTest {
             antall--;
             var builder = dokumentBuilder()
                     .medForsendelseId(forsendelseId)
-                    .medType(DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL.getVerdi());
+                    .medType(DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL.name());
             if (medBehandling) {
                 builder.medBehandlingId(BEHANDLING_ID + antall);
             }

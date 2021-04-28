@@ -28,7 +28,7 @@ import no.nav.foreldrepenger.info.web.app.tjenester.dto.BehandlingIdDto;
 class BehandlingTjenesteTest {
     private static final Long BEHANDLING_ID = 123L;
     private static final String BEHANDLING_STATUS = "FVED";
-    private static final String FAGSAK_YTELSE_TYPE = FagsakYtelseType.FP.getVerdi();
+    private static final String FAGSAK_YTELSE_TYPE = FagsakYtelseType.FP.name();
     private static final String BEHANDLENDE_ENHET_KODE = "4082";
     private static final String BEHANDLENDE_ENHET_NAVN = "NAV";
     private static final String SAKSNUMMER = "12345";
@@ -105,7 +105,7 @@ class BehandlingTjenesteTest {
     }
 
     private static List<MottattDokument> lagDokument(DokumentTypeId type) {
-        return List.of(dokumentBuilder().medForsendelseId(UUID.randomUUID()).medType(type.getVerdi()).build());
+        return List.of(dokumentBuilder().medForsendelseId(UUID.randomUUID()).medType(type.name()).build());
     }
 
     private static MottattDokument.Builder dokumentBuilder() {

@@ -36,7 +36,7 @@ class DomeneTilDtoTransformasjonTest {
     private static final String BEHANDLENDE_ENHET_NAVN = "NAV enhet";
     private static final String RESULTAT_TYPE = BehandlingResultatType.IKKE_FASTSATT.getVerdi();
     private static final String BEHANDLING_STATUS = BehandlingStatus.UTREDES.getVerdi();
-    private static final String FAGSAK_YTELSE_TYPE = FagsakYtelseType.FP.getVerdi();
+    private static final String FAGSAK_YTELSE_TYPE = FagsakYtelseType.FP.name();
     private static final String FAMILIEHENDELSE_TYPE = FamilieHendelseType.FØDSEL.getVerdi();
     private static final String TEST_LENKE = "test-lenke";
     private static final String TEST_REL = "test-rel";
@@ -48,7 +48,7 @@ class DomeneTilDtoTransformasjonTest {
     private static final ResourceLink EXPECTED_RESOURCE_LINK = ResourceLink.get(TEST_LENKE, TEST_REL, null);
     private static final String DOKUMENT_ID = "123";
     private static final UUID FORSENDELSE_ID = UUID.randomUUID();
-    private static final String DOKUMENT_TYPE_ID = DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL.getVerdi();
+    private static final String DOKUMENT_TYPE_ID = DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL.name();
 
     @Test
     void behandlingTilBehandlingDto() {

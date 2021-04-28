@@ -92,10 +92,10 @@ public class MottattDokument implements Serializable {
     }
 
     public Boolean erSøknad() {
-        return DokumentTypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON.getVerdi().equalsIgnoreCase(type) ||
-                DokumentTypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL.getVerdi().equalsIgnoreCase(type) ||
-                DokumentTypeId.SØKNAD_FORELDREPENGER_ADOPSJON.getVerdi().equalsIgnoreCase(type) ||
-                DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL.getVerdi().equalsIgnoreCase(type);
+        return DokumentTypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON.name().equalsIgnoreCase(type) ||
+                DokumentTypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL.name().equalsIgnoreCase(type) ||
+                DokumentTypeId.SØKNAD_FORELDREPENGER_ADOPSJON.name().equalsIgnoreCase(type) ||
+                DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL.name().equalsIgnoreCase(type);
     }
 
     public static Builder builder() {

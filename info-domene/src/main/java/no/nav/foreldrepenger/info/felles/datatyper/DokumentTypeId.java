@@ -6,9 +6,5 @@ public enum DokumentTypeId {
     SØKNAD_ENGANGSSTØNAD_FØDSEL,
     SØKNAD_ENGANGSSTØNAD_ADOPSJON,
     FORELDREPENGER_ENDRING_SØKNAD,
-    INNTEKTSMELDING;
-
-    public String getVerdi() {
-        return name();
-    }
+    INNTEKTSMELDING
 }

@@ -76,6 +76,11 @@
             <version>1.0.1</version>
         </dependency>
         <dependency>
+            <groupId>no.nav.foreldrepenger</groupId>
+            <artifactId>konfig</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
             <groupId>no.nav.foreldrepenger.info</groupId>
             <artifactId>domene</artifactId>
         </dependency>
