@@ -46,5 +46,12 @@ public class TokenSupportTokenProvider {
         return token;
     }
 
-
+    public static String claim(String token, String claim) {
+        try {
+            var claims = SignedJWT.parse(token).getJWTClaimsSet();
+            return String.class.cast(claims.getClaim(claim));
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("Fant ikke claim" + claim + " i token", e);
+        }
+    }
 }
