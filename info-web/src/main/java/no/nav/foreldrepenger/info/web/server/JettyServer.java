@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.info.web.server;
 
 import static javax.servlet.DispatcherType.REQUEST;
 import static no.nav.vedtak.util.env.Cluster.NAIS_CLUSTER_NAME;
+import static org.eclipse.jetty.webapp.MetaInfConfiguration.WEBINF_JAR_PATTERN;
 
 import java.net.URL;
 import java.util.EnumSet;
@@ -120,17 +121,19 @@ public class JettyServer {
         ctx.setInitParameter("resteasy.injector.factory", "org.jboss.resteasy.cdi.CdiInjectorFactory");
         ctx.setBaseResource(createResourceCollection());
         ctx.setContextPath(CONTEXT_PATH);
-        // ctx.setConfigurations(CONFIGURATIONS);
-        // ctx.setAttribute(WEBINF_JAR_PATTERN,
-        // "^.*resteasy-.*.jar$|^.*felles-.*.jar$");
+        ctx.setConfigurations(CONFIGURATIONS);
+        ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*resteasy-.*.jar$|^.*felles-.*.jar$");
         updateMetaData(ctx.getMetaData());
-        addTokenValidationFilter(ctx);
+        addFilters(ctx);
         return ctx;
     }
 
-    private void addTokenValidationFilter(WebAppContext ctx) {
+    private static void addFilters(WebAppContext ctx) {
         LOG.trace("Installerer JaxrsJwtTokenValidationFilter");
         ctx.addFilter(new FilterHolder(new JaxrsJwtTokenValidationFilter(config())),
+                "/api/*",
+                EnumSet.of(REQUEST));
+        ctx.addFilter(new FilterHolder(new HeadersToMDCFilterBean()),
                 "/api/*",
                 EnumSet.of(REQUEST));
     }
