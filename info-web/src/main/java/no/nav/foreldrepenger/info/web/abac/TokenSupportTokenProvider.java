@@ -40,15 +40,6 @@ public class TokenSupportTokenProvider {
                 .orElseThrow(() -> new IllegalArgumentException("Ukjent token type"));
     }
 
-    public static String claim(String token, String claim) {
-        try {
-            var claims = SignedJWT.parse(token).getJWTClaimsSet();
-            return String.class.cast(claims.getClaim(claim));
-        } catch (ParseException e) {
-            throw new IllegalArgumentException("Fant ikke claim" + claim + " i token", e);
-        }
-    }
-
     private Optional<JwtToken> firstToken(String type) {
         var token = JaxrsTokenValidationContextHolder.getHolder().getTokenValidationContext().getFirstValidToken();
         token.ifPresent(t -> LOG.trace("{} Issuer {}", type, t.getIssuer()));

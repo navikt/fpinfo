@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.info.web.abac;
 
-import static no.nav.foreldrepenger.info.web.abac.TokenSupportTokenProvider.claim;
 import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.AKTØR_ID;
 import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.BEHANDLING_ID;
 import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.SAKSNUMMER;
@@ -19,9 +18,7 @@ import org.slf4j.LoggerFactory;
 import no.nav.foreldrepenger.info.pip.PipRepository;
 import no.nav.foreldrepenger.sikkerhet.abac.PdpRequestBuilder;
 import no.nav.foreldrepenger.sikkerhet.abac.domene.BeskyttRessursAttributer;
-import no.nav.foreldrepenger.sikkerhet.abac.domene.IdSubject;
 import no.nav.foreldrepenger.sikkerhet.abac.domene.IdToken;
-import no.nav.foreldrepenger.sikkerhet.abac.domene.TokenType;
 import no.nav.foreldrepenger.sikkerhet.abac.pep.PdpRequest;
 
 /**
@@ -59,11 +56,6 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
             .medDomene(ABAC_DOMAIN)
             .medPepId(PEP_ID)
             .build();
-
-        if (tokeType.equals(TokenType.TOKENX)) {
-            LOG.trace("Legger til ekstra tokenX attributter");
-            pdpRequest.setIdSubject(IdSubject.with(subjectId, "EksternBruker", Integer.parseInt(claim(token, "acr").replace("Level", ""))));
-        }
 
         if (requestAttributer.getVerdier(AppAbacAttributtType.ANNEN_PART).size() == 1) {
             LOG.info("abac Attributter inneholder annen part");
