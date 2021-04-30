@@ -10,18 +10,7 @@
         "https://fpinfo-q1.dev.nav.no"
     ],
     "env": {
-        "APPDYNAMICS_AGENT_ACCOUNT_NAME" :"NON-PROD",
-        "DEFAULTDS_URL" : "jdbc:oracle:thin:@a01dbfl032.adeo.no:1521/fpsak_q1",
-        "FPINFOSCHEMA_URL" :"jdbc:oracle:thin:@a01dbfl032.adeo.no:1521/fpsak_q1",
-        "LOADBALANCER_URL" : "https://fpinfo-q1.dev.nav.no",
-        "OIDC_OPENAM_JWKSURL" : "https://isso-q.adeo.no:443/isso/oauth2/connect/jwk_uri",
-        "OIDC_OPENAM_ISSUERURL" : "https://isso-q.adeo.no:443/isso/oauth2",
-        "OPENIDCONNECT_USERNAME" : "fpinfo-q1",
-        "OPENIDCONNECT_ISSOHOST" : "https://isso-q.adeo.no:443/isso/oauth2",
-        "OIDC_STS_ISSUER_URL"  : "https://security-token-service.nais.preprod.local",
-        "OIDC_STS_JWKS_URL" : "https://security-token-service.nais.preprod.local/rest/v1/sts/jwks",
-        "OIDC_AAD_B2C_HOSTURL" : "https://not.used.in.fss",
-        "SECURITYTOKENSERVICE_URL" : "https://sts-q1.preprod.local/SecurityTokenServiceProvider/"
-      }
+        "APPDYNAMICS_AGENT_ACCOUNT_NAME" :"NON-PROD"
+     }
 }
 
