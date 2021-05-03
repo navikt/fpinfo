@@ -109,7 +109,9 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
     }
 
     private static void loggTilApplikasjonslogg(Throwable cause) {
-        if (cause instanceof VLException) {
+        if (cause instanceof ManglerTilgangException) {
+            LOG.info(cause.getMessage(), cause);
+        } else if (cause instanceof VLException) {
             LOG.warn(cause.getMessage(), cause);
         } else {
             String message = cause.getMessage() != null ? LoggerUtils.removeLineBreaks(cause.getMessage()) : "";
@@ -119,5 +121,4 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
         // key for å tracke prosess -- nullstill denne
         MDC.remove("prosess");
     }
-
 }
