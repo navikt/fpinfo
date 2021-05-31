@@ -56,9 +56,9 @@ class AppStartupInfoLogger {
 
     private static void log(Selftests.Resultat result) {
         if (result.isReady()) {
-            LOG.info("Selftest {}: {}. Endpoint: {}", getStatus(result.isReady()), result.getDescription(), result.getEndpoint());
+            LOG.info("Selftest {}: {}. Endpoint: {}", getStatus(result.isReady()), result.description(), result.endpoint());
         } else {
-            LOG.warn("Selftest {}: {}. Endpoint: {}", getStatus(result.isReady()), result.getDescription(), result.getEndpoint());
+            LOG.warn("Selftest {}: {}. Endpoint: {}", getStatus(result.isReady()), result.description(), result.endpoint());
         }
     }
 
