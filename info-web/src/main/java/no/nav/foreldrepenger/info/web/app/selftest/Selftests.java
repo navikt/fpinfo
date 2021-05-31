@@ -27,7 +27,7 @@ public class Selftests implements ReadinessAware, LivenessAware {
 
     public Selftests.Resultat run() {
         oppdaterSelftestResultatHvisNødvendig();
-        return new Selftests.Resultat(isReady(), databaseHealthCheck.getDescription(), databaseHealthCheck.getEndpoint());
+        return new Selftests.Resultat(databaseHealthCheck.isReady(), databaseHealthCheck.getDescription(), databaseHealthCheck.getEndpoint());
     }
 
     @Override
@@ -46,27 +46,7 @@ public class Selftests implements ReadinessAware, LivenessAware {
         }
     }
 
-    public static class Resultat {
-        private final boolean isReady;
-        private final String description;
-        private final String endpoint;
+    public record Resultat(boolean isReady, String description, String endpoint) {
 
-        public Resultat(boolean isReady, String description, String endpoint) {
-            this.isReady = isReady;
-            this.description = description;
-            this.endpoint = endpoint;
-        }
-
-        public boolean isReady() {
-            return isReady;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public String getEndpoint() {
-            return endpoint;
-        }
     }
 }
