@@ -6,13 +6,14 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.info.web.app.selftest.checks.DatabaseHealthCheck;
+import no.nav.vedtak.log.metrics.LivenessAware;
+import no.nav.vedtak.log.metrics.ReadinessAware;
 
 @ApplicationScoped
-public class Selftests {
+public class Selftests implements ReadinessAware, LivenessAware {
 
     private DatabaseHealthCheck databaseHealthCheck;
 
-    private boolean isReady;
     private LocalDateTime sistOppdatertTid = LocalDateTime.now().minusDays(1);
 
     @Inject
@@ -26,17 +27,21 @@ public class Selftests {
 
     public Selftests.Resultat run() {
         oppdaterSelftestResultatHvisNødvendig();
-        return new Selftests.Resultat(isReady, databaseHealthCheck.getDescription(), databaseHealthCheck.getEndpoint());
+        return new Selftests.Resultat(isReady(), databaseHealthCheck.getDescription(), databaseHealthCheck.getEndpoint());
     }
 
+    @Override
     public boolean isReady() {
-        // Bruk denne for NAIS-respons og skill omfanget her.
         return run().isReady();
+    }
+
+    @Override
+    public boolean isAlive() {
+        return isReady();
     }
 
     private synchronized void oppdaterSelftestResultatHvisNødvendig() {
         if (sistOppdatertTid.isBefore(LocalDateTime.now().minusSeconds(30))) {
-            isReady = databaseHealthCheck.isOK();
             sistOppdatertTid = LocalDateTime.now();
         }
     }

@@ -14,8 +14,10 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import no.nav.vedtak.log.metrics.ReadinessAware;
+
 @ApplicationScoped
-public class DatabaseHealthCheck {
+public class DatabaseHealthCheck implements ReadinessAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseHealthCheck.class);
     private static final String JDBC_DEFAULT_DS = "jdbc/defaultDS";
@@ -39,8 +41,8 @@ public class DatabaseHealthCheck {
         return endpoint;
     }
 
-    public boolean isOK() {
-
+    @Override
+    public boolean isReady() {
         DataSource dataSource;
         try {
             dataSource = (DataSource) new InitialContext().lookup(jndiName);
