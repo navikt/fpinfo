@@ -19,7 +19,6 @@ public class HealthChecks {
 
     private static final String RESPONSE_CACHE_KEY = "Cache-Control";
     private static final String RESPONSE_CACHE_VAL = "must-revalidate,no-cache,no-store";
-    private static final String RESPONSE_OK = "OK";
     private Selftests selftests;
 
     public HealthChecks() {
@@ -39,7 +38,7 @@ public class HealthChecks {
     @Operation(description = "sjekker om poden lever", tags = "nais", hidden = true)
     public Response isAlive() {
         return Response
-                .ok(RESPONSE_OK)
+                .ok()
                 .header(RESPONSE_CACHE_KEY, RESPONSE_CACHE_VAL)
                 .build();
     }
@@ -53,7 +52,7 @@ public class HealthChecks {
     @Operation(description = "sjekker om poden er klar", tags = "nais", hidden = true)
     public Response isReady() {
         if (selftests.isReady()) {
-            return Response.ok(RESPONSE_OK)
+            return Response.ok()
                     .header(RESPONSE_CACHE_KEY, RESPONSE_CACHE_VAL)
                     .build();
         }
