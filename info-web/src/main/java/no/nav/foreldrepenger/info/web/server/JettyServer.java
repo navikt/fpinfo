@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.info.web.server;
 
 import static javax.servlet.DispatcherType.REQUEST;
-import static no.nav.vedtak.util.env.Cluster.NAIS_CLUSTER_NAME;
+import static no.nav.foreldrepenger.konfig.Cluster.NAIS_CLUSTER_NAME;
 import static org.eclipse.jetty.webapp.MetaInfConfiguration.WEBINF_JAR_PATTERN;
 
 import java.net.URL;
@@ -31,10 +31,10 @@ import no.nav.foreldrepenger.info.dbstoette.DBConnectionProperties;
 import no.nav.foreldrepenger.info.dbstoette.DatabaseStøtte;
 import no.nav.foreldrepenger.info.web.app.konfig.ApplicationConfig;
 import no.nav.foreldrepenger.info.web.app.konfig.InternalApplication;
+import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.security.token.support.core.configuration.IssuerProperties;
 import no.nav.security.token.support.core.configuration.MultiIssuerConfiguration;
 import no.nav.security.token.support.jaxrs.servlet.JaxrsJwtTokenValidationFilter;
-import no.nav.vedtak.util.env.Environment;
 
 public class JettyServer {
 
