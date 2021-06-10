@@ -7,7 +7,6 @@ import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtT
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.enterprise.context.Dependent;
@@ -50,15 +49,15 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
         var subjectId = tokenProvider.getUid();
         var token = tokenProvider.userToken();
 
-        PdpRequest pdpRequest = PdpRequest.builder()
-            .medRequest(requestAttributer.getRequestPath())
-            .medActionType(requestAttributer.getActionType())
-            .medResourceType(requestAttributer.getResource())
-            .medUserId(subjectId)
-            .medIdToken(IdToken.withToken(token, tokeType))
-            .medDomene(ABAC_DOMAIN)
-            .medPepId(PEP_ID)
-            .build();
+        var pdpRequest = PdpRequest.builder()
+                .medRequest(requestAttributer.getRequestPath())
+                .medActionType(requestAttributer.getActionType())
+                .medResourceType(requestAttributer.getResource())
+                .medUserId(subjectId)
+                .medIdToken(IdToken.withToken(token, tokeType))
+                .medDomene(ABAC_DOMAIN)
+                .medPepId(PEP_ID)
+                .build();
 
         if (tokeType.equals(TokenType.TOKENX)) {
             LOG.trace("Legger til ekstra tokenX attributter");
@@ -67,7 +66,7 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
 
         if (requestAttributer.getVerdier(AppAbacAttributtType.ANNEN_PART).size() == 1) {
             LOG.info("abac Attributter inneholder annen part");
-            Optional<String> sakAnnenPart = pipRepository.finnSakenTilAnnenForelder(
+            var sakAnnenPart = pipRepository.finnSakenTilAnnenForelder(
                     requestAttributer.getVerdier(AKTØR_ID),
                     requestAttributer.getVerdier(AppAbacAttributtType.ANNEN_PART));
 
@@ -93,5 +92,10 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
         aktørIdSet.addAll(pipRepository
                 .hentAktørIdForForsendelseIder(attributter.getVerdier(AppAbacAttributtType.FORSENDELSE_UUID)));
         return aktørIdSet;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + " [pipRepository=" + pipRepository + ", tokenProvider=" + tokenProvider + "]";
     }
 }
