@@ -18,15 +18,15 @@ import org.hibernate.type.StringType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.foreldrepenger.info.domene.Behandling;
-import no.nav.foreldrepenger.info.domene.FagsakRelasjon;
-import no.nav.foreldrepenger.info.domene.MottattDokument;
-import no.nav.foreldrepenger.info.domene.Sak;
-import no.nav.foreldrepenger.info.domene.Saksnummer;
-import no.nav.foreldrepenger.info.domene.SøknadsGrunnlag;
-import no.nav.foreldrepenger.info.domene.UttakPeriode;
-import no.nav.foreldrepenger.info.felles.datatyper.DokumentTypeId;
-import no.nav.foreldrepenger.info.felles.datatyper.FagsakYtelseType;
+import no.nav.foreldrepenger.info.Behandling;
+import no.nav.foreldrepenger.info.FagsakRelasjon;
+import no.nav.foreldrepenger.info.MottattDokument;
+import no.nav.foreldrepenger.info.Sak;
+import no.nav.foreldrepenger.info.Saksnummer;
+import no.nav.foreldrepenger.info.SøknadsGrunnlag;
+import no.nav.foreldrepenger.info.UttakPeriode;
+import no.nav.foreldrepenger.info.datatyper.DokumentTypeId;
+import no.nav.foreldrepenger.info.datatyper.FagsakYtelseType;
 import no.nav.vedtak.exception.TekniskException;
 
 @Dependent
