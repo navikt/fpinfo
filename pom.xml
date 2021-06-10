@@ -10,7 +10,6 @@
 
     <modules>
         <module>info-migreringer</module>
-        <module>info-domene</module>
         <module>info-web</module>
     </modules>
 
