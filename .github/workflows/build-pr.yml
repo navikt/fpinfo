@@ -1,7 +1,7 @@
 name: Bygg PR eller branches
 
 on:
-  pull_request_target:
+  pull_request:
     paths-ignore:
       - '**.md'
       - '**.MD'
@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      
       - name: Cache maven repository
         uses: actions/cache@v2.1.6
         with:
