@@ -333,7 +333,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>no.nav.foreldrepenger.info.web.server.JettyServer</mainClass>
+                            <mainClass>no.nav.foreldrepenger.info.server.JettyServer</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
