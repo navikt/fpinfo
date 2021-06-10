@@ -11,6 +11,10 @@ import no.nav.foreldrepenger.sikkerhet.abac.domene.AbacDataAttributter;
 
 public record ForsendelseIdDto(@NotNull UUID forsendelseId) implements AbacDto {
 
+    public static ForsendelseIdDto valueOf(String uuid) {
+        return new ForsendelseIdDto(UUID.fromString(uuid));
+    }
+
     @Override
     public AbacDataAttributter abacAttributter() {
         return AbacDataAttributter.opprett().leggTil(FORSENDELSE_UUID, forsendelseId);
