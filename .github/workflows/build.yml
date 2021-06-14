@@ -10,6 +10,7 @@ on:
       - '.gitignore'
       - 'LICENCE'
       - 'CODEOWNERS'
+      - '.github/workflows/build-pr.yml'
 
 env:
   IMAGE_BASE: ghcr.io/${{ github.repository }}
@@ -54,7 +55,7 @@ jobs:
         env:
           SONAR: ${{ secrets.SONAR }}
           GITHUB_USERNAME: x-access-token
-          GITHUB_PASSWORD: ${{ secrets.NOTIFICATION }}
+          GITHUB_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Bygg, tag og push Docker image
         run: |
