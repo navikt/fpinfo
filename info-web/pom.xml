@@ -15,7 +15,7 @@
 
     <properties>
         <swagger-ui.version>3.50.0</swagger-ui.version>
-        <resteasy.version>4.6.0.Final</resteasy.version>
+        <resteasy.version>4.6.1.Final</resteasy.version>
     </properties>
 
     <dependencyManagement>
