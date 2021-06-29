@@ -28,7 +28,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <felles.version>3.2.98</felles.version>
         <prometheus.version>0.11.0</prometheus.version>
-        <swagger.version>2.1.9</swagger.version>
+        <swagger.version>2.1.10</swagger.version>
 
         <!-- Eksterne -->
         <assertj.version>3.20.2</assertj.version>
