@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.info.dbstoette;
 
-import no.nav.vedtak.util.env.Environment;
+import no.nav.foreldrepenger.konfig.Environment;
 
 public final class VariablePlaceholderReplacer {
 

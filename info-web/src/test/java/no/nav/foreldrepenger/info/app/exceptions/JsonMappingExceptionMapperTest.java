@@ -8,9 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.exc.InvalidTypeIdException;
 
-import no.nav.foreldrepenger.info.app.exceptions.FeilDto;
-import no.nav.foreldrepenger.info.app.exceptions.JsonProcessingExceptionMapper;
-
 class JsonMappingExceptionMapperTest {
 
     @Test

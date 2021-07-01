@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.info.app.selftest.Selftests;
-import no.nav.foreldrepenger.info.app.tjenester.HealthChecks;
 
 @ExtendWith(MockitoExtension.class)
 class HealthChecksTest {

@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.info.app.tjenester;
 
-import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.noContent;
 import static javax.ws.rs.core.Response.ok;
 import static javax.ws.rs.core.Response.status;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static no.nav.foreldrepenger.info.abac.BeskyttetRessursAttributt.FAGSAK;
 import static no.nav.foreldrepenger.info.abac.BeskyttetRessursAttributt.UTTAKSPLAN;
 import static no.nav.foreldrepenger.info.app.tjenester.DokumentforsendelseTjeneste.DOKUMENTFORSENDELSE_PATH;

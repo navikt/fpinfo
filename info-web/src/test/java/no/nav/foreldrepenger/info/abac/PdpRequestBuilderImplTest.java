@@ -17,10 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import no.nav.foreldrepenger.info.abac.AppAbacAttributtType;
-import no.nav.foreldrepenger.info.abac.BeskyttetRessursAttributt;
-import no.nav.foreldrepenger.info.abac.PdpRequestBuilderImpl;
-import no.nav.foreldrepenger.info.abac.TokenSupportTokenProvider;
 import no.nav.foreldrepenger.info.repository.PipRepository;
 import no.nav.foreldrepenger.sikkerhet.abac.PdpRequestBuilder;
 import no.nav.foreldrepenger.sikkerhet.abac.domene.AbacDataAttributter;

@@ -8,11 +8,6 @@ import org.jboss.resteasy.spi.ApplicationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.info.app.exceptions.FeilDto;
-import no.nav.foreldrepenger.info.app.exceptions.FeilType;
-import no.nav.foreldrepenger.info.app.exceptions.FeltFeilDto;
-import no.nav.foreldrepenger.info.app.exceptions.GeneralRestExceptionMapper;
-import no.nav.foreldrepenger.info.app.exceptions.ValideringsfeilException;
 import no.nav.vedtak.exception.FunksjonellException;
 import no.nav.vedtak.exception.ManglerTilgangException;
 import no.nav.vedtak.exception.TekniskException;

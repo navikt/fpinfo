@@ -14,7 +14,6 @@ import no.nav.foreldrepenger.info.Behandling;
 import no.nav.foreldrepenger.info.BehandlingÅrsak;
 import no.nav.foreldrepenger.info.Sak;
 import no.nav.foreldrepenger.info.app.ResourceLink;
-import no.nav.foreldrepenger.info.app.tjenester.SakTjeneste;
 import no.nav.foreldrepenger.info.app.tjenester.dto.AktørIdDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.SakDto;
 import no.nav.foreldrepenger.info.datatyper.BehandlingType;

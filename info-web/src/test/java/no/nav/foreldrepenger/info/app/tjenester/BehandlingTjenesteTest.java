@@ -16,8 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import no.nav.foreldrepenger.info.Behandling;
 import no.nav.foreldrepenger.info.MottattDokument;
 import no.nav.foreldrepenger.info.app.ResourceLink;
-import no.nav.foreldrepenger.info.app.tjenester.BehandlingTjeneste;
-import no.nav.foreldrepenger.info.app.tjenester.SøknadTjeneste;
 import no.nav.foreldrepenger.info.app.tjenester.dto.BehandlingDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.BehandlingIdDto;
 import no.nav.foreldrepenger.info.datatyper.BehandlingTema;
