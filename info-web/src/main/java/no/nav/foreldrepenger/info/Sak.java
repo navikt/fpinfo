@@ -44,7 +44,7 @@ public class Sak {
     @Column(name = "familie_hendelse_type")
     private String familieHendelseType;
 
-    @Column(name = "opprettet_tid", nullable = false)
+    @Column(name = "fagsak_opprettet_tid", nullable = false)
     private LocalDateTime opprettetTidspunkt;
 
     @Column(name = "endret_tid")

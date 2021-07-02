@@ -11,6 +11,7 @@ AS SELECT
        ffh.familie_hendelse_type AS familie_hendelse_type,
        beh.OPPRETTET_AV AS OPPRETTET_AV,
        beh.OPPRETTET_TID AS OPPRETTET_TID,
+       fs.OPPRETTET_TID AS FAGSAK_OPPRETTET_TID,
        beh.ENDRET_AV AS ENDRET_AV,
        beh.ENDRET_TID AS ENDRET_TID
    FROM
