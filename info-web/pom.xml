@@ -204,7 +204,7 @@
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.el</artifactId>
-            <version>4.0.1</version>
+            <version>3.0.3</version>
         </dependency>
         <dependency>
             <groupId>jakarta.validation</groupId>
