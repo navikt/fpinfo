@@ -104,13 +104,6 @@
             </dependency>
 
             <dependency>
-                <!-- kun for DbInit - kan erstattes ved å bytte JsonUtil til Jackson ObjectMapper -->
-                <groupId>org.jboss.resteasy</groupId>
-                <artifactId>resteasy-json-p-provider</artifactId>
-                <version>4.6.2.Final</version>
-            </dependency>
-
-            <dependency>
                 <!-- for Bean validation -->
                 <groupId>org.hibernate.validator</groupId>
                 <artifactId>hibernate-validator</artifactId>
