@@ -3,12 +3,12 @@ package no.nav.foreldrepenger.info.app.exceptions;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+import org.jboss.resteasy.spi.ApplicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -20,12 +20,12 @@ import no.nav.vedtak.log.mdc.MDCOperations;
 import no.nav.vedtak.log.util.LoggerUtils;
 
 @Provider
-public class GeneralRestExceptionMapper implements ExceptionMapper<WebApplicationException> {
+public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationException> {
 
     private static final Logger LOG = LoggerFactory.getLogger(GeneralRestExceptionMapper.class);
 
     @Override
-    public Response toResponse(WebApplicationException exception) {
+    public Response toResponse(ApplicationException exception) {
         Throwable cause = exception.getCause();
 
         if (cause instanceof ValideringsfeilException c) {
