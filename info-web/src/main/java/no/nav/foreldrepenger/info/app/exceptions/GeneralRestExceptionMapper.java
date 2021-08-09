@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.info.app.exceptions;
 
+import java.util.List;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -22,12 +23,31 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<Throwable> {
     @Override
     public Response toResponse(Throwable cause) {
         loggTilApplikasjonslogg(cause);
+        String callId = MDCOperations.getCallId();
+
+        if (cause instanceof VLException c) {
+            return handleVLException(c, callId);
+        }
+
+        return handleGenerellFeil(cause, callId);
+    }
+
+    private static Response handleValideringsfeil(ValideringsfeilException valideringsfeil) {
+        List<String> feltNavn = valideringsfeil.getFeltFeil().stream().map(FeltFeilDto::navn)
+                .toList();
+        return Response
+                .status(Response.Status.BAD_REQUEST)
+                .entity(new FeilDto(
+                        FeltValideringFeil.feltverdiKanIkkeValideres(feltNavn).getMessage(),
+                        valideringsfeil.getFeltFeil()))
+                .type(MediaType.APPLICATION_JSON)
+                .build();
+    }
 
         if (cause instanceof ManglerTilgangException m) {
             return ikkeTilgang(m);
-        } else {
-            return serverError(cause);
         }
+        return serverError(callId, vlException);
     }
 
 

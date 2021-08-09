@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.info.app.tjenester;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -48,7 +47,7 @@ public class BehandlingTjeneste {
     private List<String> journalPostIdr(List<MottattDokument> inntektsmeldinger) {
         return inntektsmeldinger.stream()
                 .map(MottattDokument::getJournalpostId)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private boolean harSøknad(BehandlingIdDto behandlingIdDto) {

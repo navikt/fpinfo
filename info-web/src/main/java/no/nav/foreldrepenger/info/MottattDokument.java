@@ -56,7 +56,6 @@ public class MottattDokument implements Serializable {
     }
 
     MottattDokument() {
-        // Hibernate
     }
 
     public String getBehandlingStatus() {
@@ -173,5 +172,13 @@ public class MottattDokument implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(this.mottattDokumentId, this.behandlingId);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + " [behandlingStatus=" + behandlingStatus + ", mottattDokumentId=" + mottattDokumentId
+                + ", behandlingId="
+                + behandlingId + ", forsendelseId=" + forsendelseId + ", søknadXml=" + søknadXml + ", journalpostId=" + journalpostId
+                + ", type=" + type + ", saksnummer=" + saksnummer + "]";
     }
 }

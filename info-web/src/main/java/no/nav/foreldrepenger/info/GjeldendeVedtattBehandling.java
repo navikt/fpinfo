@@ -18,8 +18,7 @@ public class GjeldendeVedtattBehandling {
     @Column(name = "SAKSNUMMER")
     private String saksnummer;
 
-    public GjeldendeVedtattBehandling() {
-        // Hibernate
+    GjeldendeVedtattBehandling() {
     }
 
     public Long getBehandlingId() {
@@ -28,5 +27,10 @@ public class GjeldendeVedtattBehandling {
 
     public Saksnummer getSaksnummer() {
         return new Saksnummer(saksnummer);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + " [behandlingId=" + behandlingId + ", saksnummer=" + saksnummer + "]";
     }
 }

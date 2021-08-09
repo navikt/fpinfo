@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -117,7 +116,7 @@ public class Repository {
         return query.getResultList()
                 .stream()
                 .filter(o -> DokumentTypeId.INNTEKTSMELDING.name().equals(o.getType()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<MottattDokument> hentMottattDokument(Long behandlingId) {

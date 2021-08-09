@@ -12,7 +12,7 @@ import org.hibernate.annotations.Immutable;
 @Immutable
 public class Aksjonspunkt {
 
-    public static final String OPPRETTET_AKSJONSPUNKT_STATUS_KODE = "OPPR";
+    private static final String OPPRETTET_AKSJONSPUNKT_STATUS_KODE = "OPPR";
 
     @Id
     @Column(name = "AKSJONSPUNKT_ID")
@@ -24,8 +24,19 @@ public class Aksjonspunkt {
     @Column(name = "behandling_id")
     private Long behandlingId;
 
-    public Aksjonspunkt() {
-        // Hibernate
+    Aksjonspunkt() {
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setBehandlingId(Long behandlingId) {
+        this.behandlingId = behandlingId;
     }
 
     public Long getId() {
@@ -40,36 +51,12 @@ public class Aksjonspunkt {
         return behandlingId;
     }
 
-    public static class Builder {
-        private Long id;
-        private String status;
-        private Long behandlingId;
-
-        public Builder medId(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder medStatus(String status) {
-            this.status = status;
-            return this;
-        }
-
-        public Builder medBehandling(Long behandlingId) {
-            this.behandlingId = behandlingId;
-            return this;
-        }
-
-        public Aksjonspunkt build() {
-            Aksjonspunkt aksjonspunkt = new Aksjonspunkt();
-            aksjonspunkt.id = this.id;
-            aksjonspunkt.status = this.status;
-            aksjonspunkt.behandlingId = this.behandlingId;
-            return aksjonspunkt;
-        }
-    }
-
     public boolean erÅpentAksjonspunkt() {
         return OPPRETTET_AKSJONSPUNKT_STATUS_KODE.equals(this.getStatus());
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + " [id=" + id + ", status=" + status + ", behandlingId=" + behandlingId + "]";
     }
 }
