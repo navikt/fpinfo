@@ -13,10 +13,6 @@ record FeilDto(String feilmelding, Collection<FeltFeilDto> feltFeil, FeilType ty
         this(msg, List.of(), feilType);
     }
 
-    FeilDto(FeilType feilType, String msg) {
-        this(msg, List.of(), feilType);
-    }
-
     FeilDto(String msg) {
         this(msg, List.of(), null);
     }

@@ -50,8 +50,8 @@
         </dependency>
         <dependency>
             <!-- kun for DbInit - kan erstattes ved å bytte JsonUtil til Jackson ObjectMapper -->
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.json</artifactId>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-json-p-provider</artifactId>
         </dependency>
     </dependencies>
 
