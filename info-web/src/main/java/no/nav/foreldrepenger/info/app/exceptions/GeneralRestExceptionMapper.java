@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.info.app.exceptions;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -44,7 +43,7 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
 
     private static Response handleValideringsfeil(ValideringsfeilException valideringsfeil) {
         List<String> feltNavn = valideringsfeil.getFeltFeil().stream().map(FeltFeilDto::navn)
-                .collect(Collectors.toList());
+                .toList();
         return Response
                 .status(Response.Status.BAD_REQUEST)
                 .entity(new FeilDto(
@@ -57,9 +56,8 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
     private static Response handleVLException(VLException vlException, String callId) {
         if (vlException instanceof ManglerTilgangException m) {
             return ikkeTilgang(m);
-        } else {
-            return serverError(callId, vlException);
         }
+            return serverError(callId, vlException);
     }
 
     private static Response serverError(String callId, VLException feil) {

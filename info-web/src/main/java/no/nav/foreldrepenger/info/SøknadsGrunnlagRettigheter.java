@@ -15,6 +15,7 @@ import no.nav.vedtak.felles.jpa.converters.BooleanToStringConverter;
 @Immutable
 public class SøknadsGrunnlagRettigheter {
 
+
     @Id
     @Column(name = "GRYF_ID")
     private Long gryfId;
@@ -45,5 +46,12 @@ public class SøknadsGrunnlagRettigheter {
         return saksbehandlerAleneomsorg != null
                 ? saksbehandlerAleneomsorg
                 : søknadAleneomsorg;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + " [gryfId=" + gryfId + ", saksbehandlerAnnenForelderRett=" + saksbehandlerAnnenForelderRett
+                + ", søknadAnnenForelderRett=" + søknadAnnenForelderRett + ", saksbehandlerAleneomsorg=" + saksbehandlerAleneomsorg
+                + ", søknadAleneomsorg=" + søknadAleneomsorg + "]";
     }
 }

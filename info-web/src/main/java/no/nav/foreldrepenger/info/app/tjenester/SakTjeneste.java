@@ -5,7 +5,6 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -17,7 +16,6 @@ import no.nav.foreldrepenger.info.Behandling;
 import no.nav.foreldrepenger.info.Sak;
 import no.nav.foreldrepenger.info.app.tjenester.dto.AktørIdDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.SakDto;
-import no.nav.foreldrepenger.info.datatyper.BehandlingType;
 import no.nav.foreldrepenger.info.datatyper.BehandlingÅrsakType;
 import no.nav.foreldrepenger.info.repository.Repository;
 
@@ -68,18 +66,10 @@ public class SakTjeneste {
                         dto.leggTilLenke(href, "uttaksplan");
                     });
                     return dto;
-                }).collect(Collectors.toList());
+                }).toList();
     }
 
-    private boolean erRelevant(Behandling behandling) {
-        return Objects.equals(behandling.getBehandlingType(), BehandlingType.FØRSTEGANGSBEHANDLING)
-                || erRevurderingMedEndringssøknad(behandling);
-    }
 
-    private boolean erRevurderingMedEndringssøknad(Behandling behandling) {
-        return Objects.equals(behandling.getBehandlingType(), BehandlingType.REVURDERING)
-                && behandlingHarMottattEndringssøknad(behandling);
-    }
 
     private boolean harMottattEndringssøknad(Sak sak) {
         return repository.hentTilknyttedeBehandlinger(sak.getSaksnummer())

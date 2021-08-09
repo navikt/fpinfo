@@ -51,7 +51,13 @@ public class FagsakRelasjon {
     }
 
     private static Optional<Saksnummer> saksnummerFra(String saksnummer) {
-        return saksnummer == null ? Optional.empty() : Optional.of(new Saksnummer(saksnummer));
+        return Optional.ofNullable(saksnummer)
+                .map(Saksnummer::new);
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + " [behandlingId=" + behandlingId + ", saksnummer=" + saksnummer + ", fagsakId=" + fagsakId
+                + ", saksnummerEn=" + saksnummerEn + ", saksnummerTo=" + saksnummerTo + ", endretTidspunkt=" + endretTidspunkt + "]";
+    }
 }
