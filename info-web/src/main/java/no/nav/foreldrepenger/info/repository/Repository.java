@@ -71,28 +71,27 @@ public class Repository {
     }
 
     public Optional<Sak> finnNyesteSakForAnnenPart(String aktørIdBruker, String annenPartAktørId) {
-        var query = em.createQuery(
+        return em.createQuery(
                 "from SakStatus where aktørId=:annenPartAktørId and aktørIdAnnenPart=:aktørId and fagsakYtelseType=:ytelseType order by opprettetTidspunkt desc",
                 Sak.class)
                 .setParameter("aktørId", aktørIdBruker)
                 .setParameter("ytelseType", FagsakYtelseType.FP.name())
-                .setParameter("annenPartAktørId", annenPartAktørId);
-        return query.getResultList().stream()
+                .setParameter("annenPartAktørId", annenPartAktørId).getResultList().stream()
                 .findFirst();
     }
 
     public Optional<FagsakRelasjon> hentFagsakRelasjon(String saksnummer) {
-        var query = em.createQuery("from FagsakRelasjon where saksnummer=:saksnummer", FagsakRelasjon.class)
+        return em.createQuery("from FagsakRelasjon where saksnummer=:saksnummer", FagsakRelasjon.class)
                 .setParameter("saksnummer",
-                        new TypedParameterValue(StringType.INSTANCE, saksnummer));
-        return query.getResultList().stream()
+                        new TypedParameterValue(StringType.INSTANCE, saksnummer))
+                .getResultList()
+                .stream()
                 .max(Comparator.comparing(FagsakRelasjon::getEndretTidspunkt));
     }
 
     public Behandling hentBehandling(Long behandlingId) {
-        var query = em.createQuery("from Behandling where behandling_id=:behandlingId", Behandling.class)
-                .setParameter("behandlingId", behandlingId);
-        var resultList = query.getResultList();
+        var resultList = em.createQuery("from Behandling where behandling_id=:behandlingId", Behandling.class)
+                .setParameter("behandlingId", behandlingId).getResultList();
         if (resultList.size() > 1) {
             LOG.info("Hent behandling med id {} returnerte {} behandlinger", behandlingId, resultList.size());
         }
@@ -111,9 +110,8 @@ public class Repository {
     }
 
     public List<MottattDokument> hentInntektsmeldinger(Long behandlingId) {
-        var query = em.createQuery("from MottattDokument where behandling_id=:behandlingId", MottattDokument.class)
-                .setParameter("behandlingId", behandlingId);
-        return query.getResultList()
+        return em.createQuery("from MottattDokument where behandling_id=:behandlingId", MottattDokument.class)
+                .setParameter("behandlingId", behandlingId).getResultList()
                 .stream()
                 .filter(o -> DokumentTypeId.INNTEKTSMELDING.name().equals(o.getType()))
                 .toList();
