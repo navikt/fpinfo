@@ -1,67 +1,36 @@
 package no.nav.foreldrepenger.info.app.exceptions;
 
-import java.util.List;
-
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import org.jboss.resteasy.spi.ApplicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import no.nav.vedtak.exception.FunksjonellException;
 import no.nav.vedtak.exception.ManglerTilgangException;
-import no.nav.vedtak.exception.VLException;
 import no.nav.vedtak.log.mdc.MDCOperations;
 import no.nav.vedtak.log.util.LoggerUtils;
 
 @Provider
-public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationException> {
+public class GeneralRestExceptionMapper implements ExceptionMapper<Throwable> {
 
     private static final Logger LOG = LoggerFactory.getLogger(GeneralRestExceptionMapper.class);
 
     @Override
-    public Response toResponse(ApplicationException exception) {
-        Throwable cause = exception.getCause();
-
-        if (cause instanceof ValideringsfeilException c) {
-            return handleValideringsfeil(c);
-        }
-
+    public Response toResponse(Throwable cause) {
         loggTilApplikasjonslogg(cause);
-        String callId = MDCOperations.getCallId();
-
-        if (cause instanceof VLException c) {
-            return handleVLException(c, callId);
-        }
-
-        return handleGenerellFeil(cause, callId);
-    }
-
-    private static Response handleValideringsfeil(ValideringsfeilException valideringsfeil) {
-        List<String> feltNavn = valideringsfeil.getFeltFeil().stream().map(FeltFeilDto::navn)
-                .toList();
-        return Response
-                .status(Response.Status.BAD_REQUEST)
-                .entity(new FeilDto(
-                        FeltValideringFeil.feltverdiKanIkkeValideres(feltNavn).getMessage(),
-                        valideringsfeil.getFeltFeil()))
-                .type(MediaType.APPLICATION_JSON)
-                .build();
-    }
-
-    private static Response handleVLException(VLException vlException, String callId) {
-        if (vlException instanceof ManglerTilgangException m) {
+        if (cause instanceof ManglerTilgangException m) {
             return ikkeTilgang(m);
         }
-            return serverError(callId, vlException);
+        return serverError(cause);
     }
 
-    private static Response serverError(String callId, VLException feil) {
-        String feilmelding = getVLExceptionFeilmelding(callId, feil);
+
+    private static Response serverError(Throwable feil) {
+        String feilmelding = getVLExceptionFeilmelding(feil);
         return Response.serverError()
                 .entity(new FeilDto(feilmelding, FeilType.GENERELL_FEIL))
                 .type(MediaType.APPLICATION_JSON)
@@ -76,8 +45,9 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
                 .build();
     }
 
-    private static String getVLExceptionFeilmelding(String callId, VLException feil) {
-        String feilbeskrivelse = feil.getMessage();
+    private static String getVLExceptionFeilmelding(Throwable feil) {
+        var callId = MDCOperations.getCallId();
+        String feilbeskrivelse = getExceptionMelding(feil);
         if (feil instanceof FunksjonellException f) {
             String løsningsforslag = f.getLøsningsforslag();
             return "Det oppstod en feil: "
@@ -91,30 +61,26 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
 
     }
 
-    private static Response handleGenerellFeil(Throwable cause, String callId) {
-        String generellFeilmelding = "Det oppstod en serverfeil: " + cause.getMessage()
-                + ". Meld til support med referanse-id: " + callId;
-        return Response.serverError()
-                .entity(new FeilDto(generellFeilmelding, FeilType.GENERELL_FEIL))
-                .type(MediaType.APPLICATION_JSON)
-                .build();
-    }
-
     private static String avsluttMedPunktum(String tekst) {
         return tekst + (tekst.endsWith(".") ? " " : ". ");
     }
 
     private static void loggTilApplikasjonslogg(Throwable cause) {
+        var feil = getExceptionMelding(cause);
         if (cause instanceof ManglerTilgangException) {
-            LOG.info(cause.getMessage(), cause);
-        } else if (cause instanceof VLException) {
-            LOG.warn(cause.getMessage(), cause);
+            LOG.info(feil, cause);
         } else {
-            String message = cause.getMessage() != null ? LoggerUtils.removeLineBreaks(cause.getMessage()) : "";
-            LOG.error("Fikk uventet feil:" + message, cause);
+            LOG.error("Fikk uventet feil:" + feil, cause);
         }
-
         // key for å tracke prosess -- nullstill denne
         MDC.remove("prosess");
+    }
+
+    private static String getExceptionMelding(Throwable feil) {
+        return getTextForField(feil.getMessage());
+    }
+
+    private static String getTextForField(String input) {
+        return input != null ? LoggerUtils.removeLineBreaks(input) : "";
     }
 }
