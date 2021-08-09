@@ -28,8 +28,7 @@ public class BehandlingÅrsak {
     @Column(name = "BEHANDLING_ID")
     private Long behandlingId;
 
-    public BehandlingÅrsak() {
-        // Hibernate
+    BehandlingÅrsak() {
     }
 
     public BehandlingÅrsak(BehandlingÅrsakType type) {
@@ -67,6 +66,6 @@ public class BehandlingÅrsak {
 
     @Override
     public String toString() {
-        return "BehandlingÅrsak{" + "type='" + type + '\'' + ", behandlingId=" + behandlingId + '}';
+        return getClass().getSimpleName() + " [id=" + id + ", type=" + type + ", behandlingId=" + behandlingId + "]";
     }
 }

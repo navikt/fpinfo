@@ -1,8 +1,6 @@
 package no.nav.foreldrepenger.info.app.tjenester;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -34,13 +32,13 @@ public class UttakTjeneste {
         var fagsakRelasjonOptional = repository.hentFagsakRelasjon(saksnummer.saksnummer());
         if (fagsakRelasjonOptional.isEmpty()) {
             LOG.info("Fant ingen uttaksplan for {}", saksnummer);
-            return Collections.emptyList();
+            return List.of();
         }
 
         var fagsakRelasjon = fagsakRelasjonOptional.get();
         var fellesPlan = hentUttakPerioder(fagsakRelasjon.getSaksnummer()).stream()
                 .map(up -> UttaksPeriodeDto.fraDomene(saksnummer, up, erAnnenPart))
-                .collect(Collectors.toList());
+                .toList();
 
         var annenPartFagsak = fagsakRelasjon.finnSaksnummerAnnenpart();
         if (annenPartFagsak.isPresent()) {
@@ -56,6 +54,11 @@ public class UttakTjeneste {
 
     private List<UttakPeriode> hentUttakPerioder(Saksnummer saksnummer) {
         return behandlingTjeneste.getGjeldendeBehandlingId(saksnummer).map(gb -> repository.hentUttakPerioder(gb))
-                .orElse(Collections.emptyList());
+                .orElse(List.of());
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + " [behandlingTjeneste=" + behandlingTjeneste + ", repository=" + repository + "]";
     }
 }

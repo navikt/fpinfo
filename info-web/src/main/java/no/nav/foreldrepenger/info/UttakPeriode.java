@@ -186,6 +186,18 @@ public class UttakPeriode {
         return morsAktivitet.getVerdi();
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + " [id=" + id + ", behandlingId=" + behandlingId + ", periodeResultatType=" + periodeResultatType
+                + ", graderingAvslagAarsak=" + graderingAvslagAarsak + ", periodeResultatÅrsak=" + periodeResultatÅrsak
+                + ", uttakUtsettelseType=" + uttakUtsettelseType + ", flerbarnsdager=" + flerbarnsdager + ", graderingInnvilget="
+                + graderingInnvilget + ", manueltBehandlet=" + manueltBehandlet + ", samtidigUttak=" + samtidigUttak + ", fom=" + fom
+                + ", tom=" + tom + ", trekkonto=" + trekkonto + ", trekkdager=" + trekkdager + ", arbeidstidprosent=" + arbeidstidprosent
+                + ", utbetalingsprosent=" + utbetalingsprosent + ", samtidigUttaksprosent=" + samtidigUttaksprosent + ", oppholdÅrsak="
+                + oppholdÅrsak + ", overføringÅrsak=" + overføringÅrsak + ", uttakArbeidType=" + uttakArbeidType + ", arbeidsgiverAktørId="
+                + arbeidsgiverAktørId + ", arbeidsgiverOrgnr=" + arbeidsgiverOrgnr + ", morsAktivitet=" + morsAktivitet + "]";
+    }
+
     public static Builder builder() {
         return new Builder();
     }

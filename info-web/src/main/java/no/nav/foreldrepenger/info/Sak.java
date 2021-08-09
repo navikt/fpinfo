@@ -50,8 +50,7 @@ public class Sak {
     @Column(name = "endret_tid")
     private LocalDateTime endretTidspunkt;
 
-    public Sak() {
-        // Hibernate
+    Sak() {
     }
 
     public String getBehandlingstema() {
@@ -88,6 +87,15 @@ public class Sak {
 
     public LocalDateTime getEndretTidspunkt() {
         return endretTidspunkt;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + " [randomId=" + randomId + ", saksnummer=" + saksnummer + ", fagsakStatus=" + fagsakStatus
+                + ", behandlingId="
+                + behandlingId + ", fagsakYtelseType=" + fagsakYtelseType + ", aktørId=" + aktørId + ", aktørIdAnnenPart="
+                + aktørIdAnnenPart + ", aktørIdBarn=" + aktørIdBarn + ", familieHendelseType=" + familieHendelseType
+                + ", opprettetTidspunkt=" + opprettetTidspunkt + ", endretTidspunkt=" + endretTidspunkt + "]";
     }
 
     public static Builder builder() {

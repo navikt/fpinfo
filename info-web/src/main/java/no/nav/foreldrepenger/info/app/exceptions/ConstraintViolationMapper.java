@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -30,7 +29,7 @@ public class ConstraintViolationMapper implements ExceptionMapper<ConstraintViol
             String feltNavn = getFeltNavn(constraintViolation.getPropertyPath());
             feilene.add(new FeltFeilDto(feltNavn, constraintViolation.getMessage()));
         }
-        List<String> feltNavn = feilene.stream().map(felt -> felt.navn()).collect(Collectors.toList());
+        List<String> feltNavn = feilene.stream().map(felt -> felt.navn()).toList();
 
         var feil = FeltValideringFeil.feltverdiKanIkkeValideres(feltNavn);
         log.warn(feil.getMessage(), feil);

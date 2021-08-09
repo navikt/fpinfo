@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -460,7 +459,7 @@ public final class DBConnectionProperties {
     public static List<DBConnectionProperties> fraStream1(InputStream in) throws JsonParseException, JsonMappingException, IOException {
         var m = new ObjectMapper().readValue(in, Wrapper.class);
         return Arrays.stream(m.schemas)
-                .map(DBConnectionProperties::map).collect(Collectors.toList());
+                .map(DBConnectionProperties::map).toList();
 
     }
 

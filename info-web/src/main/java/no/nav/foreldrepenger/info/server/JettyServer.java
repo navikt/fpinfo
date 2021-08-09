@@ -8,7 +8,6 @@ import java.net.URL;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.eclipse.jetty.annotations.AnnotationConfiguration;
 import org.eclipse.jetty.plus.webapp.EnvConfiguration;
@@ -152,7 +151,7 @@ public class JettyServer {
 
         metaData.setWebInfClassesResources(getApplicationClasses().stream()
                 .map(c -> Resource.newResource(c.getProtectionDomain().getCodeSource().getLocation()))
-                .collect(Collectors.toList()));
+                .toList());
     }
 
     protected List<Class<?>> getApplicationClasses() {

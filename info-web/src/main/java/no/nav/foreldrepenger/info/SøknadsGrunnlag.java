@@ -108,4 +108,14 @@ public class SøknadsGrunnlag {
     public Boolean getAnnenForelderInformert() {
         return annenForelderInformert;
     }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + " [randomId=" + randomId + ", saksnummer=" + saksnummer + ", behandlingId=" + behandlingId
+                + ", antallBarn="
+                + antallBarn + ", familieHendelseType=" + familieHendelseType + ", omsorgsovertakelseDato=" + omsorgsovertakelseDato
+                + ", termindato=" + termindato + ", fødselDato=" + fødselDato + ", brukerRolle=" + brukerRolle + ", dekningsgrad="
+                + dekningsgrad + ", foreldreRettigheter=" + foreldreRettigheter + ", morsAktivitetHvisUfør=" + morsAktivitetHvisUfør
+                + ", annenForelderInformert=" + annenForelderInformert + "]";
+    }
 }

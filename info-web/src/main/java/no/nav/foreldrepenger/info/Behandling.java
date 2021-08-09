@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.info;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -62,8 +61,7 @@ public class Behandling {
     @Column(name = "endret_tid")
     private LocalDateTime endretTidspunkt;
 
-    public Behandling() {
-        // Hibernate
+    Behandling() {
     }
 
     public Long getBehandlingId() {
@@ -103,8 +101,10 @@ public class Behandling {
     }
 
     public List<Aksjonspunkt> getÅpneAksjonspunkter() {
-        return this.aksjonspunkter.stream().filter(Aksjonspunkt::erÅpentAksjonspunkt).collect(Collectors.toList());
+        return this.aksjonspunkter.stream().filter(Aksjonspunkt::erÅpentAksjonspunkt).toList();
     }
+
+
 
     public BehandlingType getBehandlingType() {
         return behandlingType;
@@ -183,5 +183,15 @@ public class Behandling {
         public Behandling build() {
             return behandling;
         }
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + " [behandlingId=" + behandlingId + ", behandlingStatus=" + behandlingStatus
+                + ", behandlingResultatType="
+                + behandlingResultatType + ", behandlingType=" + behandlingType + ", fagsakYtelseType=" + fagsakYtelseType + ", saksnummer="
+                + saksnummer + ", familieHendelseType=" + familieHendelseType + ", behandlendeEnhet=" + behandlendeEnhet
+                + ", behandlendeEnhetNavn=" + behandlendeEnhetNavn + ", aksjonspunkter=" + aksjonspunkter + ", årsaker=" + årsaker
+                + ", opprettetTidspunkt=" + opprettetTidspunkt + ", endretTidspunkt=" + endretTidspunkt + "]";
     }
 }

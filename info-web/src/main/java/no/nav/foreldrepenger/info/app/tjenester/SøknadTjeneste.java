@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.info.app.tjenester;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -30,7 +29,7 @@ public class SøknadTjeneste {
         var mottatteDokumenter = repository.hentMottattDokument(behandlingId)
                 .stream()
                 .filter(MottattDokument::erSøknad)
-                .collect(Collectors.toList());
+                .toList();
         LOG.info("hentet søknader for behandling {}", behandlingId);
         return Optional.of(mottatteDokumenter).flatMap(this::mapTilSøknadXml);
     }
