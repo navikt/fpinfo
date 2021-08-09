@@ -117,12 +117,11 @@ public class JettyServer {
     protected WebAppContext createContext() {
         var ctx = new WebAppContext();
         ctx.setParentLoaderPriority(true);
+        ctx.setInitParameter("resteasy.injector.factory", "org.jboss.resteasy.cdi.CdiInjectorFactory");
         ctx.setBaseResource(createResourceCollection());
         ctx.setContextPath(CONTEXT_PATH);
         ctx.setConfigurations(CONFIGURATIONS);
-        ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*jersey-.*.jar$|^.*felles-.*.jar$");
-        ctx.addEventListener(new org.jboss.weld.environment.servlet.BeanManagerResourceBindingListener());
-        ctx.addEventListener(new org.jboss.weld.environment.servlet.Listener());
+        ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*resteasy-.*.jar$|^.*felles-.*.jar$");
         updateMetaData(ctx.getMetaData());
         addFilters(ctx);
         return ctx;
