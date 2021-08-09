@@ -84,7 +84,7 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
     }
 
     private Set<String> utledAktørIdeer(BeskyttRessursAttributer attributter) {
-        Set<String> aktørIdSet = new HashSet<>(attributter.getVerdier(AKTØR_ID));
+        var aktørIdSet = new HashSet<String>(attributter.getVerdier(AKTØR_ID));
         aktørIdSet.addAll(
                 pipRepository.hentAktørIdForSaksnummer(attributter.getVerdier(SAKSNUMMER)));
         aktørIdSet.addAll(pipRepository

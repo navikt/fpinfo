@@ -8,18 +8,8 @@ public enum AppAbacAttributtType implements AbacAttributtType {
     ANNEN_PART,
     OPPGITT_ALENEOMSORG;
 
-    private final boolean maskerOutput;
-
-    AppAbacAttributtType() {
-        this(false);
-    }
-
-    AppAbacAttributtType(boolean maskerOutput) {
-        this.maskerOutput = maskerOutput;
-    }
-
     @Override
     public boolean getMaskerOutput() {
-        return maskerOutput;
+        return false;
     }
 }

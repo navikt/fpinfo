@@ -44,7 +44,7 @@ class SakTjenesteTest {
 
         assertThat(sakDtos).hasSize(1);
         assertThat(getBehandlingLinks(sakDtos)).hasSize(2);
-        assertThat(getBehandlingLinks(sakDtos).map(l -> l.getHref().getPath())).containsExactlyInAnyOrder(
+        assertThat(getBehandlingLinks(sakDtos).map(l -> l.href().getPath())).containsExactlyInAnyOrder(
                 prefix + førstegangsbehandling.getBehandlingId(), prefix + revurderingEndringssøknad.getBehandlingId());
     }
 
@@ -65,7 +65,7 @@ class SakTjenesteTest {
     }
 
     private Stream<ResourceLink> getBehandlingLinks(List<SakDto> sakDtos) {
-        return sakDtos.get(0).getLenker().stream().filter(resourceLink -> resourceLink.getRel().equals("behandlinger"));
+        return sakDtos.get(0).getLenker().stream().filter(resourceLink -> resourceLink.rel().equals("behandlinger"));
     }
 
 }

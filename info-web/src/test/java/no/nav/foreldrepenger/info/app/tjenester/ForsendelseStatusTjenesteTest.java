@@ -68,7 +68,7 @@ class ForsendelseStatusTjenesteTest {
 
         Optional<ForsendelseStatusDto> opt = forsendelseStatusTjeneste.hentForsendelseStatus(new ForsendelseIdDto(fid));
 
-        assertThat(opt.orElseThrow().getForsendelseStatus()).isEqualTo(ForsendelseStatus.MOTTATT);
+        assertThat(opt.orElseThrow().forsendelseStatus()).isEqualTo(ForsendelseStatus.MOTTATT);
     }
 
     @Test
@@ -81,7 +81,7 @@ class ForsendelseStatusTjenesteTest {
         Optional<ForsendelseStatusDto> opt = forsendelseStatusTjeneste.hentForsendelseStatus(new ForsendelseIdDto(fid));
 
         assertThat(opt).isPresent();
-        assertThat(opt.orElseThrow().getForsendelseStatus()).isEqualTo(ForsendelseStatus.PÅGÅR);
+        assertThat(opt.orElseThrow().forsendelseStatus()).isEqualTo(ForsendelseStatus.PÅGÅR);
     }
 
     @Test

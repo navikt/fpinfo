@@ -2,10 +2,7 @@ package no.nav.foreldrepenger.info.app.exceptions;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Path;
 import javax.ws.rs.core.MediaType;
@@ -18,21 +15,21 @@ import org.slf4j.LoggerFactory;
 
 public class ConstraintViolationMapper implements ExceptionMapper<ConstraintViolationException> {
 
-    private static final Logger log = LoggerFactory.getLogger(ConstraintViolationMapper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConstraintViolationMapper.class);
 
     @Override
     public Response toResponse(ConstraintViolationException exception) {
         Collection<FeltFeilDto> feilene = new ArrayList<>();
 
-        Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
-        for (ConstraintViolation<?> constraintViolation : constraintViolations) {
+        var constraintViolations = exception.getConstraintViolations();
+        for (var constraintViolation : constraintViolations) {
             String feltNavn = getFeltNavn(constraintViolation.getPropertyPath());
             feilene.add(new FeltFeilDto(feltNavn, constraintViolation.getMessage()));
         }
-        List<String> feltNavn = feilene.stream().map(felt -> felt.navn()).toList();
+        var feltNavn = feilene.stream().map(felt -> felt.navn()).toList();
 
         var feil = FeltValideringFeil.feltverdiKanIkkeValideres(feltNavn);
-        log.warn(feil.getMessage(), feil);
+        LOG.warn(feil.getMessage(), feil);
         return Response
                 .status(Response.Status.BAD_REQUEST)
                 .entity(new FeilDto(feil.getMessage(), feilene))

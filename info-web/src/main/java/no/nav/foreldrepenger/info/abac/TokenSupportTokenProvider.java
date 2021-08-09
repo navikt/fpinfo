@@ -35,7 +35,8 @@ public class TokenSupportTokenProvider {
     public TokenType getTokeType() {
         return firstToken("ISSUER")
                 .map(JwtToken::getIssuer)
-                .map(it -> URI.create(it).getHost())
+                .map(URI::create)
+                .map(URI::getHost)
                 .map(host -> host.contains("tokendings") ? TokenType.TOKENX : TokenType.OIDC)
                 .orElseThrow(() -> new IllegalArgumentException("Ukjent token type"));
     }
@@ -48,10 +49,9 @@ public class TokenSupportTokenProvider {
 
     public static String claim(String token, String claim) {
         try {
-            var claims = SignedJWT.parse(token).getJWTClaimsSet();
-            return String.class.cast(claims.getClaim(claim));
+            return String.class.cast(SignedJWT.parse(token).getJWTClaimsSet().getClaim(claim));
         } catch (ParseException e) {
-            throw new IllegalArgumentException("Fant ikke claim" + claim + " i token", e);
+            throw new IllegalArgumentException("Fant ikke claim " + claim + " i token", e);
         }
     }
 }

@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.info.app.tjenester;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -53,7 +52,8 @@ public class ForsendelseStatusTjeneste {
             return Optional.of(new ForsendelseStatusDto(ForsendelseStatus.MOTTATT));
         }
         if (behandlingsIder.size() > 1) {
-            throw ForsendelseStatusTjenesteFeil.flereBehandlingerForForsendelsen(behandlingsIder, forsendelseId);
+            throw new TekniskException("FP-760822",
+                    String.format("Det er flere behandlinger (%s) knyttet til forsendelsen med ID %s", behandlingsIder, forsendelseId));
         }
 
         var behandling = repository.hentBehandling(behandlingsIder.iterator().next());
@@ -78,14 +78,14 @@ public class ForsendelseStatusTjeneste {
                         BehandlingResultatType.MERGET_OG_HENLAGT.name());
                 return null;
             }
-            throw ForsendelseStatusTjenesteFeil.ugyldigBehandlingResultat(forsendelseId);
+            throw new TekniskException("FP-760822", String.format("Ugyldig behandlingsresultat for forsendelse ID %s", forsendelseId));
         }
         var aksjonspunkt = behandling.getÅpneAksjonspunkter();
         if (aksjonspunkt.isEmpty()) {
             return new ForsendelseStatusDto(ForsendelseStatus.PÅGÅR);
-        } else {
-            return new ForsendelseStatusDto(ForsendelseStatus.PÅ_VENT);
         }
+        return new ForsendelseStatusDto(ForsendelseStatus.PÅ_VENT);
+
     }
 
     private static boolean erMergetOgHenlagt(String resultat) {
@@ -108,15 +108,4 @@ public class ForsendelseStatusTjeneste {
                 BehandlingStatus.IVERKSETTER_VEDTAK.getVerdi());
     }
 
-    private static class ForsendelseStatusTjenesteFeil {
-
-        static TekniskException flereBehandlingerForForsendelsen(Set<Long> behandlingsIder, UUID forsendelseId) {
-            return new TekniskException("FP-760822",
-                    String.format("Det er flere behandlinger (%s) knyttet til forsendelsen med ID %s", behandlingsIder, forsendelseId));
-        }
-
-        static TekniskException ugyldigBehandlingResultat(UUID forsendelseId) {
-            return new TekniskException("FP-760822", String.format("Ugyldig behandlingsresultat for forsendelse ID %s", forsendelseId));
-        }
-    }
 }

@@ -8,49 +8,15 @@ import no.nav.foreldrepenger.sikkerhet.abac.AbacDto;
 import no.nav.foreldrepenger.sikkerhet.abac.domene.AbacDataAttributter;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ForsendelseStatusDto implements AbacDto {
-    private ForsendelseStatus forsendelseStatus;
 
-    /**
-     * Joark journalpostid.
-     */
-    private Long journalpostId;
-
-    /**
-     * GSAK Saksnummer. (samme som Fagsak#saksnummer).
-     */
-    private Long saksnummer;
+public record ForsendelseStatusDto(ForsendelseStatus forsendelseStatus, Long journalpostId, Long saksnummer) implements AbacDto {
 
     public ForsendelseStatusDto(ForsendelseStatus forsendelseStatus) {
-        this.forsendelseStatus = forsendelseStatus;
-    }
-
-    public ForsendelseStatus getForsendelseStatus() {
-        return forsendelseStatus;
-    }
-
-    public void setForsendelseStatus(ForsendelseStatus forsendelseStatus) {
-        this.forsendelseStatus = forsendelseStatus;
-    }
-
-    public Long getJournalpostId() {
-        return journalpostId;
-    }
-
-    public void setJournalpostId(Long journalpostId) {
-        this.journalpostId = journalpostId;
-    }
-
-    public Long getSaksnummer() {
-        return saksnummer;
-    }
-
-    public void setSaksnummer(Long saksnummer) {
-        this.saksnummer = saksnummer;
+        this(forsendelseStatus, null, null);
     }
 
     @Override
     public AbacDataAttributter abacAttributter() {
-        return AbacDataAttributter.opprett().leggTil(SAKSNUMMER, String.valueOf(saksnummer));
+        return AbacDataAttributter.opprett().leggTil(SAKSNUMMER, String.valueOf(saksnummer()));
     }
 }

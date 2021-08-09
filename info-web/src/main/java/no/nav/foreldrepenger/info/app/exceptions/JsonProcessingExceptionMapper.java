@@ -13,12 +13,12 @@ import no.nav.vedtak.exception.TekniskException;
 
 public class JsonProcessingExceptionMapper implements ExceptionMapper<JsonProcessingException> {
 
-    private static final Logger log = LoggerFactory.getLogger(JsonProcessingException.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JsonProcessingException.class);
 
     @Override
     public Response toResponse(JsonProcessingException ex) {
         var e = new TekniskException("FP-299955", String.format("JSON-processing feil: %s", ex.getMessage()), ex);
-        log.warn(e.getMessage(), e);
+        LOG.warn(e.getMessage(), e);
         return Response
                 .status(Response.Status.BAD_REQUEST)
                 .entity(new FeilDto(e.getMessage()))
