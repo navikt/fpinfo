@@ -16,6 +16,7 @@ import no.nav.foreldrepenger.info.app.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.info.app.tjenester.DokumentforsendelseTjeneste;
 import no.nav.foreldrepenger.info.server.TimingFilter;
 import no.nav.security.token.support.jaxrs.JwtTokenContainerRequestFilter;
+import no.nav.security.token.support.jaxrs.servlet.JaxrsJwtTokenValidationFilter;
 
 @ApplicationPath(ApplicationConfig.API_URI)
 public class ApplicationConfig extends Application {
@@ -26,6 +27,7 @@ public class ApplicationConfig extends Application {
     public Set<Class<?>> getClasses() {
         return Set.of(
                 TimingFilter.class,
+                JaxrsJwtTokenValidationFilter.class,
                 JwtTokenContainerRequestFilter.class,
                 DokumentforsendelseTjeneste.class,
                 ConstraintViolationMapper.class,
