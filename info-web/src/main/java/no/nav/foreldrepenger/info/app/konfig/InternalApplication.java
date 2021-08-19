@@ -5,7 +5,6 @@ import java.util.Set;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 import io.swagger.v3.oas.integration.GenericOpenApiContextBuilder;
 import io.swagger.v3.oas.integration.OpenApiConfigurationException;
 import io.swagger.v3.oas.integration.SwaggerConfiguration;
@@ -39,7 +38,7 @@ public class InternalApplication extends Application {
 
     @Override
     public Set<Class<?>> getClasses() {
-        return Set.of(PrometheusRestService.class, HealthChecks.class, OpenApiResource.class);
+        return Set.of(PrometheusRestService.class, HealthChecks.class);
     }
 
 }
