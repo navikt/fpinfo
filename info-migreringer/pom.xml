@@ -23,7 +23,6 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>4.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
@@ -32,7 +31,6 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>5.0.0</version>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
@@ -50,8 +48,8 @@
         </dependency>
         <dependency>
             <!-- kun for DbInit - kan erstattes ved å bytte JsonUtil til Jackson ObjectMapper -->
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-json-p-provider</artifactId>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.json</artifactId>
         </dependency>
     </dependencies>
 
