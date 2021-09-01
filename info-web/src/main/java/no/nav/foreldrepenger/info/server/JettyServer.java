@@ -15,6 +15,7 @@ import org.eclipse.jetty.plus.webapp.PlusConfiguration;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.FilterHolder;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.webapp.Configuration;
@@ -136,6 +137,10 @@ public class JettyServer {
         ctx.addFilter(new FilterHolder(new HeadersToMDCFilterBean()),
                 "/api/*",
                 EnumSet.of(REQUEST));
+        var corsFilter = ctx.addFilter(CrossOriginFilter.class,
+                "/*",
+                EnumSet.of(REQUEST));
+        corsFilter.setInitParameter("allowedOrigins", "*");
     }
 
     private static MultiIssuerConfiguration config() {
