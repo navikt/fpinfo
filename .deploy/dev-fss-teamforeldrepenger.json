@@ -7,7 +7,8 @@
     "ingresses": [
         "https://fpinfo-q1.dev.adeo.no",
         "https://fpinfo.dev.adeo.no",
-        "https://fpinfo-q1.dev.nav.no"
+        "https://fpinfo-q1.dev.nav.no",
+        "https://fpinfo.dev.intern.nav.no"
     ],
     "env": {
 	    "DEFAULTDS_URL" : "jdbc:oracle:thin:@a01dbfl032.adeo.no:1521/fpsak_q1",
