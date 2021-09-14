@@ -29,7 +29,8 @@ public class BehandlingTjeneste {
         this.repository = repository;
     }
 
-    public BehandlingTjeneste() {
+    BehandlingTjeneste() {
+        //CDI
     }
 
     public BehandlingDto hentBehandling(BehandlingIdDto behandlingIdDto, String linkPathSøknad) {

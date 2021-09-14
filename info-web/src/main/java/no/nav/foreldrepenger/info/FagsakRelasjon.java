@@ -60,4 +60,30 @@ public class FagsakRelasjon {
         return getClass().getSimpleName() + " [behandlingId=" + behandlingId + ", saksnummer=" + saksnummer + ", fagsakId=" + fagsakId
                 + ", saksnummerEn=" + saksnummerEn + ", saksnummerTo=" + saksnummerTo + ", endretTidspunkt=" + endretTidspunkt + "]";
     }
+
+    public static class Builder {
+
+        private FagsakRelasjon kladd = new FagsakRelasjon();
+
+        public Builder saksnummer(String saksnummer) {
+            kladd.saksnummer = saksnummer;
+            return this;
+        }
+
+        public Builder saksnummerEn(String saksnummer) {
+            kladd.saksnummerEn = saksnummer;
+            return this;
+        }
+
+        public Builder saksnummerTo(String saksnummer) {
+            kladd.saksnummerTo = saksnummer;
+            return this;
+        }
+
+        public FagsakRelasjon build() {
+            var tmp = kladd;
+            kladd = null;
+            return tmp;
+        }
+    }
 }

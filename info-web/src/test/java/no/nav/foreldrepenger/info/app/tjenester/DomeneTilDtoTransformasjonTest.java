@@ -31,7 +31,7 @@ import no.nav.vedtak.exception.TekniskException;
 
 class DomeneTilDtoTransformasjonTest {
     private static final Long BEHANDLING_ID = 1234L;
-    private static final String SAKSNUMMER = "4567";
+    private static final Saksnummer SAKSNUMMER = new Saksnummer("4567");
     private static final String BEHANDLENDE_ENHET = "4052";
     private static final String BEHANDLENDE_ENHET_NAVN = "NAV enhet";
     private static final String RESULTAT_TYPE = BehandlingResultatType.IKKE_FASTSATT.name();

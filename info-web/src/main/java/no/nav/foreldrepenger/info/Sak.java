@@ -109,8 +109,8 @@ public class Sak {
             sak = new Sak();
         }
 
-        public Builder medSaksnummer(String saksnummer) {
-            sak.saksnummer = saksnummer;
+        public Builder medSaksnummer(Saksnummer saksnummer) {
+            sak.saksnummer = saksnummer.saksnummer();
             return this;
         }
 

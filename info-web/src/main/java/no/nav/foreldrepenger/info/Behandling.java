@@ -149,8 +149,8 @@ public class Behandling {
             return this;
         }
 
-        public Builder medSaksnummer(String saksnummer) {
-            behandling.saksnummer = saksnummer;
+        public Builder medSaksnummer(Saksnummer saksnummer) {
+            behandling.saksnummer = saksnummer == null ? null : saksnummer.saksnummer();
             return this;
         }
 
