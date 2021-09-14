@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import no.nav.foreldrepenger.info.Behandling;
 import no.nav.foreldrepenger.info.BehandlingÅrsak;
 import no.nav.foreldrepenger.info.Sak;
+import no.nav.foreldrepenger.info.Saksnummer;
 import no.nav.foreldrepenger.info.app.ResourceLink;
 import no.nav.foreldrepenger.info.app.tjenester.dto.AktørIdDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.SakDto;
@@ -28,7 +29,7 @@ class SakTjenesteTest {
         var repository = mock(Repository.class);
         var tjeneste = new SakTjeneste(repository);
 
-        var saksnummer = "123";
+        var saksnummer = new Saksnummer("123");
         var aktørId = "aktørId";
         var sak = Sak.builder().medAktørId(aktørId).medSaksnummer(saksnummer).build();
         when(repository.hentSak(aktørId)).thenReturn(List.of(sak));
@@ -36,7 +37,7 @@ class SakTjenesteTest {
         var førstegangsbehandling = førstegangsbehandling(1L);
         var revurderingEndringssøknad = revurdering(BehandlingÅrsakType.ENDRINGSSØKNAD, 2L);
         var revurderingAnnet = revurdering(BehandlingÅrsakType.ANNET, 3L);
-        when(repository.hentTilknyttedeBehandlinger(saksnummer)).thenReturn(
+        when(repository.hentTilknyttedeBehandlinger(saksnummer.saksnummer())).thenReturn(
                 List.of(førstegangsbehandling, revurderingAnnet, revurderingEndringssøknad));
 
         var prefix = "link";

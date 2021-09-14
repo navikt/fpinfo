@@ -107,7 +107,7 @@ public class UttakPeriode {
     }
 
     public String getGraderingAvslagAarsak() {
-        return graderingAvslagAarsak.equals(GraderingAvslagÅrsak.UKJENT) ? null : graderingAvslagAarsak.name();
+        return graderingAvslagAarsak == null || graderingAvslagAarsak.equals(GraderingAvslagÅrsak.UKJENT) ? null : graderingAvslagAarsak.name();
     }
 
     public String getPeriodeResultatÅrsak() {
@@ -183,7 +183,7 @@ public class UttakPeriode {
     }
 
     public String getMorsAktivitet() {
-        return morsAktivitet.getVerdi();
+        return morsAktivitet == null ? null : morsAktivitet.getVerdi();
     }
 
     @Override

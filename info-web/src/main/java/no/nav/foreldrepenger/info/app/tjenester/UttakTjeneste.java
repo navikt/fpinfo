@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.info.app.tjenester;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -38,7 +39,7 @@ public class UttakTjeneste {
         var fagsakRelasjon = fagsakRelasjonOptional.get();
         var fellesPlan = hentUttakPerioder(fagsakRelasjon.getSaksnummer()).stream()
                 .map(up -> UttaksPeriodeDto.fraDomene(saksnummer, up, erAnnenPart))
-                .toList();
+                .collect(Collectors.toList());
 
         var annenPartFagsak = fagsakRelasjon.finnSaksnummerAnnenpart();
         if (annenPartFagsak.isPresent()) {
