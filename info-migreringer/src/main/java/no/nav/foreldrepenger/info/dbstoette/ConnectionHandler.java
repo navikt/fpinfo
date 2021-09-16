@@ -13,7 +13,7 @@ import com.zaxxer.hikari.HikariDataSource;
 
 public class ConnectionHandler {
 
-    private static Map<String, DataSource> cache = new ConcurrentHashMap<>();
+    private static final Map<String, DataSource> CACHE = new ConcurrentHashMap<>();
 
     private ConnectionHandler() {
     }
@@ -26,12 +26,12 @@ public class ConnectionHandler {
         }
         key = key.toLowerCase();
 
-        if (cache.containsKey(key)) {
-            return cache.get(key);
+        if (CACHE.containsKey(key)) {
+            return CACHE.get(key);
         }
 
         DataSource ds = opprettDatasource(dbProperties, brukAnnetSkjema);
-        cache.put(key, ds);
+        CACHE.put(key, ds);
         return ds;
     }
 

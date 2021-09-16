@@ -16,7 +16,7 @@ public final class FlywayKonfig {
     private static final Logger LOG = LoggerFactory.getLogger(FlywayKonfig.class);
 
     private static final Environment ENV = Environment.current();
-    private DataSource dataSource;
+    private final DataSource dataSource;
     private String sqlLokasjon = null;
 
     private FlywayKonfig(DataSource dataSource) {

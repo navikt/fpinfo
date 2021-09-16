@@ -20,7 +20,6 @@ public class Schema {
     String migrationScriptsFilesystemRoot;
     String versjonstabell;
     boolean sqlLoggable;
-    boolean migrateClean;
     String testdataClasspathRoot;
 
     @Override
@@ -28,8 +27,8 @@ public class Schema {
         return "Schema [user=" + user + ", effectiveSchema=" + effectiveSchema + ", datasource=" + datasource + ", defaultSchema=" + defaultSchema
                 + ", password=" + password + ", schema=" + schema + ", effective_schema=" + effective_schema + ", url=" + url + ", defaultDataSource="
                 + defaultDataSource + ", migrationScriptsClasspathRoot=" + migrationScriptsClasspathRoot + ", migrationScriptsFilesystemRoot="
-                + migrationScriptsFilesystemRoot + ", versjonstabell=" + versjonstabell + ", sqlLoggable=" + sqlLoggable + ", migrateClean="
-                + migrateClean + ", testdataClasspathRoot=" + testdataClasspathRoot + "]";
+                + migrationScriptsFilesystemRoot + ", versjonstabell=" + versjonstabell + ", sqlLoggable=" + sqlLoggable +
+                ", testdataClasspathRoot=" + testdataClasspathRoot + "]";
     }
 
 }

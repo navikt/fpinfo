@@ -63,7 +63,7 @@ public class JettyServer {
 
     private static final String CONTEXT_PATH = "/fpinfo";
     private static final String SERVER_HOST = "0.0.0.0";
-    private int hostPort;
+    private final int hostPort;
 
     public JettyServer(int hostPort) {
         this.hostPort = hostPort;
