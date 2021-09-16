@@ -77,7 +77,7 @@ public class JettyServer {
 
     private static List<DBConnectionProperties> getDBConnectionProperties() {
         try (var in = JettyServer.class.getResourceAsStream("/jetty_web_server.json");) {
-            var props = DBConnectionProperties.fraStream1(in);
+            var props = DBConnectionProperties.fraStream(in);
             LOG.info("DB connection properties {}", props);
             return props;
         } catch (Exception e) {

@@ -37,14 +37,14 @@ public final class FlywayKonfig {
         flyway.setBaselineOnMigrate(true);
         flyway.setDataSource(dataSource);
 
-        if (sqlLokasjon != null) {
-            flyway.setLocations(sqlLokasjon);
-        } else {
-            /**
-             * Default leter flyway etter classpath:db/migration. Her vet vi at vi ikke skal
-             * lete i classpath
+        if (sqlLokasjon == null) {
+            /*
+              Default leter flyway etter classpath:db/migration. Her vet vi at vi ikke skal
+              lete i classpath
              */
             flyway.setLocations("denne/stien/finnes/ikke");
+        } else {
+            flyway.setLocations(sqlLokasjon);
         }
 
         flyway.configure(lesFlywayPlaceholders());
@@ -60,9 +60,5 @@ public final class FlywayKonfig {
 
     private static Properties lesFlywayPlaceholders() {
         return ENV.getPropertiesWithPrefix("flyway.placeholders.");
-    }
-
-    public DataSource getDataSource() {
-        return dataSource;
     }
 }
