@@ -75,7 +75,8 @@
         <dependency>
             <groupId>org.glassfish.jersey.inject</groupId>
             <artifactId>jersey-hk2</artifactId>
-        </dependency><dependency>
+        </dependency>
+        <dependency>
             <groupId>no.nav.foreldrepenger.info</groupId>
             <artifactId>migreringer</artifactId>
         </dependency>
@@ -184,10 +185,19 @@
         </dependency>
 
         <!-- Test avhengigheter -->
-
         <dependency>
-            <groupId>no.nav.foreldrepenger.felles</groupId>
-            <artifactId>felles-testutilities</artifactId>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
         </dependency>
         <!-- Annet -->
@@ -210,19 +220,8 @@
             <artifactId>ojdbc8</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.info</groupId>
-            <artifactId>migreringer</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

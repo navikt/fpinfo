@@ -49,12 +49,7 @@ public final class DatabaseStøtte {
     }
 
     private static void settOppDBSkjema(DataSource dataSource, DBConnectionProperties dbProperties) {
-        if (dbProperties.isMigrateClean()) {
-            LOG.error("Feil under migrering");
-            throw new IllegalStateException("Feil i konfigurasjon, prod kan ikke cleanes");
-        } else {
-            migrer(dataSource, dbProperties);
-        }
+        migrer(dataSource, dbProperties);
     }
 
     private static void migrer(DataSource dataSource, DBConnectionProperties connectionProperties) {

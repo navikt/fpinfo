@@ -38,7 +38,7 @@
         <mockito.version>3.12.4</mockito.version>
         <ojdbc.version>19.3.0.0</ojdbc.version>
 
-        <!-- Transitive avh. versjoner for å sikre unikhet (enforcer dependencyConvergence). Skal ikke benyttes direkte av 
+        <!-- Transitive avh. versjoner for å sikre unikhet (enforcer dependencyConvergence). Skal ikke benyttes direkte av
             vår egen kode. -->
         <owaspencoder.version>1.2.3</owaspencoder.version>
         <javaslang.version>2.0.6</javaslang.version>
@@ -57,12 +57,6 @@
                 <groupId>no.nav.foreldrepenger.info</groupId>
                 <artifactId>migreringer</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.info</groupId>
-                <artifactId>migreringer</artifactId>
-                <version>${project.version}</version>
-                <type>test-jar</type>
             </dependency>
 
             <!-- Foreldrepengeprosjektet -->
@@ -87,20 +81,23 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.felles</groupId>
-                <artifactId>felles-mapper</artifactId>
-                <version>${felles.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.felles</groupId>
                 <artifactId>felles-db</artifactId>
                 <version>${felles.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.felles</groupId>
-                <artifactId>felles-testutilities</artifactId>
-                <version>${felles.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>${assertj.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${jupiter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${jupiter.version}</version>
             </dependency>
 
             <dependency>
@@ -150,12 +147,6 @@
                 <version>${prometheus.version}</version>
             </dependency>
 
-
-            <dependency>
-                <groupId>org.assertj</groupId>
-                <artifactId>assertj-core</artifactId>
-                <version>${assertj.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
@@ -180,7 +171,7 @@
                 <version>${geronimo.osgi.version}</version>
             </dependency>
 
-            <!-- Transitive avh. versjoner for å sikre unikhet (enforcer dependencyConvergence). Skal ikke benyttes direkte 
+            <!-- Transitive avh. versjoner for å sikre unikhet (enforcer dependencyConvergence). Skal ikke benyttes direkte
                 av vår egen kode. -->
             <dependency>
                 <!-- Transitive avhengighet resolution for å sikre bestemt versjon -->
@@ -250,15 +241,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <dependencies>
-
-        <dependency>
-            <groupId>com.oracle.ojdbc</groupId>
-            <artifactId>ojdbc8</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
     <build>
         <pluginManagement>
             <plugins>
@@ -456,8 +438,8 @@
 
                                 </bannedDependencies>
                                 <!-- <dependencyConvergence /> -->
-                                <!-- Ikke kommenter inn denne. Det brekker muligheten til å bygge bare deler av prosjektet 
-                                    https://issues.apache.org/jira/browse/MENFORCER-189 -> "ReactorModuleConvergence is not compatible with 'advanced' reactor 
+                                <!-- Ikke kommenter inn denne. Det brekker muligheten til å bygge bare deler av prosjektet
+                                    https://issues.apache.org/jira/browse/MENFORCER-189 -> "ReactorModuleConvergence is not compatible with 'advanced' reactor
                                     options: -pl, -rf" <reactorModuleConvergence /> -->
                             </rules>
                         </configuration>

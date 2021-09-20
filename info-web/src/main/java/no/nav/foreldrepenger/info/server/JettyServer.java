@@ -63,7 +63,7 @@ public class JettyServer {
 
     private static final String CONTEXT_PATH = "/fpinfo";
     private static final String SERVER_HOST = "0.0.0.0";
-    private int hostPort;
+    private final int hostPort;
 
     public JettyServer(int hostPort) {
         this.hostPort = hostPort;
@@ -77,7 +77,7 @@ public class JettyServer {
 
     private static List<DBConnectionProperties> getDBConnectionProperties() {
         try (var in = JettyServer.class.getResourceAsStream("/jetty_web_server.json");) {
-            var props = DBConnectionProperties.fraStream1(in);
+            var props = DBConnectionProperties.fraStream(in);
             LOG.info("DB connection properties {}", props);
             return props;
         } catch (Exception e) {
