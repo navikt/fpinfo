@@ -21,14 +21,14 @@
         <revision>1.0</revision>
         <sha1 />
         <changelist>-SNAPSHOT</changelist>
-        <java.version>16</java.version>
+        <java.version>17</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <felles.version>4.0.5</felles.version>
+        <felles.version>4.0.10</felles.version>
         <prometheus.version>0.12.0</prometheus.version>
-        <swagger.version>2.1.10</swagger.version>
+        <swagger.version>2.1.11</swagger.version>
 
         <!-- Eksterne -->
         <assertj.version>3.21.0</assertj.version>
@@ -182,7 +182,7 @@
             <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-compat-spec-parser</artifactId>
-                <version>1.0.55</version>
+                <version>1.0.56</version>
             </dependency>
             <dependency>
                 <groupId>io.swagger.core.v3</groupId>
@@ -263,11 +263,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <configuration>
-                        <compilerArgs>
-                            <arg>--enable-preview</arg>
-                        </compilerArgs>
                         <parameters>true</parameters>
-                        <release>16</release>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                        <release>${java.version}</release>
                     </configuration>
                 </plugin>
                 <plugin>
