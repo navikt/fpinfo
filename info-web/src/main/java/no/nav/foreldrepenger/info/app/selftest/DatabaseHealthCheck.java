@@ -15,13 +15,12 @@ import no.nav.vedtak.log.metrics.ReadinessAware;
 public class DatabaseHealthCheck implements ReadinessAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseHealthCheck.class);
-    private static final String JDBC_DEFAULT_DS = "jdbc/defaultDS";
-    private static final String SQL_QUERY = "select count(1) from BEHANDLING";
+    private static final String SQL_QUERY = "select 1 from dual";
     private final String jdbcURL;
     private final DataSource ds;
 
     public DatabaseHealthCheck() throws Exception {
-        ds = DataSource.class.cast(new InitialContext().lookup(JDBC_DEFAULT_DS));
+        ds = (DataSource) new InitialContext().lookup("fpinfoSchema");
         jdbcURL = ds.getConnection().getMetaData().getURL();
     }
 

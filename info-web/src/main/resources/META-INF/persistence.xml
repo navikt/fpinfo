@@ -6,9 +6,7 @@
     <!-- Hibernate persistence unit. -->
     <persistence-unit name="pu-default" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <non-jta-data-source>jdbc/defaultDS</non-jta-data-source>
-
-        <mapping-file>META-INF/info-orm.xml</mapping-file>
+        <non-jta-data-source>jdbc/fpinfoSchema</non-jta-data-source>
 
         <properties>
             <property name="hibernate.generate_statistics" value="true" />
