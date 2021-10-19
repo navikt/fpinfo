@@ -8,6 +8,16 @@
       "url": "${fpinfoschema.url}",
       "default": false,
       "migrationScriptsClasspathRoot": "classpath:/db/migration/fpinfoSchema"
+    },
+    {
+      "datasource": "defaultDS",
+      "defaultSchema": "fpinfo",
+      "schema": "${flyway.placeholders.fpinfo.schema.navn}",
+      "password": "${defaultds.password}",
+      "url": "${defaultds.url}",
+      "default": true,
+      "effective_schema": "${flyway.placeholders.fpinfoschema.schema.navn}",
+      "migrationScriptsClasspathRoot": "classpath:/db/migration/defaultDS"
     }
   ]
 }

@@ -16,7 +16,7 @@ spec:
 {{#each env}}
    - name: {{@key}}
      value: "{{this}}"
-{{/each}}
+{{/each}} 
   image: {{image}}
   ingresses:
 {{#each ingresses as |url|}}
@@ -53,12 +53,14 @@ spec:
     enabled: true
     paths:
 
+    - kvPath: {{oraclecredskv}}
+      mountPath: /var/run/secrets/nais.io/defaultDS
     - kvPath: {{oraclefpinfocredsskv}}
       mountPath: /var/run/secrets/nais.io/fpinfoSchema
-
+      
     - kvPath: {{serviceuserkv}}
       mountPath: /var/run/secrets/nais.io/srvfpinfo
-
+   
     - kvPath: /kv/{{cluster}}/fss/fpinfo/{{namespace}}
       mountPath: /var/run/secrets/nais.io/vault
   webproxy: true

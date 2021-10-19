@@ -8,22 +8,53 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * TODO(Humle): Skriv tester Enkel representasjon av properties for migrering av
+ * skjema med flyway. Tilhørende json ser ca slik ut:
+ * <p>
+ *
+ * <pre>
+ * {
+ *  "datasource" : "vl_dba",
+ *  "schema": "vl_dba",
+ *  "url": "jdbc:oracle:thin:@localhost:1521:XE",
+ *  "migrationScriptsClasspathRoot": "database/migration/foreldrepenger",
+ * }
+ * </pre>
+ * </p>
+ * <p>
+ * testdataClasspathRoot: pathen til java-klasser for testdata<br>
+ * migrationScriptsFilesystemRoot: filsystemsti hvor migreringsfilene for angitt
+ * skjema ligger<br>
+ * migrationScriptsClasspathRoot: classpath sti hvor migreringsfilene for angitt
+ * skjema ligger<br>
+ * defaultDataSource: får JDNI-oppslag som 'java/defaultDS' hvis satt til true
+ * (default false)<br>
+ * </p>
+ * <p>
+ * Kan også inneholde placeholdere som leses inn via
+ * <code>System.getProperties()</code>
+ * </p>
+ */
 public final class DBConnectionProperties {
 
-    private final String datasource;
-    private final String schema;
+    private String datasource;
+    private String schema;
 
-    private final String effectiveSchema;
-    private final String url;
-    private final String user;
-    private final String password;
+    private String effectiveSchema;
+    private String url;
+    private String user;
+    private String password;
 
-    private final String testdataClasspathRoot;
-    private final String migrationScriptsFilesystemRoot;
-    private final String migrationScriptsClasspathRoot;
+    private String testdataClasspathRoot;
+    private String migrationScriptsFilesystemRoot;
+    private String migrationScriptsClasspathRoot;
 
-    private final String versjonstabell;
-    private final boolean defaultDataSource;
+    private String versjonstabell;
+    private boolean defaultDataSource;
+
+    private DBConnectionProperties() {
+    }
 
     private DBConnectionProperties(Builder builder) {
         this.datasource = builder.datasource;
