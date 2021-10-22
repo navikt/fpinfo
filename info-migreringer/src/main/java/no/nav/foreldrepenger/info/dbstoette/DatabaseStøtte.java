@@ -42,7 +42,7 @@ public final class DatabaseStøtte {
     static void settOppJndiDataSource(DBConnectionProperties defaultConnectionProperties) {
         DataSource dataSource = ConnectionHandler.opprettFra(defaultConnectionProperties, null);
         try {
-            new EnvEntry("jdbc/" + defaultConnectionProperties.getDatasource(), dataSource); // NOSONAR
+            new EnvEntry("jdbc/defaultDS", dataSource); // NOSONAR
         } catch (NamingException e) {
             throw new RuntimeException("Feil under registrering av JDNI-entry for default datasource", e); // NOSONAR
         }
@@ -80,7 +80,7 @@ public final class DatabaseStøtte {
         while (!location.exists()) {
             baseDir = baseDir.getParentFile();
             if (baseDir == null || !baseDir.isDirectory()) {
-                throw new IllegalArgumentException("Klarte ikke finne : " + baseDir);
+                throw new IllegalArgumentException("Klarte ikke finne : " + baseDir + " : " + location);
             }
             location = new File(baseDir, relativePath); // NOSONAR
         }

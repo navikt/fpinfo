@@ -23,13 +23,13 @@ AS SELECT
        ua.UTTAK_ARBEID_TYPE       as UTTAK_ARBEID_TYPE,
        ua.ARBEIDSGIVER_AKTOR_ID   as ARBEIDSGIVER_AKTOR_ID,
        ua.ARBEIDSGIVER_ORGNR      as ARBEIDSGIVER_ORGNR
-   FROM ${fpinfo.fpsak.schema.navn}.UTTAK_RESULTAT_PERIODE rp
-            LEFT JOIN ${fpinfo.fpsak.schema.navn}.UTTAK_RESULTAT_PERIODE_AKT pa ON rp.ID = pa.UTTAK_RESULTAT_PERIODE_ID
-            LEFT JOIN ${fpinfo.fpsak.schema.navn}.UTTAK_AKTIVITET ua on pa.UTTAK_AKTIVITET_ID = ua.ID
-            left JOIN ${fpinfo.fpsak.schema.navn}.UTTAK_RESULTAT_PERIODER rps ON rp.UTTAK_RESULTAT_PERIODER_ID = rps.ID
-            LEFT JOIN ${fpinfo.fpsak.schema.navn}.UTTAK_RESULTAT_PERIODE_SOKNAD urps on rp.PERIODE_SOKNAD_ID = urps.ID
-            LEFT JOIN ${fpinfo.fpsak.schema.navn}.UTTAK_RESULTAT ur on rps.id = coalesce(ur.OVERSTYRT_PERIODER_ID, ur.OPPRINNELIG_PERIODER_ID)
-            LEFT JOIN ${fpinfo.fpsak.schema.navn}.BEHANDLING_RESULTAT br ON ur.BEHANDLING_RESULTAT_ID = br.ID
+   FROM fpsak.UTTAK_RESULTAT_PERIODE rp
+            LEFT JOIN fpsak.UTTAK_RESULTAT_PERIODE_AKT pa ON rp.ID = pa.UTTAK_RESULTAT_PERIODE_ID
+            LEFT JOIN fpsak.UTTAK_AKTIVITET ua on pa.UTTAK_AKTIVITET_ID = ua.ID
+            left JOIN fpsak.UTTAK_RESULTAT_PERIODER rps ON rp.UTTAK_RESULTAT_PERIODER_ID = rps.ID
+            LEFT JOIN fpsak.UTTAK_RESULTAT_PERIODE_SOKNAD urps on rp.PERIODE_SOKNAD_ID = urps.ID
+            LEFT JOIN fpsak.UTTAK_RESULTAT ur on rps.id = coalesce(ur.OVERSTYRT_PERIODER_ID, ur.OPPRINNELIG_PERIODER_ID)
+            LEFT JOIN fpsak.BEHANDLING_RESULTAT br ON ur.BEHANDLING_RESULTAT_ID = br.ID
    WHERE ur.AKTIV = 'J';
 
 GRANT SELECT ON UTTAK_PERIODE TO ${fpinfo.schema.navn};

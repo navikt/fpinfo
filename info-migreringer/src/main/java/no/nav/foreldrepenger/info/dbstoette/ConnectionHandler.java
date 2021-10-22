@@ -39,7 +39,7 @@ public class ConnectionHandler {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(dbProperties.getUrl());
         config.setUsername(dbProperties.getUser());
-        config.setPassword(dbProperties.getPassword());
+        config.setPassword(dbProperties.getPassword() == null ? dbProperties.getUser() : dbProperties.getPassword());
         config.setSchema(dbProperties.getEffectiveSchema());
         if (brukAnnetSkjema != null) {
             config.setSchema(brukAnnetSkjema);

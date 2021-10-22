@@ -129,7 +129,7 @@ public class JettyServer {
         return ctx;
     }
 
-    private static void addFilters(WebAppContext ctx) {
+    protected void addFilters(WebAppContext ctx) {
         LOG.trace("Installerer JaxrsJwtTokenValidationFilter");
         ctx.addFilter(new FilterHolder(new JaxrsJwtTokenValidationFilter(config())),
                 "/api/*",
