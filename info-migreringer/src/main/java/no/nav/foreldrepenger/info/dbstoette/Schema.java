@@ -20,15 +20,13 @@ public class Schema {
     String migrationScriptsFilesystemRoot;
     String versjonstabell;
     boolean sqlLoggable;
-    String testdataClasspathRoot;
 
     @Override
     public String toString() {
         return "Schema [user=" + user + ", effectiveSchema=" + effectiveSchema + ", datasource=" + datasource + ", defaultSchema=" + defaultSchema
                 + ", password=" + password + ", schema=" + schema + ", effective_schema=" + effective_schema + ", url=" + url + ", defaultDataSource="
                 + defaultDataSource + ", migrationScriptsClasspathRoot=" + migrationScriptsClasspathRoot + ", migrationScriptsFilesystemRoot="
-                + migrationScriptsFilesystemRoot + ", versjonstabell=" + versjonstabell + ", sqlLoggable=" + sqlLoggable +
-                ", testdataClasspathRoot=" + testdataClasspathRoot + "]";
+                + migrationScriptsFilesystemRoot + ", versjonstabell=" + versjonstabell + ", sqlLoggable=" + sqlLoggable + "]";
     }
 
 }

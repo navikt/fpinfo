@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * </pre>
  * </p>
  * <p>
- * testdataClasspathRoot: pathen til java-klasser for testdata<br>
  * migrationScriptsFilesystemRoot: filsystemsti hvor migreringsfilene for angitt
  * skjema ligger<br>
  * migrationScriptsClasspathRoot: classpath sti hvor migreringsfilene for angitt
@@ -46,7 +45,6 @@ public final class DBConnectionProperties {
     private String user;
     private String password;
 
-    private String testdataClasspathRoot;
     private String migrationScriptsFilesystemRoot;
     private String migrationScriptsClasspathRoot;
 
@@ -63,7 +61,6 @@ public final class DBConnectionProperties {
         this.url = builder.url;
         this.user = builder.user;
         this.password = builder.password;
-        this.testdataClasspathRoot = builder.testdataClasspathRoot;
         this.migrationScriptsFilesystemRoot = builder.migrationScriptsFilesystemRoot;
         this.migrationScriptsClasspathRoot = builder.migrationScriptsClasspathRoot;
         this.versjonstabell = builder.versjonstabell;
@@ -106,8 +103,8 @@ public final class DBConnectionProperties {
     public String toString() {
         return getClass().getSimpleName() + "[datasource=" + datasource + ", schema=" + schema + ", effectiveSchema="
                 + effectiveSchema + ", url=" + url + ", user=" + user
-                + ", testdataClasspathRoot=" + testdataClasspathRoot + ", migrationScriptsFilesystemRoot="
-                + migrationScriptsFilesystemRoot + ", migrationScriptsClasspathRoot=" + migrationScriptsClasspathRoot
+                + ", migrationScriptsFilesystemRoot=" + migrationScriptsFilesystemRoot
+                + ", migrationScriptsClasspathRoot=" + migrationScriptsClasspathRoot
                 + ", versjonstabell=" + versjonstabell + ", defaultDataSource=" + defaultDataSource + ", sqlLoggable="
                 + "]";
     }
@@ -128,7 +125,6 @@ public final class DBConnectionProperties {
         private String url;
         private String user;
         private String password;
-        private String testdataClasspathRoot;
         private String migrationScriptsFilesystemRoot;
         private String migrationScriptsClasspathRoot;
         private String versjonstabell;
@@ -156,11 +152,6 @@ public final class DBConnectionProperties {
 
         public Builder password(String password) {
             this.password = password;
-            return this;
-        }
-
-        public Builder testdataClasspathRoot(String testdataClasspathRoot) {
-            this.testdataClasspathRoot = testdataClasspathRoot;
             return this;
         }
 
@@ -202,7 +193,6 @@ public final class DBConnectionProperties {
     }
 
     private static DBConnectionProperties map(Schema p) {
-        var versjonstabell = "schema_version";
         var url = VariablePlaceholderReplacer.replacePlaceholders(p.url);
         var schema = VariablePlaceholderReplacer.replacePlaceholders(p.schema);
         var defaultSchema =
@@ -222,9 +212,8 @@ public final class DBConnectionProperties {
                 .url(url)
                 .effectiveSchema(effectiveSchema)
                 .password(password)
-                .testdataClasspathRoot(p.testdataClasspathRoot)
                 .url(url)
-                .versjonstabell(versjonstabell)
+                .versjonstabell(p.versjonstabell == null ? "schema_version" : p.versjonstabell)
                 .build();
     }
 
@@ -239,7 +228,6 @@ public final class DBConnectionProperties {
         result = prime * result + ((migrationScriptsFilesystemRoot == null) ? 0 : migrationScriptsFilesystemRoot.hashCode());
         result = prime * result + ((password == null) ? 0 : password.hashCode());
         result = prime * result + ((schema == null) ? 0 : schema.hashCode());
-        result = prime * result + ((testdataClasspathRoot == null) ? 0 : testdataClasspathRoot.hashCode());
         result = prime * result + ((url == null) ? 0 : url.hashCode());
         result = prime * result + ((user == null) ? 0 : user.hashCode());
         result = prime * result + ((versjonstabell == null) ? 0 : versjonstabell.hashCode());
@@ -286,11 +274,6 @@ public final class DBConnectionProperties {
             if (other.schema != null)
                 return false;
         } else if (!schema.equals(other.schema))
-            return false;
-        if (testdataClasspathRoot == null) {
-            if (other.testdataClasspathRoot != null)
-                return false;
-        } else if (!testdataClasspathRoot.equals(other.testdataClasspathRoot))
             return false;
         if (url == null) {
             if (other.url != null)

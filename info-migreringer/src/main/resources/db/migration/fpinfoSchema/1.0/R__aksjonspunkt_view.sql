@@ -9,6 +9,6 @@ CREATE OR REPLACE VIEW AKSJONSPUNKT
          ,aks.ENDRET_AV AS ENDRET_AV
          ,aks.ENDRET_TID AS ENDRET_TID
      FROM
-          ${fpinfo.fpsak.schema.navn}.AKSJONSPUNKT aks;
+          fpsak.AKSJONSPUNKT aks;
 
 GRANT SELECT ON AKSJONSPUNKT TO ${fpinfo.schema.navn};

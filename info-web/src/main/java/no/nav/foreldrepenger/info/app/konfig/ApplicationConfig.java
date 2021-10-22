@@ -20,7 +20,7 @@ import no.nav.security.token.support.jaxrs.JwtTokenContainerRequestFilter;
 @ApplicationPath(ApplicationConfig.API_URI)
 public class ApplicationConfig extends Application {
 
-    static final String API_URI = "/api";
+    public static final String API_URI = "/api";
 
     @Override
     public Set<Class<?>> getClasses() {

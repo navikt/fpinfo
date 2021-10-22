@@ -6,10 +6,10 @@ AS select rader.* from
                    ELSE bv.vedtak_dato
                   END desc
               ) as row_number, b.id as behandling_id, fs.saksnummer
-      from ${fpinfo.fpsak.schema.navn}.behandling b
-      JOIN ${fpinfo.fpsak.schema.navn}.fagsak fs ON fs.id = b.fagsak_id
-      JOIN ${fpinfo.fpsak.schema.navn}.behandling_resultat br ON b.id = br.behandling_id
-      JOIN ${fpinfo.fpsak.schema.navn}.behandling_vedtak bv ON bv.behandling_resultat_id = br.id
+      from fpsak.behandling b
+      JOIN fpsak.fagsak fs ON fs.id = b.fagsak_id
+      JOIN fpsak.behandling_resultat br ON b.id = br.behandling_id
+      JOIN fpsak.behandling_vedtak bv ON bv.behandling_resultat_id = br.id
       WHERE b.BEHANDLING_STATUS in ('AVSLU', 'IVED')
         AND b.BEHANDLING_TYPE in ('BT-002', 'BT-004')
     ) rader
