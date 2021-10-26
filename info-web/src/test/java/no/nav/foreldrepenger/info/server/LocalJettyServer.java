@@ -19,7 +19,7 @@ import no.nav.foreldrepenger.info.dbstoette.DatabaseStøtte;
 
 public class LocalJettyServer extends JettyServer {
 
-    private static final int PORT = 8090;
+    private static final int PORT = 8040;
 
     public LocalJettyServer(int hostPort) {
         super(hostPort);
