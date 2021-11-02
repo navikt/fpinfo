@@ -3,16 +3,12 @@ package no.nav.foreldrepenger.info.server;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.ws.rs.ApplicationPath;
 
-import org.eclipse.jetty.webapp.WebAppContext;
-
 import no.nav.foreldrepenger.info.TestTjeneste;
-import no.nav.foreldrepenger.info.app.exceptions.ConstraintViolationMapper;
-import no.nav.foreldrepenger.info.app.exceptions.GeneralRestExceptionMapper;
-import no.nav.foreldrepenger.info.app.exceptions.JsonProcessingExceptionMapper;
-import no.nav.foreldrepenger.info.app.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.info.app.konfig.ApplicationConfig;
 import no.nav.foreldrepenger.info.dbstoette.DBConnectionProperties;
 import no.nav.foreldrepenger.info.dbstoette.DatabaseStøtte;
@@ -37,11 +33,6 @@ public class LocalJettyServer extends JettyServer {
         DatabaseStøtte.kjørMigreringFor(dbProps);
     }
 
-    @Override
-    protected void addFilters(WebAppContext ctx) {
-        //Ingen filter lokalt
-    }
-
     private static List<DBConnectionProperties> dbProps() {
         var fpinfo_schema_props = new DBConnectionProperties.Builder()
                 .user("fpinfo_schema")
@@ -51,6 +42,7 @@ public class LocalJettyServer extends JettyServer {
                 .datasource("fpinfoSchema")
                 .url("jdbc:oracle:thin:@localhost:1521:XE")
                 .migrationScriptsFilesystemRoot("info-migreringer/src/main/resources/db/migration/")
+                .connectionTimeout(10_000)
                 .build();
         return List.of(fpinfo_schema_props);
     }
@@ -65,12 +57,9 @@ public class LocalJettyServer extends JettyServer {
 
         @Override
         public Set<Class<?>> getClasses() {
-            return Set.of(
-                    TestTjeneste.class,
-                    ConstraintViolationMapper.class,
-                    JsonProcessingExceptionMapper.class,
-                    JacksonJsonConfig.class,
-                    GeneralRestExceptionMapper.class);
+            return Stream.concat(super.getClasses().stream(),
+                            Stream.of(TestTjeneste.class))
+                    .collect(Collectors.toUnmodifiableSet());
         }
     }
 }

@@ -44,7 +44,7 @@ public class ConnectionHandler {
         if (brukAnnetSkjema != null) {
             config.setSchema(brukAnnetSkjema);
         }
-        config.setConnectionTimeout(1000);
+        config.setConnectionTimeout(dbProperties.getConnectionTimeout());
         config.setMinimumIdle(0);
         config.setMetricRegistry(globalRegistry);
         config.setMaximumPoolSize(4);

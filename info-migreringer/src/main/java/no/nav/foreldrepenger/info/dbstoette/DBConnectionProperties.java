@@ -51,6 +51,8 @@ public final class DBConnectionProperties {
     private String versjonstabell;
     private boolean defaultDataSource;
 
+    private long connectionTimeout = 1000;
+
     private DBConnectionProperties() {
     }
 
@@ -65,6 +67,7 @@ public final class DBConnectionProperties {
         this.migrationScriptsClasspathRoot = builder.migrationScriptsClasspathRoot;
         this.versjonstabell = builder.versjonstabell;
         this.defaultDataSource = builder.defaultDataSource;
+        this.connectionTimeout = builder.connectionTimeout;
     }
 
     public static Optional<DBConnectionProperties> finnDefault(List<DBConnectionProperties> connectionProperties) {
@@ -99,6 +102,10 @@ public final class DBConnectionProperties {
         return migrationScriptsClasspathRoot;
     }
 
+    public long getConnectionTimeout() {
+        return connectionTimeout;
+    }
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + "[datasource=" + datasource + ", schema=" + schema + ", effectiveSchema="
@@ -129,6 +136,7 @@ public final class DBConnectionProperties {
         private String migrationScriptsClasspathRoot;
         private String versjonstabell;
         private boolean defaultDataSource;
+        private long connectionTimeout;
 
         public Builder datasource(String datasource) {
             this.datasource = datasource;
@@ -177,6 +185,11 @@ public final class DBConnectionProperties {
 
         public Builder effectiveSchema(String effectiveSchema) {
             this.effectiveSchema = effectiveSchema;
+            return this;
+        }
+
+        public Builder connectionTimeout(long connectionTimeout) {
+            this.connectionTimeout = connectionTimeout;
             return this;
         }
 

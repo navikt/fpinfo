@@ -18,12 +18,14 @@ import io.swagger.v3.oas.annotations.Parameter;
 import no.nav.foreldrepenger.info.app.tjenester.SøknadsGrunnlagTjeneste;
 import no.nav.foreldrepenger.info.app.tjenester.dto.SaksnummerDto;
 import no.nav.foreldrepenger.konfig.Environment;
+import no.nav.security.token.support.core.api.Unprotected;
 
 /**
  * For lokalt test. Laget egen tjeneste for å unngå alle security filters/tokenx lokalt
  */
 @Path("test")
 @Produces(MediaType.APPLICATION_JSON)
+@Unprotected
 @ApplicationScoped
 public class TestTjeneste {
 
