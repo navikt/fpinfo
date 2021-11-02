@@ -26,7 +26,6 @@ import no.nav.foreldrepenger.info.datatyper.DokumentTypeId;
 import no.nav.foreldrepenger.info.datatyper.FagsakYtelseType;
 import no.nav.foreldrepenger.info.datatyper.FamilieHendelseType;
 import no.nav.foreldrepenger.info.datatyper.GraderingAvslagÅrsak;
-import no.nav.foreldrepenger.info.datatyper.MorsAktivitet;
 import no.nav.vedtak.exception.TekniskException;
 
 class DomeneTilDtoTransformasjonTest {
@@ -170,7 +169,7 @@ class DomeneTilDtoTransformasjonTest {
                 .withSamtidigUttaksprosent(null)
                 .withOppholdÅrsak("-")
                 .withOverføringÅrsak("-")
-                .withMorsAktivitet(MorsAktivitet.UKJENT)
+                .withMorsAktivitet(null)
                 .withUttakArbeidType("ORDINÆRT_ARBEID")
                 .withArbeidsgiverAktørId(null)
                 .withArbeidsgiverAktørId("11111111")

@@ -13,7 +13,7 @@ public class StringToMorsAktivitetConverter implements AttributeConverter<MorsAk
     @Override
     public String convertToDatabaseColumn(MorsAktivitet attribute) {
         return Optional.ofNullable(attribute)
-                .map(MorsAktivitet::getVerdi)
+                .map(MorsAktivitet::name)
                 .orElse(null);
     }
 

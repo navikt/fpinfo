@@ -86,7 +86,7 @@ public class UttaksPeriodeDto implements AbacDto {
         dto.oppholdAarsak = dash2null(uttakPeriode.getOppholdÅrsak());
         dto.overfoeringAarsak = dash2null(uttakPeriode.getOverføringÅrsak());
         dto.uttakArbeidType = uttakPeriode.getUttakArbeidType();
-        dto.morsAktivitet = dash2null(uttakPeriode.getMorsAktivitet());
+        dto.morsAktivitet = uttakPeriode.getMorsAktivitet() == null ? null : uttakPeriode.getMorsAktivitet().name();
         dto.periodeResultatÅrsak = dash2null(uttakPeriode.getPeriodeResultatÅrsak());
         return dto;
     }

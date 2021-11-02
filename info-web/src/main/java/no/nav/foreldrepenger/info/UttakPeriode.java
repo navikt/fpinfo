@@ -182,8 +182,8 @@ public class UttakPeriode {
         return arbeidsgiverOrgnr;
     }
 
-    public String getMorsAktivitet() {
-        return morsAktivitet == null ? null : morsAktivitet.getVerdi();
+    public MorsAktivitet getMorsAktivitet() {
+        return morsAktivitet;
     }
 
     @Override
@@ -203,7 +203,7 @@ public class UttakPeriode {
     }
 
     public static class Builder {
-        private UttakPeriode uttakPeriode;
+        private final UttakPeriode uttakPeriode;
 
         public Builder() {
             uttakPeriode = new UttakPeriode();
