@@ -16,7 +16,7 @@
     <properties>
         <swagger-ui.version>3.52.5</swagger-ui.version>
         <jersey.version>2.34</jersey.version>
-        <micrometer.version>1.7.5</micrometer.version>
+        <micrometer.version>1.8.0</micrometer.version>
     </properties>
 
     <dependencyManagement>
