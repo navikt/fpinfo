@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.info.app.tjenester;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -25,6 +26,10 @@ import no.nav.vedtak.exception.TekniskException;
 public class ForsendelseStatusTjeneste {
 
     private static final Logger LOG = LoggerFactory.getLogger(ForsendelseStatusTjeneste.class);
+    private static final Set<String> INNVILGET_RESULTAT = Set.of(BehandlingResultatType.INNVILGET.name(),
+            BehandlingResultatType.FORELDREPENGER_ENDRET.name(),
+            BehandlingResultatType.FORELDREPENGER_SENERE.name(),
+            BehandlingResultatType.INGEN_ENDRING.name());
 
     private final Repository repository;
 
@@ -97,10 +102,7 @@ public class ForsendelseStatusTjeneste {
     }
 
     private static boolean erInnvilget(String resultat) {
-        return resultat.equals(BehandlingResultatType.INNVILGET.name()) || resultat.equals(
-                BehandlingResultatType.FORELDREPENGER_ENDRET.name())
-                || resultat.equals(
-                        BehandlingResultatType.INGEN_ENDRING.name());
+        return INNVILGET_RESULTAT.contains(resultat);
     }
 
     private static boolean erAvsluttet(String behandlingStatus) {
