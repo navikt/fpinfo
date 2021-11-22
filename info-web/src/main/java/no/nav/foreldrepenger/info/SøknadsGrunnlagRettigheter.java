@@ -48,6 +48,22 @@ public class SøknadsGrunnlagRettigheter {
                 : søknadAleneomsorg;
     }
 
+    SøknadsGrunnlagRettigheter() {
+
+    }
+
+    public SøknadsGrunnlagRettigheter(Long gryfId,
+                                      Boolean saksbehandlerAnnenForelderRett,
+                                      Boolean søknadAnnenForelderRett,
+                                      Boolean saksbehandlerAleneomsorg,
+                                      Boolean søknadAleneomsorg) {
+        this.gryfId = gryfId;
+        this.saksbehandlerAnnenForelderRett = saksbehandlerAnnenForelderRett;
+        this.søknadAnnenForelderRett = søknadAnnenForelderRett;
+        this.saksbehandlerAleneomsorg = saksbehandlerAleneomsorg;
+        this.søknadAleneomsorg = søknadAleneomsorg;
+    }
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + " [gryfId=" + gryfId + ", saksbehandlerAnnenForelderRett=" + saksbehandlerAnnenForelderRett

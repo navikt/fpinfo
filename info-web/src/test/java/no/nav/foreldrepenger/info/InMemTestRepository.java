@@ -1,5 +1,8 @@
 package no.nav.foreldrepenger.info;
 
+import static no.nav.foreldrepenger.info.datatyper.BehandlingType.FØRSTEGANGSBEHANDLING;
+import static no.nav.foreldrepenger.info.datatyper.BehandlingType.REVURDERING;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -7,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -29,7 +33,8 @@ public class InMemTestRepository implements Repository {
 
     @Override
     public List<UttakPeriode> hentUttakPerioder(Long behandlingId) {
-        return List.copyOf(uttak.get(behandlingId));
+        var p = uttak.get(behandlingId);
+        return p == null ? List.of() : List.copyOf(p);
     }
 
     @Override
@@ -44,6 +49,10 @@ public class InMemTestRepository implements Repository {
     public Optional<Long> hentGjeldendeBehandling(Saksnummer saksnummer) {
         return behandlinger.stream()
                 .filter(behandling -> behandling.getSaksnummer().equals(saksnummer.saksnummer()))
+                //Filterne er de samme som ligger i viewet
+                .filter(behandling -> Set.of("AVSLU", "IVED").contains(behandling.getBehandlingStatus()))
+                .filter(behandling -> behandling.getBehandlingType().equals(FØRSTEGANGSBEHANDLING)
+                        || behandling.getBehandlingType().equals(REVURDERING))
                 .max(Comparator.comparing(Behandling::getOpprettetTidspunkt))
                 .map(Behandling::getBehandlingId);
     }
@@ -91,6 +100,14 @@ public class InMemTestRepository implements Repository {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public Set<String> hentBarn(Saksnummer saksnummer) {
+        return saker.stream()
+                .filter(s -> s.getSaksnummer().equals(saksnummer.saksnummer()))
+                .map(s -> s.getAktørIdBarn())
+                .collect(Collectors.toSet());
+    }
+
     public void lagre(Sak sak) {
         saker.add(sak);
     }
@@ -109,5 +126,9 @@ public class InMemTestRepository implements Repository {
 
     public void lagre(List<MottattDokument> dokumenter) {
         mottattDokumenter.addAll(dokumenter);
+    }
+
+    public void lagre(Long behandlingId, SøknadsGrunnlag søknadsGrunnlag) {
+        this.søknadsGrunnlag.put(behandlingId, søknadsGrunnlag);
     }
 }

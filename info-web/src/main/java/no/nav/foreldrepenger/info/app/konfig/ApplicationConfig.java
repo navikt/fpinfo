@@ -15,6 +15,7 @@ import no.nav.foreldrepenger.info.app.exceptions.JsonProcessingExceptionMapper;
 import no.nav.foreldrepenger.info.app.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.info.app.tjenester.DokumentforsendelseTjeneste;
 import no.nav.foreldrepenger.info.server.TimingFilter;
+import no.nav.foreldrepenger.info.v2.SakRest;
 import no.nav.security.token.support.jaxrs.JwtTokenContainerRequestFilter;
 
 @ApplicationPath(ApplicationConfig.API_URI)
@@ -28,6 +29,7 @@ public class ApplicationConfig extends Application {
                 TimingFilter.class,
                 JwtTokenContainerRequestFilter.class,
                 DokumentforsendelseTjeneste.class,
+                SakRest.class,
                 ConstraintViolationMapper.class,
                 JsonProcessingExceptionMapper.class,
                 JacksonJsonConfig.class,

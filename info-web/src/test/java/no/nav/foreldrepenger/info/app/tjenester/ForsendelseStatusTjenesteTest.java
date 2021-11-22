@@ -133,7 +133,7 @@ class ForsendelseStatusTjenesteTest {
             antall--;
             var builder = dokumentBuilder()
                     .medForsendelseId(forsendelseId)
-                    .medType(DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL.name());
+                    .medType(DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL);
             if (medBehandling) {
                 var behandlingId = BEHANDLING_ID + antall;
                 lagreBehandling(behandlingId, årsakTyper);

@@ -3,6 +3,8 @@ package no.nav.foreldrepenger.info;
 import java.util.List;
 import java.util.UUID;
 
+import no.nav.foreldrepenger.info.datatyper.BehandlingType;
+
 public class ToParterTestScenario {
 
     private final InMemTestRepository repository;
@@ -20,10 +22,14 @@ public class ToParterTestScenario {
     private final Behandling behandling = new Behandling.Builder()
             .medBehandlingId(1L)
             .medSaksnummer(saksnummer)
+            .medBehandlingStatus("AVSLU")
+            .medBehandlingType(BehandlingType.FØRSTEGANGSBEHANDLING)
             .build();
     private final Behandling behandlingAnnenpart = new Behandling.Builder()
             .medBehandlingId(2L)
             .medSaksnummer(saksnummerAnnenpart)
+            .medBehandlingStatus("AVSLU")
+            .medBehandlingType(BehandlingType.FØRSTEGANGSBEHANDLING)
             .build();
 
     public ToParterTestScenario(InMemTestRepository repository) {

@@ -103,7 +103,7 @@ class BehandlingTjenesteTest {
         return List.of(dokumentBuilder()
                 .medForsendelseId(UUID.randomUUID())
                 .medBehandlingId(BEHANDLING_ID)
-                .medType(type.name())
+                .medType(type)
                 .build());
     }
 

@@ -57,6 +57,10 @@ public class Sak {
         return BehandlingTema.fraYtelse(fagsakYtelseType, familieHendelseType);
     }
 
+    public String getFagsakYtelseType() {
+        return fagsakYtelseType;
+    }
+
     public String getAktørIdBarn() {
         return aktørIdBarn;
     }

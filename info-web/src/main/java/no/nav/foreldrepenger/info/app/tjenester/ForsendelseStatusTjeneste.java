@@ -18,7 +18,6 @@ import no.nav.foreldrepenger.info.app.tjenester.dto.ForsendelseIdDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.ForsendelseStatus;
 import no.nav.foreldrepenger.info.app.tjenester.dto.ForsendelseStatusDto;
 import no.nav.foreldrepenger.info.datatyper.BehandlingResultatType;
-import no.nav.foreldrepenger.info.datatyper.BehandlingStatus;
 import no.nav.foreldrepenger.info.datatyper.BehandlingÅrsakType;
 import no.nav.foreldrepenger.info.repository.Repository;
 import no.nav.vedtak.exception.TekniskException;
@@ -27,10 +26,6 @@ import no.nav.vedtak.exception.TekniskException;
 public class ForsendelseStatusTjeneste {
 
     private static final Logger LOG = LoggerFactory.getLogger(ForsendelseStatusTjeneste.class);
-    private static final Set<String> INNVILGET_RESULTAT = Set.of(BehandlingResultatType.INNVILGET.name(),
-            BehandlingResultatType.FORELDREPENGER_ENDRET.name(),
-            BehandlingResultatType.FORELDREPENGER_SENERE.name(),
-            BehandlingResultatType.INGEN_ENDRING.name());
 
     private final Repository repository;
 
@@ -82,16 +77,14 @@ public class ForsendelseStatusTjeneste {
     }
 
     private static ForsendelseStatusDto mapTilDto(Behandling behandling, UUID forsendelseId) {
-        var behandlingStatus = behandling.getBehandlingStatus();
-        if (erAvsluttet(behandlingStatus)) {
-            var resultat = behandling.getBehandlingResultatType();
-            if (erInnvilget(resultat)) {
+        if (behandling.erAvsluttet()) {
+            if (behandling.erInnvilget()) {
                 return new ForsendelseStatusDto(ForsendelseStatus.INNVILGET);
             }
-            if (erAvslått(resultat)) {
+            if (behandling.erAvslått()) {
                 return new ForsendelseStatusDto(ForsendelseStatus.AVSLÅTT);
             }
-            if (erMergetOgHenlagt(resultat)) {
+            if (behandling.erMergetOgHenlagt()) {
                 // FIXME: finnes ikke funksjonalitet for å håndtere MERGET_OG_HENLAGT
                 LOG.info("Behandlingsresultat er {}, fpinfo ser ikke videre på denne",
                         BehandlingResultatType.MERGET_OG_HENLAGT.name());
@@ -105,23 +98,6 @@ public class ForsendelseStatusTjeneste {
         }
         return new ForsendelseStatusDto(ForsendelseStatus.PÅ_VENT);
 
-    }
-
-    private static boolean erMergetOgHenlagt(String resultat) {
-        return resultat.equals(BehandlingResultatType.MERGET_OG_HENLAGT.name());
-    }
-
-    private static boolean erAvslått(String resultat) {
-        return resultat.equals(BehandlingResultatType.AVSLÅTT.name());
-    }
-
-    private static boolean erInnvilget(String resultat) {
-        return INNVILGET_RESULTAT.contains(resultat);
-    }
-
-    private static boolean erAvsluttet(String behandlingStatus) {
-        return behandlingStatus.equals(BehandlingStatus.AVSLUTTET.getVerdi()) || behandlingStatus.equals(
-                BehandlingStatus.IVERKSETTER_VEDTAK.getVerdi());
     }
 
 }

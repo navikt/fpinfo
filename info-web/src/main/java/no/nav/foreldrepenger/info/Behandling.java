@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.info;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -13,12 +14,19 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Immutable;
 
+import no.nav.foreldrepenger.info.datatyper.BehandlingResultatType;
+import no.nav.foreldrepenger.info.datatyper.BehandlingStatus;
 import no.nav.foreldrepenger.info.datatyper.BehandlingType;
 
 @Entity(name = "Behandling")
 @Table(name = "BEHANDLING")
 @Immutable
 public class Behandling {
+
+    private static final Set<String> INNVILGET_RESULTAT = Set.of(BehandlingResultatType.INNVILGET.name(),
+            BehandlingResultatType.FORELDREPENGER_ENDRET.name(),
+            BehandlingResultatType.FORELDREPENGER_SENERE.name(),
+            BehandlingResultatType.INGEN_ENDRING.name());
 
     @Id
     @Column(name = "BEHANDLING_ID")
@@ -116,6 +124,24 @@ public class Behandling {
 
     public LocalDateTime getEndretTidspunkt() {
         return endretTidspunkt;
+    }
+
+    public boolean erMergetOgHenlagt() {
+        return getBehandlingResultatType().equals(BehandlingResultatType.MERGET_OG_HENLAGT.name());
+    }
+
+    public boolean erAvslått() {
+        return getBehandlingResultatType().equals(BehandlingResultatType.AVSLÅTT.name());
+    }
+
+    public boolean erInnvilget() {
+        var resultat = getBehandlingResultatType();
+        return INNVILGET_RESULTAT.contains(resultat);
+    }
+
+    public boolean erAvsluttet() {
+        return getBehandlingStatus().equals(BehandlingStatus.AVSLUTTET.getVerdi())
+                || getBehandlingStatus().equals(BehandlingStatus.IVERKSETTER_VEDTAK.getVerdi());
     }
 
     public static Builder builder() {

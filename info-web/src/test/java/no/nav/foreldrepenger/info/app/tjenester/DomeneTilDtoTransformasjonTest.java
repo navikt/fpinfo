@@ -47,7 +47,7 @@ class DomeneTilDtoTransformasjonTest {
     private static final ResourceLink EXPECTED_RESOURCE_LINK = ResourceLink.get(TEST_LENKE, TEST_REL, null);
     private static final String DOKUMENT_ID = "123";
     private static final UUID FORSENDELSE_ID = UUID.randomUUID();
-    private static final String DOKUMENT_TYPE_ID = DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL.name();
+    private static final DokumentTypeId DOKUMENT_TYPE_ID = DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL;
 
     @Test
     void behandlingTilBehandlingDto() {

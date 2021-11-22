@@ -109,6 +109,72 @@ public class SøknadsGrunnlag {
         return annenForelderInformert;
     }
 
+    public static class Builder {
+
+        private SøknadsGrunnlag kladd = new SøknadsGrunnlag();
+
+        public Builder behandlingId(Long behandlingId) {
+            kladd.behandlingId = behandlingId;
+            return this;
+        }
+
+        public Builder antallBarn(Integer antallBarn) {
+            kladd.antallBarn = antallBarn;
+            return this;
+        }
+
+        public Builder familieHendelseType(String familieHendelseType) {
+            kladd.familieHendelseType = familieHendelseType;
+            return this;
+        }
+
+        public Builder omsorgsovertakelseDato(LocalDate omsorgsovertakelseDato) {
+            kladd.omsorgsovertakelseDato = omsorgsovertakelseDato;
+            return this;
+        }
+
+        public Builder termindato(LocalDate termindato) {
+            kladd.termindato = termindato;
+            return this;
+        }
+
+        public Builder fødselDato(LocalDate fødselDato) {
+            kladd.fødselDato = fødselDato;
+            return this;
+        }
+
+        public Builder brukerRolle(String brukerRolle) {
+            kladd.brukerRolle = brukerRolle;
+            return this;
+        }
+
+        public Builder dekningsgrad(Integer dekningsgrad) {
+            kladd.dekningsgrad = dekningsgrad;
+            return this;
+        }
+
+        public Builder foreldreRettigheter(SøknadsGrunnlagRettigheter foreldreRettigheter) {
+            kladd.foreldreRettigheter = foreldreRettigheter;
+            return this;
+        }
+
+        public Builder morsAktivitetHvisUfør(String morsAktivitetHvisUfør) {
+            kladd.morsAktivitetHvisUfør = morsAktivitetHvisUfør;
+            return this;
+        }
+
+        public Builder annenForelderInformert(Boolean annenForelderInformert) {
+            kladd.annenForelderInformert = annenForelderInformert;
+            return this;
+        }
+
+        public SøknadsGrunnlag build() {
+            var tmp = kladd;
+            kladd = null;
+            return tmp;
+        }
+    }
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + " [randomId=" + randomId + ", saksnummer=" + saksnummer + ", behandlingId=" + behandlingId

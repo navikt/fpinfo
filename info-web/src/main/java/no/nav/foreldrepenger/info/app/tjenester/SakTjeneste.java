@@ -54,8 +54,6 @@ public class SakTjeneste {
                             .forEach(e -> dto.leggTilBarn(e.getAktørIdBarn()));
 
                     repository.hentTilknyttedeBehandlinger(sak.getSaksnummer())
-                            .stream()
-//                    .filter(this::erRelevant) //TODO må brukes ved omskriving.
                             .forEach(elem -> {
                                 String href = linkPathBehandling + elem.getBehandlingId();
                                 dto.leggTilLenke(href, "behandlinger");
