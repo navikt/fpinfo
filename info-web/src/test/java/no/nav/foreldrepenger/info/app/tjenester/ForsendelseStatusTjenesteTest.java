@@ -1,23 +1,23 @@
 package no.nav.foreldrepenger.info.app.tjenester;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.info.Behandling;
+import no.nav.foreldrepenger.info.BehandlingÅrsak;
 import no.nav.foreldrepenger.info.InMemTestRepository;
 import no.nav.foreldrepenger.info.MottattDokument;
 import no.nav.foreldrepenger.info.Saksnummer;
 import no.nav.foreldrepenger.info.app.tjenester.dto.ForsendelseIdDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.ForsendelseStatus;
-import no.nav.foreldrepenger.info.app.tjenester.dto.ForsendelseStatusDto;
+import no.nav.foreldrepenger.info.datatyper.BehandlingÅrsakType;
 import no.nav.foreldrepenger.info.datatyper.DokumentTypeId;
 import no.nav.foreldrepenger.info.datatyper.FagsakYtelseType;
 import no.nav.foreldrepenger.info.datatyper.FamilieHendelseType;
@@ -46,33 +46,33 @@ class ForsendelseStatusTjenesteTest {
 
     @Test
     void skalReturnereTomtResultat() {
-        UUID fid = UUID.randomUUID();
+        var fid = UUID.randomUUID();
         repository.lagre(lagDokumenter(fid, 0, true));
 
-        Optional<ForsendelseStatusDto> opt = forsendelseStatusTjeneste.hentForsendelseStatus(new ForsendelseIdDto(fid));
+        var opt = forsendelseStatusTjeneste.hentForsendelseStatus(new ForsendelseIdDto(fid));
 
         assertThat(opt).isEmpty();
     }
 
     @Test
     void skalReturnereMottattNårBehandlingForForsendelseIkkeFinnes() {
-        UUID fid = UUID.randomUUID();
+        var fid = UUID.randomUUID();
 
         repository.lagre(lagDokumenter(fid, 1, false));
 
-        Optional<ForsendelseStatusDto> opt = forsendelseStatusTjeneste.hentForsendelseStatus(new ForsendelseIdDto(fid));
+        var opt = forsendelseStatusTjeneste.hentForsendelseStatus(new ForsendelseIdDto(fid));
 
         assertThat(opt.orElseThrow().forsendelseStatus()).isEqualTo(ForsendelseStatus.MOTTATT);
     }
 
     @Test
     void skalReturnereStatusInformasjon() {
-        UUID fid = UUID.randomUUID();
+        var fid = UUID.randomUUID();
 
         repository.lagre(lagDokumenter(fid, 1, true));
         repository.lagre(lagBehandling());
 
-        Optional<ForsendelseStatusDto> opt = forsendelseStatusTjeneste.hentForsendelseStatus(new ForsendelseIdDto(fid));
+        var opt = forsendelseStatusTjeneste.hentForsendelseStatus(new ForsendelseIdDto(fid));
 
         assertThat(opt).isPresent();
         assertThat(opt.orElseThrow().forsendelseStatus()).isEqualTo(ForsendelseStatus.PÅGÅR);
@@ -80,11 +80,31 @@ class ForsendelseStatusTjenesteTest {
 
     @Test
     void skalKasteFeilVedFlereBehandlingerKnyttetTilForsendelseId() {
-        UUID fid = UUID.randomUUID();
+        var fid = UUID.randomUUID();
 
         repository.lagre(lagDokumenter(fid, 2, true));
 
-        Assertions.assertThrows(TekniskException.class,
+        assertThrows(TekniskException.class,
+                () -> forsendelseStatusTjeneste.hentForsendelseStatus(new ForsendelseIdDto(fid)));
+    }
+
+    @Test
+    void skalIkkeKasteFeilVedFlereBehandlingerKnyttetTilForsendelseIdHvisBehandlingÅrsakUtsattFp() {
+        var fid = UUID.randomUUID();
+
+        repository.lagre(lagDokumenter(fid, 2, true, List.of(BehandlingÅrsakType.RE_UTSATT_START)));
+
+        var forsendelseStatusDto = forsendelseStatusTjeneste.hentForsendelseStatus(new ForsendelseIdDto(fid));
+        assertThat(forsendelseStatusDto.orElseThrow().forsendelseStatus()).isEqualTo(ForsendelseStatus.PÅ_VENT);
+    }
+
+    @Test
+    void skalKasteFeilVedFlereBehandlingerKnyttetTilForsendelseIdHvisBehandlingÅrsakUtsattFpOgFlereEnn2Behandlinger() {
+        var fid = UUID.randomUUID();
+
+        repository.lagre(lagDokumenter(fid, 3, true, List.of(BehandlingÅrsakType.RE_UTSATT_START)));
+
+        assertThrows(TekniskException.class,
                 () -> forsendelseStatusTjeneste.hentForsendelseStatus(new ForsendelseIdDto(fid)));
     }
 
@@ -100,7 +120,14 @@ class ForsendelseStatusTjenesteTest {
                 .build();
     }
 
-    private static List<MottattDokument> lagDokumenter(UUID forsendelseId, int antall, boolean medBehandling) {
+    private List<MottattDokument> lagDokumenter(UUID forsendelseId, int antall, boolean medBehandling) {
+        return lagDokumenter(forsendelseId, antall, medBehandling, List.of());
+    }
+
+    private List<MottattDokument> lagDokumenter(UUID forsendelseId,
+                                                int antall,
+                                                boolean medBehandling,
+                                                List<BehandlingÅrsakType> årsakTyper) {
         List<MottattDokument> dokumenter = new ArrayList<>();
         while (antall > 0) {
             antall--;
@@ -108,11 +135,21 @@ class ForsendelseStatusTjenesteTest {
                     .medForsendelseId(forsendelseId)
                     .medType(DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL.name());
             if (medBehandling) {
-                builder.medBehandlingId(BEHANDLING_ID + antall);
+                var behandlingId = BEHANDLING_ID + antall;
+                lagreBehandling(behandlingId, årsakTyper);
+                builder.medBehandlingId(behandlingId);
             }
             dokumenter.add(builder.build());
         }
         return dokumenter;
+    }
+
+    private void lagreBehandling(long behandlingId, List<BehandlingÅrsakType> årsakTyper) {
+        repository.lagre(new Behandling.Builder()
+                        .medBehandlingId(behandlingId)
+                        .medBehandlingÅrsaker(årsakTyper.stream().map(å -> new BehandlingÅrsak(å)).toList())
+                        .medBehandlingStatus(BEHANDLING_STATUS)
+                .build());
     }
 
     private static MottattDokument.Builder dokumentBuilder() {

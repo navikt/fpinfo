@@ -19,6 +19,7 @@ import no.nav.foreldrepenger.info.app.tjenester.dto.ForsendelseStatus;
 import no.nav.foreldrepenger.info.app.tjenester.dto.ForsendelseStatusDto;
 import no.nav.foreldrepenger.info.datatyper.BehandlingResultatType;
 import no.nav.foreldrepenger.info.datatyper.BehandlingStatus;
+import no.nav.foreldrepenger.info.datatyper.BehandlingÅrsakType;
 import no.nav.foreldrepenger.info.repository.Repository;
 import no.nav.vedtak.exception.TekniskException;
 
@@ -57,6 +58,10 @@ public class ForsendelseStatusTjeneste {
             return Optional.of(new ForsendelseStatusDto(ForsendelseStatus.MOTTATT));
         }
         if (behandlingsIder.size() > 1) {
+            LOG.info("Fant forsendelse knyttet til flere behandlinger {}", forsendelseId);
+            if (erUtsattOppstart(behandlingsIder)) {
+                return Optional.of(new ForsendelseStatusDto(ForsendelseStatus.PÅ_VENT));
+            }
             throw new TekniskException("FP-760822",
                     String.format("Det er flere behandlinger (%s) knyttet til forsendelsen med ID %s", behandlingsIder, forsendelseId));
         }
@@ -65,6 +70,12 @@ public class ForsendelseStatusTjeneste {
         var forsendelseStatusDataDTO = mapTilDto(behandling, forsendelseId);
         LOG.info("Hentet behandling {} for forsendelse {}", behandling.getBehandlingId(), forsendelseId);
         return Optional.ofNullable(forsendelseStatusDataDTO);
+    }
+
+    private boolean erUtsattOppstart(Set<Long> behandlingsIder) {
+        return behandlingsIder.size() == 2 && behandlingsIder.stream()
+                .anyMatch(b -> repository.hentBehandling(b).getÅrsaker().stream()
+                        .anyMatch(å -> å.getType().equals(BehandlingÅrsakType.RE_UTSATT_START)));
     }
 
     private static ForsendelseStatusDto mapTilDto(Behandling behandling, UUID forsendelseId) {
