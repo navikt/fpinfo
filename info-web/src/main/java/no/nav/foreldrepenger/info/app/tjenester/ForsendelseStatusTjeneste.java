@@ -58,7 +58,7 @@ public class ForsendelseStatusTjeneste {
             return Optional.of(new ForsendelseStatusDto(ForsendelseStatus.MOTTATT));
         }
         if (behandlingsIder.size() > 1) {
-            LOG.info("Fant forsendelse knyttet til flere behandlinger {}", forsendelseId);
+            LOG.info("Fant forsendelse knyttet til flere behandlinger {} {}", forsendelseId, behandlingsIder);
             if (erUtsattOppstart(behandlingsIder)) {
                 return Optional.of(new ForsendelseStatusDto(ForsendelseStatus.PÅ_VENT));
             }
@@ -74,8 +74,11 @@ public class ForsendelseStatusTjeneste {
 
     private boolean erUtsattOppstart(Set<Long> behandlingsIder) {
         return behandlingsIder.size() == 2 && behandlingsIder.stream()
-                .anyMatch(b -> repository.hentBehandling(b).getÅrsaker().stream()
-                        .anyMatch(å -> å.getType().equals(BehandlingÅrsakType.RE_UTSATT_START)));
+                .anyMatch(b -> {
+                    var årsaker = repository.hentBehandling(b).getÅrsaker();
+                    LOG.info("Behandlingårsaker for behandling {} er {}", b, årsaker);
+                    return årsaker.stream().anyMatch(å -> å.getType().equals(BehandlingÅrsakType.RE_UTSATT_START));
+                });
     }
 
     private static ForsendelseStatusDto mapTilDto(Behandling behandling, UUID forsendelseId) {
