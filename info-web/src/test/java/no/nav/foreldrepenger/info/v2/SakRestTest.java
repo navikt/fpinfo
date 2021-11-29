@@ -107,6 +107,7 @@ class SakRestTest {
         assertThat(fpSak.gjelderAdopsjon()).isFalse();
         assertThat(fpSak.gjeldendeVedtak()).isNotNull();
         assertThat(fpSak.gjeldendeVedtak().perioder()).hasSize(1);
+        assertThat(fpSak.dekningsgrad()).isEqualTo(Dekningsgrad.ÅTTI);
         var vedtakPeriode = fpSak.gjeldendeVedtak().perioder().get(0);
         assertThat(vedtakPeriode.flerbarnsdager()).isEqualTo(uttakPeriode.getFlerbarnsdager());
         assertThat(vedtakPeriode.fom()).isEqualTo(uttakPeriode.getFom());
@@ -124,6 +125,7 @@ class SakRestTest {
         assertThat(vedtakPeriode.utsettelseÅrsak()).isEqualTo(UtsettelseÅrsak.SØKER_INNLAGT);
         assertThat(vedtakPeriode.overføringÅrsak()).isEqualTo(OverføringÅrsak.SYKDOM_ANNEN_FORELDER);
         assertThat(vedtakPeriode.oppholdÅrsak()).isEqualTo(OppholdÅrsak.MØDREKVOTE_ANNEN_FORELDER);
+
     }
 
     @Test
@@ -196,6 +198,7 @@ class SakRestTest {
         assertThat(fpSak.familiehendelse().fødselsdato()).isEqualTo(fødselsdato);
         assertThat(fpSak.gjelderAdopsjon()).isFalse();
         assertThat(fpSak.gjeldendeVedtak()).isNull();
+        assertThat(fpSak.dekningsgrad()).isEqualTo(Dekningsgrad.HUNDRE);
     }
 
 }
