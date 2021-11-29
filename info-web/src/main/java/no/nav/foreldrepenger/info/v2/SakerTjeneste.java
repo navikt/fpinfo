@@ -69,19 +69,20 @@ class SakerTjeneste {
             return Optional.empty();
         }
         var åpenBehandling = åbOpt.get();
-        var søknadsgrunnlag = finnSøknadsgrunnlag(åpenBehandling.getBehandlingId());
-        if (søknadsgrunnlag.isEmpty()) {
+        var søknadsgrunnlagOpt = finnSøknadsgrunnlag(åpenBehandling.getBehandlingId());
+        if (søknadsgrunnlagOpt.isEmpty()) {
             //Kommer hit hvis behandling uten søknad. Feks ved utsendelse av brev, eller papir punching
             return Optional.empty();
         }
-        var tilhørerMor = tilhørerSakMor(søknadsgrunnlag.get());
+        var søknadsgrunnlag = søknadsgrunnlagOpt.get();
+        var tilhørerMor = tilhørerSakMor(søknadsgrunnlag);
         var annenPart = annenPart(fpSak).orElse(null);
-        var familiehendelse = familiehendelse(søknadsgrunnlag.get());
+        var familiehendelse = familiehendelse(søknadsgrunnlag);
 
         var barn = barn(fpSak.saksnummer());
         return Optional.of(new FpSak(fpSak.saksnummer(), false, false, tilhørerMor,
-                rettighetType(søknadsgrunnlag.get()), annenPart, familiehendelse, null, map(åpenBehandling),
-                fpSak.opprettetTidspunkt(), barn));
+                rettighetType(søknadsgrunnlag), annenPart, familiehendelse, null, map(åpenBehandling),
+                fpSak.opprettetTidspunkt(), barn, Dekningsgrad.valueOf(søknadsgrunnlag.getDekningsgrad())));
     }
 
     private RettighetType rettighetType(SøknadsGrunnlag søknadsGrunnlag) {
@@ -107,7 +108,8 @@ class SakerTjeneste {
         var barn = barn(fpSak.saksnummer());
         return Optional.of(new FpSak(fpSak.saksnummer(), sakAvsluttet, kanSøkeOmEndring, tilhørerMor,
                 rettighetType(søknadsgrunnlag), annenPart, familiehendelse, gjeldendeVedtak,
-                åpenBehandling.orElse(null), fpSak.opprettetTidspunkt(), barn));
+                åpenBehandling.orElse(null), fpSak.opprettetTidspunkt(), barn,
+                Dekningsgrad.valueOf(søknadsgrunnlag.getDekningsgrad())));
     }
 
     private Set<AktørId> barn(no.nav.foreldrepenger.info.v2.Saksnummer saksnummer) {
@@ -189,7 +191,8 @@ class SakerTjeneste {
                 // flere arbeidsforhold gir flere perioder med samme tidsperiode. Selvbetjening frontend støtter ikke flere
                 // arbeidsforhold per periode, så her velger vi en tilfeldig den med høyest arbeidstidsprosent (for at gradering skal bli riktig).
                 // Dette kan gi feil i noen case der feks aktivitene har forskjellig trekkonto
-                .sorted((o1, o2) -> o2.getArbeidstidprosent().compareTo(o1.getArbeidstidprosent()))
+                .sorted((o1, o2) -> o1.getArbeidstidprosent() != null && o2.getArbeidstidprosent() != null
+                        ? o2.getArbeidstidprosent().compareTo(o1.getArbeidstidprosent()) : 0)
                 .filter(distinct(UttakPeriode::getFom))
                 .sorted(Comparator.comparing(UttakPeriode::getFom))
                 .map(p -> map(p))
@@ -255,16 +258,17 @@ class SakerTjeneste {
     }
 
     private OverføringÅrsak mapOverføringÅrsak(String overføringÅrsak) {
-        if (overføringÅrsak == null) {
-            return null;
-        }
-        if ("-".equals(overføringÅrsak)) {
+        if (overføringÅrsak == null || "-".equals(overføringÅrsak)) {
             return null;
         }
         return OverføringÅrsak.valueOf(overføringÅrsak);
     }
 
     private ResultatÅrsak mapResultatÅrsak(String periodeResultatÅrsak) {
+        if ("-".equals(periodeResultatÅrsak)) {
+            //Skjer ved oppholdsperioder
+            return null;
+        }
         if (InnvilgetÅrsak.contains(periodeResultatÅrsak)) {
             return InnvilgetÅrsak.fraKode(periodeResultatÅrsak);
         }

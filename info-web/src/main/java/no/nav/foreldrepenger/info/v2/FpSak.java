@@ -15,6 +15,7 @@ record FpSak(Saksnummer saksnummer,
              FpVedtak gjeldendeVedtak,
              FpÅpenBehandling åpenBehandling,
              @JsonIgnore LocalDateTime opprettetTidspunkt,
-             Set<AktørId> barn) implements Sak {
+             Set<AktørId> barn,
+             Dekningsgrad dekningsgrad) implements Sak {
 
 }
