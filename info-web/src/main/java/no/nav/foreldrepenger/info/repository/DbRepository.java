@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -56,8 +58,7 @@ public class DbRepository implements Repository {
     @Override
     public Optional<SøknadsGrunnlag> hentSøknadsGrunnlag(Long behandlingId) {
         return em.createQuery("from SøknadsGrunnlag where behandlingId=:behandlingId", SøknadsGrunnlag.class)
-                .setParameter("behandlingId",
-                        behandlingId)
+                .setParameter("behandlingId", behandlingId)
                 .getResultList().stream()
                 .reduce((first, second) -> second);
     }
@@ -131,5 +132,14 @@ public class DbRepository implements Repository {
     public List<MottattDokument> hentMottattDokument(Long behandlingId) {
         return em.createQuery("from MottattDokument where behandling_id=:behandlingId", MottattDokument.class)
                 .setParameter("behandlingId", behandlingId).getResultList();
+    }
+
+    @Override
+    public Set<String> hentBarn(Saksnummer saksnummer) {
+        var query = em.createQuery("select distinct aktørIdBarn from SakStatus "
+                        + "where saksnummer=:saksnummer "
+                        + "and aktørIdBarn is not null", String.class)
+                .setParameter("saksnummer", saksnummer.saksnummer());
+        return query.getResultStream().collect(Collectors.toSet());
     }
 }

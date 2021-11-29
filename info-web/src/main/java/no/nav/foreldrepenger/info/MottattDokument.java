@@ -146,8 +146,8 @@ public class MottattDokument implements Serializable {
             return this;
         }
 
-        public Builder medType(String dokumentTypeId) {
-            mottattDokumentMal.type = dokumentTypeId;
+        public Builder medType(DokumentTypeId dokumentTypeId) {
+            mottattDokumentMal.type = dokumentTypeId.name();
             return this;
         }
 

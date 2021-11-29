@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.info.repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import no.nav.foreldrepenger.info.Behandling;
@@ -35,4 +36,6 @@ public interface Repository {
     List<MottattDokument> hentInntektsmeldinger(Long behandlingId);
 
     List<MottattDokument> hentMottattDokument(Long behandlingId);
+
+    Set<String> hentBarn(Saksnummer saksnummer);
 }
