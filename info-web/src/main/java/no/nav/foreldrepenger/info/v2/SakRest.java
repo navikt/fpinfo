@@ -11,7 +11,6 @@ import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtT
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
