@@ -3,12 +3,15 @@ package no.nav.foreldrepenger.info.v2;
 import static no.nav.foreldrepenger.info.abac.AppAbacAttributtType.ANNEN_PART;
 import static no.nav.foreldrepenger.info.abac.BeskyttetRessursAttributt.FAGSAK;
 import static no.nav.foreldrepenger.info.abac.BeskyttetRessursAttributt.UTTAKSPLAN;
+import static no.nav.foreldrepenger.info.server.JettyServer.ACR_LEVEL4;
+import static no.nav.foreldrepenger.info.server.JettyServer.TOKENX;
 import static no.nav.foreldrepenger.sikkerhet.abac.domene.ActionType.READ;
 import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.AKTØR_ID;
 
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
@@ -25,10 +28,12 @@ import io.swagger.v3.oas.annotations.Parameter;
 import no.nav.foreldrepenger.sikkerhet.abac.AbacDto;
 import no.nav.foreldrepenger.sikkerhet.abac.BeskyttetRessurs;
 import no.nav.foreldrepenger.sikkerhet.abac.domene.AbacDataAttributter;
+import no.nav.security.token.support.core.api.ProtectedWithClaims;
 
 @Path(SakRest.PATH)
 @Produces(MediaType.APPLICATION_JSON)
 @ApplicationScoped
+@ProtectedWithClaims(issuer = TOKENX, claimMap = { ACR_LEVEL4 })
 public class SakRest {
 
     final static String PATH = "/v2/saker";
