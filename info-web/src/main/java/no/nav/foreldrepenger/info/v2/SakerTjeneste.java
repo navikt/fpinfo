@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import no.nav.foreldrepenger.info.MottattDokument;
 import no.nav.foreldrepenger.info.v2.persondetaljer.AktørId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,7 +108,7 @@ class SakerTjeneste {
         var barn = barn(fpSak.saksnummer());
         return Optional.of(new FpSak(fpSak.saksnummer, sakAvsluttet, kanSøkeOmEndring, tilhørerMor, false,
                 rettighetType(søknadsgrunnlag), annenPart, familiehendelse, gjeldendeVedtak, åpenBehandling.orElse(null), barn, dekningsgrad(søknadsgrunnlag),
-                null)); //TODO: fiks opprettettidspunkt
+                fpSak.opprettetTidspunkt));
     }
 
     private Set<PersonDetaljer> barn(no.nav.foreldrepenger.info.v2.Saksnummer saksnummer) {
@@ -167,7 +168,7 @@ class SakerTjeneste {
             return false;
         }
         var dokumenter = repository.hentMottattDokument(behandling.getBehandlingId());
-        return dokumenter.stream().anyMatch(d -> d.erSøknad());
+        return dokumenter.stream().anyMatch(MottattDokument::erSøknad);
     }
 
     private boolean erRelevantRevurdering(Behandling behandling) {
@@ -197,13 +198,12 @@ class SakerTjeneste {
                         ? o2.getArbeidstidprosent().compareTo(o1.getArbeidstidprosent()) : 0)
                 .filter(distinct(UttakPeriode::getFom))
                 .sorted(Comparator.comparing(UttakPeriode::getFom))
-                .map(p -> map(p))
+                .map(this::map)
                 .collect(Collectors.toList());
     }
 
     private VedtakPeriode map(UttakPeriode p) {
         var resultat = new VedtakPeriodeResultat("INNVILGET".equals(p.getPeriodeResultatType()));
-                //, mapResultatÅrsak(p.getPeriodeResultatÅrsak()));
         var samtidigUttaksprosent = p.getSamtidigUttaksprosent();
         var samtidigUttak = map(samtidigUttaksprosent);
 
@@ -264,21 +264,6 @@ class SakerTjeneste {
             return null;
         }
         return OverføringÅrsak.valueOf(overføringÅrsak);
-    }
-
-    private ResultatÅrsak mapResultatÅrsak(String periodeResultatÅrsak) {
-        if ("-".equals(periodeResultatÅrsak)) {
-            //Skjer ved oppholdsperioder
-            return null;
-        }
-        if (InnvilgetÅrsak.contains(periodeResultatÅrsak)) {
-            return InnvilgetÅrsak.fraKode(periodeResultatÅrsak);
-        }
-        if (AvslåttÅrsak.contains(periodeResultatÅrsak)) {
-            return AvslåttÅrsak.fraKode(periodeResultatÅrsak);
-        }
-        LOG.warn("Ukjent perioderesultatårsak {}", periodeResultatÅrsak);
-        return null;
     }
 
     private static <T> Predicate<T> distinct(Function<? super T, ?> key) {

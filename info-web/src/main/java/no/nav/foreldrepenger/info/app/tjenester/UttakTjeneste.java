@@ -54,7 +54,7 @@ public class UttakTjeneste {
     }
 
     private List<UttakPeriode> hentUttakPerioder(Saksnummer saksnummer) {
-        return behandlingTjeneste.getGjeldendeBehandlingId(saksnummer).map(gb -> repository.hentUttakPerioder(gb))
+        return behandlingTjeneste.getGjeldendeBehandlingId(saksnummer).map(repository::hentUttakPerioder)
                 .orElse(List.of());
     }
 
