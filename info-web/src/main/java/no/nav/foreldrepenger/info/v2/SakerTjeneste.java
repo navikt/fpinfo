@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import no.nav.foreldrepenger.info.v2.persondetaljer.AktørId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,9 +81,9 @@ class SakerTjeneste {
         var familiehendelse = familiehendelse(søknadsgrunnlag);
 
         var barn = barn(fpSak.saksnummer());
-        return Optional.of(new FpSak(fpSak.saksnummer(), false, false, tilhørerMor,
-                rettighetType(søknadsgrunnlag), annenPart, familiehendelse, null, map(åpenBehandling),
-                fpSak.opprettetTidspunkt(), barn, Dekningsgrad.valueOf(søknadsgrunnlag.getDekningsgrad())));
+        return Optional.of(new FpSak(fpSak.saksnummer, false, false, tilhørerMor,
+                false, rettighetType(søknadsgrunnlag), annenPart, familiehendelse, null, map(åpenBehandling),
+                barn, dekningsgrad(søknadsgrunnlag), åbOpt.get().getOpprettetTidspunkt())); //TODO: fiks opprettettidspunkt
     }
 
     private RettighetType rettighetType(SøknadsGrunnlag søknadsGrunnlag) {
@@ -96,7 +97,6 @@ class SakerTjeneste {
         var søknadsgrunnlag = finnSøknadsgrunnlag(gjeldendeVedtakBehandlingId)
                 .orElseThrow(() -> new IllegalStateException("Forventer søknadsgrunnlag på behandling"));
         var tilhørerMor = tilhørerSakMor(søknadsgrunnlag);
-
         var familiehendelse = familiehendelse(søknadsgrunnlag);
         var vedtaksperioder = hentVedtakPerioder(gjeldendeVedtakBehandlingId);
         var gjeldendeVedtak = new FpVedtak(vedtaksperioder);
@@ -104,35 +104,37 @@ class SakerTjeneste {
         var kanSøkeOmEndring = gjeldendeVedtak.perioder().stream().anyMatch(p -> p.resultat().innvilget());
         var åpenBehandling = åpenBehandling(fpSak);
         var annenPart = annenPart(fpSak).orElse(null);
-
         var barn = barn(fpSak.saksnummer());
-        return Optional.of(new FpSak(fpSak.saksnummer(), sakAvsluttet, kanSøkeOmEndring, tilhørerMor,
-                rettighetType(søknadsgrunnlag), annenPart, familiehendelse, gjeldendeVedtak,
-                åpenBehandling.orElse(null), fpSak.opprettetTidspunkt(), barn,
-                Dekningsgrad.valueOf(søknadsgrunnlag.getDekningsgrad())));
+        return Optional.of(new FpSak(fpSak.saksnummer, sakAvsluttet, kanSøkeOmEndring, tilhørerMor, false,
+                rettighetType(søknadsgrunnlag), annenPart, familiehendelse, gjeldendeVedtak, åpenBehandling.orElse(null), barn, dekningsgrad(søknadsgrunnlag),
+                null)); //TODO: fiks opprettettidspunkt
     }
 
-    private Set<AktørId> barn(no.nav.foreldrepenger.info.v2.Saksnummer saksnummer) {
+    private Set<PersonDetaljer> barn(no.nav.foreldrepenger.info.v2.Saksnummer saksnummer) {
         return repository.hentBarn(new Saksnummer(saksnummer.value()))
-                .stream().map(b -> new AktørId(b))
+                .stream().map(AktørId::new)
                 .collect(Collectors.toSet());
-    }
-
-    private Familiehendelse familiehendelse(SøknadsGrunnlag søknadsgrunnlag) {
-        return new Familiehendelse(søknadsgrunnlag.getFødselDato(), søknadsgrunnlag.getTermindato(),
-                søknadsgrunnlag.getAntallBarn(), søknadsgrunnlag.getOmsorgsovertakelseDato());
     }
 
     private Optional<SøknadsGrunnlag> finnSøknadsgrunnlag(Long behandlingId) {
         return repository.hentSøknadsGrunnlag(behandlingId);
     }
 
-    private boolean tilhørerSakMor(SøknadsGrunnlag søknadsgrunnlag) {
+    private static Familiehendelse familiehendelse(SøknadsGrunnlag søknadsgrunnlag) {
+        return new Familiehendelse(søknadsgrunnlag.getFødselDato(), søknadsgrunnlag.getTermindato(),
+                søknadsgrunnlag.getAntallBarn(), søknadsgrunnlag.getOmsorgsovertakelseDato());
+    }
+
+    private static Dekningsgrad dekningsgrad(SøknadsGrunnlag søknadsgrunnlag) {
+        return Dekningsgrad.valueOf(søknadsgrunnlag.getDekningsgrad());
+    }
+
+    private static boolean tilhørerSakMor(SøknadsGrunnlag søknadsgrunnlag) {
         return Objects.equals(søknadsgrunnlag.getBrukerRolle(), "MORA");
     }
 
     private Optional<FpÅpenBehandling> åpenBehandling(FpSakRef fpSak) {
-        return finnÅpenBehandling(fpSak.saksnummer()).map(behandling -> map(behandling));
+        return finnÅpenBehandling(fpSak.saksnummer()).map(this::map);
     }
 
     private FpÅpenBehandling map(Behandling behandling) {
@@ -200,8 +202,8 @@ class SakerTjeneste {
     }
 
     private VedtakPeriode map(UttakPeriode p) {
-        var resultat = new VedtakPeriodeResultat("INNVILGET".equals(p.getPeriodeResultatType()),
-                mapResultatÅrsak(p.getPeriodeResultatÅrsak()));
+        var resultat = new VedtakPeriodeResultat("INNVILGET".equals(p.getPeriodeResultatType()));
+                //, mapResultatÅrsak(p.getPeriodeResultatÅrsak()));
         var samtidigUttaksprosent = p.getSamtidigUttaksprosent();
         var samtidigUttak = map(samtidigUttaksprosent);
 
@@ -212,9 +214,9 @@ class SakerTjeneste {
         } else {
             gradering = null;
         }
-        return new VedtakPeriode(p.getFom(), p.getTom(), KontoType.fraString(p.getTrekkonto()), resultat,
-                mapUtsettelseÅrsak(p.getUttakUtsettelseType()), mapOppholdÅrsak(p.getOppholdÅrsak()), mapOverføringÅrsak(p.getOverføringÅrsak()),
-                gradering, mapMorsAktivitet(p.getMorsAktivitet()), samtidigUttak, p.getFlerbarnsdager());
+        return new VedtakPeriode(p.getFom(), p.getTom(), KontoType.valueOf(p.getTrekkonto()), resultat, mapUtsettelseÅrsak(p.getUttakUtsettelseType()),
+                mapOppholdÅrsak(p.getOppholdÅrsak()), mapOverføringÅrsak(p.getOverføringÅrsak()), gradering, mapMorsAktivitet(p.getMorsAktivitet()),
+                samtidigUttak, p.getFlerbarnsdager());
     }
 
     private SamtidigUttak map(Long samtidigUttaksprosent) {

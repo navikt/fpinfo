@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import no.nav.foreldrepenger.info.v2.persondetaljer.AktørId;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.info.Behandling;
@@ -96,9 +97,9 @@ class SakRestTest {
 
         var fpSak = saker.foreldrepenger().stream().findFirst().orElseThrow();
         assertThat(fpSak.saksnummer().value()).isEqualTo(saksnummer.saksnummer());
-        assertThat(fpSak.annenPart().aktørId().value()).isEqualTo(annenPartAktørId);
+        assertThat(fpSak.annenPart() .personDetaljer()).isEqualTo(new AktørId(annenPartAktørId));
         assertThat(fpSak.barn()).hasSize(1);
-        assertThat(fpSak.barn().stream().findFirst().orElseThrow().value()).isEqualTo(barnAktørId);
+        assertThat(fpSak.barn().stream().findFirst().orElseThrow()).isEqualTo(new AktørId(barnAktørId));
         assertThat(fpSak.sakAvsluttet()).isFalse();
         assertThat(fpSak.kanSøkeOmEndring()).isTrue();
         assertThat(fpSak.sakTilhørerMor()).isTrue();
@@ -112,9 +113,9 @@ class SakRestTest {
         assertThat(vedtakPeriode.flerbarnsdager()).isEqualTo(uttakPeriode.getFlerbarnsdager());
         assertThat(vedtakPeriode.fom()).isEqualTo(uttakPeriode.getFom());
         assertThat(vedtakPeriode.tom()).isEqualTo(uttakPeriode.getTom());
-        assertThat(vedtakPeriode.kontoType()).isEqualTo(KontoType.fraString(uttakPeriode.getTrekkonto()));
+        assertThat(vedtakPeriode.kontoType()).isEqualTo(KontoType.valueOf(uttakPeriode.getTrekkonto()));
         assertThat(vedtakPeriode.resultat().innvilget()).isTrue();
-        assertThat(vedtakPeriode.resultat().årsak()).isEqualTo(InnvilgetÅrsak.fraKode(uttakPeriode.getPeriodeResultatÅrsak()));
+        //assertThat(vedtakPeriode.resultat().årsak()).isEqualTo(InnvilgetÅrsak.fraKode(uttakPeriode.getPeriodeResultatÅrsak())); //TODO: fjernet dette feltet
         assertThat(vedtakPeriode.gradering()).isEqualTo(new Gradering(
                 BigDecimal.valueOf(uttakPeriode.getArbeidstidprosent())));
         assertThat(vedtakPeriode.morsAktivitet()).isNull();
@@ -189,9 +190,9 @@ class SakRestTest {
 
         var fpSak = saker.foreldrepenger().stream().findFirst().orElseThrow();
         assertThat(fpSak.saksnummer().value()).isEqualTo(saksnummer.saksnummer());
-        assertThat(fpSak.annenPart().aktørId().value()).isEqualTo(annenPartAktørId);
+        assertThat(fpSak.annenPart().personDetaljer()).isEqualTo(new AktørId(annenPartAktørId));
         assertThat(fpSak.barn()).hasSize(1);
-        assertThat(fpSak.barn().stream().findFirst().orElseThrow().value()).isEqualTo(barnAktørId);
+        assertThat(fpSak.barn().stream().findFirst().orElseThrow()).isEqualTo(new AktørId(barnAktørId));
         assertThat(fpSak.sakAvsluttet()).isFalse();
         assertThat(fpSak.kanSøkeOmEndring()).isFalse();
         assertThat(fpSak.sakTilhørerMor()).isFalse();
