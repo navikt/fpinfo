@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import no.nav.foreldrepenger.info.v2.persondetaljer.AktørId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +51,7 @@ class AnnenPartsVedtaksperioderTjeneste {
         var annenPartsSaker = sakerMedAnnenpartLikSøker(søkersAktørId, saker, barn);
 
         if (annenPartsSaker.size() > 1) {
-            var saksnummer = annenPartsSaker.stream().map(sak -> sak.saksnummer()).collect(Collectors.toSet());
+            var saksnummer = annenPartsSaker.stream().map(FpSak::saksnummer).collect(Collectors.toSet());
             LOG.warn("Fant fler enn 1 sak ved oppslag av annen parts vedtaksperioder."
                             + " Velger sist opprettet. Søker {} AnnenPart {} Saksnummer {}.",
                     søkersAktørId, annenPartAktørId, saksnummer);
@@ -62,7 +63,7 @@ class AnnenPartsVedtaksperioderTjeneste {
     private List<FpSak> sakerMedAnnenpartLikSøker(AktørId søkersAktørId, Saker saker, AktørId barn) {
         return saker.foreldrepenger()
                 .stream()
-                .filter(sak -> sak.annenPart() != null && sak.annenPart().aktørId().equals(søkersAktørId))
+                .filter(sak -> sak.annenPart() != null && sak.annenPart().personDetaljer().equals(søkersAktørId))
                 .filter(sak -> sak.barn().contains(barn))
                 .toList();
     }
