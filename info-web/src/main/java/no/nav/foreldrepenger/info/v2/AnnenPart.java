@@ -1,14 +1,15 @@
 package no.nav.foreldrepenger.info.v2;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-
 import java.util.Objects;
 
 
-public record AnnenPart(PersonDetaljer personDetaljer) {
+record AnnenPart(AktørId aktørId) {
 
-    @JsonCreator
-    public AnnenPart {
-        Objects.requireNonNull(personDetaljer, "Persondetaljer kan ikke være null");
+    AnnenPart {
+        Objects.requireNonNull(aktørId, "aktørId kan ikke være null");
+    }
+
+    no.nav.foreldrepenger.info.v2.dto.AnnenPart tilDto() {
+        return new no.nav.foreldrepenger.info.v2.dto.AnnenPart(aktørId.tilDto());
     }
 }

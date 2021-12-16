@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.info.v2;
 enum Dekningsgrad {
     ÅTTI, HUNDRE;
 
-    public static Dekningsgrad valueOf(Integer value) {
+    static Dekningsgrad valueOf(Integer value) {
         if (value == null) {
             return null;
         }
@@ -14,5 +14,12 @@ enum Dekningsgrad {
             return HUNDRE;
         }
         throw new IllegalArgumentException("Ukjent dekningsgrad " + value);
+    }
+
+    no.nav.foreldrepenger.info.v2.dto.Dekningsgrad tilDto() {
+        return switch (this) {
+            case ÅTTI -> no.nav.foreldrepenger.info.v2.dto.Dekningsgrad.ÅTTI;
+            case HUNDRE -> no.nav.foreldrepenger.info.v2.dto.Dekningsgrad.HUNDRE;
+        };
     }
 }
