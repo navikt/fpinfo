@@ -65,7 +65,7 @@ class SakRestTest {
                 .withGraderingInnvilget(true)
                 .withUttakUtsettelseType("-")
                 .withPeriodeResultatType("INNVILGET")
-                .withPeriodeResultatÅrsak(InnvilgetÅrsak.KVOTE_ELLER_OVERFØRT_KVOTE.kode())
+                .withPeriodeResultatÅrsak("2003")
                 .withTrekkkonto(KontoType.MØDREKVOTE.name())
                 .withBehandlingId(behandlingId)
                 .withFlerbarnsdager(false)
