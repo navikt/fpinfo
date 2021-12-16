@@ -15,18 +15,18 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.info.MottattDokument;
-import no.nav.foreldrepenger.info.v2.persondetaljer.AktørId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.info.Behandling;
+import no.nav.foreldrepenger.info.MottattDokument;
 import no.nav.foreldrepenger.info.Saksnummer;
 import no.nav.foreldrepenger.info.SøknadsGrunnlag;
 import no.nav.foreldrepenger.info.UttakPeriode;
 import no.nav.foreldrepenger.info.datatyper.BehandlingType;
 import no.nav.foreldrepenger.info.datatyper.BehandlingÅrsakType;
 import no.nav.foreldrepenger.info.repository.Repository;
+import no.nav.foreldrepenger.info.v2.persondetaljer.AktørId;
 
 @ApplicationScoped
 class SakerTjeneste {
@@ -84,7 +84,7 @@ class SakerTjeneste {
         var barn = barn(fpSak.saksnummer());
         return Optional.of(new FpSak(fpSak.saksnummer, false, false, tilhørerMor,
                 false, rettighetType(søknadsgrunnlag), annenPart, familiehendelse, null, map(åpenBehandling),
-                barn, dekningsgrad(søknadsgrunnlag), åbOpt.get().getOpprettetTidspunkt())); //TODO: fiks opprettettidspunkt
+                barn, dekningsgrad(søknadsgrunnlag), fpSak.opprettetTidspunkt()));
     }
 
     private RettighetType rettighetType(SøknadsGrunnlag søknadsGrunnlag) {

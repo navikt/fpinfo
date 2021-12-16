@@ -7,9 +7,10 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.info.v2.persondetaljer.AktørId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import no.nav.foreldrepenger.info.v2.persondetaljer.AktørId;
 
 @ApplicationScoped
 class AnnenPartsVedtaksperioderTjeneste {
@@ -52,7 +53,7 @@ class AnnenPartsVedtaksperioderTjeneste {
 
         if (annenPartsSaker.size() > 1) {
             var saksnummer = annenPartsSaker.stream().map(FpSak::saksnummer).collect(Collectors.toSet());
-            LOG.warn("Fant fler enn 1 sak ved oppslag av annen parts vedtaksperioder."
+            LOG.warn("Fant flere enn 1 sak ved oppslag av annen parts vedtaksperioder."
                             + " Velger sist opprettet. Søker {} AnnenPart {} Saksnummer {}.",
                     søkersAktørId, annenPartAktørId, saksnummer);
         }
