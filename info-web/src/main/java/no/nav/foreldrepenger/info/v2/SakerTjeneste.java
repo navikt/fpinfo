@@ -15,9 +15,6 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import no.nav.foreldrepenger.info.Behandling;
 import no.nav.foreldrepenger.info.MottattDokument;
 import no.nav.foreldrepenger.info.Saksnummer;
@@ -28,10 +25,9 @@ import no.nav.foreldrepenger.info.datatyper.BehandlingÅrsakType;
 import no.nav.foreldrepenger.info.repository.Repository;
 import no.nav.foreldrepenger.info.v2.persondetaljer.AktørId;
 
+
 @ApplicationScoped
 class SakerTjeneste {
-
-    private static final Logger LOG = LoggerFactory.getLogger(SakerTjeneste.class);
 
     private Repository repository;
 
