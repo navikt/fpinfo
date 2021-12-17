@@ -23,7 +23,6 @@ import no.nav.foreldrepenger.info.UttakPeriode;
 import no.nav.foreldrepenger.info.datatyper.BehandlingType;
 import no.nav.foreldrepenger.info.datatyper.BehandlingÅrsakType;
 import no.nav.foreldrepenger.info.repository.Repository;
-import no.nav.foreldrepenger.info.v2.persondetaljer.AktørId;
 
 
 @ApplicationScoped
@@ -40,9 +39,9 @@ class SakerTjeneste {
         //CDI
     }
 
-    public Saker hentFor(AktørId aktørId) {
+    public Set<FpSak> hentFor(AktørId aktørId) {
         var sakList = repository.hentSak(aktørId.value());
-        var fpSaker = sakList.stream()
+        return sakList.stream()
                 .filter(s -> s.getFagsakYtelseType().equals("FP"))
                 .map(s -> new FpSakRef(new no.nav.foreldrepenger.info.v2.Saksnummer(s.getSaksnummer()),
                         s.getAktørIdAnnenPart() == null ? null : new AktørId(s.getAktørIdAnnenPart()),
@@ -51,7 +50,6 @@ class SakerTjeneste {
                 .distinct()
                 .flatMap(s -> hentFpSak(s).stream())
                 .collect(Collectors.toSet());
-        return new Saker(fpSaker, Set.of(), Set.of());
     }
 
     private Optional<FpSak> hentFpSak(FpSakRef fpSak) {
@@ -107,7 +105,7 @@ class SakerTjeneste {
                 fpSak.opprettetTidspunkt));
     }
 
-    private Set<PersonDetaljer> barn(no.nav.foreldrepenger.info.v2.Saksnummer saksnummer) {
+    private Set<AktørId> barn(no.nav.foreldrepenger.info.v2.Saksnummer saksnummer) {
         return repository.hentBarn(new Saksnummer(saksnummer.value()))
                 .stream().map(AktørId::new)
                 .collect(Collectors.toSet());

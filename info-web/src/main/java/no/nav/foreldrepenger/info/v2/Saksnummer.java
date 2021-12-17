@@ -1,19 +1,14 @@
 package no.nav.foreldrepenger.info.v2;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-
 import java.util.Objects;
 
-record Saksnummer(@JsonValue String value) {
+record Saksnummer(String value) {
 
-    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
     Saksnummer {
         Objects.requireNonNull(value, "saksnummer kan ikke være null");
     }
 
-    @Override
-    public String value() {
-        return value;
+    no.nav.foreldrepenger.info.v2.dto.Saksnummer tilDto() {
+        return new no.nav.foreldrepenger.info.v2.dto.Saksnummer(value);
     }
 }

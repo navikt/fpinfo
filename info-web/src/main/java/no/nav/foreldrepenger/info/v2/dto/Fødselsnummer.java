@@ -1,9 +1,9 @@
-package no.nav.foreldrepenger.info.v2.persondetaljer;
+package no.nav.foreldrepenger.info.v2.dto;
+
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-
-import java.util.Objects;
 
 public record Fødselsnummer(@JsonValue String value) {
 

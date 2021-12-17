@@ -1,21 +1,18 @@
 package no.nav.foreldrepenger.info.v2;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-
 import java.math.BigDecimal;
 
 record Gradering(Arbeidstidprosent arbeidstidprosent) {
 
-    @JsonCreator
     Gradering(BigDecimal arbeidstidprosent) {
         this(new Arbeidstidprosent(arbeidstidprosent));
     }
 
-    static record Arbeidstidprosent(@JsonValue BigDecimal value) {
-        @Override
-        public BigDecimal value() {
-            return value;
-        }
+    no.nav.foreldrepenger.info.v2.dto.Gradering tilDto() {
+        return new no.nav.foreldrepenger.info.v2.dto.Gradering(arbeidstidprosent.value);
+    }
+
+    static record Arbeidstidprosent(BigDecimal value) {
+
     }
 }

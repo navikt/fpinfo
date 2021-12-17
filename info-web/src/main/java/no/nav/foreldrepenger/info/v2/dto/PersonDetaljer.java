@@ -1,9 +1,7 @@
-package no.nav.foreldrepenger.info.v2;
+package no.nav.foreldrepenger.info.v2.dto;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import no.nav.foreldrepenger.info.v2.persondetaljer.AktørId;
-import no.nav.foreldrepenger.info.v2.persondetaljer.Person;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({

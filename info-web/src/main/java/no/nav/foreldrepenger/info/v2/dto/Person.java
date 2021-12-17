@@ -1,10 +1,9 @@
-package no.nav.foreldrepenger.info.v2.persondetaljer;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import no.nav.foreldrepenger.info.v2.PersonDetaljer;
+package no.nav.foreldrepenger.info.v2.dto;
 
 import java.time.LocalDate;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 
 public record Person (Fødselsnummer fødselsnummer,

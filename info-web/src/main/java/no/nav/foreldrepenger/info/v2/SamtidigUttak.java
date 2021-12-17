@@ -1,18 +1,9 @@
 package no.nav.foreldrepenger.info.v2;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-
 import java.math.BigDecimal;
 
-record SamtidigUttak(@JsonValue BigDecimal value) {
-
-    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-    SamtidigUttak {
-    }
-
-    @Override
-    public BigDecimal value() {
-        return value;
+record SamtidigUttak(BigDecimal value) {
+    no.nav.foreldrepenger.info.v2.dto.SamtidigUttak tilDto() {
+        return new no.nav.foreldrepenger.info.v2.dto.SamtidigUttak(value);
     }
 }

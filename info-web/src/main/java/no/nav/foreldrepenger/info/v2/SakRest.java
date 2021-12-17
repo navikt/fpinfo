@@ -9,6 +9,8 @@ import static no.nav.foreldrepenger.sikkerhet.abac.domene.ActionType.READ;
 import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.AKTØR_ID;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -20,11 +22,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import no.nav.foreldrepenger.info.v2.persondetaljer.AktørId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import no.nav.foreldrepenger.info.v2.dto.Saker;
+import no.nav.foreldrepenger.info.v2.dto.VedtakPeriode;
 import no.nav.foreldrepenger.sikkerhet.abac.AbacDto;
 import no.nav.foreldrepenger.sikkerhet.abac.BeskyttetRessurs;
 import no.nav.foreldrepenger.sikkerhet.abac.domene.AbacDataAttributter;
@@ -57,7 +60,9 @@ public class SakRest {
     @BeskyttetRessurs(action = READ, resource = FAGSAK, path = PATH)
     public Saker hentSaker(@NotNull @QueryParam("aktorId") @Parameter(name = "aktorId") AktørIdDto aktørId) {
         LOG.info("Henter saker for bruker");
-        return sakerTjeneste.hentFor(map(aktørId.aktørId()));
+        var fpSaker = sakerTjeneste.hentFor(map(aktørId.aktørId()));
+        var fpSakerDto = fpSaker.stream().map(sak -> sak.tilDto()).collect(Collectors.toSet());
+        return new Saker(fpSakerDto, Set.of(), Set.of());
     }
 
     @Path("/annenpart")
@@ -70,7 +75,7 @@ public class SakRest {
         var perioder = annenPartsVedtaksperioder.hentFor(map(søkersAktørId.aktørId()),
                 map(annenPartAktørId.aktørId), map(barnAktorId.aktørId()));
         LOG.info("Returnerer annen parts vedtaksperioder. Antall perioder {}", perioder.size());
-        return perioder;
+        return perioder.stream().map(p -> p.tilDto()).collect(Collectors.toList());
     }
 
     private AktørId map(String aktørId) {

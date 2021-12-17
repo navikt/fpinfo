@@ -1,10 +1,9 @@
-package no.nav.foreldrepenger.info.v2.persondetaljer;
+package no.nav.foreldrepenger.info.v2.dto;
+
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import no.nav.foreldrepenger.info.v2.PersonDetaljer;
-
-import java.util.Objects;
 
 public record AktørId(String value) implements PersonDetaljer {
 
@@ -18,4 +17,8 @@ public record AktørId(String value) implements PersonDetaljer {
         return value;
     }
 
+    @Override
+    public String toString() {
+        return "***";
+    }
 }
