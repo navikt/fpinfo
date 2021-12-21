@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.info.app.tjenester;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +14,7 @@ import no.nav.foreldrepenger.info.Saksnummer;
 import no.nav.foreldrepenger.info.app.ResourceLink;
 import no.nav.foreldrepenger.info.app.tjenester.dto.BehandlingDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.BehandlingIdDto;
+import no.nav.foreldrepenger.info.datatyper.BehandlingStatus;
 import no.nav.foreldrepenger.info.datatyper.BehandlingTema;
 import no.nav.foreldrepenger.info.datatyper.DokumentTypeId;
 import no.nav.foreldrepenger.info.datatyper.FagsakYtelseType;
@@ -23,7 +23,7 @@ import no.nav.foreldrepenger.info.datatyper.FamilieHendelseType;
 class BehandlingTjenesteTest {
 
     private static final Long BEHANDLING_ID = 123L;
-    private static final String BEHANDLING_STATUS = "FVED";
+    private static final String BEHANDLING_STATUS = BehandlingStatus.FATTER_VEDTAK.getVerdi();
     private static final String FAGSAK_YTELSE_TYPE = FagsakYtelseType.FP.name();
     private static final String BEHANDLENDE_ENHET_KODE = "4082";
     private static final String BEHANDLENDE_ENHET_NAVN = "NAV";
@@ -101,7 +101,6 @@ class BehandlingTjenesteTest {
 
     private static List<MottattDokument> lagDokument(DokumentTypeId type) {
         return List.of(dokumentBuilder()
-                .medForsendelseId(UUID.randomUUID())
                 .medBehandlingId(BEHANDLING_ID)
                 .medType(type)
                 .build());
@@ -109,7 +108,6 @@ class BehandlingTjenesteTest {
 
     private static MottattDokument.Builder dokumentBuilder() {
         return MottattDokument.builder()
-                .medBehandlingStatus(BEHANDLING_STATUS)
                 .medJournalpostId(JOURNALPOST_ID)
                 .medMottattDokumentId(DOKUMENT_ID)
                 .medSøknadXml(XML_CLOB);

@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.info.app.tjenester;
 
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.noContent;
 import static javax.ws.rs.core.Response.ok;
 import static javax.ws.rs.core.Response.status;
-import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static no.nav.foreldrepenger.info.abac.BeskyttetRessursAttributt.FAGSAK;
 import static no.nav.foreldrepenger.info.abac.BeskyttetRessursAttributt.UTTAKSPLAN;
 import static no.nav.foreldrepenger.info.app.tjenester.DokumentforsendelseTjeneste.DOKUMENTFORSENDELSE_PATH;
@@ -24,9 +24,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -36,8 +33,6 @@ import no.nav.foreldrepenger.info.app.tjenester.dto.AktørAnnenPartDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.AktørIdDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.BehandlingDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.BehandlingIdDto;
-import no.nav.foreldrepenger.info.app.tjenester.dto.ForsendelseIdDto;
-import no.nav.foreldrepenger.info.app.tjenester.dto.ForsendelseStatusDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.SakDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.SaksnummerDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.SøknadXmlDto;
@@ -51,12 +46,9 @@ import no.nav.security.token.support.core.api.ProtectedWithClaims;
 @ProtectedWithClaims(issuer = TOKENX, claimMap = { ACR_LEVEL4 })
 public class DokumentforsendelseTjeneste {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DokumentforsendelseTjeneste.class);
-
     static final String DOKUMENTFORSENDELSE_PATH = "/dokumentforsendelse";
     private static final String API_PATH = "/fpinfo/api" + DOKUMENTFORSENDELSE_PATH;
     private static final String BEHANDLING_PATH = "/behandling";
-    private static final String STATUS_PATH = "/status";
     private static final String SAK_PATH = "/sak";
     private static final String SOKNAD_PATH = "/soknad";
     private static final String UTTAKSPLAN_PATH = "/uttaksplan";
@@ -64,19 +56,16 @@ public class DokumentforsendelseTjeneste {
 
     private BehandlingTjeneste behandling;
     private SøknadTjeneste søknad;
-    private ForsendelseStatusTjeneste forsendelse;
     private SøknadsGrunnlagTjeneste grunnlag;
     private SakTjeneste sak;
 
     @Inject
     public DokumentforsendelseTjeneste(BehandlingTjeneste behandling,
             SøknadTjeneste søknad,
-            ForsendelseStatusTjeneste forsendelse,
             SøknadsGrunnlagTjeneste grunnlag,
             SakTjeneste sak) {
         this.behandling = behandling;
         this.søknad = søknad;
-        this.forsendelse = forsendelse;
         this.grunnlag = grunnlag;
         this.sak = sak;
     }
@@ -93,21 +82,6 @@ public class DokumentforsendelseTjeneste {
     public BehandlingDto hentBehandling(
             @NotNull @QueryParam("behandlingId") @Parameter(name = "behandlingId") @Valid BehandlingIdDto id) {
         return behandling.hentBehandling(id, API_PATH + "/soknad?behandlingId=");
-    }
-
-    @GET
-    @Path(STATUS_PATH)
-    @BeskyttetRessurs(action = READ, resource = FAGSAK, path = DOKUMENTFORSENDELSE_PATH + STATUS_PATH)
-    @Operation(description = "Søker om status på prossesseringen av et mottatt dokument", summary = "status på prossesseringen av et mottatt dokument", responses = {
-            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = ForsendelseStatusDto.class)), responseCode = "200", description = "Status og Periode"),
-            @ApiResponse(responseCode = "404", description = "Forsendelse ikke funnet")
-    })
-    public Response getForsendelseStatus(
-            @NotNull @QueryParam("forsendelseId") @Parameter(name = "forsendelseId") @Valid ForsendelseIdDto id) {
-
-        return forsendelse.hentForsendelseStatus(id)
-                .map(d -> ok(d).build())
-                .orElseGet(() -> status(NOT_FOUND).build());
     }
 
     @GET
