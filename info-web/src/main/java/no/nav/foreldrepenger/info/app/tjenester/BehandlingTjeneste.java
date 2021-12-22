@@ -20,12 +20,10 @@ public class BehandlingTjeneste {
 
     private static final Logger LOG = LoggerFactory.getLogger(BehandlingTjeneste.class);
 
-    private SøknadTjeneste søknadTjeneste;
     private Repository repository;
 
     @Inject
-    public BehandlingTjeneste(SøknadTjeneste søknadTjeneste, Repository repository) {
-        this.søknadTjeneste = søknadTjeneste;
+    public BehandlingTjeneste(Repository repository) {
         this.repository = repository;
     }
 
@@ -33,13 +31,10 @@ public class BehandlingTjeneste {
         //CDI
     }
 
-    public BehandlingDto hentBehandling(BehandlingIdDto behandlingIdDto, String linkPathSøknad) {
+    public BehandlingDto hentBehandling(BehandlingIdDto behandlingIdDto) {
         var behandlingId = behandlingIdDto.getBehandlingId();
         var behandling = repository.hentBehandling(behandlingId);
         var dto = BehandlingDto.fraDomene(behandling);
-        if (harSøknad(behandlingIdDto)) {
-            dto.leggTilLenke(linkPathSøknad + behandlingId, "søknad");
-        }
         var inntektsmeldinger = repository.hentInntektsmeldinger(behandlingId);
         dto.setInntektsmeldinger(journalPostIdr(inntektsmeldinger));
         return dto;
@@ -49,10 +44,6 @@ public class BehandlingTjeneste {
         return inntektsmeldinger.stream()
                 .map(MottattDokument::getJournalpostId)
                 .toList();
-    }
-
-    private boolean harSøknad(BehandlingIdDto behandlingIdDto) {
-        return søknadTjeneste.harSøknad(behandlingIdDto.getBehandlingId());
     }
 
     public Optional<Long> getGjeldendeBehandlingId(Saksnummer saksnummer) {

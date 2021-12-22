@@ -18,8 +18,7 @@ class UttakTjenesteTest {
                 .uttakAnnenpart(List.of(new UttakPeriode.Builder().build()));
 
         var repository = scenario.repository();
-        var tjeneste = new UttakTjeneste(new BehandlingTjeneste(new SøknadTjeneste(repository), repository),
-                repository);
+        var tjeneste = new UttakTjeneste(new BehandlingTjeneste(repository), repository);
 
         var uttak = tjeneste.hentFellesUttaksplan(scenario.saksnummer(), false);
 

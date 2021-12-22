@@ -1,9 +1,7 @@
 package no.nav.foreldrepenger.info.app.tjenester;
 
-import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.noContent;
 import static javax.ws.rs.core.Response.ok;
-import static javax.ws.rs.core.Response.status;
 import static no.nav.foreldrepenger.info.abac.BeskyttetRessursAttributt.FAGSAK;
 import static no.nav.foreldrepenger.info.abac.BeskyttetRessursAttributt.UTTAKSPLAN;
 import static no.nav.foreldrepenger.info.app.tjenester.DokumentforsendelseTjeneste.DOKUMENTFORSENDELSE_PATH;
@@ -35,7 +33,6 @@ import no.nav.foreldrepenger.info.app.tjenester.dto.BehandlingDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.BehandlingIdDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.SakDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.SaksnummerDto;
-import no.nav.foreldrepenger.info.app.tjenester.dto.SøknadXmlDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.SøknadsGrunnlagDto;
 import no.nav.foreldrepenger.sikkerhet.abac.BeskyttetRessurs;
 import no.nav.security.token.support.core.api.ProtectedWithClaims;
@@ -50,22 +47,18 @@ public class DokumentforsendelseTjeneste {
     private static final String API_PATH = "/fpinfo/api" + DOKUMENTFORSENDELSE_PATH;
     private static final String BEHANDLING_PATH = "/behandling";
     private static final String SAK_PATH = "/sak";
-    private static final String SOKNAD_PATH = "/soknad";
     private static final String UTTAKSPLAN_PATH = "/uttaksplan";
     protected static final String ANNENFORELDERPLAN_PATH = "/annenforelderplan";
 
     private BehandlingTjeneste behandling;
-    private SøknadTjeneste søknad;
     private SøknadsGrunnlagTjeneste grunnlag;
     private SakTjeneste sak;
 
     @Inject
     public DokumentforsendelseTjeneste(BehandlingTjeneste behandling,
-            SøknadTjeneste søknad,
             SøknadsGrunnlagTjeneste grunnlag,
             SakTjeneste sak) {
         this.behandling = behandling;
-        this.søknad = søknad;
         this.grunnlag = grunnlag;
         this.sak = sak;
     }
@@ -81,7 +74,7 @@ public class DokumentforsendelseTjeneste {
     })
     public BehandlingDto hentBehandling(
             @NotNull @QueryParam("behandlingId") @Parameter(name = "behandlingId") @Valid BehandlingIdDto id) {
-        return behandling.hentBehandling(id, API_PATH + "/soknad?behandlingId=");
+        return behandling.hentBehandling(id);
     }
 
     @GET
@@ -93,19 +86,6 @@ public class DokumentforsendelseTjeneste {
     public List<SakDto> hentSak(
             @NotNull @QueryParam("aktorId") @Parameter(name = "aktorId") @Valid AktørIdDto aktørIdDto) {
         return sak.hentSak(aktørIdDto, API_PATH + "/behandling?behandlingId=", API_PATH + "/uttaksplan?saksnummer=");
-    }
-
-    @GET
-    @Path(SOKNAD_PATH)
-    @BeskyttetRessurs(action = READ, resource = FAGSAK, path = DOKUMENTFORSENDELSE_PATH + SOKNAD_PATH)
-    @Operation(description = "Url for å hente søknad XML og journalpostId", summary = "Returnerer søknad XML og Journalpost ID", responses = {
-            @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SøknadXmlDto.class)), responseCode = "200", description = "Returnerer søknad XML")
-    })
-    public Response hentSøknadXml(
-            @NotNull @QueryParam("behandlingId") @Parameter(name = "behandlingId") @Valid BehandlingIdDto id) {
-        return søknad.hentSøknadXml(id.getBehandlingId())
-                .map(xml -> ok(xml).build())
-                .orElseGet(() -> status(NOT_FOUND).build());
     }
 
     @GET

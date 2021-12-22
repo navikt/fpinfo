@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.info.app.tjenester;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -9,25 +8,22 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.info.Behandling;
-import no.nav.foreldrepenger.info.MottattDokument;
 import no.nav.foreldrepenger.info.Sak;
 import no.nav.foreldrepenger.info.Saksnummer;
 import no.nav.foreldrepenger.info.UttakPeriode;
 import no.nav.foreldrepenger.info.app.ResourceLink;
 import no.nav.foreldrepenger.info.app.tjenester.dto.BehandlingDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.SakDto;
-import no.nav.foreldrepenger.info.app.tjenester.dto.SøknadXmlDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.UttaksPeriodeDto;
 import no.nav.foreldrepenger.info.datatyper.BehandlingResultatType;
 import no.nav.foreldrepenger.info.datatyper.BehandlingStatus;
 import no.nav.foreldrepenger.info.datatyper.BehandlingTema;
-import no.nav.foreldrepenger.info.datatyper.DokumentTypeId;
 import no.nav.foreldrepenger.info.datatyper.FagsakYtelseType;
 import no.nav.foreldrepenger.info.datatyper.FamilieHendelseType;
 import no.nav.foreldrepenger.info.datatyper.GraderingAvslagÅrsak;
-import no.nav.vedtak.exception.TekniskException;
 
 class DomeneTilDtoTransformasjonTest {
+
     private static final Long BEHANDLING_ID = 1234L;
     private static final Saksnummer SAKSNUMMER = new Saksnummer("4567");
     private static final String BEHANDLENDE_ENHET = "4052";
@@ -41,11 +37,7 @@ class DomeneTilDtoTransformasjonTest {
     private static final String FAGSAK_STATUS = "OPPR";
     private static final String AKTØR_ID = "1234";
     private static final String AKTØR_ID_ANNEN_PART = "5678";
-    private static final String JOURNALPOST_ID = "123456789";
-    private static final String XML_PAYLOAD = "xml";
     private static final ResourceLink EXPECTED_RESOURCE_LINK = ResourceLink.get(TEST_LENKE, TEST_REL, null);
-    private static final String DOKUMENT_ID = "123";
-    private static final DokumentTypeId DOKUMENT_TYPE_ID = DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL;
 
     @Test
     void behandlingTilBehandlingDto() {
@@ -67,12 +59,6 @@ class DomeneTilDtoTransformasjonTest {
         assertThat(dto.getType()).isEqualTo(FAGSAK_YTELSE_TYPE);
         assertThat(dto.getBehandlendeEnhet()).isEqualTo(BEHANDLENDE_ENHET);
         assertThat(dto.getBehandlendeEnhetNavn()).isEqualTo(BEHANDLENDE_ENHET_NAVN);
-        assertThat(dto.getLenker()).isEmpty();
-
-        dto.leggTilLenke(TEST_LENKE, TEST_REL);
-
-        assertThat(dto.getLenker()).hasSize(1);
-        assertThat(dto.getLenker().get(0)).isEqualTo(EXPECTED_RESOURCE_LINK);
     }
 
     @Test
@@ -118,33 +104,6 @@ class DomeneTilDtoTransformasjonTest {
     }
 
     @Test
-    void fullstendigMottattDokumentTilSøknadXmlDto() {
-        var dokument = lagDokument(BEHANDLING_ID, JOURNALPOST_ID, XML_PAYLOAD);
-
-        var dto = new SøknadXmlDto(dokument);
-        assertThat(dto.journalpostId()).isEqualTo(JOURNALPOST_ID);
-        assertThat(dto.xml()).isEqualTo(XML_PAYLOAD);
-    }
-
-    @Test
-    void skalKasteFeilmeldingNårVedForsøkPåSammenslåingAvToUrelaterteDokumenter() {
-        var dokument1 = lagDokument(1L, JOURNALPOST_ID, XML_PAYLOAD);
-        var dokument2 = lagDokument(2L, JOURNALPOST_ID, XML_PAYLOAD);
-        assertThrows(TekniskException.class, () -> SøknadXmlDto.fraDomene(dokument1, dokument2));
-    }
-
-    @Test
-    void skalSammenslåToMottatteDokumentKnyttetTilSammeBehandlingTilSøknadXmlDto() {
-        var dokument1 = lagDokument(BEHANDLING_ID, JOURNALPOST_ID, null);
-        var dokument2 = lagDokument(BEHANDLING_ID, null, XML_PAYLOAD);
-
-        var dto = SøknadXmlDto.fraDomene(dokument1, dokument2);
-
-        assertThat(dto.xml()).isEqualTo(XML_PAYLOAD);
-        assertThat(dto.journalpostId()).isEqualTo(JOURNALPOST_ID);
-    }
-
-    @Test
     void skalMappeUttakPeriodeTilUttakPeriodeDto() {
         var periodeResultatÅrsak = "4005";
         var uttakPeriode = UttakPeriode.builder()
@@ -177,15 +136,5 @@ class DomeneTilDtoTransformasjonTest {
         assertThat(uttaksPeriodeDto.getMorsAktivitet()).isNull();
         assertThat(uttaksPeriodeDto.getGraderingAvslagAarsak()).isEqualTo("MOR_OPPFYLLER_IKKE_AKTIVITETSKRAV");
         assertThat(uttaksPeriodeDto.getPeriodeResultatÅrsak()).isEqualTo(periodeResultatÅrsak);
-    }
-
-    private MottattDokument lagDokument(Long behandlingId, String journalpostId, String xmlPayload) {
-        return MottattDokument.builder()
-                .medBehandlingId(behandlingId)
-                .medMottattDokumentId(DOKUMENT_ID)
-                .medJournalpostId(journalpostId)
-                .medSøknadXml(xmlPayload)
-                .medType(DOKUMENT_TYPE_ID)
-                .build();
     }
 }

@@ -3,11 +3,9 @@ package no.nav.foreldrepenger.info.app.tjenester.dto;
 import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.BEHANDLING_ID;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import no.nav.foreldrepenger.info.Behandling;
-import no.nav.foreldrepenger.info.app.ResourceLink;
 import no.nav.foreldrepenger.info.datatyper.BehandlingTema;
 import no.nav.foreldrepenger.sikkerhet.abac.AbacDto;
 import no.nav.foreldrepenger.sikkerhet.abac.domene.AbacDataAttributter;
@@ -21,14 +19,9 @@ public class BehandlingDto implements AbacDto {
     private String behandlendeEnhet;
     private String behandlendeEnhetNavn;
     private List<String> inntektsmeldinger;
-    private List<ResourceLink> lenker;
     private LocalDateTime opprettetTidspunkt;
     private LocalDateTime endretTidspunkt;
     private String behandlingResultat;
-
-    public BehandlingDto() {
-        lenker = new ArrayList<>();
-    }
 
     public String getBehandlingResultat() {
         return behandlingResultat;
@@ -68,16 +61,6 @@ public class BehandlingDto implements AbacDto {
 
     public void setInntektsmeldinger(List<String> inntektsmeldinger) {
         this.inntektsmeldinger = inntektsmeldinger;
-    }
-
-    public List<ResourceLink> getLenker() {
-        return lenker;
-    }
-
-    public void leggTilLenke(String href, String rel) {
-        if (href != null) {
-            lenker.add(ResourceLink.get(href, rel, null));
-        }
     }
 
     public static BehandlingDto fraDomene(Behandling behandling) {
