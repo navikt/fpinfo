@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.info;
 
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,9 +17,6 @@ import no.nav.foreldrepenger.info.datatyper.DokumentTypeId;
 @Table(name = "MOTTATT_DOKUMENT")
 public class MottattDokument implements Serializable {
 
-    @Column(name = "BEHANDLING_STATUS")
-    private String behandlingStatus;
-
     @Id
     @Column(name = "MOTTATT_DOKUMENT_ID")
     private String mottattDokumentId;
@@ -28,9 +24,6 @@ public class MottattDokument implements Serializable {
     @Id
     @Column(name = "BEHANDLING_ID")
     private Long behandlingId;
-
-    @Column(name = "FORSENDELSE_ID")
-    private UUID forsendelseId;
 
     @Column(name = "SOEKNAD_XML")
     private String søknadXml;
@@ -45,9 +38,7 @@ public class MottattDokument implements Serializable {
     private String saksnummer;
 
     MottattDokument(MottattDokument mottattDokument) {
-        this.behandlingStatus = mottattDokument.behandlingStatus;
         this.behandlingId = mottattDokument.behandlingId;
-        this.forsendelseId = mottattDokument.forsendelseId;
         this.mottattDokumentId = mottattDokument.mottattDokumentId;
         this.søknadXml = mottattDokument.søknadXml;
         this.journalpostId = mottattDokument.journalpostId;
@@ -58,16 +49,8 @@ public class MottattDokument implements Serializable {
     MottattDokument() {
     }
 
-    public String getBehandlingStatus() {
-        return behandlingStatus;
-    }
-
     public Long getBehandlingId() {
         return behandlingId;
-    }
-
-    public UUID getForsendelseId() {
-        return forsendelseId;
     }
 
     public String getMottattDokumentId() {
@@ -102,7 +85,7 @@ public class MottattDokument implements Serializable {
     }
 
     public static class Builder {
-        private MottattDokument mottattDokumentMal;
+        private final MottattDokument mottattDokumentMal;
 
         public Builder() {
             mottattDokumentMal = new MottattDokument();
@@ -116,18 +99,8 @@ public class MottattDokument implements Serializable {
             }
         }
 
-        public Builder medBehandlingStatus(String behandlingStatus) {
-            mottattDokumentMal.behandlingStatus = behandlingStatus;
-            return this;
-        }
-
         public Builder medBehandlingId(Long behandlingId) {
             mottattDokumentMal.behandlingId = behandlingId;
-            return this;
-        }
-
-        public Builder medForsendelseId(UUID forsendelseId) {
-            mottattDokumentMal.forsendelseId = forsendelseId;
             return this;
         }
 
@@ -176,9 +149,8 @@ public class MottattDokument implements Serializable {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + " [behandlingStatus=" + behandlingStatus + ", mottattDokumentId=" + mottattDokumentId
-                + ", behandlingId="
-                + behandlingId + ", forsendelseId=" + forsendelseId + ", søknadXml=" + søknadXml + ", journalpostId=" + journalpostId
-                + ", type=" + type + ", saksnummer=" + saksnummer + "]";
+        return "MottattDokument{" + "mottattDokumentId='" + mottattDokumentId + '\'' + ", behandlingId=" + behandlingId
+                + '\'' + ", journalpostId='" + journalpostId + '\'' + ", type='" + type
+                + '\'' + ", saksnummer='" + saksnummer + '\'' + '}';
     }
 }

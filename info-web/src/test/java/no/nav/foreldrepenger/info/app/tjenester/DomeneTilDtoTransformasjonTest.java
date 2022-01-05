@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +45,6 @@ class DomeneTilDtoTransformasjonTest {
     private static final String XML_PAYLOAD = "xml";
     private static final ResourceLink EXPECTED_RESOURCE_LINK = ResourceLink.get(TEST_LENKE, TEST_REL, null);
     private static final String DOKUMENT_ID = "123";
-    private static final UUID FORSENDELSE_ID = UUID.randomUUID();
     private static final DokumentTypeId DOKUMENT_TYPE_ID = DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL;
 
     @Test
@@ -185,8 +183,6 @@ class DomeneTilDtoTransformasjonTest {
         return MottattDokument.builder()
                 .medBehandlingId(behandlingId)
                 .medMottattDokumentId(DOKUMENT_ID)
-                .medBehandlingStatus(BEHANDLING_STATUS)
-                .medForsendelseId(FORSENDELSE_ID)
                 .medJournalpostId(journalpostId)
                 .medSøknadXml(xmlPayload)
                 .medType(DOKUMENT_TYPE_ID)

@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.info.repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 import no.nav.foreldrepenger.info.Behandling;
 import no.nav.foreldrepenger.info.FagsakRelasjon;
@@ -30,8 +29,6 @@ public interface Repository {
     Behandling hentBehandling(Long behandlingId);
 
     List<Behandling> hentTilknyttedeBehandlinger(String saksnummer);
-
-    List<MottattDokument> hentMottatteDokumenter(UUID forsendelseId);
 
     List<MottattDokument> hentInntektsmeldinger(Long behandlingId);
 

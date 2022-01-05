@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.Dependent;
@@ -111,12 +110,6 @@ public class DbRepository implements Repository {
     public List<Behandling> hentTilknyttedeBehandlinger(String saksnummer) {
         return em.createQuery("from Behandling where saksnummer=:saksnummer", Behandling.class)
                 .setParameter("saksnummer", new TypedParameterValue(StringType.INSTANCE, saksnummer)).getResultList();
-    }
-
-    @Override
-    public List<MottattDokument> hentMottatteDokumenter(UUID forsendelseId) {
-        return em.createQuery("from MottattDokument where forsendelse_id=:forsendelseId", MottattDokument.class)
-                .setParameter("forsendelseId", forsendelseId).getResultList();
     }
 
     @Override

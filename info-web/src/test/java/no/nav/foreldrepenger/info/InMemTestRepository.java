@@ -80,13 +80,6 @@ public class InMemTestRepository implements Repository {
     }
 
     @Override
-    public List<MottattDokument> hentMottatteDokumenter(UUID forsendelseId) {
-        return mottattDokumenter.stream()
-                .filter(md -> Objects.equals(md.getForsendelseId(), forsendelseId))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<MottattDokument> hentInntektsmeldinger(Long behandlingId) {
         return hentMottattDokument(behandlingId).stream()
                 .filter(md -> md.getType().equals(DokumentTypeId.INNTEKTSMELDING.name()))
