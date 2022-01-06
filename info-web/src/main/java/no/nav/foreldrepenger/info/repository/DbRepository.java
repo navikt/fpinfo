@@ -114,9 +114,7 @@ public class DbRepository implements Repository {
 
     @Override
     public List<MottattDokument> hentInntektsmeldinger(Long behandlingId) {
-        return em.createQuery("from MottattDokument where behandling_id=:behandlingId", MottattDokument.class)
-                .setParameter("behandlingId", behandlingId).getResultList()
-                .stream()
+        return hentMottattDokument(behandlingId).stream()
                 .filter(o -> DokumentTypeId.INNTEKTSMELDING.name().equals(o.getType()))
                 .toList();
     }

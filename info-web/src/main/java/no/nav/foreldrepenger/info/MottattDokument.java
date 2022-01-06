@@ -25,25 +25,17 @@ public class MottattDokument implements Serializable {
     @Column(name = "BEHANDLING_ID")
     private Long behandlingId;
 
-    @Column(name = "SOEKNAD_XML")
-    private String søknadXml;
-
     @Column(name = "JOURNALPOST_ID")
     private String journalpostId;
 
     @Column(name = "TYPE")
     private String type;
 
-    @Column(name = "SAKSNUMMER")
-    private String saksnummer;
-
     MottattDokument(MottattDokument mottattDokument) {
         this.behandlingId = mottattDokument.behandlingId;
         this.mottattDokumentId = mottattDokument.mottattDokumentId;
-        this.søknadXml = mottattDokument.søknadXml;
         this.journalpostId = mottattDokument.journalpostId;
         this.type = mottattDokument.type;
-        this.saksnummer = mottattDokument.saksnummer;
     }
 
     MottattDokument() {
@@ -57,20 +49,12 @@ public class MottattDokument implements Serializable {
         return mottattDokumentId;
     }
 
-    public String getSøknadXml() {
-        return søknadXml;
-    }
-
     public String getJournalpostId() {
         return journalpostId;
     }
 
     public String getType() {
         return type;
-    }
-
-    public String getSaksnummer() {
-        return saksnummer;
     }
 
     public Boolean erSøknad() {
@@ -109,11 +93,6 @@ public class MottattDokument implements Serializable {
             return this;
         }
 
-        public Builder medSøknadXml(String søknadXml) {
-            mottattDokumentMal.søknadXml = søknadXml;
-            return this;
-        }
-
         public Builder medJournalpostId(String journalpostId) {
             mottattDokumentMal.journalpostId = journalpostId;
             return this;
@@ -121,11 +100,6 @@ public class MottattDokument implements Serializable {
 
         public Builder medType(DokumentTypeId dokumentTypeId) {
             mottattDokumentMal.type = dokumentTypeId.name();
-            return this;
-        }
-
-        public Builder medSaksnummer(String saksnummer) {
-            mottattDokumentMal.saksnummer = saksnummer;
             return this;
         }
 
@@ -150,7 +124,6 @@ public class MottattDokument implements Serializable {
     @Override
     public String toString() {
         return "MottattDokument{" + "mottattDokumentId='" + mottattDokumentId + '\'' + ", behandlingId=" + behandlingId
-                + '\'' + ", journalpostId='" + journalpostId + '\'' + ", type='" + type
-                + '\'' + ", saksnummer='" + saksnummer + '\'' + '}';
+                + ", journalpostId='" + journalpostId + '\'' + ", type='" + type + '\'' + '}';
     }
 }

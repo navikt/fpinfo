@@ -11,7 +11,6 @@ import no.nav.foreldrepenger.info.Behandling;
 import no.nav.foreldrepenger.info.InMemTestRepository;
 import no.nav.foreldrepenger.info.MottattDokument;
 import no.nav.foreldrepenger.info.Saksnummer;
-import no.nav.foreldrepenger.info.app.ResourceLink;
 import no.nav.foreldrepenger.info.app.tjenester.dto.BehandlingDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.BehandlingIdDto;
 import no.nav.foreldrepenger.info.datatyper.BehandlingStatus;
@@ -30,10 +29,8 @@ class BehandlingTjenesteTest {
     private static final Saksnummer SAKSNUMMER = new Saksnummer("12345");
     private static final String FAMILIE_HENDELSE_FØDSEL = FamilieHendelseType.FØDSEL.getVerdi();
     private static final String BEHANDLING_TEMA = BehandlingTema.FORELDREPENGER_FØDSEL;
-    private static final String XML_CLOB = "xml clob";
     private static final String DOKUMENT_ID = "1234";
     private static final String JOURNALPOST_ID = "1234";
-    private static final String LINK_PATH_SØKNAD = "/søknad?param=";
 
     private InMemTestRepository repository;
     private BehandlingTjeneste behandlingTjeneste;
@@ -41,7 +38,7 @@ class BehandlingTjenesteTest {
     @BeforeEach
     void beforeEach() {
         repository = new InMemTestRepository();
-        behandlingTjeneste = new BehandlingTjeneste(new SøknadTjeneste(repository), repository);
+        behandlingTjeneste = new BehandlingTjeneste(repository);
     }
 
     @Test
@@ -49,38 +46,12 @@ class BehandlingTjenesteTest {
         repository.lagre(lagBehandling());
         repository.lagre(lagDokument());
 
-        BehandlingDto dto = behandlingTjeneste.hentBehandling(new BehandlingIdDto(BEHANDLING_ID.toString()),
-                LINK_PATH_SØKNAD);
+        BehandlingDto dto = behandlingTjeneste.hentBehandling(new BehandlingIdDto(BEHANDLING_ID.toString()));
         assertThat(dto.getType()).isEqualTo(FAGSAK_YTELSE_TYPE);
         assertThat(dto.getBehandlendeEnhet()).isEqualTo(BEHANDLENDE_ENHET_KODE);
         assertThat(dto.getBehandlendeEnhetNavn()).isEqualTo(BEHANDLENDE_ENHET_NAVN);
         assertThat(dto.getStatus()).isEqualTo(BEHANDLING_STATUS);
         assertThat(dto.getTema()).isEqualTo(BEHANDLING_TEMA);
-        assertThat(dto.getLenker()).isNotEmpty();
-
-        ResourceLink resourceLink = ResourceLink.get(LINK_PATH_SØKNAD + BEHANDLING_ID, "søknad", null);
-
-        assertThat(dto.getLenker().get(0)).isEqualTo(resourceLink);
-    }
-
-    @Test
-    void skalIkkeLageLenkerSøknadSomIkkeFinnes() {
-        repository.lagre(lagBehandling());
-
-        BehandlingDto dto = behandlingTjeneste.hentBehandling(new BehandlingIdDto(BEHANDLING_ID.toString()),
-                LINK_PATH_SØKNAD);
-
-        assertThat(dto.getLenker()).isEmpty();
-    }
-
-    @Test
-    void skalIkkeLageLenkeTilSøknadSomIkkeErRelevant() {
-        repository.lagre(lagBehandling());
-        repository.lagre(lagDokument(DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD));
-
-        BehandlingDto dto = behandlingTjeneste.hentBehandling(new BehandlingIdDto(BEHANDLING_ID.toString()),
-                LINK_PATH_SØKNAD);
-        assertThat(dto.getLenker()).isEmpty();
     }
 
     private static Behandling lagBehandling() {
@@ -109,7 +80,6 @@ class BehandlingTjenesteTest {
     private static MottattDokument.Builder dokumentBuilder() {
         return MottattDokument.builder()
                 .medJournalpostId(JOURNALPOST_ID)
-                .medMottattDokumentId(DOKUMENT_ID)
-                .medSøknadXml(XML_CLOB);
+                .medMottattDokumentId(DOKUMENT_ID);
     }
 }
