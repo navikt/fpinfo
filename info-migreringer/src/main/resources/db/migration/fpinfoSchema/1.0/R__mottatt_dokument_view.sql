@@ -7,10 +7,8 @@ SELECT beh.ID            AS BEHANDLING_ID
      , beh.ENDRET_AV     AS ENDRET_AV
      , beh.ENDRET_TID    AS ENDRET_TID
      , md.ID             AS MOTTATT_DOKUMENT_ID
-     , md.XML_PAYLOAD    AS SOEKNAD_XML
      , md.JOURNALPOST_ID AS JOURNALPOST_ID
      , md.TYPE           AS TYPE
-     , fs.SAKSNUMMER     AS SAKSNUMMER
 FROM fpsak.MOTTATT_DOKUMENT md
          left join fpsak.BEHANDLING beh on md.BEHANDLING_ID = beh.ID
          left JOIN fpsak.FAGSAK fs ON md.FAGSAK_ID = fs.ID;
