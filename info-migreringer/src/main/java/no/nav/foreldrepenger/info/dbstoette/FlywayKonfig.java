@@ -16,7 +16,6 @@ public final class FlywayKonfig {
     private static final Logger LOG = LoggerFactory.getLogger(FlywayKonfig.class);
 
     private static final Environment ENV = Environment.current();
-    protected static final String FLYWAY_SCHEMA_VERSION = "schema_version";
     private final DataSource dataSource;
     private String sqlLokasjon = null;
 
@@ -37,7 +36,7 @@ public final class FlywayKonfig {
         var flywayKonfig = Flyway.configure()
                 .baselineOnMigrate(true)
                 .dataSource(dataSource)
-                .table(FLYWAY_SCHEMA_VERSION);
+                .table("schema_version");
 
         if (sqlLokasjon == null) {
             /*
