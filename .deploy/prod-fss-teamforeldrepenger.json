@@ -7,17 +7,8 @@
     "namespace": "teamforeldrepenger",
     "ingresses": [ "https://fpinfo.nais.adeo.no" ],
     "env": {
-        "APPDYNAMICS_AGENT_ACCOUNT_NAME" :"PROD",
         "DEFAULTDS_URL" : "jdbc:oracle:thin:@a01dbfl043.adeo.no:1521/fpsak",
         "FPINFOSCHEMA_URL" :"jdbc:oracle:thin:@a01dbfl043.adeo.no:1521/fpsak",
-        "LOADBALANCER_URL" : "https://fpinfo.nais.adeo.no",
-        "OIDC_OPENAM_JWKSURL" : "https://isso.adeo.no:443/isso/oauth2/connect/jwk_uri",
-        "OIDC_OPENAM_ISSUERURL" : "https://isso.adeo.no:443/isso/oauth2",
-        "OPENIDCONNECT_USERNAME" : "fpinfo-p",
-        "OPENIDCONNECT_ISSOHOST" : "https://isso.adeo.no/isso/oauth2",
-        "OIDC_STS_ISSUER_URL"  : "https://security-token-service.nais.adeo.no",
-        "OIDC_STS_JWKS_URL" : "https://security-token-service.nais.adeo.no/rest/v1/sts/jwks",
-        "OIDC_AAD_B2C_HOSTURL" : "https://NOT-USED.adeo.internal",
-        "SECURITYTOKENSERVICE_URL" :"https://sts.adeo.no/SecurityTokenServiceProvider/"
+        "APPDYNAMICS_AGENT_ACCOUNT_NAME" :"PROD"
       }
 }

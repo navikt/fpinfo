@@ -16,6 +16,6 @@ COPY info-web/target/app.jar /app/
 
 COPY info-web/target/lib/*.jar /app/lib/
 
-COPY 03-export-vault-secrets.sh /init-scripts/
+COPY export-vault-secrets.sh /init-scripts/
 ENV JAVA_OPTS="-XX:MaxRAMPercentage=75.0  -Djava.security.egd=file:/dev/./urandom -Duser.timezone=Europe/Oslo --illegal-access=permit"
 
