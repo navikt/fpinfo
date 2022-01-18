@@ -33,28 +33,29 @@ public final class FlywayKonfig {
     }
 
     public boolean migrerDb() {
-        Flyway flyway = new Flyway();
-        flyway.setBaselineOnMigrate(true);
-        flyway.setDataSource(dataSource);
+        var flywayKonfig = Flyway.configure()
+                .baselineOnMigrate(true)
+                .dataSource(dataSource)
+                .table("schema_version");
 
         if (sqlLokasjon == null) {
             /*
-              Default leter flyway etter classpath:db/migration. Her vet vi at vi ikke skal
+              Default leter flywayKonfig etter classpath:db/migration. Her vet vi at vi ikke skal
               lete i classpath
              */
-            flyway.setLocations("denne/stien/finnes/ikke");
+            flywayKonfig.locations("denne/stien/finnes/ikke");
         } else {
-            flyway.setLocations(sqlLokasjon);
+            flywayKonfig.locations(sqlLokasjon);
         }
 
-        flyway.configure(lesFlywayPlaceholders());
+        flywayKonfig.configuration(lesFlywayPlaceholders());
 
         try {
-            flyway.migrate();
+            flywayKonfig.load().migrate();
             return true;
-        } catch (FlywayException flywayException) {
-            LOG.error("Feil under migrering");
-            throw flywayException;
+        } catch (FlywayException exception) {
+            LOG.error("Feil under migrering database migrering", exception);
+            throw exception;
         }
     }
 
