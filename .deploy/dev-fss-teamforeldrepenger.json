@@ -1,5 +1,4 @@
 {
-    "cluster": "preprod",
     "oraclecredskv": "/oracle/data/dev/creds/fpsak_q1-fpinfo",
     "oraclefpinfocredsskv": "/oracle/data/dev/creds/fpsak_q1-fpinfo_schema",
 
