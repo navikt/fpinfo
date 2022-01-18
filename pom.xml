@@ -44,7 +44,7 @@
         <javaslang.version>2.0.6</javaslang.version>
 
         <abac.version>1.0.9</abac.version>
-        <flyway-core.version>8.4.1</flyway-core.version>
+        <flyway.version>8.4.1</flyway.version>
     </properties>
 
     <dependencyManagement>
@@ -116,7 +116,7 @@
             <dependency>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-core</artifactId>
-                <version>${flyway-core.version}</version>
+                <version>${flyway.version}</version>
             </dependency>
 
             <dependency>
