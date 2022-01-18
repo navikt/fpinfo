@@ -9,21 +9,14 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jetty.annotations.AnnotationConfiguration;
-import org.eclipse.jetty.plus.webapp.EnvConfiguration;
-import org.eclipse.jetty.plus.webapp.PlusConfiguration;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
-import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.MetaData;
-import org.eclipse.jetty.webapp.WebAppConfiguration;
 import org.eclipse.jetty.webapp.WebAppContext;
-import org.eclipse.jetty.webapp.WebInfConfiguration;
-import org.eclipse.jetty.webapp.WebXmlConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,20 +42,7 @@ public class JettyServer {
         System.setProperty(NAIS_CLUSTER_NAME, ENV.clusterName());
     }
 
-    /**
-     * nedstrippet sett med Jetty configurations for raskere startup.
-     */
-    private static final Configuration[] CONFIGURATIONS = new Configuration[] {
-            new WebXmlConfiguration(),
-            new AnnotationConfiguration(),
-            new WebAppConfiguration(),
-            new WebInfConfiguration(),
-            new PlusConfiguration(),
-            new EnvConfiguration(),
-    };
-
     private static final String CONTEXT_PATH = "/fpinfo";
-    private static final String SERVER_HOST = "0.0.0.0";
     private final int hostPort;
 
     public JettyServer(int hostPort) {
@@ -90,7 +70,6 @@ public class JettyServer {
         var server = new Server();
         var connector = new ServerConnector(server);
         connector.setPort(getServerPort());
-        connector.setHost(SERVER_HOST);
         server.addConnector(connector);
         var ctx = createContext();
         server.setHandler(ctx);
@@ -119,8 +98,8 @@ public class JettyServer {
         var ctx = new WebAppContext();
         ctx.setParentLoaderPriority(true);
         ctx.setBaseResource(createResourceCollection());
+        ctx.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
         ctx.setContextPath(CONTEXT_PATH);
-        ctx.setConfigurations(CONFIGURATIONS);
         ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*jersey-.*.jar$|^.*felles-.*.jar$");
         ctx.addEventListener(new org.jboss.weld.environment.servlet.BeanManagerResourceBindingListener());
         ctx.addEventListener(new org.jboss.weld.environment.servlet.Listener());
