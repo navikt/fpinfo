@@ -7,8 +7,6 @@
     "namespace": "teamforeldrepenger",
     "ingresses": [ "https://fpinfo.nais.adeo.no" ],
     "env": {
-        "DEFAULTDS_URL" : "jdbc:oracle:thin:@a01dbfl043.adeo.no:1521/fpsak",
-        "FPINFOSCHEMA_URL" :"jdbc:oracle:thin:@a01dbfl043.adeo.no:1521/fpsak",
         "APPDYNAMICS_AGENT_ACCOUNT_NAME" :"PROD"
       }
 }
