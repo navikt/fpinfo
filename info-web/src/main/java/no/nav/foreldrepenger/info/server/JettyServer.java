@@ -136,6 +136,7 @@ public class JettyServer {
 
         metaData.setWebInfClassesResources(getApplicationClasses().stream()
                 .map(c -> Resource.newResource(c.getProtectionDomain().getCodeSource().getLocation()))
+                .distinct()
                 .toList());
     }
 
