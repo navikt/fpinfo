@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.info.server;
 
-import static javax.servlet.DispatcherType.REQUEST;
 import static no.nav.foreldrepenger.konfig.Cluster.NAIS_CLUSTER_NAME;
 import static org.eclipse.jetty.webapp.MetaInfConfiguration.WEBINF_JAR_PATTERN;
 
@@ -20,6 +19,8 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.Filter;
 import no.nav.foreldrepenger.info.app.konfig.ApplicationConfig;
 import no.nav.foreldrepenger.info.app.konfig.InternalApplication;
 import no.nav.foreldrepenger.info.dbstoette.DBConnectionProperties;
@@ -109,16 +110,18 @@ public class JettyServer {
     }
 
     protected void addFilters(WebAppContext ctx) {
+        var dispatcherType = EnumSet.of(DispatcherType.REQUEST);
+
         LOG.trace("Installerer JaxrsJwtTokenValidationFilter");
-        ctx.addFilter(new FilterHolder(new JaxrsJwtTokenValidationFilter(config())),
+        ctx.addFilter(new FilterHolder((Filter) new JaxrsJwtTokenValidationFilter(config())),
                 "/api/*",
-                EnumSet.of(REQUEST));
-        ctx.addFilter(new FilterHolder(new HeadersToMDCFilterBean()),
+                dispatcherType);
+        ctx.addFilter(new FilterHolder((Filter) new HeadersToMDCFilterBean()),
                 "/api/*",
-                EnumSet.of(REQUEST));
+                dispatcherType);
         var corsFilter = ctx.addFilter(CrossOriginFilter.class,
                 "/*",
-                EnumSet.of(REQUEST));
+                dispatcherType);
         corsFilter.setInitParameter("allowedOrigins", "*");
     }
 
