@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.info.v2;
 
+import static no.nav.foreldrepenger.info.app.tjenester.dto.SøknadsGrunnlagDto.MOR_UFØR;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -77,8 +79,9 @@ class SakerTjeneste {
 
         var barn = barn(fpSak.saksnummer());
         return Optional.of(new FpSak(fpSak.saksnummer, false, false, tilhørerMor,
-                false, rettighetType(søknadsgrunnlag), annenPart, familiehendelse, null, map(åpenBehandling),
-                barn, dekningsgrad(søknadsgrunnlag), fpSak.opprettetTidspunkt()));
+                false, isMorUføretrygd(søknadsgrunnlag), rettighetType(søknadsgrunnlag), annenPart,
+                familiehendelse, null, map(åpenBehandling), barn, dekningsgrad(søknadsgrunnlag),
+                fpSak.opprettetTidspunkt()));
     }
 
     private RettighetType rettighetType(SøknadsGrunnlag søknadsGrunnlag) {
@@ -101,8 +104,14 @@ class SakerTjeneste {
         var annenPart = annenPart(fpSak).orElse(null);
         var barn = barn(fpSak.saksnummer());
         return Optional.of(new FpSak(fpSak.saksnummer, sakAvsluttet, kanSøkeOmEndring, tilhørerMor, false,
-                rettighetType(søknadsgrunnlag), annenPart, familiehendelse, gjeldendeVedtak, åpenBehandling.orElse(null), barn, dekningsgrad(søknadsgrunnlag),
+                isMorUføretrygd(søknadsgrunnlag), rettighetType(søknadsgrunnlag), annenPart,
+                familiehendelse, gjeldendeVedtak, åpenBehandling.orElse(null), barn, dekningsgrad(søknadsgrunnlag),
                 fpSak.opprettetTidspunkt));
+    }
+
+    // TODO: Finn ut riktig måte å finne ut om mor er uføre
+    private boolean isMorUføretrygd(SøknadsGrunnlag søknadsgrunnlag) {
+        return MOR_UFØR.equals(søknadsgrunnlag.getMorsAktivitetHvisUfør());
     }
 
     private Set<AktørId> barn(no.nav.foreldrepenger.info.v2.Saksnummer saksnummer) {
