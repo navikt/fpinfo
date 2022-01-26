@@ -22,7 +22,7 @@ public class SøknadsGrunnlagDto implements AbacDto {
     private static final Logger LOG = LoggerFactory.getLogger(SøknadsGrunnlagDto.class);
 
     private static final String MOR_ROLLE = "MORA";
-    private static final String MOR_UFØR = "UFØRE";
+    public static final String MOR_UFØR = "UFØRE";
 
     private String saksnummer;
 

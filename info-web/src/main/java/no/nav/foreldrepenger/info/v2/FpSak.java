@@ -9,6 +9,7 @@ record FpSak(Saksnummer saksnummer,
              boolean kanSøkeOmEndring,
              boolean sakTilhørerMor,
              boolean gjelderAdopsjon,
+             boolean morUføretrygd,
              RettighetType rettighetType,
              AnnenPart annenPart,
              Familiehendelse familiehendelse,
@@ -24,7 +25,7 @@ record FpSak(Saksnummer saksnummer,
         var familiehendelseDto = familiehendelse == null ? null : familiehendelse.tilDto();
         var åpenBehandlingDto = åpenBehandling == null ? null : åpenBehandling.tilDto();
         return new no.nav.foreldrepenger.info.v2.dto.FpSak(saksnummer.tilDto(), sakAvsluttet, kanSøkeOmEndring, sakTilhørerMor,
-                gjelderAdopsjon, rettighetType.tilDto(), annenPartDto, familiehendelseDto, gjeldendeVedtakDto,
+                gjelderAdopsjon, morUføretrygd, rettighetType.tilDto(), annenPartDto, familiehendelseDto, gjeldendeVedtakDto,
                 åpenBehandlingDto, barn.stream().map(b -> b.tilDto()).collect(Collectors.toSet()), dekningsgrad.tilDto());
     }
 }
