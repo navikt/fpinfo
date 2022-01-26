@@ -19,7 +19,7 @@
         <sonar.organization>navit</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <revision>1.0</revision>
-        <sha1 />
+        <sha1/>
         <changelist>-SNAPSHOT</changelist>
         <java.version>17</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -130,7 +130,7 @@
                 <!-- for Bean validation -->
                 <groupId>org.hibernate.validator</groupId>
                 <artifactId>hibernate-validator</artifactId>
-                <version>6.1.7.Final</version>
+                <version>6.2.1.Final</version>
             </dependency>
 
             <!-- Eksterne -->
@@ -424,7 +424,7 @@
                                     <version>[3.5.3,)</version>
                                 </requireMavenVersion>
                                 <bannedDependencies>
-                                    <excludes />
+                                    <excludes/>
 
                                 </bannedDependencies>
                                 <!-- <dependencyConvergence /> -->
