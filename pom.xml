@@ -26,7 +26,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <felles.version>4.1.12</felles.version>
+        <felles.version>4.1.16</felles.version>
         <prometheus.version>0.14.1</prometheus.version>
         <swagger.version>2.1.12</swagger.version>
 
@@ -44,7 +44,7 @@
         <javaslang.version>2.0.6</javaslang.version>
 
         <abac.version>1.0.9</abac.version>
-        <flyway.version>8.4.3</flyway.version>
+        <flyway.version>8.4.4</flyway.version>
     </properties>
 
     <dependencyManagement>
@@ -345,7 +345,7 @@
                 <plugin>
                     <groupId>org.asciidoctor</groupId>
                     <artifactId>asciidoctor-maven-plugin</artifactId>
-                    <version>2.2.1</version>
+                    <version>2.2.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.jacoco</groupId>
