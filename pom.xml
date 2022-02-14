@@ -43,7 +43,7 @@
         <javaslang.version>2.0.6</javaslang.version>
 
         <abac.version>1.0.9</abac.version>
-        <flyway.version>8.4.4</flyway.version>
+        <flyway.version>8.5.0</flyway.version>
     </properties>
 
     <dependencyManagement>
