@@ -27,15 +27,15 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <felles.version>4.1.17</felles.version>
-        <prometheus.version>0.14.1</prometheus.version>
-        <swagger.version>2.1.12</swagger.version>
+        <prometheus.version>0.15.0</prometheus.version>
+        <swagger.version>2.1.13</swagger.version>
 
         <!-- Eksterne -->
         <assertj.version>3.22.0</assertj.version>
         <hamcrest.version>1.3</hamcrest.version>
         <jupiter.version>5.8.2</jupiter.version>
         <logstash.version>7.0.1</logstash.version>
-        <mockito.version>4.3.1</mockito.version>
+        <mockito.version>4.4.0</mockito.version>
         <ojdbc.version>19.3.0.0</ojdbc.version>
 
         <!-- Transitive avh. versjoner for å sikre unikhet (enforcer dependencyConvergence). Skal ikke benyttes direkte av
@@ -43,7 +43,7 @@
         <javaslang.version>2.0.6</javaslang.version>
 
         <abac.version>1.0.9</abac.version>
-        <flyway.version>8.5.2</flyway.version>
+        <flyway.version>8.5.3</flyway.version>
     </properties>
 
     <dependencyManagement>
@@ -171,7 +171,7 @@
             <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-compat-spec-parser</artifactId>
-                <version>1.0.56</version>
+                <version>1.0.57</version>
             </dependency>
             <dependency>
                 <groupId>io.swagger.core.v3</groupId>
@@ -282,7 +282,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>3.3.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -356,7 +356,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

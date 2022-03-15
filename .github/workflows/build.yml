@@ -19,7 +19,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-java@v2
         with:
           distribution: 'temurin'
@@ -51,7 +51,7 @@ jobs:
           docker push ${IMAGE_BASE} --all-tags
 
       - name: Lukk gamle deployment-issues
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -74,7 +74,7 @@ jobs:
       -  name: Opprett deployment issue
          id: createdeployissue
          if: success()
-         uses: actions/github-script@v5
+         uses: actions/github-script@v6
          with:
            github-token: ${{secrets.GITHUB_TOKEN}}
            script: |
