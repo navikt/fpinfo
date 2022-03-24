@@ -19,13 +19,13 @@ record FpSak(Saksnummer saksnummer,
              Dekningsgrad dekningsgrad,
              LocalDateTime opprettetTidspunkt)  {
 
-    no.nav.foreldrepenger.info.v2.dto.FpSak tilDto() {
+    no.nav.foreldrepenger.common.innsyn.v2.FpSak tilDto() {
         var annenPartDto = annenPart == null ? null : annenPart.tilDto();
         var gjeldendeVedtakDto = gjeldendeVedtak == null ? null : gjeldendeVedtak.tilDto();
         var familiehendelseDto = familiehendelse == null ? null : familiehendelse.tilDto();
         var åpenBehandlingDto = åpenBehandling == null ? null : åpenBehandling.tilDto();
-        return new no.nav.foreldrepenger.info.v2.dto.FpSak(saksnummer.tilDto(), sakAvsluttet, kanSøkeOmEndring, sakTilhørerMor,
+        return new no.nav.foreldrepenger.common.innsyn.v2.FpSak(saksnummer.tilDto(), sakAvsluttet, kanSøkeOmEndring, sakTilhørerMor,
                 gjelderAdopsjon, morUføretrygd, rettighetType.tilDto(), annenPartDto, familiehendelseDto, gjeldendeVedtakDto,
-                åpenBehandlingDto, barn.stream().map(b -> b.tilDto()).collect(Collectors.toSet()), dekningsgrad.tilDto());
+                åpenBehandlingDto, barn.stream().map(AktørId::tilDto).collect(Collectors.toSet()), dekningsgrad.tilDto());
     }
 }

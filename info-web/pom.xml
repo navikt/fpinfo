@@ -119,6 +119,10 @@
 
         <!-- NAV -->
         <dependency>
+            <groupId>no.nav.foreldrepenger</groupId>
+            <artifactId>fpsoknad-felles</artifactId>
+        </dependency>
+        <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
             <artifactId>felles-util</artifactId>
             <exclusions>

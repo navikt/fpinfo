@@ -8,11 +8,11 @@ record Gradering(Arbeidstidprosent arbeidstidprosent) {
         this(new Arbeidstidprosent(arbeidstidprosent));
     }
 
-    no.nav.foreldrepenger.info.v2.dto.Gradering tilDto() {
-        return new no.nav.foreldrepenger.info.v2.dto.Gradering(arbeidstidprosent.value);
+    no.nav.foreldrepenger.common.innsyn.v2.Gradering tilDto() {
+        return new no.nav.foreldrepenger.common.innsyn.v2.Gradering(arbeidstidprosent.value);
     }
 
-    static record Arbeidstidprosent(BigDecimal value) {
+    record Arbeidstidprosent(BigDecimal value) {
 
     }
 }

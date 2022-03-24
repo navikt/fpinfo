@@ -27,6 +27,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <felles.version>4.1.17</felles.version>
+        <selvbetjening-felles.version>0.6.2</selvbetjening-felles.version>
         <prometheus.version>0.15.0</prometheus.version>
         <swagger.version>2.1.13</swagger.version>
 
@@ -90,6 +91,11 @@
                 <groupId>no.nav.foreldrepenger.felles</groupId>
                 <artifactId>felles-db</artifactId>
                 <version>${felles.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger</groupId>
+                <artifactId>fpsoknad-felles</artifactId>
+                <version>${selvbetjening-felles.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.assertj</groupId>

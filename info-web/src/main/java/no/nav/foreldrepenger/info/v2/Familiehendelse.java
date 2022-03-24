@@ -7,7 +7,7 @@ record Familiehendelse(LocalDate fødselsdato,
                        int antallBarn,
                        LocalDate omsorgsovertakelse) {
 
-    no.nav.foreldrepenger.info.v2.dto.Familiehendelse tilDto() {
-        return new no.nav.foreldrepenger.info.v2.dto.Familiehendelse(fødselsdato, termindato, antallBarn, omsorgsovertakelse);
+    no.nav.foreldrepenger.common.innsyn.v2.Familiehendelse tilDto() {
+        return new no.nav.foreldrepenger.common.innsyn.v2.Familiehendelse(fødselsdato, termindato, antallBarn, omsorgsovertakelse);
     }
 }
