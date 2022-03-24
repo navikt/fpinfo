@@ -9,7 +9,7 @@ record AnnenPart(AktørId aktørId) {
         Objects.requireNonNull(aktørId, "aktørId kan ikke være null");
     }
 
-    no.nav.foreldrepenger.info.v2.dto.AnnenPart tilDto() {
-        return new no.nav.foreldrepenger.info.v2.dto.AnnenPart(aktørId.tilDto());
+    no.nav.foreldrepenger.common.innsyn.v2.AnnenPart tilDto() {
+        return new no.nav.foreldrepenger.common.innsyn.v2.AnnenPart(aktørId.tilDto());
     }
 }

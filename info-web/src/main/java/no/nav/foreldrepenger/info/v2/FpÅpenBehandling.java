@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 
 record FpÅpenBehandling(BehandlingTilstand tilstand, Set<Søknadsperiode> søknadsperioder) {
 
-    no.nav.foreldrepenger.info.v2.dto.FpÅpenBehandling tilDto() {
-        var søknadsperioderDto = søknadsperioder.stream().map(sp -> sp.tilDto()).collect(Collectors.toSet());
-        return new no.nav.foreldrepenger.info.v2.dto.FpÅpenBehandling(tilstand.tilDto(), søknadsperioderDto);
+    no.nav.foreldrepenger.common.innsyn.v2.FpÅpenBehandling tilDto() {
+        var søknadsperioderDto = søknadsperioder.stream().map(Søknadsperiode::tilDto).collect(Collectors.toSet());
+        return new no.nav.foreldrepenger.common.innsyn.v2.FpÅpenBehandling(tilstand.tilDto(), søknadsperioderDto);
     }
 }

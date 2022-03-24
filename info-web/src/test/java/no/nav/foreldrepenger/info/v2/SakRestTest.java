@@ -96,9 +96,9 @@ class SakRestTest {
 
         var fpSak = saker.foreldrepenger().stream().findFirst().orElseThrow();
         assertThat(fpSak.saksnummer().value()).isEqualTo(saksnummer.saksnummer());
-        assertThat(fpSak.annenPart().personDetaljer()).isEqualTo(new no.nav.foreldrepenger.info.v2.dto.AktørId(annenPartAktørId));
+        assertThat(fpSak.annenPart().personDetaljer()).isEqualTo(new no.nav.foreldrepenger.common.innsyn.v2.persondetaljer.AktørId(annenPartAktørId));
         assertThat(fpSak.barn()).hasSize(1);
-        assertThat(fpSak.barn().stream().findFirst().orElseThrow()).isEqualTo(new no.nav.foreldrepenger.info.v2.dto.AktørId(barnAktørId));
+        assertThat(fpSak.barn().stream().findFirst().orElseThrow()).isEqualTo(new no.nav.foreldrepenger.common.innsyn.v2.persondetaljer.AktørId(barnAktørId));
         assertThat(fpSak.sakAvsluttet()).isFalse();
         assertThat(fpSak.kanSøkeOmEndring()).isTrue();
         assertThat(fpSak.sakTilhørerMor()).isTrue();
@@ -107,23 +107,23 @@ class SakRestTest {
         assertThat(fpSak.gjelderAdopsjon()).isFalse();
         assertThat(fpSak.gjeldendeVedtak()).isNotNull();
         assertThat(fpSak.gjeldendeVedtak().perioder()).hasSize(1);
-        assertThat(fpSak.dekningsgrad()).isEqualTo(no.nav.foreldrepenger.info.v2.dto.Dekningsgrad.ÅTTI);
+        assertThat(fpSak.dekningsgrad()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.Dekningsgrad.ÅTTI);
         var vedtakPeriode = fpSak.gjeldendeVedtak().perioder().get(0);
         assertThat(vedtakPeriode.flerbarnsdager()).isEqualTo(uttakPeriode.getFlerbarnsdager());
         assertThat(vedtakPeriode.fom()).isEqualTo(uttakPeriode.getFom());
         assertThat(vedtakPeriode.tom()).isEqualTo(uttakPeriode.getTom());
-        assertThat(vedtakPeriode.kontoType()).isEqualTo(no.nav.foreldrepenger.info.v2.dto.KontoType.valueOf(uttakPeriode.getTrekkonto()));
+        assertThat(vedtakPeriode.kontoType()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.KontoType.valueOf(uttakPeriode.getTrekkonto()));
         assertThat(vedtakPeriode.resultat().innvilget()).isTrue();
-        assertThat(vedtakPeriode.gradering()).isEqualTo(new no.nav.foreldrepenger.info.v2.dto.Gradering(
+        assertThat(vedtakPeriode.gradering()).isEqualTo(new no.nav.foreldrepenger.common.innsyn.v2.Gradering(
                 BigDecimal.valueOf(uttakPeriode.getArbeidstidprosent())));
         assertThat(vedtakPeriode.morsAktivitet()).isNull();
         assertThat(vedtakPeriode.samtidigUttak()).isNull();
         assertThat(vedtakPeriode.flerbarnsdager()).isEqualTo(uttakPeriode.getFlerbarnsdager());
 
         //I praksis kan ikke alle disse være satt samtidig
-        assertThat(vedtakPeriode.utsettelseÅrsak()).isEqualTo(no.nav.foreldrepenger.info.v2.dto.UtsettelseÅrsak.SØKER_INNLAGT);
-        assertThat(vedtakPeriode.overføringÅrsak()).isEqualTo(no.nav.foreldrepenger.info.v2.dto.OverføringÅrsak.SYKDOM_ANNEN_FORELDER);
-        assertThat(vedtakPeriode.oppholdÅrsak()).isEqualTo(no.nav.foreldrepenger.info.v2.dto.OppholdÅrsak.MØDREKVOTE_ANNEN_FORELDER);
+        assertThat(vedtakPeriode.utsettelseÅrsak()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.UtsettelseÅrsak.SØKER_INNLAGT);
+        assertThat(vedtakPeriode.overføringÅrsak()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.OverføringÅrsak.SYKDOM_ANNEN_FORELDER);
+        assertThat(vedtakPeriode.oppholdÅrsak()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.OppholdÅrsak.MØDREKVOTE_ANNEN_FORELDER);
 
     }
 
@@ -188,16 +188,16 @@ class SakRestTest {
 
         var fpSak = saker.foreldrepenger().stream().findFirst().orElseThrow();
         assertThat(fpSak.saksnummer().value()).isEqualTo(saksnummer.saksnummer());
-        assertThat(fpSak.annenPart().personDetaljer()).isEqualTo(new no.nav.foreldrepenger.info.v2.dto.AktørId(annenPartAktørId));
+        assertThat(fpSak.annenPart().personDetaljer()).isEqualTo(new no.nav.foreldrepenger.common.innsyn.v2.persondetaljer.AktørId(annenPartAktørId));
         assertThat(fpSak.barn()).hasSize(1);
-        assertThat(fpSak.barn().stream().findFirst().orElseThrow()).isEqualTo(new no.nav.foreldrepenger.info.v2.dto.AktørId(barnAktørId));
+        assertThat(fpSak.barn().stream().findFirst().orElseThrow()).isEqualTo(new no.nav.foreldrepenger.common.innsyn.v2.persondetaljer.AktørId(barnAktørId));
         assertThat(fpSak.sakAvsluttet()).isFalse();
         assertThat(fpSak.kanSøkeOmEndring()).isFalse();
         assertThat(fpSak.sakTilhørerMor()).isFalse();
         assertThat(fpSak.familiehendelse().fødselsdato()).isEqualTo(fødselsdato);
         assertThat(fpSak.gjelderAdopsjon()).isFalse();
         assertThat(fpSak.gjeldendeVedtak()).isNull();
-        assertThat(fpSak.dekningsgrad()).isEqualTo(no.nav.foreldrepenger.info.v2.dto.Dekningsgrad.HUNDRE);
+        assertThat(fpSak.dekningsgrad()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.Dekningsgrad.HUNDRE);
     }
 
 }

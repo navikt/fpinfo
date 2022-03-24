@@ -26,8 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.swagger.v3.oas.annotations.Parameter;
-import no.nav.foreldrepenger.info.v2.dto.Saker;
-import no.nav.foreldrepenger.info.v2.dto.VedtakPeriode;
+import no.nav.foreldrepenger.common.innsyn.v2.Saker;
+import no.nav.foreldrepenger.common.innsyn.v2.VedtakPeriode;
 import no.nav.foreldrepenger.sikkerhet.abac.AbacDto;
 import no.nav.foreldrepenger.sikkerhet.abac.BeskyttetRessurs;
 import no.nav.foreldrepenger.sikkerhet.abac.domene.AbacDataAttributter;
@@ -61,7 +61,7 @@ public class SakRest {
     public Saker hentSaker(@NotNull @QueryParam("aktorId") @Parameter(name = "aktorId") AktørIdDto aktørId) {
         LOG.info("Henter saker for bruker");
         var fpSaker = sakerTjeneste.hentFor(map(aktørId.aktørId()));
-        var fpSakerDto = fpSaker.stream().map(sak -> sak.tilDto()).collect(Collectors.toSet());
+        var fpSakerDto = fpSaker.stream().map(FpSak::tilDto).collect(Collectors.toSet());
         return new Saker(fpSakerDto, Set.of(), Set.of());
     }
 
@@ -75,14 +75,14 @@ public class SakRest {
         var perioder = annenPartsVedtaksperioder.hentFor(map(søkersAktørId.aktørId()),
                 map(annenPartAktørId.aktørId), map(barnAktorId.aktørId()));
         LOG.info("Returnerer annen parts vedtaksperioder. Antall perioder {}", perioder.size());
-        return perioder.stream().map(p -> p.tilDto()).collect(Collectors.toList());
+        return perioder.stream().map(no.nav.foreldrepenger.info.v2.VedtakPeriode::tilDto).toList();
     }
 
     private AktørId map(String aktørId) {
         return new AktørId(aktørId);
     }
 
-    public static record AktørAnnenPartDto(@NotNull @Digits(integer = 19, fraction = 0) String aktørId) implements AbacDto {
+    public record AktørAnnenPartDto(@NotNull @Digits(integer = 19, fraction = 0) String aktørId) implements AbacDto {
 
         @Override
         public AbacDataAttributter abacAttributter() {
@@ -90,7 +90,7 @@ public class SakRest {
         }
     }
 
-    public static record AktørIdDto(@NotNull @Digits(integer = 19, fraction = 0) String aktørId) implements AbacDto {
+    public record AktørIdDto(@NotNull @Digits(integer = 19, fraction = 0) String aktørId) implements AbacDto {
 
         @Override
         public AbacDataAttributter abacAttributter() {
@@ -98,7 +98,7 @@ public class SakRest {
         }
     }
 
-    public static record AktørIdBarnDto(@NotNull @Digits(integer = 19, fraction = 0) String aktørId) implements AbacDto {
+    public record AktørIdBarnDto(@NotNull @Digits(integer = 19, fraction = 0) String aktørId) implements AbacDto {
 
         @Override
         public AbacDataAttributter abacAttributter() {
