@@ -175,7 +175,7 @@ class SakerTjeneste {
     }
 
     private boolean erRelevantRevurdering(Behandling behandling) {
-        //TODO palfi køet behandlinger
+        //TODO palfi køet behandlinger. Sannsynligvis ikke køet endringssøknader som er riktig
 
         //TODO palfi må også ha med revurderinger der det er sendt varsel til bruker.
         // Kan sjekke tabellen BEHANDLING_DOKUMENT i databasen om det finnes et bestilt dokument

@@ -9,7 +9,6 @@ import java.util.Optional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * TODO(Humle): Skriv tester Enkel representasjon av properties for migrering av
  * skjema med flyway. Tilhørende json ser ca slik ut:
  * <p>
  *

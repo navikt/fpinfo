@@ -8,7 +8,6 @@ import javax.persistence.Converter;
 public enum BehandlingÅrsakType {
 
     ENDRINGSSØKNAD("RE-END-FRA-BRUKER"),
-    RE_UTSATT_START("RE_UTSATT_START"),
     ANNET("ANNET") //Samler alle ukjente/urelevante
     ;
 
