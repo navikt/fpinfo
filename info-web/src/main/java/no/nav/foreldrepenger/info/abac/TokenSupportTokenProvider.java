@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import no.nav.security.token.support.core.jwt.JwtTokenClaims;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +24,8 @@ public class TokenSupportTokenProvider {
 
     public String getUid() {
         return firstToken("UID")
-                .map(JwtToken::getSubject)
+                .map(JwtToken::getJwtTokenClaims)
+                .map(TokenSupportTokenProvider::uid)
                 .orElseThrow();
     }
 
@@ -54,4 +57,10 @@ public class TokenSupportTokenProvider {
             throw new IllegalArgumentException("Fant ikke claim " + claim + " i token", e);
         }
     }
+
+    private static String uid(JwtTokenClaims claims) {
+        return Optional.ofNullable(claims.getStringClaim("pid"))
+                .orElseGet(() -> claims.getStringClaim("sub"));
+    }
+
 }
