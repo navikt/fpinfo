@@ -39,7 +39,7 @@ jobs:
 
       - name: Kompiler
         run: |
-          mvn jacoco:prepare-agent deploy jacoco:report sonar:sonar -e --batch-mode --settings .github/.m2/settings.xml -Dchangelist= -Dsha1=-${BUILD_VERSION} -Dsonar.login=${SONAR_TOKEN}
+          mvn jacoco:prepare-agent deploy jacoco:report -e --batch-mode --settings .github/.m2/settings.xml -Dchangelist= -Dsha1=-${BUILD_VERSION}
           echo "TAG=$(mvn help:evaluate --batch-mode --settings .github/.m2/settings.xml --file .flattened -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
