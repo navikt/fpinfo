@@ -36,6 +36,28 @@ public class SøknadsGrunnlagRettigheter {
     @Column(name = "SO_ALENEOMSORG")
     private Boolean søknadAleneomsorg;
 
+    @Convert(converter = BooleanToStringConverter.class)
+    @Column(name = "SO_UFORETRYGD")
+    private Boolean søknadUføretrygd;
+
+    public SøknadsGrunnlagRettigheter(Long gryfId,
+                                      Boolean saksbehandlerAnnenForelderRett,
+                                      Boolean søknadAnnenForelderRett,
+                                      Boolean saksbehandlerAleneomsorg,
+                                      Boolean søknadAleneomsorg,
+                                      Boolean søknadUføretrygd) {
+        this.gryfId = gryfId;
+        this.saksbehandlerAnnenForelderRett = saksbehandlerAnnenForelderRett;
+        this.søknadAnnenForelderRett = søknadAnnenForelderRett;
+        this.saksbehandlerAleneomsorg = saksbehandlerAleneomsorg;
+        this.søknadAleneomsorg = søknadAleneomsorg;
+        this.søknadUføretrygd = søknadUføretrygd;
+    }
+
+    SøknadsGrunnlagRettigheter() {
+
+    }
+
     public Boolean getAnnenForelderRett() {
         return saksbehandlerAnnenForelderRett != null
                 ? saksbehandlerAnnenForelderRett
@@ -48,20 +70,8 @@ public class SøknadsGrunnlagRettigheter {
                 : søknadAleneomsorg;
     }
 
-    SøknadsGrunnlagRettigheter() {
-
-    }
-
-    public SøknadsGrunnlagRettigheter(Long gryfId,
-                                      Boolean saksbehandlerAnnenForelderRett,
-                                      Boolean søknadAnnenForelderRett,
-                                      Boolean saksbehandlerAleneomsorg,
-                                      Boolean søknadAleneomsorg) {
-        this.gryfId = gryfId;
-        this.saksbehandlerAnnenForelderRett = saksbehandlerAnnenForelderRett;
-        this.søknadAnnenForelderRett = søknadAnnenForelderRett;
-        this.saksbehandlerAleneomsorg = saksbehandlerAleneomsorg;
-        this.søknadAleneomsorg = søknadAleneomsorg;
+    public Boolean getSøknadUføretrygd() {
+        return søknadUføretrygd;
     }
 
     @Override

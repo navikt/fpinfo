@@ -109,9 +109,10 @@ class SakerTjeneste {
                 fpSak.opprettetTidspunkt));
     }
 
-    // TODO: Finn ut riktig måte å finne ut om mor er uføre
     private boolean isMorUføretrygd(SøknadsGrunnlag søknadsgrunnlag) {
-        return MOR_UFØR.equals(søknadsgrunnlag.getMorsAktivitetHvisUfør());
+        //TODO TFP-4795 UføretrygdGrunnlagEntitet for register og avklaring fra saksbehandler
+        return søknadsgrunnlag.isMorUfør() == null ? MOR_UFØR.equals(søknadsgrunnlag.getMorsAktivitetHvisUfør())
+                : søknadsgrunnlag.isMorUfør();
     }
 
     private Set<AktørId> barn(no.nav.foreldrepenger.info.v2.Saksnummer saksnummer) {
