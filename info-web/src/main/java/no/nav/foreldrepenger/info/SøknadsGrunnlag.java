@@ -97,10 +97,6 @@ public class SøknadsGrunnlag {
         return foreldreRettigheter.getAleneomsorg();
     }
 
-    public Boolean isMorUfør() {
-        return foreldreRettigheter.getSøknadUføretrygd();
-    }
-
     public Boolean getAnnenForelderRett() {
         return foreldreRettigheter.getAnnenForelderRett();
     }
