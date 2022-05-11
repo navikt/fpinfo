@@ -80,7 +80,8 @@ public class SøknadsGrunnlagDto implements AbacDto {
         dto.farMedmorHarRett = !søkerErMor || grunnlag.getAnnenForelderRett();
         dto.morHarRett = søkerErMor || grunnlag.getAnnenForelderRett();
 
-        dto.morErUfør = MOR_UFØR.equals(grunnlag.getMorsAktivitetHvisUfør());
+        //TODO TFP-4795 UføretrygdGrunnlagEntitet for register og avklaring fra saksbehandler
+        dto.morErUfør = grunnlag.isMorUfør() == null ? MOR_UFØR.equals(grunnlag.getMorsAktivitetHvisUfør()) : grunnlag.isMorUfør();
 
         dto.annenForelderErInformert = grunnlag.getAnnenForelderInformert();
 
