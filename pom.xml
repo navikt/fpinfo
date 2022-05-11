@@ -23,7 +23,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <felles.version>4.1.17</felles.version>
-        <selvbetjening-felles.version>0.6.11</selvbetjening-felles.version>
+        <selvbetjening-felles.version>0.6.12</selvbetjening-felles.version>
         <prometheus.version>0.15.0</prometheus.version>
         <swagger.version>2.2.0</swagger.version>
 
@@ -32,7 +32,7 @@
         <hamcrest.version>1.3</hamcrest.version>
         <jupiter.version>5.8.2</jupiter.version>
         <logstash.version>7.1.1</logstash.version>
-        <mockito.version>4.5.0</mockito.version>
+        <mockito.version>4.5.1</mockito.version>
         <ojdbc.version>19.3.0.0</ojdbc.version>
 
         <!-- Transitive avh. versjoner for å sikre unikhet (enforcer dependencyConvergence). Skal ikke benyttes direkte av
@@ -40,7 +40,7 @@
         <javaslang.version>2.0.6</javaslang.version>
 
         <abac.version>1.0.9</abac.version>
-        <flyway.version>8.5.8</flyway.version>
+        <flyway.version>8.5.10</flyway.version>
     </properties>
 
     <dependencyManagement>
@@ -279,11 +279,6 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>3.3.2</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
                     <version>3.3.2</version>
                 </plugin>
                 <plugin>
