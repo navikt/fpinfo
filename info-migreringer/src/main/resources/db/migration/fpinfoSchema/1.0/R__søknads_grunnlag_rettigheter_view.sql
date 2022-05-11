@@ -42,7 +42,8 @@ select gryf.id                  as GRYF_ID,
                                   )
                           ))
            from dual)           as SAKSB_ALENEOMSORG,
-       SORE.aleneomsorg         as SO_ALENEOMSORG
+       SORE.aleneomsorg         as SO_ALENEOMSORG,
+       SORE.mor_uforetrygd      as SO_UFORETRYGD
 from fpsak.gr_ytelses_fordeling gryf
          join fpsak.so_rettighet sore
               on sore.id = gryf.so_rettighet_id

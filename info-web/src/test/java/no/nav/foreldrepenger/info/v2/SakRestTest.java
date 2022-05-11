@@ -83,7 +83,7 @@ class SakRestTest {
                 .behandlingId(behandlingId)
                 .fødselDato(fødselsdato)
                 .termindato(termindato)
-                .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false))
+                .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false, true))
                 .build();
         repository.lagre(behandlingId, søknadsGrunnlag);
 
@@ -102,6 +102,7 @@ class SakRestTest {
         assertThat(fpSak.sakAvsluttet()).isFalse();
         assertThat(fpSak.kanSøkeOmEndring()).isTrue();
         assertThat(fpSak.sakTilhørerMor()).isTrue();
+        assertThat(fpSak.morUføretrygd()).isTrue();
         assertThat(fpSak.familiehendelse().fødselsdato()).isEqualTo(fødselsdato);
         assertThat(fpSak.familiehendelse().termindato()).isEqualTo(termindato);
         assertThat(fpSak.gjelderAdopsjon()).isFalse();
@@ -169,7 +170,7 @@ class SakRestTest {
                 .dekningsgrad(100)
                 .behandlingId(behandlingId)
                 .fødselDato(fødselsdato)
-                .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false))
+                .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false, false))
                 .build();
         repository.lagre(behandlingId, søknadsGrunnlag);
 
@@ -194,6 +195,7 @@ class SakRestTest {
         assertThat(fpSak.sakAvsluttet()).isFalse();
         assertThat(fpSak.kanSøkeOmEndring()).isFalse();
         assertThat(fpSak.sakTilhørerMor()).isFalse();
+        assertThat(fpSak.morUføretrygd()).isFalse();
         assertThat(fpSak.familiehendelse().fødselsdato()).isEqualTo(fødselsdato);
         assertThat(fpSak.gjelderAdopsjon()).isFalse();
         assertThat(fpSak.gjeldendeVedtak()).isNull();
