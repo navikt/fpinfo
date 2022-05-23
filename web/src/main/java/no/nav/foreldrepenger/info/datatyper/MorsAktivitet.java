@@ -8,13 +8,13 @@ public enum MorsAktivitet {
 
     ARBEID,
     UTDANNING,
-    SAMTIDIGUTTAK,
     KVALPROG,
     INTROPROG,
     TRENGER_HJELP,
     INNLAGT,
     ARBEID_OG_UTDANNING,
-    UFØRE;
+    UFØRE,
+    IKKE_OPPGITT;
 
     public static MorsAktivitet get(String verdi) {
         return Optional.ofNullable(verdi)
