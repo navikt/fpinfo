@@ -28,7 +28,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <felles.version>4.1.26</felles.version>
-        <selvbetjening-felles.version>0.6.12</selvbetjening-felles.version>
+        <selvbetjening-felles.version>0.8.5</selvbetjening-felles.version>
         <abac.version>1.0.9</abac.version>
     </properties>
 
