@@ -20,6 +20,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      - name: Setup maven
+        uses: whelk-io/maven-settings-xml-action@v20
+        with:
+          repositories: '[{ "id": "github", "name": "github", "url": "https://maven.pkg.github.com/${{ github.repository }}", "releases": { "enabled": "true" }, "snapshots": { "enabled": "false" } }]'
+          servers: '[{ "id": "github", "username": "${{ github.actor }}", "password": "${{ secrets.READER_TOKEN }}" }]'
+          output_file: settings.xml
+
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
@@ -39,8 +47,9 @@ jobs:
 
       - name: Kompiler
         run: |
-          mvn jacoco:prepare-agent deploy jacoco:report -e -B -s .github/.m2/settings.xml -Drevision=${BUILD_VERSION}
+          mvn jacoco:prepare-agent install jacoco:report sonar:sonar -q -e -B -s settings.xml -Drevision=${BUILD_VERSION}
         env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Bygg, tag og push Docker image
@@ -48,7 +57,8 @@ jobs:
           docker build --pull --tag ${IMAGE_BASE}:${BUILD_VERSION} --tag ${IMAGE_BASE}:latest .
           docker push ${IMAGE_BASE} --all-tags
 
-      - name: Lukk gamle deployment-issues
+      - name: Lukk gamle bygg-issues
+        if: success()
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
