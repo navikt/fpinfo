@@ -9,12 +9,12 @@ RUN mkdir /app/lib
 RUN mkdir /app/conf
 
 # Config
-#COPY info-web/target/classes/logback*.xml /app/conf/
+#COPY web/target/classes/logback*.xml /app/conf/
 
 # Application Container (Jetty)
-COPY info-web/target/app.jar /app/
+COPY web/target/app.jar /app/
 
-COPY info-web/target/lib/*.jar /app/lib/
+COPY web/target/lib/*.jar /app/lib/
 
 COPY export-vault-secrets.sh /init-scripts/
 ENV JAVA_OPTS="-XX:MaxRAMPercentage=75.0  -Djava.security.egd=file:/dev/./urandom -Duser.timezone=Europe/Oslo"

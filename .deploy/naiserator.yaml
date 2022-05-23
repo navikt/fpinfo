@@ -12,11 +12,6 @@ spec:
     inbound:
       rules:
         - application: fpsoknad-mottak
-  env:
-{{#each env}}
-   - name: {{@key}}
-     value: "{{this}}"
-{{/each}} 
   image: {{image}}
   ingresses:
 {{#each ingresses as |url|}}
@@ -52,7 +47,6 @@ spec:
   vault:
     enabled: true
     paths:
-
     - kvPath: {{oraclecredskv}}
       mountPath: /var/run/secrets/nais.io/defaultDS
     - kvPath: {{oraclefpinfocredsskv}}
@@ -60,3 +54,8 @@ spec:
     - kvPath: {{serviceuserkv}}
       mountPath: /var/run/secrets/nais.io/srvfpinfo
   webproxy: true
+  env:
+{{#each env}}
+    - name: {{@key}}
+      value: "{{this}}"
+{{/each}}

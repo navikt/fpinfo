@@ -1,7 +1,6 @@
 {
     "oraclecredskv": "/oracle/data/dev/creds/fpsak_q1-fpinfo",
     "oraclefpinfocredsskv": "/oracle/data/dev/creds/fpsak_q1-fpinfo_schema",
-
     "serviceuserkv": "/serviceuser/data/dev/srvfpinfo",
     "ingresses": [
         "https://fpinfo-q1.dev.adeo.no",
