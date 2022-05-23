@@ -4,7 +4,7 @@ if test -f /var/run/secrets/nais.io/defaultDS/username;
 then
    export  DEFAULTDS_USERNAME=$(cat /var/run/secrets/nais.io/defaultDS/username)
    echo "Setting DEFAULTDS_USERNAME to $DEFAULTDS_USERNAME"
-    
+
 fi
 
 if test -f /var/run/secrets/nais.io/defaultDS/password;
@@ -18,7 +18,7 @@ if test -f /var/run/secrets/nais.io/fpinfoSchema/username;
 then
    export  FPINFOSCHEMA_USERNAME=$(cat /var/run/secrets/nais.io/fpinfoSchema/username)
    echo "Setting FPINFOSCHEMA_USERNAME to $FPINFOSCHEMA_USERNAME"
-    
+
 fi
 
 if test -f /var/run/secrets/nais.io/fpinfoSchema/password;
