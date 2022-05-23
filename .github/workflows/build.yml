@@ -11,6 +11,9 @@ on:
       - 'LICENCE'
       - 'CODEOWNERS'
       - '.github/workflows/build-pr.yml'
+      - '.github/workflows/snyk.yml'
+      - '.github/workflows/dispatch.yml'
+      - '.github/dependabot.yml'
 
 env:
   IMAGE_BASE: ghcr.io/${{ github.repository }}

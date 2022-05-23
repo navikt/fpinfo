@@ -1,21 +1,26 @@
-FROM navikt/java:17
-ENV APPD_ENABLED=true
-ENV APP_NAME=fpinfo
-ENV APPDYNAMICS_CONTROLLER_HOST_NAME=appdynamics.adeo.no
-ENV APPDYNAMICS_CONTROLLER_PORT=443
-ENV APPDYNAMICS_CONTROLLER_SSL_ENABLED=true
+FROM navikt/java:17-appdynamics
 
-RUN mkdir /app/lib
-RUN mkdir /app/conf
+ENV APPD_ENABLED=true
+
+RUN mkdir lib
+RUN mkdir conf
+
+ENV JAVA_OPTS="-XX:MaxRAMPercentage=75.0 \
+    -Djava.security.egd=file:/dev/urandom \
+    -Duser.timezone=Europe/Oslo \
+    -Dlogback.configurationFile=conf/logback.xml"
+
+# Import vault properties
+COPY .scripts/03-import-appd.sh /init-scripts/03-import-appd.sh
+COPY .scripts/05-import-users.sh /init-scripts/05-import-users.sh
 
 # Config
-#COPY web/target/classes/logback*.xml /app/conf/
+COPY web/target/classes/logback*.xml conf/
 
 # Application Container (Jetty)
-COPY web/target/app.jar /app/
+COPY web/target/app.jar .
+COPY web/target/lib/*.jar ./
 
-COPY web/target/lib/*.jar /app/lib/
-
-COPY export-vault-secrets.sh /init-scripts/
-ENV JAVA_OPTS="-XX:MaxRAMPercentage=75.0  -Djava.security.egd=file:/dev/./urandom -Duser.timezone=Europe/Oslo"
+ENV TZ=Europe/Oslo
+LABEL org.opencontainers.image.source=https://github.com/navikt/fpinfo
 
