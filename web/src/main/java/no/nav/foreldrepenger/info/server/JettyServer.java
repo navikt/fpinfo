@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.info.server;
 
-import static javax.servlet.DispatcherType.REQUEST;
 import static no.nav.foreldrepenger.konfig.Cluster.NAIS_CLUSTER_NAME;
 import static org.eclipse.jetty.webapp.MetaInfConfiguration.WEBINF_JAR_PATTERN;
 
@@ -8,6 +7,8 @@ import java.net.URL;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.DispatcherType;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -109,16 +110,18 @@ public class JettyServer {
     }
 
     protected void addFilters(WebAppContext ctx) {
+        var dispatcherType = EnumSet.of(DispatcherType.REQUEST);
+
         LOG.trace("Installerer JaxrsJwtTokenValidationFilter");
         ctx.addFilter(new FilterHolder(new JaxrsJwtTokenValidationFilter(config())),
                 "/api/*",
-                EnumSet.of(REQUEST));
+                dispatcherType);
         ctx.addFilter(new FilterHolder(new HeadersToMDCFilterBean()),
                 "/api/*",
-                EnumSet.of(REQUEST));
+                dispatcherType);
         var corsFilter = ctx.addFilter(CrossOriginFilter.class,
                 "/*",
-                EnumSet.of(REQUEST));
+                dispatcherType);
         corsFilter.setInitParameter("allowedOrigins", "*");
     }
 

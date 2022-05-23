@@ -23,10 +23,10 @@
     <properties>
         <revision>1.0-SNAPSHOT</revision>
         <java.version>17</java.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
+        <sonar.projectKey>navikt_fpinfo</sonar.projectKey>
+
         <felles.version>4.1.26</felles.version>
         <selvbetjening-felles.version>0.8.5</selvbetjening-felles.version>
         <abac.version>1.0.9</abac.version>
@@ -78,6 +78,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
     <build>
         <plugins>
             <plugin>
