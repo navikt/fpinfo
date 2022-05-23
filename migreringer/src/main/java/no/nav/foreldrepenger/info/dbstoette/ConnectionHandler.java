@@ -55,7 +55,7 @@ public class ConnectionHandler {
         config.setDataSourceProperties(dsProperties);
 
         HikariDataSource hikariDataSource = new HikariDataSource(config);
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> hikariDataSource.close()));
+        Runtime.getRuntime().addShutdownHook(new Thread(hikariDataSource::close));
 
         return hikariDataSource;
     }

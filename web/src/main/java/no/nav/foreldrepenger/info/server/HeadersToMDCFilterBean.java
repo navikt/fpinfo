@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.info.server;
 
-import static no.nav.foreldrepenger.log.mdc.MDCOperations.NAV_CALL_ID;
-import static no.nav.foreldrepenger.log.mdc.MDCOperations.NAV_CONSUMER_ID;
-import static no.nav.foreldrepenger.log.mdc.MDCOperations.generateCallId;
-import static no.nav.foreldrepenger.log.mdc.MDCOperations.putToMDC;
+import static no.nav.vedtak.log.mdc.MDCOperations.generateCallId;
+import static no.nav.vedtak.log.mdc.MDCOperations.putToMDC;
+import static no.nav.vedtak.log.mdc.MDCOperations.MDC_CALL_ID;
+import static no.nav.vedtak.log.mdc.MDCOperations.MDC_CONSUMER_ID;
 
 import java.io.IOException;
 
@@ -30,8 +30,8 @@ public class HeadersToMDCFilterBean implements Filter {
 
     private void toMDC(HttpServletRequest req) {
         try {
-            putToMDC(NAV_CONSUMER_ID, req.getHeader(NAV_CONSUMER_ID));
-            putToMDC(NAV_CALL_ID, req.getHeader(NAV_CALL_ID), generateCallId());
+            putToMDC(MDC_CONSUMER_ID, req.getHeader(MDC_CONSUMER_ID));
+            putToMDC(MDC_CALL_ID, req.getHeader(MDC_CALL_ID), generateCallId());
         } catch (Exception e) {
             LOG.warn("Noe gikk galt ved setting av MDC-verdier for request {}, MDC-verdier er inkomplette",
                     req.getRequestURI(), e);
