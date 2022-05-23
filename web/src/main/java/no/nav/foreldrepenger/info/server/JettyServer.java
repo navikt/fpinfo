@@ -8,6 +8,9 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.DispatcherType;
+import javax.servlet.Filter;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.FilterHolder;
@@ -19,8 +22,6 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.servlet.DispatcherType;
-import jakarta.servlet.Filter;
 import no.nav.foreldrepenger.info.app.konfig.ApplicationConfig;
 import no.nav.foreldrepenger.info.app.konfig.InternalApplication;
 import no.nav.foreldrepenger.info.dbstoette.DBConnectionProperties;
@@ -113,10 +114,10 @@ public class JettyServer {
         var dispatcherType = EnumSet.of(DispatcherType.REQUEST);
 
         LOG.trace("Installerer JaxrsJwtTokenValidationFilter");
-        ctx.addFilter(new FilterHolder((Filter) new JaxrsJwtTokenValidationFilter(config())),
+        ctx.addFilter(new FilterHolder(new JaxrsJwtTokenValidationFilter(config())),
                 "/api/*",
                 dispatcherType);
-        ctx.addFilter(new FilterHolder((Filter) new HeadersToMDCFilterBean()),
+        ctx.addFilter(new FilterHolder(new HeadersToMDCFilterBean()),
                 "/api/*",
                 dispatcherType);
         var corsFilter = ctx.addFilter(CrossOriginFilter.class,
