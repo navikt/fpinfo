@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.DispatcherType;
-import javax.servlet.Filter;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
