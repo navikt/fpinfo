@@ -28,7 +28,7 @@
         <sonar.projectKey>navikt_fpinfo</sonar.projectKey>
 
         <felles.version>4.1.26</felles.version>
-        <selvbetjening-felles.version>0.8.5</selvbetjening-felles.version>
+        <selvbetjening-felles.version>0.8.7</selvbetjening-felles.version>
         <abac.version>1.0.9</abac.version>
     </properties>
 
