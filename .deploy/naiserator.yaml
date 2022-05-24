@@ -47,12 +47,15 @@ spec:
   vault:
     enabled: true
     paths:
-    - kvPath: {{oraclecredskv}}
-      mountPath: /var/run/secrets/nais.io/defaultDS
-    - kvPath: {{oraclefpinfocredsskv}}
-      mountPath: /var/run/secrets/nais.io/fpinfoSchema
-    - kvPath: {{serviceuserkv}}
-      mountPath: /var/run/secrets/nais.io/srvfpinfo
+      - kvPath: {{oraclecredskv}}
+        mountPath: /var/run/secrets/nais.io/defaultDS
+      - kvPath: {{oraclefpinfocredsskv}}
+        mountPath: /var/run/secrets/nais.io/fpinfoSchema
+      - kvPath: {{serviceuserkv}}
+        mountPath: /var/run/secrets/nais.io/srvfpinfo
+      - kvPath: /apikey/appdynamics/{{environment}}
+        mountPath: /var/run/secrets/nais.io/appdynamics
+
   webproxy: true
   env:
 {{#each env}}
