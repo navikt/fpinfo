@@ -1,15 +1,16 @@
 {
-    "oraclecredskv": "/oracle/data/dev/creds/fpsak_q1-fpinfo",
-    "oraclefpinfocredsskv": "/oracle/data/dev/creds/fpsak_q1-fpinfo_schema",
-    "serviceuserkv": "/serviceuser/data/dev/srvfpinfo",
-    "ingresses": [
-        "https://fpinfo-q1.dev.adeo.no",
-        "https://fpinfo.dev.adeo.no",
-        "https://fpinfo-q1.dev.nav.no",
-        "https://fpinfo.dev.intern.nav.no"
-    ],
-    "env": {
-        "APPDYNAMICS_AGENT_ACCOUNT_NAME" :"NON-PROD"
-     }
+  "environment": "dev",
+  "oraclecredskv": "/oracle/data/dev/creds/fpsak_q1-fpinfo",
+  "oraclefpinfocredsskv": "/oracle/data/dev/creds/fpsak_q1-fpinfo_schema",
+  "serviceuserkv": "/serviceuser/data/dev/srvfpinfo",
+  "ingresses": [
+    "https://fpinfo-q1.dev.adeo.no",
+    "https://fpinfo.dev.adeo.no",
+    "https://fpinfo-q1.dev.nav.no",
+    "https://fpinfo.dev.intern.nav.no"
+  ],
+  "env": {
+    "APPDYNAMICS_AGENT_ACCOUNT_NAME": "NON-PROD"
+  }
 }
 
