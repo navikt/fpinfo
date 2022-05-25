@@ -50,4 +50,4 @@ from fpsak.gr_ytelses_fordeling gryf
 where gryf.aktiv = 'J';
 
 
-GRANT SELECT ON SOEKNADS_GR_RETTIGHETER TO ${fpinfo.schema.navn};
+GRANT SELECT ON SOEKNADS_GR_RETTIGHETER TO fpinfo;

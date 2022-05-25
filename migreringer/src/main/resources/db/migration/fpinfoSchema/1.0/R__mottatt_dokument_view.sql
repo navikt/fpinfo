@@ -13,4 +13,4 @@ FROM fpsak.MOTTATT_DOKUMENT md
          left join fpsak.BEHANDLING beh on md.BEHANDLING_ID = beh.ID
          left JOIN fpsak.FAGSAK fs ON md.FAGSAK_ID = fs.ID;
 
-GRANT SELECT ON MOTTATT_DOKUMENT TO ${fpinfo.schema.navn};
+GRANT SELECT ON MOTTATT_DOKUMENT TO fpinfo;

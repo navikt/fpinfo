@@ -16,4 +16,4 @@ as select
             left join fpsak.FAGSAK fs2 ON fs2.ID = fr.fagsak_to_id
    where fr.AKTIV='J';
 
-GRANT SELECT ON FAGSAK_RELASJON TO ${fpinfo.schema.navn};
+GRANT SELECT ON FAGSAK_RELASJON TO fpinfo;

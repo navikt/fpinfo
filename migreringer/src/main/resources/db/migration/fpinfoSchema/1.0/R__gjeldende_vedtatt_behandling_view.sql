@@ -15,4 +15,4 @@ AS select rader.* from
     ) rader
    where rader.row_number = 1;
 
-GRANT SELECT ON GJELDENDE_VEDTATT_BEHANDLING TO ${fpinfo.schema.navn};
+GRANT SELECT ON GJELDENDE_VEDTATT_BEHANDLING TO fpinfo;
