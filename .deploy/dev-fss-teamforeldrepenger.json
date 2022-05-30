@@ -1,5 +1,6 @@
 {
   "environment": "dev",
+  "oracleconfig": "oracle/data/dev/config/fpsak_q1",
   "oraclecredskv": "/oracle/data/dev/creds/fpsak_q1-fpinfo",
   "oraclefpinfocredsskv": "/oracle/data/dev/creds/fpsak_q1-fpinfo_schema",
   "serviceuserkv": "/serviceuser/data/dev/srvfpinfo",
