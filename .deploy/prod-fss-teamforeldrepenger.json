@@ -1,5 +1,6 @@
 {
   "environment": "prod",
+  "oracleconfig": "oracle/data/prod/config/fpsak",
   "oraclecredskv": "/oracle/data/prod/creds/fpsak-fpinfo",
   "oraclefpinfocredsskv": "/oracle/data/prod/creds/fpsak-fpinfo_schema",
   "serviceuserkv": "/serviceuser/data/prod/srvfpinfo",

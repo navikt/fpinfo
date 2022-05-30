@@ -13,7 +13,6 @@ then
     echo "Setting DEFAULTDS_PASSWORD"
 fi
 
-
 if test -f /var/run/secrets/nais.io/fpinfoSchema/username;
 then
    export  FPINFOSCHEMA_USERNAME=$(cat /var/run/secrets/nais.io/fpinfoSchema/username)
@@ -27,16 +26,11 @@ then
     echo "Setting FPINFOSCHEMA_PASSWORD"
 fi
 
-
 if test -f /var/run/secrets/nais.io/defaultDSconfig/jdbc_url;
 then
-    export  DEFAULTDS_URL=$(cat /var/run/secrets/nais.io/defaultDSconfig/jdbc_url)
+    export DEFAULTDS_URL=$(cat /var/run/secrets/nais.io/defaultDSconfig/jdbc_url)
+    export FPINFOSCHEMA_URL=$(echo $DEFAULTDS_URL)
     echo "Setting DEFAULTDS_URL til $DEFAULTDS_URL"
-fi
-
-if test -f /var/run/secrets/nais.io/fpinfoSchemaDSconfig/jdbc_url;
-then
-    export  FPINFOSCHEMA_URL=$(cat /var/run/secrets/nais.io/fpinfoSchemaDSconfig/jdbc_url)
     echo "Setting FPINFOSCHEMA_URL til $FPINFOSCHEMA_URL"
 fi
 
