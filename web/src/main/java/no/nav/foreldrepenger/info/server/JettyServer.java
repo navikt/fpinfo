@@ -4,12 +4,16 @@ import static no.nav.foreldrepenger.konfig.Cluster.NAIS_CLUSTER_NAME;
 import static org.eclipse.jetty.webapp.MetaInfConfiguration.WEBINF_JAR_PATTERN;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
+import javax.naming.NamingException;
 import javax.servlet.DispatcherType;
+import javax.sql.DataSource;
 
+import org.eclipse.jetty.plus.jndi.EnvEntry;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.FilterHolder;
@@ -18,13 +22,13 @@ import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.webapp.MetaData;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.FlywayException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.info.app.konfig.ApplicationConfig;
 import no.nav.foreldrepenger.info.app.konfig.InternalApplication;
-import no.nav.foreldrepenger.info.dbstoette.DBConnectionProperties;
-import no.nav.foreldrepenger.info.dbstoette.DatabaseStøtte;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.security.token.support.core.configuration.IssuerProperties;
 import no.nav.security.token.support.core.configuration.MultiIssuerConfiguration;
@@ -34,82 +38,112 @@ public class JettyServer {
 
     public static final String ACR_LEVEL4 = "acr=Level4";
     public static final String TOKENX = "tokenx";
-
-    private static final Environment ENV = Environment.current();
-
     private static final Logger LOG = LoggerFactory.getLogger(JettyServer.class);
+    private static final Environment ENV = Environment.current();
+    private static final String CONTEXT_PATH = ENV.getProperty("context.path","/fpinfo");
 
     static {
         System.setProperty(NAIS_CLUSTER_NAME, ENV.clusterName());
     }
 
-    private static final String CONTEXT_PATH = "/fpinfo";
-    private final int hostPort;
-
-    public JettyServer(int hostPort) {
-        this.hostPort = hostPort;
-    }
+    private final int serverPort;
 
     public static void main(String[] args) throws Exception {
-        var jettyServer = new JettyServer(8080);
-        jettyServer.migrerDatabaseScript();
-        jettyServer.start();
+        jettyServer(args).bootStrap();
     }
 
-    private static List<DBConnectionProperties> getDBConnectionProperties() {
-        try (var in = JettyServer.class.getResourceAsStream("/jetty_web_server.json");) {
-            var props = DBConnectionProperties.fraStream(in);
-            LOG.info("DB connection properties {}", props);
-            return props;
-        } catch (Exception e) {
-            LOG.info("DB connection properties feilet", e);
-            throw new RuntimeException(e);
+    protected static JettyServer jettyServer(String[] args) {
+        if (args.length > 0) {
+            return new JettyServer(Integer.parseUnsignedInt(args[0]));
+        }
+        return new JettyServer(ENV.getProperty("server.port", Integer.class, 8080));
+    }
+
+    protected JettyServer(int serverPort) {
+        this.serverPort = serverPort;
+    }
+
+    protected void bootStrap() throws Exception {
+        // Vi migrerer ikke for defaultDS siden den ikke har noe migreringer uansett. Brukeren skal benytte fpinfo_schema skjema.
+        settJdniOppslag(DatasourceUtil.createDatasource("defaultDS", 30));
+
+        var fpinfoSchemaDatasource = DatasourceUtil.createDatasource("fpinfoSchema", 5);
+        migrerDatabase(fpinfoSchemaDatasource);
+
+        start();
+    }
+
+    private static void settJdniOppslag(DataSource dataSource) throws NamingException {
+        new EnvEntry("jdbc/defaultDS", dataSource);
+    }
+
+    protected void migrerDatabase(DataSource dataSource) {
+        try {
+            Flyway.configure()
+                    .dataSource(dataSource)
+                    .locations("classpath:/db/migration/fpinfoSchema")
+                    .table("schema_version")
+                    .baselineOnMigrate(true)
+                    .load()
+                    .migrate();
+        } catch (FlywayException e) {
+            LOG.error("Feil under migrering av databasen.");
+            throw e;
+        } finally {
+            try {
+                dataSource.getConnection().close();
+            } catch (SQLException exception) {
+                LOG.warn("Kunne ikke lukke migrering datasource.");
+            }
         }
     }
 
-    protected void start() throws Exception {
-        var server = new Server();
+    private void start() throws Exception {
+        var server = new Server(getServerPort());
         var connector = new ServerConnector(server);
-        connector.setPort(getServerPort());
         server.addConnector(connector);
         var ctx = createContext();
         server.setHandler(ctx);
 
         server.start();
         server.join();
+        LOG.info("Jetty startet on port: " + getServerPort());
     }
 
-    protected int getServerPort() {
-        return hostPort;
-    }
-
-    protected void migrerDatabaseScript() {
-        try {
-            var dbs = getDBConnectionProperties();
-            DatabaseStøtte.settOppJndiForDefaultDataSource(dbs);
-            DatabaseStøtte.kjørMigreringFor(dbs);
-        } catch (Exception e) {
-            LOG.error("Feil under migrering", e);
-            throw e;
-        }
-
-    }
-
-    protected WebAppContext createContext() {
+    private WebAppContext createContext() {
         var ctx = new WebAppContext();
         ctx.setParentLoaderPriority(true);
         ctx.setBaseResource(createResourceCollection());
-        ctx.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
         ctx.setContextPath(CONTEXT_PATH);
+        ctx.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
         ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*jersey-.*.jar$|^.*felles-.*.jar$");
         ctx.addEventListener(new org.jboss.weld.environment.servlet.BeanManagerResourceBindingListener());
         ctx.addEventListener(new org.jboss.weld.environment.servlet.Listener());
         updateMetaData(ctx.getMetaData());
+        ctx.setThrowUnavailableOnStartupException(true);
         addFilters(ctx);
         return ctx;
     }
 
-    protected void addFilters(WebAppContext ctx) {
+    private static Resource createResourceCollection() {
+        return new ResourceCollection(
+                Resource.newClassPathResource("/META-INF/resources/webjars/"),
+                Resource.newClassPathResource("/web"));
+    }
+
+    private void updateMetaData(MetaData metaData) {
+        // Find path to class-files while starting jetty from development environment.
+        metaData.setWebInfClassesResources(getWebInfClasses().stream()
+                .map(c -> Resource.newResource(c.getProtectionDomain().getCodeSource().getLocation()))
+                .distinct()
+                .toList());
+    }
+
+    protected List<Class<?>> getWebInfClasses() {
+        return List.of(ApplicationConfig.class, InternalApplication.class);
+    }
+
+    private static void addFilters(WebAppContext ctx) {
         var dispatcherType = EnumSet.of(DispatcherType.REQUEST);
 
         LOG.trace("Installerer JaxrsJwtTokenValidationFilter");
@@ -134,22 +168,7 @@ public class JettyServer {
         return new IssuerProperties(ENV.getRequiredProperty(wellKnownUrl, URL.class), List.of(ENV.getRequiredProperty(clientId)));
     }
 
-    private void updateMetaData(MetaData metaData) {
-        // Find path to class-files while starting jetty from development environment.
-
-        metaData.setWebInfClassesResources(getApplicationClasses().stream()
-                .map(c -> Resource.newResource(c.getProtectionDomain().getCodeSource().getLocation()))
-                .distinct()
-                .toList());
-    }
-
-    protected List<Class<?>> getApplicationClasses() {
-        return List.of(ApplicationConfig.class, InternalApplication.class);
-    }
-
-    protected Resource createResourceCollection() {
-        return new ResourceCollection(
-                Resource.newClassPathResource("META-INF/resources/webjars/"),
-                Resource.newClassPathResource("/web"));
+    private int getServerPort() {
+        return serverPort;
     }
 }

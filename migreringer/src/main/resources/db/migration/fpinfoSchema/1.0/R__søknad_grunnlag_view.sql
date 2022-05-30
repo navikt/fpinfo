@@ -27,4 +27,4 @@ from fpsak.BEHANDLING b
          left join fpsak.FH_UIDENTIFISERT_BARN ub on h.ID = ub.FAMILIE_HENDELSE_ID and ub.barn_nummer = '1' -- velger tilfeldig
 where f.ytelse_type = 'FP';
 
-GRANT SELECT ON SOEKNAD_GR TO ${fpinfo.schema.navn};
+GRANT SELECT ON SOEKNAD_GR TO fpinfo;

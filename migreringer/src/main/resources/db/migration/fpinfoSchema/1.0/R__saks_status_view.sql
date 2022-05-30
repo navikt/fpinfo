@@ -28,4 +28,4 @@ AS SELECT
            fs.til_infotrygd = 'N';
 
 
-GRANT SELECT ON SAK_STATUS TO ${fpinfo.schema.navn};
+GRANT SELECT ON SAK_STATUS TO fpinfo;

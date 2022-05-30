@@ -24,4 +24,4 @@ AS SELECT
   WHERE
     gfh.AKTIV = 'J' AND  fs.til_infotrygd = 'N';
 
-GRANT SELECT ON BEHANDLING TO ${fpinfo.schema.navn};
+GRANT SELECT ON BEHANDLING TO fpinfo;
