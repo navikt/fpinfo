@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.info.v2;
 
-import static no.nav.foreldrepenger.info.app.tjenester.dto.SøknadsGrunnlagDto.MOR_UFØR;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -78,8 +76,10 @@ class SakerTjeneste {
         var familiehendelse = familiehendelse(søknadsgrunnlag);
 
         var barn = barn(fpSak.saksnummer());
+        //TODO er vel ikke riktig å bruke saksbehandlet versjon hvis saken ikke har vedtak
+        var rettighetType = rettighetType(søknadsgrunnlag);
         return Optional.of(new FpSak(fpSak.saksnummer, false, false, tilhørerMor,
-                false, isMorUføretrygd(søknadsgrunnlag), rettighetType(søknadsgrunnlag), annenPart,
+                false, søknadsgrunnlag.søknadMorUfør(), rettighetType, annenPart,
                 familiehendelse, null, map(åpenBehandling), barn, dekningsgrad(søknadsgrunnlag),
                 fpSak.opprettetTidspunkt()));
     }
@@ -104,15 +104,9 @@ class SakerTjeneste {
         var annenPart = annenPart(fpSak).orElse(null);
         var barn = barn(fpSak.saksnummer());
         return Optional.of(new FpSak(fpSak.saksnummer, sakAvsluttet, kanSøkeOmEndring, tilhørerMor, false,
-                isMorUføretrygd(søknadsgrunnlag), rettighetType(søknadsgrunnlag), annenPart,
+                søknadsgrunnlag.bekreftetMorUfør(), rettighetType(søknadsgrunnlag), annenPart,
                 familiehendelse, gjeldendeVedtak, åpenBehandling.orElse(null), barn, dekningsgrad(søknadsgrunnlag),
                 fpSak.opprettetTidspunkt));
-    }
-
-    private boolean isMorUføretrygd(SøknadsGrunnlag søknadsgrunnlag) {
-        //TODO TFP-4795 UføretrygdGrunnlagEntitet for register og avklaring fra saksbehandler
-        return søknadsgrunnlag.isMorUfør() == null ? MOR_UFØR.equals(søknadsgrunnlag.getMorsAktivitetHvisUfør())
-                : søknadsgrunnlag.isMorUfør();
     }
 
     private Set<AktørId> barn(no.nav.foreldrepenger.info.v2.Saksnummer saksnummer) {

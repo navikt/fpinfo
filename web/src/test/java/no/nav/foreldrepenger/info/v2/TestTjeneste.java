@@ -1,7 +1,11 @@
-package no.nav.foreldrepenger.info;
+package no.nav.foreldrepenger.info.v2;
 
 import static javax.ws.rs.core.Response.noContent;
 import static javax.ws.rs.core.Response.ok;
+import static no.nav.foreldrepenger.info.v2.SakRest.map;
+import static no.nav.foreldrepenger.info.v2.SakRest.tilDto;
+
+import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -15,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import no.nav.foreldrepenger.common.innsyn.v2.Saker;
 import no.nav.foreldrepenger.info.app.tjenester.SøknadsGrunnlagTjeneste;
 import no.nav.foreldrepenger.info.app.tjenester.dto.SaksnummerDto;
 import no.nav.foreldrepenger.konfig.Environment;
@@ -32,6 +37,7 @@ public class TestTjeneste {
     private static final Environment ENV = Environment.current();
 
     private SøknadsGrunnlagTjeneste grunnlag;
+    private SakerTjeneste sakerTjeneste;
 
     static {
         if (!ENV.isLocal()) {
@@ -40,8 +46,9 @@ public class TestTjeneste {
     }
 
     @Inject
-    public TestTjeneste(SøknadsGrunnlagTjeneste grunnlag) {
+    public TestTjeneste(SøknadsGrunnlagTjeneste grunnlag, SakerTjeneste sakerTjeneste) {
         this.grunnlag = grunnlag;
+        this.sakerTjeneste = sakerTjeneste;
 
     }
 
@@ -54,5 +61,13 @@ public class TestTjeneste {
         return grunnlag.hentSøknadsgrunnlag(saksnummer, false)
                 .map(d -> ok(d).build())
                 .orElse(noContent().build());
+    }
+
+    @GET
+    @Path("v2")
+    public Saker v2(@NotNull @QueryParam("aktørId") @Parameter(name = "aktørId") @Valid SakRest.AktørIdDto aktørIdDto) {
+        var fpSaker = sakerTjeneste.hentFor(map(aktørIdDto.aktørId()));
+        var fpSakerDto = tilDto(fpSaker);
+        return new Saker(fpSakerDto, Set.of(), Set.of());
     }
 }

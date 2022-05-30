@@ -15,6 +15,7 @@ import no.nav.foreldrepenger.info.MottattDokument;
 import no.nav.foreldrepenger.info.Sak;
 import no.nav.foreldrepenger.info.SøknadsGrunnlag;
 import no.nav.foreldrepenger.info.SøknadsGrunnlagRettigheter;
+import no.nav.foreldrepenger.info.UføreGrunnlag;
 import no.nav.foreldrepenger.info.UttakPeriode;
 import no.nav.foreldrepenger.info.datatyper.BehandlingType;
 import no.nav.foreldrepenger.info.datatyper.DokumentTypeId;
@@ -35,19 +36,20 @@ class SakRestTest {
         var termindato = LocalDate.now().minusDays(2);
 
         repository.lagre(new Sak.Builder()
-                        .medSaksnummer(saksnummer)
-                        .medBehandlingId(String.valueOf(behandlingId))
-                        .medFagsakStatus("OPPR")
-                        .medAktørId(aktørId.aktørId())
-                        .medFamilieHendelseType(FamilieHendelseType.FØDSEL.getVerdi())
-                        .medFagsakYtelseType(FagsakYtelseType.FP.name())
-                        .medAktørIdBarn(barnAktørId)
-                        .medAktørIdAnnenPart(annenPartAktørId)
+                .medSaksnummer(saksnummer)
+                .medBehandlingId(String.valueOf(behandlingId))
+                .medFagsakStatus("OPPR")
+                .medAktørId(aktørId.aktørId())
+                .medFamilieHendelseType(FamilieHendelseType.FØDSEL.getVerdi())
+                .medFagsakYtelseType(FagsakYtelseType.FP.name())
+                .medAktørIdBarn(barnAktørId)
+
+                .medAktørIdAnnenPart(annenPartAktørId)
                 .build());
         var annenpartSaksnummer = "111";
         repository.lagre(new FagsakRelasjon.Builder()
-                        .saksnummerEn(saksnummer.saksnummer())
-                        .saksnummerTo(annenpartSaksnummer)
+                .saksnummerEn(saksnummer.saksnummer())
+                .saksnummerTo(annenpartSaksnummer)
                 .build());
         var behandling = new Behandling.Builder()
                 .medBehandlingId(behandlingId)
@@ -84,6 +86,7 @@ class SakRestTest {
                 .fødselDato(fødselsdato)
                 .termindato(termindato)
                 .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false, true))
+                .uføreGrunnlag(new UføreGrunnlag(behandlingId, true, false))
                 .build();
         repository.lagre(behandlingId, søknadsGrunnlag);
 
@@ -102,7 +105,7 @@ class SakRestTest {
         assertThat(fpSak.sakAvsluttet()).isFalse();
         assertThat(fpSak.kanSøkeOmEndring()).isTrue();
         assertThat(fpSak.sakTilhørerMor()).isTrue();
-        assertThat(fpSak.morUføretrygd()).isTrue();
+        assertThat(fpSak.morUføretrygd()).isFalse();
         assertThat(fpSak.familiehendelse().fødselsdato()).isEqualTo(fødselsdato);
         assertThat(fpSak.familiehendelse().termindato()).isEqualTo(termindato);
         assertThat(fpSak.gjelderAdopsjon()).isFalse();

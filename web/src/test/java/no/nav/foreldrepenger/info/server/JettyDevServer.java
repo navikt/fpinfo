@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 import javax.ws.rs.ApplicationPath;
 
-import no.nav.foreldrepenger.info.TestTjeneste;
+import no.nav.foreldrepenger.info.v2.TestTjeneste;
 import no.nav.foreldrepenger.info.app.konfig.ApplicationConfig;
 import no.nav.foreldrepenger.konfig.Environment;
 

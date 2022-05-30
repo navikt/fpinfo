@@ -61,8 +61,12 @@ public class SakRest {
     public Saker hentSaker(@NotNull @QueryParam("aktorId") @Parameter(name = "aktorId") AktørIdDto aktørId) {
         LOG.info("Henter saker for bruker");
         var fpSaker = sakerTjeneste.hentFor(map(aktørId.aktørId()));
-        var fpSakerDto = fpSaker.stream().map(FpSak::tilDto).collect(Collectors.toSet());
+        var fpSakerDto = tilDto(fpSaker);
         return new Saker(fpSakerDto, Set.of(), Set.of());
+    }
+
+    public static Set<no.nav.foreldrepenger.common.innsyn.v2.FpSak> tilDto(Set<FpSak> fpSaker) {
+        return fpSaker.stream().map(FpSak::tilDto).collect(Collectors.toSet());
     }
 
     @Path("/annenpart")
@@ -78,7 +82,7 @@ public class SakRest {
         return perioder.stream().map(no.nav.foreldrepenger.info.v2.VedtakPeriode::tilDto).toList();
     }
 
-    private AktørId map(String aktørId) {
+    public static AktørId map(String aktørId) {
         return new AktørId(aktørId);
     }
 
