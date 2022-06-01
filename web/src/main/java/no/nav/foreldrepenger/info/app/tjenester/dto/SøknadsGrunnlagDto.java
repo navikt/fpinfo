@@ -22,7 +22,6 @@ public class SøknadsGrunnlagDto implements AbacDto {
     private static final Logger LOG = LoggerFactory.getLogger(SøknadsGrunnlagDto.class);
 
     private static final String MOR_ROLLE = "MORA";
-    public static final String MOR_UFØR = "UFØRE";
 
     private String saksnummer;
 
@@ -80,8 +79,7 @@ public class SøknadsGrunnlagDto implements AbacDto {
         dto.farMedmorHarRett = !søkerErMor || grunnlag.getAnnenForelderRett();
         dto.morHarRett = søkerErMor || grunnlag.getAnnenForelderRett();
 
-        //TODO TFP-4795 UføretrygdGrunnlagEntitet for register og avklaring fra saksbehandler
-        dto.morErUfør = grunnlag.isMorUfør() == null ? MOR_UFØR.equals(grunnlag.getMorsAktivitetHvisUfør()) : grunnlag.isMorUfør();
+        dto.morErUfør = grunnlag.bekreftetMorUfør();
 
         dto.annenForelderErInformert = grunnlag.getAnnenForelderInformert();
 

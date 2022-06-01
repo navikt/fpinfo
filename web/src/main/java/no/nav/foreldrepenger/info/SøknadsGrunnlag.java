@@ -19,6 +19,8 @@ import no.nav.vedtak.felles.jpa.converters.BooleanToStringConverter;
 @Immutable
 public class SøknadsGrunnlag {
 
+    public static final String MOR_UFØR = "UFØRE";
+
     @Id
     @Column(name = "RANDOM_ID")
     private Long randomId;
@@ -26,7 +28,7 @@ public class SøknadsGrunnlag {
     @Column(name = "SAKSNUMMER")
     private String saksnummer;
 
-    @Column(name = "BEHANDLING_ID")
+    @Column(name = "BEHANDLING_ID", updatable = false, insertable = false)
     private Long behandlingId;
 
     @Column(name = "ANTALL_BARN")
@@ -53,6 +55,10 @@ public class SøknadsGrunnlag {
     @OneToOne
     @JoinColumn(name = "GRYF_ID")
     private SøknadsGrunnlagRettigheter foreldreRettigheter;
+
+    @OneToOne
+    @JoinColumn(name = "BEHANDLING_ID")
+    private UføreGrunnlag uføreGrunnlag;
 
     @Column(name = "MORS_AKTIVITET_UFOERE")
     private String morsAktivitetHvisUfør;
@@ -97,16 +103,22 @@ public class SøknadsGrunnlag {
         return foreldreRettigheter.getAleneomsorg();
     }
 
-    public Boolean isMorUfør() {
-        return foreldreRettigheter.getSøknadUføretrygd();
+    public Boolean bekreftetMorUfør() {
+        //left outer join her, så får et objekt der alle feltene er null
+        var gjeldendeUføre = uføreGrunnlag.getGjeldende();
+        if (gjeldendeUføre == null) {
+            return søknadMorUfør();
+        }
+        return gjeldendeUføre;
+    }
+
+    public Boolean søknadMorUfør() {
+        var morUførSøknad = foreldreRettigheter.getSøknadUføretrygd();
+        return morUførSøknad == null ? MOR_UFØR.equals(morsAktivitetHvisUfør) : morUførSøknad;
     }
 
     public Boolean getAnnenForelderRett() {
         return foreldreRettigheter.getAnnenForelderRett();
-    }
-
-    public String getMorsAktivitetHvisUfør() {
-        return morsAktivitetHvisUfør;
     }
 
     public Boolean getAnnenForelderInformert() {
@@ -159,6 +171,11 @@ public class SøknadsGrunnlag {
 
         public Builder foreldreRettigheter(SøknadsGrunnlagRettigheter foreldreRettigheter) {
             kladd.foreldreRettigheter = foreldreRettigheter;
+            return this;
+        }
+
+        public Builder uføreGrunnlag(UføreGrunnlag uføreGrunnlag) {
+            kladd.uføreGrunnlag = uføreGrunnlag;
             return this;
         }
 
