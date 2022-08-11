@@ -13,7 +13,7 @@ import no.nav.foreldrepenger.konfig.Environment;
 public class DatasourceUtil {
     private static final Environment ENV = Environment.current();
 
-    public static DataSource createDatasource(String dataSourceName, int maxPoolSize) {
+    public static HikariDataSource createDatasource(String dataSourceName, int maxPoolSize) {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(ENV.getRequiredProperty(dataSourceName + ".url"));
         config.setUsername(ENV.getRequiredProperty(dataSourceName + ".username"));

@@ -4,7 +4,6 @@ import static no.nav.foreldrepenger.konfig.Cluster.NAIS_CLUSTER_NAME;
 import static org.eclipse.jetty.webapp.MetaInfConfiguration.WEBINF_JAR_PATTERN;
 
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -67,8 +66,7 @@ public class JettyServer {
         // Vi migrerer ikke for defaultDS siden den ikke har noe migreringer uansett. Brukeren skal benytte fpinfo_schema skjema.
         settJdniOppslag(DatasourceUtil.createDatasource("defaultDS", 30));
 
-        var fpinfoSchemaDatasource = DatasourceUtil.createDatasource("fpinfoSchema", 5);
-        migrerDatabase(fpinfoSchemaDatasource);
+        migrerDatabase();
 
         start();
     }
@@ -77,8 +75,8 @@ public class JettyServer {
         new EnvEntry("jdbc/defaultDS", dataSource);
     }
 
-    protected void migrerDatabase(DataSource dataSource) {
-        try {
+    protected void migrerDatabase() {
+        try (var dataSource = DatasourceUtil.createDatasource("fpinfoSchema", 10)) {
             Flyway.configure()
                     .dataSource(dataSource)
                     .locations("classpath:/db/migration/fpinfoSchema")
@@ -89,12 +87,6 @@ public class JettyServer {
         } catch (FlywayException e) {
             LOG.error("Feil under migrering av databasen.");
             throw e;
-        } finally {
-            try {
-                dataSource.getConnection().close();
-            } catch (SQLException exception) {
-                LOG.warn("Kunne ikke lukke migrering datasource.");
-            }
         }
     }
 
