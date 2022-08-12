@@ -2,8 +2,6 @@ package no.nav.foreldrepenger.info.server;
 
 import java.util.Properties;
 
-import javax.sql.DataSource;
-
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
