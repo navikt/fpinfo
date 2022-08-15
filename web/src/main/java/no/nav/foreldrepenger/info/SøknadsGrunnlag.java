@@ -117,6 +117,15 @@ public class SøknadsGrunnlag {
         return morUførSøknad == null ? MOR_UFØR.equals(morsAktivitetHvisUfør) : morUførSøknad;
     }
 
+    public Boolean søknadAnnenPartHarRettPåForeldrepengerIEØS() {
+        return foreldreRettigheter.getSøknadAnnenPartHarRettPåForeldrepengerIEØS();
+    }
+
+    public Boolean bekreftetAnnenPartHarRettPåForeldrepengerIEØS() {
+        //TODO må legge inn saksbehandlers avklaring
+        return søknadAnnenPartHarRettPåForeldrepengerIEØS();
+    }
+
     public Boolean getAnnenForelderRett() {
         return foreldreRettigheter.getAnnenForelderRett();
     }

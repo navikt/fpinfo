@@ -68,7 +68,7 @@ public class UttaksPeriodeDto implements AbacDto {
         dto.periodeResultatType = dash2null(uttakPeriode.getPeriodeResultatType());
         dto.fom = uttakPeriode.getFom();
         dto.tom = uttakPeriode.getTom();
-        dto.trekkonto = dash2null(uttakPeriode.getTrekkonto());
+        dto.trekkonto = uttakPeriode.getTrekkonto();
         dto.trekkdager = uttakPeriode.getTrekkdager();
         dto.utbetalingsprosent = uttakPeriode.getUtbetalingsprosent();
         dto.utsettelsePeriodeType = dash2null(uttakPeriode.getUttakUtsettelseType());
@@ -91,7 +91,7 @@ public class UttaksPeriodeDto implements AbacDto {
         return dto;
     }
 
-    private static String dash2null(String domeneString) {
+    public static String dash2null(String domeneString) {
         return "-".equals(domeneString) ? null : domeneString;
     }
 
