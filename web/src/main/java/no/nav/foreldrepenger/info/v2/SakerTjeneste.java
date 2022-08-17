@@ -79,7 +79,7 @@ class SakerTjeneste {
         //TODO er vel ikke riktig å bruke saksbehandlet versjon hvis saken ikke har vedtak
         var rettighetType = rettighetType(søknadsgrunnlag);
         return Optional.of(new FpSak(fpSak.saksnummer, false, false, tilhørerMor,
-                false, søknadsgrunnlag.søknadMorUfør(), rettighetType, annenPart,
+                false, søknadsgrunnlag.søknadMorUfør(), søknadsgrunnlag.søknadAnnenPartHarRettPåForeldrepengerIEØS(), rettighetType, annenPart,
                 familiehendelse, null, map(åpenBehandling), barn, dekningsgrad(søknadsgrunnlag),
                 fpSak.opprettetTidspunkt()));
     }
@@ -104,7 +104,7 @@ class SakerTjeneste {
         var annenPart = annenPart(fpSak).orElse(null);
         var barn = barn(fpSak.saksnummer());
         return Optional.of(new FpSak(fpSak.saksnummer, sakAvsluttet, kanSøkeOmEndring, tilhørerMor, false,
-                søknadsgrunnlag.bekreftetMorUfør(), rettighetType(søknadsgrunnlag), annenPart,
+                søknadsgrunnlag.bekreftetMorUfør(), søknadsgrunnlag.bekreftetAnnenPartHarRettPåForeldrepengerIEØS(), rettighetType(søknadsgrunnlag), annenPart,
                 familiehendelse, gjeldendeVedtak, åpenBehandling.orElse(null), barn, dekningsgrad(søknadsgrunnlag),
                 fpSak.opprettetTidspunkt));
     }
@@ -212,9 +212,14 @@ class SakerTjeneste {
         } else {
             gradering = null;
         }
-        return new VedtakPeriode(p.getFom(), p.getTom(), KontoType.valueOf(p.getTrekkonto()), resultat, mapUtsettelseÅrsak(p.getUttakUtsettelseType()),
+        return new VedtakPeriode(p.getFom(), p.getTom(), mapKontotype(p), resultat, mapUtsettelseÅrsak(p.getUttakUtsettelseType()),
                 mapOppholdÅrsak(p.getOppholdÅrsak()), mapOverføringÅrsak(p.getOverføringÅrsak()), gradering, mapMorsAktivitet(p.getMorsAktivitet()),
                 samtidigUttak, p.getFlerbarnsdager());
+    }
+
+    private KontoType mapKontotype(UttakPeriode p) {
+        var trekkonto = p.getTrekkonto();
+        return trekkonto == null ? null : KontoType.valueOf(trekkonto);
     }
 
     private SamtidigUttak map(Long samtidigUttaksprosent) {
