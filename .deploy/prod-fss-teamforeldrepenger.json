@@ -5,7 +5,7 @@
   "oraclefpinfocredsskv": "/oracle/data/prod/creds/fpsak-fpinfo_schema",
   "serviceuserkv": "/serviceuser/data/prod/srvfpinfo",
   "ingresses": [
-    "https://fpinfo.nais.adeo.no"
+    "https://fpinfo.intern.nav.no"
   ],
   "env": {
     "APPDYNAMICS_AGENT_ACCOUNT_NAME": "PROD"
