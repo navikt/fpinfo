@@ -76,7 +76,7 @@ public class JettyServer {
     }
 
     protected void migrerDatabase() {
-        try (var dataSource = DatasourceUtil.createDatasource("fpinfoSchema", 10)) {
+        try (var dataSource = DatasourceUtil.createDatasource("fpinfoSchema", 4)) {
             Flyway.configure()
                     .dataSource(dataSource)
                     .locations("classpath:/db/migration/fpinfoSchema")
