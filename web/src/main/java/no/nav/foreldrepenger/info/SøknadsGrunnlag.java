@@ -67,6 +67,10 @@ public class SøknadsGrunnlag {
     @Column(name = "ANNENFORELDERERINFORMERT")
     private Boolean annenForelderInformert;
 
+    @Convert(converter = BooleanToStringConverter.class)
+    @Column(name = "OENSKER_JUSTERT_UTTAK_VED_FOEDSEL")
+    private Boolean ønskerJustertUttakVedFødsel;
+
     public Long getBehandlingId() {
         return behandlingId;
     }
@@ -124,6 +128,10 @@ public class SøknadsGrunnlag {
     public Boolean bekreftetAnnenPartHarRettPåForeldrepengerIEØS() {
         //TODO må legge inn saksbehandlers avklaring
         return søknadAnnenPartHarRettPåForeldrepengerIEØS();
+    }
+
+    public Boolean ønskerJustertUttakVedFødsel() {
+        return ønskerJustertUttakVedFødsel;
     }
 
     public Boolean getAnnenForelderRett() {
