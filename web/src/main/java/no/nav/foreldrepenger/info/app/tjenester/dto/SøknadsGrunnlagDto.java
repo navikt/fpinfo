@@ -39,6 +39,7 @@ public class SøknadsGrunnlagDto implements AbacDto {
     private Boolean morHarRett;
     private Boolean morErUfør;
     private Boolean annenPartHarRettPåForeldrepengerIEØS;
+    private Boolean ønskerJustertUttakVedFødsel;
 
     private Boolean farMedmorErAleneOmOmsorg;
     private Boolean farMedmorHarRett;
@@ -82,6 +83,7 @@ public class SøknadsGrunnlagDto implements AbacDto {
 
         dto.morErUfør = grunnlag.bekreftetMorUfør();
         dto.annenPartHarRettPåForeldrepengerIEØS = grunnlag.bekreftetAnnenPartHarRettPåForeldrepengerIEØS();
+        dto.ønskerJustertUttakVedFødsel = grunnlag.ønskerJustertUttakVedFødsel();
 
         dto.annenForelderErInformert = grunnlag.getAnnenForelderInformert();
 
@@ -135,6 +137,10 @@ public class SøknadsGrunnlagDto implements AbacDto {
 
     public Boolean getAnnenPartHarRettPåForeldrepengerIEØS() {
         return annenPartHarRettPåForeldrepengerIEØS;
+    }
+
+    public Boolean getØnskerJustertUttakVedFødsel() {
+        return ønskerJustertUttakVedFødsel;
     }
 
     public Boolean getFarMedmorErAleneOmOmsorg() {

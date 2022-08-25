@@ -79,9 +79,9 @@ class SakerTjeneste {
         //TODO er vel ikke riktig å bruke saksbehandlet versjon hvis saken ikke har vedtak
         var rettighetType = rettighetType(søknadsgrunnlag);
         return Optional.of(new FpSak(fpSak.saksnummer, false, false, tilhørerMor,
-                false, søknadsgrunnlag.søknadMorUfør(), søknadsgrunnlag.søknadAnnenPartHarRettPåForeldrepengerIEØS(), rettighetType, annenPart,
-                familiehendelse, null, map(åpenBehandling), barn, dekningsgrad(søknadsgrunnlag),
-                fpSak.opprettetTidspunkt()));
+                false, nullSafeEquals(søknadsgrunnlag.søknadMorUfør()), nullSafeEquals(søknadsgrunnlag.søknadAnnenPartHarRettPåForeldrepengerIEØS()),
+                isØnskerJustertUttakVedFødsel(søknadsgrunnlag), rettighetType, annenPart, familiehendelse, null, map(åpenBehandling),
+                barn, dekningsgrad(søknadsgrunnlag), fpSak.opprettetTidspunkt()));
     }
 
     private RettighetType rettighetType(SøknadsGrunnlag søknadsGrunnlag) {
@@ -104,9 +104,18 @@ class SakerTjeneste {
         var annenPart = annenPart(fpSak).orElse(null);
         var barn = barn(fpSak.saksnummer());
         return Optional.of(new FpSak(fpSak.saksnummer, sakAvsluttet, kanSøkeOmEndring, tilhørerMor, false,
-                søknadsgrunnlag.bekreftetMorUfør(), søknadsgrunnlag.bekreftetAnnenPartHarRettPåForeldrepengerIEØS(), rettighetType(søknadsgrunnlag), annenPart,
+                nullSafeEquals(søknadsgrunnlag.bekreftetMorUfør()), nullSafeEquals(søknadsgrunnlag.bekreftetAnnenPartHarRettPåForeldrepengerIEØS()),
+                isØnskerJustertUttakVedFødsel(søknadsgrunnlag), rettighetType(søknadsgrunnlag), annenPart,
                 familiehendelse, gjeldendeVedtak, åpenBehandling.orElse(null), barn, dekningsgrad(søknadsgrunnlag),
                 fpSak.opprettetTidspunkt));
+    }
+
+    private boolean isØnskerJustertUttakVedFødsel(SøknadsGrunnlag søknadsgrunnlag) {
+        return nullSafeEquals(søknadsgrunnlag.ønskerJustertUttakVedFødsel());
+    }
+
+    private boolean nullSafeEquals(Boolean b) {
+        return Objects.equals(true, b);
     }
 
     private Set<AktørId> barn(no.nav.foreldrepenger.info.v2.Saksnummer saksnummer) {
