@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.common.innsyn.v2.Aktivitet;
+import no.nav.foreldrepenger.common.innsyn.v2.Arbeidsgiver;
 import no.nav.foreldrepenger.info.Behandling;
 import no.nav.foreldrepenger.info.FagsakRelasjon;
 import no.nav.foreldrepenger.info.InMemTestRepository;
@@ -65,6 +67,8 @@ class SakRestTest {
                 .withArbeidstidprosent(30L)
                 .withGraderingInnvilget(true)
                 .withUttakUtsettelseType("-")
+                .withUttakArbeidType(Aktivitet.Type.ORDINÆRT_ARBEID.name())
+                .withArbeidsgiverOrgnr("123")
                 .withPeriodeResultatType("INNVILGET")
                 .withPeriodeResultatÅrsak("2003")
                 .withTrekkkonto(KontoType.MØDREKVOTE.name())
@@ -120,7 +124,8 @@ class SakRestTest {
         assertThat(vedtakPeriode.kontoType()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.KontoType.valueOf(uttakPeriode.getTrekkonto()));
         assertThat(vedtakPeriode.resultat().innvilget()).isTrue();
         assertThat(vedtakPeriode.gradering()).isEqualTo(new no.nav.foreldrepenger.common.innsyn.v2.Gradering(
-                BigDecimal.valueOf(uttakPeriode.getArbeidstidprosent())));
+                BigDecimal.valueOf(uttakPeriode.getArbeidstidprosent()), new Aktivitet(Aktivitet.Type.ORDINÆRT_ARBEID,
+                new Arbeidsgiver(uttakPeriode.getArbeidsgiverOrgnr(), Arbeidsgiver.ArbeidsgiverType.ORGANISASJON))));
         assertThat(vedtakPeriode.morsAktivitet()).isNull();
         assertThat(vedtakPeriode.samtidigUttak()).isNull();
         assertThat(vedtakPeriode.flerbarnsdager()).isEqualTo(uttakPeriode.getFlerbarnsdager());

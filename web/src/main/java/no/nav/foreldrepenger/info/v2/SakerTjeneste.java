@@ -199,7 +199,7 @@ class SakerTjeneste {
         return repository.hentUttakPerioder(behandlingId)
                 .stream()
                 // flere arbeidsforhold gir flere perioder med samme tidsperiode. Selvbetjening frontend støtter ikke flere
-                // arbeidsforhold per periode, så her velger vi en tilfeldig den med høyest arbeidstidsprosent (for at gradering skal bli riktig).
+                // arbeidsforhold per periode, så her velger vi den med høyest arbeidstidsprosent (for at gradering skal bli riktig).
                 // Dette kan gi feil i noen case der feks aktivitene har forskjellig trekkonto
                 .sorted((o1, o2) -> o1.getArbeidstidprosent() != null && o2.getArbeidstidprosent() != null
                         ? o2.getArbeidstidprosent().compareTo(o1.getArbeidstidprosent()) : 0)
@@ -216,14 +216,33 @@ class SakerTjeneste {
 
         //frontend vil ikke ha detaljer om gradering ved samtidigUttak
         final Gradering gradering;
-        if (samtidigUttak == null) {
-            gradering = p.getGraderingInnvilget() ? new Gradering(BigDecimal.valueOf(p.getArbeidstidprosent())) : null;
+        if (samtidigUttak == null && p.getGraderingInnvilget()) {
+            var arbeidsgiver = utledArbeidsgiver(p);
+            var aktivitetType = mapAktivitetType(p.getUttakArbeidType());
+            gradering = new Gradering(BigDecimal.valueOf(p.getArbeidstidprosent()), new Aktivitet(aktivitetType,
+                    arbeidsgiver));
         } else {
             gradering = null;
         }
         return new VedtakPeriode(p.getFom(), p.getTom(), mapKontotype(p), resultat, mapUtsettelseÅrsak(p.getUttakUtsettelseType()),
                 mapOppholdÅrsak(p.getOppholdÅrsak()), mapOverføringÅrsak(p.getOverføringÅrsak()), gradering, mapMorsAktivitet(p.getMorsAktivitet()),
                 samtidigUttak, p.getFlerbarnsdager());
+    }
+
+    private Aktivitet.Type mapAktivitetType(String type) {
+        if (type == null) {
+            return null;
+        }
+        return Aktivitet.Type.valueOf(type);
+    }
+
+    private Arbeidsgiver utledArbeidsgiver(UttakPeriode p) {
+        if (p.getArbeidsgiverOrgnr() != null) {
+            return new Arbeidsgiver(p.getArbeidsgiverOrgnr(), Arbeidsgiver.ArbeidsgiverType.ORGANISASJON);
+        } else if (p.getArbeidsgiverAktørId() != null) {
+            return new Arbeidsgiver(p.getArbeidsgiverAktørId(), Arbeidsgiver.ArbeidsgiverType.PRIVAT);
+        }
+        return null;
     }
 
     private KontoType mapKontotype(UttakPeriode p) {
