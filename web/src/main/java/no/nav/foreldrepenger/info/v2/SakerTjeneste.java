@@ -79,7 +79,7 @@ class SakerTjeneste {
         //TODO er vel ikke riktig å bruke saksbehandlet versjon hvis saken ikke har vedtak
         var rettighetType = rettighetType(søknadsgrunnlag);
         return Optional.of(new FpSak(fpSak.saksnummer, false, false, tilhørerMor,
-                false, nullSafeEquals(søknadsgrunnlag.søknadMorUfør()), nullSafeEquals(søknadsgrunnlag.søknadAnnenPartHarRettPåForeldrepengerIEØS()),
+                false, nullSafeEquals(søknadsgrunnlag.søknadMorUfør()), nullSafeEquals(søknadsgrunnlag.søknadHarAnnenForelderTilsvarendeRettEØS()),
                 isØnskerJustertUttakVedFødsel(søknadsgrunnlag), rettighetType, annenPart, familiehendelse, null, map(åpenBehandling),
                 barn, dekningsgrad(søknadsgrunnlag), fpSak.opprettetTidspunkt()));
     }
@@ -104,7 +104,7 @@ class SakerTjeneste {
         var annenPart = annenPart(fpSak).orElse(null);
         var barn = barn(fpSak.saksnummer());
         return Optional.of(new FpSak(fpSak.saksnummer, sakAvsluttet, kanSøkeOmEndring, tilhørerMor, false,
-                nullSafeEquals(søknadsgrunnlag.bekreftetMorUfør()), nullSafeEquals(søknadsgrunnlag.bekreftetAnnenPartHarRettPåForeldrepengerIEØS()),
+                nullSafeEquals(søknadsgrunnlag.bekreftetMorUfør()), nullSafeEquals(søknadsgrunnlag.bekreftetHarAnnenForelderTilsvarendeRettEØS()),
                 isØnskerJustertUttakVedFødsel(søknadsgrunnlag), rettighetType(søknadsgrunnlag), annenPart,
                 familiehendelse, gjeldendeVedtak, åpenBehandling.orElse(null), barn, dekningsgrad(søknadsgrunnlag),
                 fpSak.opprettetTidspunkt));

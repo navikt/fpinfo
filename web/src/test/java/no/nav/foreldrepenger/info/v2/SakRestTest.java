@@ -110,7 +110,7 @@ class SakRestTest {
         assertThat(fpSak.kanSøkeOmEndring()).isTrue();
         assertThat(fpSak.sakTilhørerMor()).isTrue();
         assertThat(fpSak.morUføretrygd()).isFalse();
-        assertThat(fpSak.annenPartHarRettPåForeldrepengerIEØS()).isTrue();
+        assertThat(fpSak.harAnnenForelderTilsvarendeRettEØS()).isTrue();
         assertThat(fpSak.familiehendelse().fødselsdato()).isEqualTo(fødselsdato);
         assertThat(fpSak.familiehendelse().termindato()).isEqualTo(termindato);
         assertThat(fpSak.gjelderAdopsjon()).isFalse();
@@ -205,7 +205,7 @@ class SakRestTest {
         assertThat(fpSak.kanSøkeOmEndring()).isFalse();
         assertThat(fpSak.sakTilhørerMor()).isFalse();
         assertThat(fpSak.morUføretrygd()).isFalse();
-        assertThat(fpSak.annenPartHarRettPåForeldrepengerIEØS()).isFalse();
+        assertThat(fpSak.harAnnenForelderTilsvarendeRettEØS()).isFalse();
         assertThat(fpSak.familiehendelse().fødselsdato()).isEqualTo(fødselsdato);
         assertThat(fpSak.gjelderAdopsjon()).isFalse();
         assertThat(fpSak.gjeldendeVedtak()).isNull();

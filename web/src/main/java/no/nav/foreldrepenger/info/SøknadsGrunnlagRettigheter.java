@@ -41,8 +41,8 @@ public class SøknadsGrunnlagRettigheter {
     private Boolean søknadUføretrygd;
 
     @Convert(converter = BooleanToStringConverter.class)
-    @Column(name = "SO_ANNEN_PART_FP_EOS")
-    private Boolean søknadAnnenPartHarRettPåForeldrepengerIEØS;
+    @Column(name = "SO_ANNEN_FORELDER_RETT_EOS")
+    private Boolean søknadHarAnnenForelderTilsvarendeRettEØS;
 
     public SøknadsGrunnlagRettigheter(Long gryfId,
                                       Boolean saksbehandlerAnnenForelderRett,
@@ -50,14 +50,14 @@ public class SøknadsGrunnlagRettigheter {
                                       Boolean saksbehandlerAleneomsorg,
                                       Boolean søknadAleneomsorg,
                                       Boolean søknadUføretrygd,
-                                      Boolean søknadAnnenPartHarRettPåForeldrepengerIEØS) {
+                                      Boolean søknadHarAnnenForelderTilsvarendeRettEØS) {
         this.gryfId = gryfId;
         this.saksbehandlerAnnenForelderRett = saksbehandlerAnnenForelderRett;
         this.søknadAnnenForelderRett = søknadAnnenForelderRett;
         this.saksbehandlerAleneomsorg = saksbehandlerAleneomsorg;
         this.søknadAleneomsorg = søknadAleneomsorg;
         this.søknadUføretrygd = søknadUføretrygd;
-        this.søknadAnnenPartHarRettPåForeldrepengerIEØS = søknadAnnenPartHarRettPåForeldrepengerIEØS;
+        this.søknadHarAnnenForelderTilsvarendeRettEØS = søknadHarAnnenForelderTilsvarendeRettEØS;
     }
 
     SøknadsGrunnlagRettigheter() {
@@ -80,8 +80,8 @@ public class SøknadsGrunnlagRettigheter {
         return søknadUføretrygd;
     }
 
-    public Boolean getSøknadAnnenPartHarRettPåForeldrepengerIEØS() {
-        return søknadAnnenPartHarRettPåForeldrepengerIEØS;
+    public Boolean getSøknadHarAnnenForelderTilsvarendeRettEØS() {
+        return søknadHarAnnenForelderTilsvarendeRettEØS;
     }
 
     @Override
@@ -89,6 +89,6 @@ public class SøknadsGrunnlagRettigheter {
         return "SøknadsGrunnlagRettigheter{" + "saksbehandlerAnnenForelderRett=" + saksbehandlerAnnenForelderRett
                 + ", søknadAnnenForelderRett=" + søknadAnnenForelderRett + ", saksbehandlerAleneomsorg="
                 + saksbehandlerAleneomsorg + ", søknadAleneomsorg=" + søknadAleneomsorg + ", søknadUføretrygd="
-                + søknadUføretrygd + ", søknadAnnenPartHarRettPåForeldrepengerIEØS=" + søknadAnnenPartHarRettPåForeldrepengerIEØS + '}';
+                + søknadUføretrygd + ", søknadHarAnnenForelderTilsvarendeRettEØS=" + søknadHarAnnenForelderTilsvarendeRettEØS + '}';
     }
 }
