@@ -51,7 +51,7 @@ class AnnenPartsVedtaksperioderTjeneste {
     private Optional<FpSak> gjeldendeSak(Set<FpSak> saker, AktørId søkersAktørId, AktørId annenPartAktørId, AktørId barn) {
         var annenPartsSaker = sakerMedAnnenpartLikSøker(søkersAktørId, saker, barn);
 
-        if (annenPartsSaker.size() > 1) {
+        if (annenPartsSaker.size() > 1 && barn != null) {
             var saksnummer = annenPartsSaker.stream().map(FpSak::saksnummer).collect(Collectors.toSet());
             LOG.warn("Fant flere enn 1 sak ved oppslag av annen parts vedtaksperioder."
                             + " Velger sist opprettet. Søker {} AnnenPart {} Saksnummer {}.",
