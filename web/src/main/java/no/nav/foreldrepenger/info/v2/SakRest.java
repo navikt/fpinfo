@@ -69,15 +69,15 @@ public class SakRest {
         return fpSaker.stream().map(FpSak::tilDto).collect(Collectors.toSet());
     }
 
-    @Path("/annenpart")
+    @Path("/annenForeldersVedtaksperioder")
     @GET
-    @BeskyttetRessurs(action = READ, resource = UTTAKSPLAN, path = PATH + "/annenPart")
-    public List<VedtakPeriode> hentAnnenPartsVedtaksperioder(@NotNull @QueryParam("sokersAktorId") @Parameter(name = "sokersAktorId") AktørIdDto søkersAktørId,
-                                                             @NotNull @QueryParam("annenPartAktorId") @Parameter(name = "annenPartAktorId") AktørAnnenPartDto annenPartAktørId,
-                                                             @NotNull @QueryParam("barnAktorId") @Parameter(name = "barnAktorId") AktørIdBarnDto barnAktorId) {
+    @BeskyttetRessurs(action = READ, resource = UTTAKSPLAN, path = PATH + "/annenForeldersVedtaksperioder")
+    public List<VedtakPeriode> annenPartsVedtaksperioder(@NotNull @QueryParam("sokersAktorId") @Parameter(name = "sokersAktorId") AktørIdDto søkersAktørId,
+                                                         @NotNull @QueryParam("annenPartAktorId") @Parameter(name = "annenPartAktorId") AktørAnnenPartDto annenPartAktørId,
+                                                         @NotNull @QueryParam("barnAktorId") @Parameter(name = "barnAktorId") AktørIdBarnDto barnAktorId) {
         LOG.info("Henter annen parts vedtaksperioder");
         var perioder = annenPartsVedtaksperioder.hentFor(map(søkersAktørId.aktørId()),
-                map(annenPartAktørId.aktørId), map(barnAktorId.aktørId()));
+                map(annenPartAktørId.aktørId), barnAktorId == null ? null : map(barnAktorId.aktørId()));
         LOG.info("Returnerer annen parts vedtaksperioder. Antall perioder {}", perioder.size());
         return perioder.stream().map(no.nav.foreldrepenger.info.v2.VedtakPeriode::tilDto).toList();
     }
