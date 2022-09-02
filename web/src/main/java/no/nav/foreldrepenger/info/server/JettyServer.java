@@ -85,7 +85,7 @@ public class JettyServer {
                     .load()
                     .migrate();
         } catch (FlywayException e) {
-            LOG.error("Feil under migrering av databasen.");
+            LOG.error("Feil under migrering av databasen.", e);
             throw e;
         }
     }
