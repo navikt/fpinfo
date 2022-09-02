@@ -210,7 +210,8 @@ class SakerTjeneste {
     }
 
     private VedtakPeriode map(UttakPeriode p) {
-        var resultat = new VedtakPeriodeResultat("INNVILGET".equals(p.getPeriodeResultatType()));
+        var trekkerMinsterett = !Set.of("2004", "2033").contains(p.getPeriodeResultatÅrsak());
+        var resultat = new VedtakPeriodeResultat("INNVILGET".equals(p.getPeriodeResultatType()), trekkerMinsterett);
         var samtidigUttaksprosent = p.getSamtidigUttaksprosent();
         var samtidigUttak = map(samtidigUttaksprosent);
 
