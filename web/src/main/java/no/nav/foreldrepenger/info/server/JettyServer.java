@@ -77,11 +77,15 @@ public class JettyServer {
 
     protected void migrerDatabase() {
         try (var dataSource = DatasourceUtil.createDatasource("fpinfoSchema", 4)) {
-            Flyway.configure()
+            var configuration = Flyway.configure()
                     .dataSource(dataSource)
                     .locations("classpath:/db/migration/fpinfoSchema")
                     .table("schema_version")
-                    .baselineOnMigrate(true)
+                    .baselineOnMigrate(true);
+            if (ENV.isLocal() || ENV.isVTP()) {
+                configuration = configuration.cleanDisabled(false).cleanOnValidationError(true);
+            }
+            configuration
                     .load()
                     .migrate();
         } catch (FlywayException e) {
