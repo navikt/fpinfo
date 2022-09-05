@@ -220,6 +220,7 @@ class SakerTjeneste {
         if (samtidigUttak == null && p.getGraderingInnvilget()) {
             var arbeidsgiver = utledArbeidsgiver(p);
             var aktivitetType = mapAktivitetType(p.getUttakArbeidType());
+            //TODO long til bigdecimal fra entitet
             gradering = new Gradering(BigDecimal.valueOf(p.getArbeidstidprosent()), new Aktivitet(aktivitetType,
                     arbeidsgiver));
         } else {
