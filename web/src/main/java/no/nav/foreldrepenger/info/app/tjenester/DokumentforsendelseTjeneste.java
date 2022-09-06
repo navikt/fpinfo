@@ -2,12 +2,9 @@ package no.nav.foreldrepenger.info.app.tjenester;
 
 import static javax.ws.rs.core.Response.noContent;
 import static javax.ws.rs.core.Response.ok;
-import static no.nav.foreldrepenger.info.abac.BeskyttetRessursAttributt.FAGSAK;
-import static no.nav.foreldrepenger.info.abac.BeskyttetRessursAttributt.UTTAKSPLAN;
 import static no.nav.foreldrepenger.info.app.tjenester.DokumentforsendelseTjeneste.DOKUMENTFORSENDELSE_PATH;
 import static no.nav.foreldrepenger.info.server.JettyServer.ACR_LEVEL4;
 import static no.nav.foreldrepenger.info.server.JettyServer.TOKENX;
-import static no.nav.foreldrepenger.sikkerhet.abac.domene.ActionType.READ;
 
 import java.util.List;
 
@@ -34,8 +31,10 @@ import no.nav.foreldrepenger.info.app.tjenester.dto.BehandlingIdDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.SakDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.SaksnummerDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.SøknadsGrunnlagDto;
-import no.nav.foreldrepenger.sikkerhet.abac.BeskyttetRessurs;
 import no.nav.security.token.support.core.api.ProtectedWithClaims;
+import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
+import no.nav.vedtak.sikkerhet.abac.beskyttet.ActionType;
+import no.nav.vedtak.sikkerhet.abac.beskyttet.ResourceType;
 
 @Path(DOKUMENTFORSENDELSE_PATH)
 @Produces(MediaType.APPLICATION_JSON)
@@ -68,7 +67,7 @@ public class DokumentforsendelseTjeneste {
 
     @GET
     @Path(BEHANDLING_PATH)
-    @BeskyttetRessurs(action = READ, resource = FAGSAK, path = DOKUMENTFORSENDELSE_PATH + BEHANDLING_PATH)
+    @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.FAGSAK)
     @Operation(description = "Url for å hente Behandling", summary = "Returnerer Behandling", responses = {
             @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = BehandlingDto.class)), responseCode = "200", description = "Returnerer søknad XML")
     })
@@ -79,7 +78,7 @@ public class DokumentforsendelseTjeneste {
 
     @GET
     @Path(SAK_PATH)
-    @BeskyttetRessurs(action = READ, resource = FAGSAK, path = DOKUMENTFORSENDELSE_PATH + SAK_PATH)
+    @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.FAGSAK)
     @Operation(description = "Url for å hente sak status informasjon som er relevant til aktør", summary = ("Returnerer Sak Status Informasjon"), responses = {
             @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SakDto.class)), responseCode = "200", description = "Returnerer Sak Status Informasjon")
     })
@@ -90,7 +89,7 @@ public class DokumentforsendelseTjeneste {
 
     @GET
     @Path(UTTAKSPLAN_PATH)
-    @BeskyttetRessurs(action = READ, resource = UTTAKSPLAN, path = DOKUMENTFORSENDELSE_PATH + UTTAKSPLAN_PATH)
+    @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.UTTAKSPLAN)
     @Operation(description = "Url for å hente søknadsgrunnlag og felles uttaksplan", summary = "Returnerer grunnlagsinfo og liste av uttaksperioder for begge parter", responses = {
             @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SøknadsGrunnlagDto.class)), responseCode = "200", description = "Returnerer søknad XML")
     })
@@ -103,7 +102,7 @@ public class DokumentforsendelseTjeneste {
 
     @GET
     @Path(ANNENFORELDERPLAN_PATH)
-    @BeskyttetRessurs(action = READ, resource = UTTAKSPLAN, path = DOKUMENTFORSENDELSE_PATH + ANNENFORELDERPLAN_PATH)
+    @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.UTTAKSPLAN)
     @Operation(description = "Url for å hente søknadsgrunnlag og felles uttaksplan", summary = "Returnerer grunnlagsinfo og liste av uttaksperioder for begge parter", responses = {
             @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = SøknadsGrunnlagDto.class)), responseCode = "200", description = "Returnerer søknad XML")
     })

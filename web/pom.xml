@@ -69,8 +69,8 @@
         </dependency>
 
         <dependency>
-            <groupId>no.nav.foreldrepenger</groupId>
-            <artifactId>abac</artifactId>
+            <groupId>no.nav.foreldrepenger.felles</groupId>
+            <artifactId>felles-abac-legacy</artifactId>
         </dependency>
 
         <dependency>

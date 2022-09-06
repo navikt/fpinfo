@@ -1,12 +1,8 @@
 package no.nav.foreldrepenger.info.v2;
 
 import static no.nav.foreldrepenger.info.abac.AppAbacAttributtType.ANNEN_PART;
-import static no.nav.foreldrepenger.info.abac.BeskyttetRessursAttributt.FAGSAK;
-import static no.nav.foreldrepenger.info.abac.BeskyttetRessursAttributt.UTTAKSPLAN;
 import static no.nav.foreldrepenger.info.server.JettyServer.ACR_LEVEL4;
 import static no.nav.foreldrepenger.info.server.JettyServer.TOKENX;
-import static no.nav.foreldrepenger.sikkerhet.abac.domene.ActionType.READ;
-import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.AKTØR_ID;
 
 import java.util.List;
 import java.util.Set;
@@ -28,10 +24,13 @@ import org.slf4j.LoggerFactory;
 import io.swagger.v3.oas.annotations.Parameter;
 import no.nav.foreldrepenger.common.innsyn.v2.Saker;
 import no.nav.foreldrepenger.common.innsyn.v2.VedtakPeriode;
-import no.nav.foreldrepenger.sikkerhet.abac.AbacDto;
-import no.nav.foreldrepenger.sikkerhet.abac.BeskyttetRessurs;
-import no.nav.foreldrepenger.sikkerhet.abac.domene.AbacDataAttributter;
 import no.nav.security.token.support.core.api.ProtectedWithClaims;
+import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
+import no.nav.vedtak.sikkerhet.abac.AbacDto;
+import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
+import no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType;
+import no.nav.vedtak.sikkerhet.abac.beskyttet.ActionType;
+import no.nav.vedtak.sikkerhet.abac.beskyttet.ResourceType;
 
 @Path(SakRest.PATH)
 @Produces(MediaType.APPLICATION_JSON)
@@ -57,7 +56,7 @@ public class SakRest {
     }
 
     @GET
-    @BeskyttetRessurs(action = READ, resource = FAGSAK, path = PATH)
+    @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.FAGSAK)
     public Saker hentSaker(@NotNull @QueryParam("aktorId") @Parameter(name = "aktorId") AktørIdDto aktørId) {
         LOG.info("Henter saker for bruker");
         var fpSaker = sakerTjeneste.hentFor(map(aktørId.aktørId()));
@@ -71,7 +70,7 @@ public class SakRest {
 
     @Path("/annenForeldersVedtaksperioder")
     @GET
-    @BeskyttetRessurs(action = READ, resource = UTTAKSPLAN, path = PATH + "/annenForeldersVedtaksperioder")
+    @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.UTTAKSPLAN)
     public List<VedtakPeriode> annenPartsVedtaksperioder(@NotNull @QueryParam("sokersAktorId") @Parameter(name = "sokersAktorId") AktørIdDto søkersAktørId,
                                                          @NotNull @QueryParam("annenPartAktorId") @Parameter(name = "annenPartAktorId") AktørAnnenPartDto annenPartAktørId,
                                                          @NotNull @QueryParam("barnAktorId") @Parameter(name = "barnAktorId") AktørIdBarnDto barnAktorId) {
@@ -98,7 +97,7 @@ public class SakRest {
 
         @Override
         public AbacDataAttributter abacAttributter() {
-            return AbacDataAttributter.opprett().leggTil(AKTØR_ID, aktørId);
+            return AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.AKTØR_ID, aktørId);
         }
     }
 

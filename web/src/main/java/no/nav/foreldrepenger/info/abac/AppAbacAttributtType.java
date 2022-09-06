@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.info.abac;
 
-import no.nav.foreldrepenger.sikkerhet.abac.domene.AbacAttributtType;
+
+import no.nav.vedtak.sikkerhet.abac.AbacAttributtType;
 
 public enum AppAbacAttributtType implements AbacAttributtType {
 
