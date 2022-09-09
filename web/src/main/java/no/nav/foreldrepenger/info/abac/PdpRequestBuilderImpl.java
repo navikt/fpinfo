@@ -35,7 +35,8 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
     public AppRessursData lagAppRessursData(AbacDataAttributter dataAttributter) {
         LOG.trace("Lager PDP app ressursdata");
 
-        var builder= AppRessursData.builder();
+        var builder= AppRessursData.builder()
+                .leggTilAktørIdSet(dataAttributter.getVerdier(StandardAbacAttributtType.AKTØR_ID));
 
         if (dataAttributter.getVerdier(AppAbacAttributtType.ANNEN_PART).size() == 1) {
             LOG.info("abac Attributter inneholder annen part");
