@@ -56,5 +56,4 @@ public class TokenSupportTokenProvider {
         return Optional.ofNullable(claims.getStringClaim("pid"))
                 .orElseGet(() -> claims.getStringClaim("sub"));
     }
-
 }
