@@ -27,9 +27,8 @@
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
         <sonar.projectKey>navikt_fpinfo</sonar.projectKey>
 
-        <felles.version>4.1.34</felles.version>
-        <selvbetjening-felles.version>0.8.22</selvbetjening-felles.version>
-        <abac.version>1.0.9</abac.version>
+        <felles.version>4.1.36</felles.version>
+        <selvbetjening-felles.version>0.8.23</selvbetjening-felles.version>
     </properties>
 
     <dependencyManagement>
@@ -71,11 +70,6 @@
                 <version>${selvbetjening-felles.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>no.nav.foreldrepenger</groupId>
-                <artifactId>abac</artifactId>
-                <version>${abac.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 

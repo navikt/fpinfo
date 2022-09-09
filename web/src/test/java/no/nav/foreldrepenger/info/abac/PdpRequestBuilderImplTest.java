@@ -1,8 +1,5 @@
 package no.nav.foreldrepenger.info.abac;
 
-import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.AKTØR_ID;
-import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.BEHANDLING_ID;
-import static no.nav.foreldrepenger.sikkerhet.abac.domene.StandardAbacAttributtType.SAKSNUMMER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -18,12 +15,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.info.repository.PipRepository;
-import no.nav.foreldrepenger.sikkerhet.abac.PdpRequestBuilder;
-import no.nav.foreldrepenger.sikkerhet.abac.domene.AbacDataAttributter;
-import no.nav.foreldrepenger.sikkerhet.abac.domene.ActionType;
-import no.nav.foreldrepenger.sikkerhet.abac.domene.BeskyttRessursAttributer;
-import no.nav.foreldrepenger.sikkerhet.abac.domene.TokenType;
-import no.nav.foreldrepenger.sikkerhet.abac.pep.PdpRequest;
+import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
+import no.nav.vedtak.sikkerhet.abac.PdpRequestBuilder;
+import no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType;
+import no.nav.vedtak.sikkerhet.abac.pdp.ForeldrepengerDataKeys;
 
 @ExtendWith(MockitoExtension.class)
 class PdpRequestBuilderImplTest {
@@ -35,42 +30,36 @@ class PdpRequestBuilderImplTest {
     private static final UUID FORSENDELSE_ID = UUID.randomUUID();
     @Mock
     private PipRepository pip;
-    @Mock
-    private TokenSupportTokenProvider tokenProvider;
 
     private PdpRequestBuilder requestBuilder;
-    private BeskyttRessursAttributer attributter;
+    private AbacDataAttributter attributter;
 
     @BeforeEach
     void beforeEach() {
-        requestBuilder = new PdpRequestBuilderImpl(pip, tokenProvider);
+        requestBuilder = new PdpRequestBuilderImpl(pip);
         attributter = byggAbacAttributtSamling();
-
-        when(tokenProvider.getUid()).thenReturn("testUser");
-        when(tokenProvider.getTokeType()).thenReturn(TokenType.OIDC);
-        when(tokenProvider.userToken()).thenReturn(DUMMY_ID_TOKEN);
 
     }
 
     @Test
     void skal_utlede_aktørid_fra_behandlingid() {
-        attributter.leggTil(AbacDataAttributter.opprett().leggTil(BEHANDLING_ID, BEHANDLINGS_ID));
+        attributter.leggTil(AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.BEHANDLING_ID, BEHANDLINGS_ID));
         when(pip.hentAktørIdForBehandling(Collections.singleton(BEHANDLINGS_ID)))
                 .thenReturn(List.of(AKTØRID));
 
-        var request = requestBuilder.lagPdpRequest(attributter);
-        assertThat(request.getAktørIder()).containsOnly(AKTØRID);
+        var request = requestBuilder.lagAppRessursData(attributter);
+        assertThat(request.getAktørIdSet()).containsOnly(AKTØRID);
     }
 
     @Test
     void skal_utlede_aktørid_fra_saksnummer() {
-        attributter.leggTil(AbacDataAttributter.opprett().leggTil(SAKSNUMMER, SAKSNR));
+        attributter.leggTil(AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.SAKSNUMMER, SAKSNR));
 
         when(pip.hentAktørIdForSaksnummer(Collections.singleton(SAKSNR)))
                 .thenReturn(Collections.singletonList(AKTØRID));
 
-        var request = requestBuilder.lagPdpRequest(attributter);
-        assertThat(request.getAktørIder()).containsOnly(AKTØRID);
+        var request = requestBuilder.lagAppRessursData(attributter);
+        assertThat(request.getAktørIdSet()).containsOnly(AKTØRID);
     }
 
     @Test
@@ -81,14 +70,14 @@ class PdpRequestBuilderImplTest {
         when(pip.hentAktørIdForForsendelseIder(Collections.singleton(FORSENDELSE_ID)))
                 .thenReturn(Collections.singletonList(AKTØRID));
 
-        var request = requestBuilder.lagPdpRequest(attributter);
-        assertThat(request.getAktørIder()).containsOnly(AKTØRID);
+        var request = requestBuilder.lagAppRessursData(attributter);
+        assertThat(request.getAktørIdSet()).containsOnly(AKTØRID);
     }
 
     @Test
     void skal_legge_til_omsorg_og_annen_part() {
         attributter.leggTil(AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.ANNEN_PART, ANNEN_PART_ID));
-        attributter.leggTil(AbacDataAttributter.opprett().leggTil(AKTØR_ID, AKTØRID));
+        attributter.leggTil(AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.AKTØR_ID, AKTØRID));
 
         when(pip.hentAktørIdForSaksnummer(Collections.singleton(SAKSNR)))
                 .thenReturn(List.of(AKTØRID));
@@ -97,17 +86,13 @@ class PdpRequestBuilderImplTest {
         when(pip.hentAnnenPartForSaksnummer(SAKSNR)).thenReturn(Optional.of(ANNEN_PART_ID));
         when(pip.hentOppgittAleneomsorgForSaksnummer(SAKSNR)).thenReturn(Optional.of(Boolean.TRUE));
 
-        PdpRequest request = requestBuilder.lagPdpRequest(attributter);
-        assertThat(request.getAktørIder()).containsOnly(AKTØRID);
-        assertThat(request.getAnnenPartAktørId()).hasValue(ANNEN_PART_ID);
-        assertThat(request.getAleneomsorg()).hasValue(true);
+        var request = requestBuilder.lagAppRessursData(attributter);
+        assertThat(request.getAktørIdSet()).containsOnly(AKTØRID);
+        assertThat(request.getResource(ForeldrepengerDataKeys.ANNENPART).verdi()).isEqualTo(ANNEN_PART_ID);
+        assertThat(request.getResource(ForeldrepengerDataKeys.ALENEOMSORG).verdi()).isEqualTo("true");
     }
 
-    private static BeskyttRessursAttributer byggAbacAttributtSamling() {
-        var s = new BeskyttRessursAttributer();
-        s.setActionType(ActionType.READ);
-        s.setResource(BeskyttetRessursAttributt.FAGSAK);
-        s.setRequestPath("/test/path");
-        return s;
+    private static AbacDataAttributter byggAbacAttributtSamling() {
+        return AbacDataAttributter.opprett();
     }
 }

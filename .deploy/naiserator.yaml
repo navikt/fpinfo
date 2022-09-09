@@ -58,7 +58,6 @@ spec:
       - kvPath: /apikey/appdynamics/{{environment}}
         mountPath: /var/run/secrets/nais.io/appdynamics
 
-  webproxy: true
   env:
 {{#each env}}
     - name: {{@key}}
