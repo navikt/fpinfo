@@ -2,25 +2,26 @@ package no.nav.foreldrepenger.info.abac;
 
 import java.util.Optional;
 
+import javax.enterprise.context.ApplicationScoped;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import no.nav.security.token.support.core.jwt.JwtToken;
 import no.nav.security.token.support.core.jwt.JwtTokenClaims;
 import no.nav.security.token.support.jaxrs.JaxrsTokenValidationContextHolder;
+import no.nav.vedtak.sikkerhet.abac.TokenProvider;
 import no.nav.vedtak.sikkerhet.oidc.config.ConfigProvider;
 import no.nav.vedtak.sikkerhet.oidc.config.OpenIDConfiguration;
 import no.nav.vedtak.sikkerhet.oidc.token.OpenIDToken;
 import no.nav.vedtak.sikkerhet.oidc.token.TokenString;
 
-// TODO: enable når man kutter jaspi/jaas og felles-abac-legacy
-// Den må da implementere TokenProvider-grensesnittet
-//@ApplicationScoped
-public class TokenSupportTokenProvider {
+@ApplicationScoped
+public class TokenSupportTokenProvider implements TokenProvider {
 
     private static final Logger LOG = LoggerFactory.getLogger(TokenSupportTokenProvider.class);
 
-    //@Override
+    @Override
     public String getUid() {
         return firstToken("UID")
                 .map(JwtToken::getJwtTokenClaims)
@@ -28,7 +29,7 @@ public class TokenSupportTokenProvider {
                 .orElseThrow();
     }
 
-    //@Override
+    @Override
     public OpenIDToken openIdToken() {
         var provider = firstToken("ISSUER")
                 .map(JwtToken::getIssuer)
@@ -41,7 +42,7 @@ public class TokenSupportTokenProvider {
                 .orElseThrow();
     }
 
-    //@Override
+    @Override
     public String samlToken() {
         return null;
     }
