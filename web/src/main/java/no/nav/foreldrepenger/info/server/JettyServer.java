@@ -9,10 +9,18 @@ import java.util.List;
 import java.util.Map;
 
 import javax.naming.NamingException;
+import javax.security.auth.message.config.AuthConfigFactory;
 import javax.servlet.DispatcherType;
 import javax.sql.DataSource;
 
+import org.eclipse.jetty.jaas.JAASLoginService;
 import org.eclipse.jetty.plus.jndi.EnvEntry;
+import org.eclipse.jetty.security.ConstraintSecurityHandler;
+import org.eclipse.jetty.security.DefaultIdentityService;
+import org.eclipse.jetty.security.SecurityHandler;
+import org.eclipse.jetty.security.jaspi.DefaultAuthConfigFactory;
+import org.eclipse.jetty.security.jaspi.JaspiAuthenticatorFactory;
+import org.eclipse.jetty.security.jaspi.provider.JaspiAuthConfigProvider;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.FilterHolder;
@@ -32,6 +40,7 @@ import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.security.token.support.core.configuration.IssuerProperties;
 import no.nav.security.token.support.core.configuration.MultiIssuerConfiguration;
 import no.nav.security.token.support.jaxrs.servlet.JaxrsJwtTokenValidationFilter;
+import no.nav.vedtak.sikkerhet.jaspic.OidcAuthModule;
 
 public class JettyServer {
 
@@ -63,12 +72,24 @@ public class JettyServer {
     }
 
     protected void bootStrap() throws Exception {
+        konfigurerSikkerhet();
         // Vi migrerer ikke for defaultDS siden den ikke har noe migreringer uansett. Brukeren skal benytte fpinfo_schema skjema.
         settJdniOppslag(DatasourceUtil.createDatasource("defaultDS", 30));
 
         migrerDatabase();
 
         start();
+    }
+
+    private static void konfigurerSikkerhet() {
+
+        var factory = new DefaultAuthConfigFactory();
+        factory.registerConfigProvider(new JaspiAuthConfigProvider(new OidcAuthModule()),
+                "HttpServlet",
+                "server " + CONTEXT_PATH,
+                "OIDC Authentication");
+
+        AuthConfigFactory.setFactory(factory);
     }
 
     private static void settJdniOppslag(DataSource dataSource) throws NamingException {
@@ -115,9 +136,11 @@ public class JettyServer {
         ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*jersey-.*.jar$|^.*felles-.*.jar$");
         ctx.addEventListener(new org.jboss.weld.environment.servlet.BeanManagerResourceBindingListener());
         ctx.addEventListener(new org.jboss.weld.environment.servlet.Listener());
+        ctx.setSecurityHandler(createSecurityHandler());
         updateMetaData(ctx.getMetaData());
         ctx.setThrowUnavailableOnStartupException(true);
         addFilters(ctx);
+        //addFiltersTokenSupport(ctx);
         return ctx;
     }
 
@@ -142,6 +165,15 @@ public class JettyServer {
     private static void addFilters(WebAppContext ctx) {
         var dispatcherType = EnumSet.of(DispatcherType.REQUEST);
 
+        var corsFilter = ctx.addFilter(CrossOriginFilter.class,
+                "/*",
+                dispatcherType);
+        corsFilter.setInitParameter("allowedOrigins", "*");
+    }
+
+    private static void addFiltersTokenSupport(WebAppContext ctx) {
+        var dispatcherType = EnumSet.of(DispatcherType.REQUEST);
+
         LOG.trace("Installerer JaxrsJwtTokenValidationFilter");
         ctx.addFilter(new FilterHolder(new JaxrsJwtTokenValidationFilter(config())),
                 "/api/*",
@@ -149,10 +181,17 @@ public class JettyServer {
         ctx.addFilter(new FilterHolder(new HeadersToMDCFilterBean()),
                 "/api/*",
                 dispatcherType);
-        var corsFilter = ctx.addFilter(CrossOriginFilter.class,
-                "/*",
-                dispatcherType);
-        corsFilter.setInitParameter("allowedOrigins", "*");
+    }
+
+    private static SecurityHandler createSecurityHandler() {
+        var securityHandler = new ConstraintSecurityHandler();
+        securityHandler.setAuthenticatorFactory(new JaspiAuthenticatorFactory());
+        var loginService = new JAASLoginService();
+        loginService.setName("jetty-login");
+        loginService.setLoginModuleName("jetty-login");
+        loginService.setIdentityService(new DefaultIdentityService());
+        securityHandler.setLoginService(loginService);
+        return securityHandler;
     }
 
     private static MultiIssuerConfiguration config() {
