@@ -44,6 +44,26 @@ select gryf.id                  as GRYF_ID,
            from dual)           as SAKSB_ALENEOMSORG,
        SORE.aleneomsorg         as SO_ALENEOMSORG,
        SORE.mor_uforetrygd      as SO_UFORETRYGD,
+       (
+           select coalesce(
+                          (select CASE
+                                      WHEN count(1) > 0
+                                          THEN 'J' -- rett dersom det eksisterer dokumentasjonsperioder tilknyttet gryf.annen_forelder_rett_eos_id
+                                      ELSE null
+                                      END
+                           from fpsak.YF_DOKUMENTASJON_PERIODE dp
+                           where dp.perioder_id = GRYF.annen_forelder_rett_eos_id
+                          ), (
+                              select 'N' -- ikke rett dersom gryf.annen_forelder_rett_eos_id er satt, men det ikke eksisterer innslag i yf_dokumentasjon_periode
+                              from dual
+                              where GRYF.annen_forelder_rett_eos_id is not null
+                                and not exists(
+                                      select 1
+                                      from fpsak.yf_dokumentasjon_periode yfdp
+                                      where yfdp.perioder_id = GRYF.annen_forelder_rett_eos_id
+                                  )
+                          ))
+           from dual)           as SAKSB_ANNEN_FORELDER_RETT_EOS,
        SORE.annen_forelder_rett_eos as SO_ANNEN_FORELDER_RETT_EOS
 from fpsak.gr_ytelses_fordeling gryf
          join fpsak.so_rettighet sore

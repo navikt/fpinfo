@@ -126,8 +126,11 @@ public class SøknadsGrunnlag {
     }
 
     public Boolean bekreftetHarAnnenForelderTilsvarendeRettEØS() {
-        //TODO må legge inn saksbehandlers avklaring
-        return søknadHarAnnenForelderTilsvarendeRettEØS();
+        var avklart = foreldreRettigheter.getSaksbehandlerHarAnnenForelderTilsvarendeRettEØS();
+        if (avklart == null) {
+            return søknadHarAnnenForelderTilsvarendeRettEØS();
+        }
+        return avklart;
     }
 
     public Boolean ønskerJustertUttakVedFødsel() {

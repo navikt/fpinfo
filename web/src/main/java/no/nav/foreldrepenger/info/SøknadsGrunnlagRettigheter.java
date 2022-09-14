@@ -44,6 +44,10 @@ public class SøknadsGrunnlagRettigheter {
     @Column(name = "SO_ANNEN_FORELDER_RETT_EOS")
     private Boolean søknadHarAnnenForelderTilsvarendeRettEØS;
 
+    @Convert(converter = BooleanToStringConverter.class)
+    @Column(name = "SAKSB_ANNEN_FORELDER_RETT_EOS")
+    private Boolean saksbehandlerHarAnnenForelderTilsvarendeRettEØS;
+
     public SøknadsGrunnlagRettigheter(Long gryfId,
                                       Boolean saksbehandlerAnnenForelderRett,
                                       Boolean søknadAnnenForelderRett,
@@ -84,11 +88,17 @@ public class SøknadsGrunnlagRettigheter {
         return søknadHarAnnenForelderTilsvarendeRettEØS;
     }
 
+    public Boolean getSaksbehandlerHarAnnenForelderTilsvarendeRettEØS() {
+        return saksbehandlerHarAnnenForelderTilsvarendeRettEØS;
+    }
+
     @Override
     public String toString() {
         return "SøknadsGrunnlagRettigheter{" + "saksbehandlerAnnenForelderRett=" + saksbehandlerAnnenForelderRett
                 + ", søknadAnnenForelderRett=" + søknadAnnenForelderRett + ", saksbehandlerAleneomsorg="
                 + saksbehandlerAleneomsorg + ", søknadAleneomsorg=" + søknadAleneomsorg + ", søknadUføretrygd="
-                + søknadUføretrygd + ", søknadHarAnnenForelderTilsvarendeRettEØS=" + søknadHarAnnenForelderTilsvarendeRettEØS + '}';
+                + søknadUføretrygd + ", søknadHarAnnenForelderTilsvarendeRettEØS="
+                + søknadHarAnnenForelderTilsvarendeRettEØS + ", saksbehandlerHarAnnenForelderTilsvarendeRettEØS="
+                + saksbehandlerHarAnnenForelderTilsvarendeRettEØS + '}';
     }
 }
