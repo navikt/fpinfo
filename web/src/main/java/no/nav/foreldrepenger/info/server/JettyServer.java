@@ -16,7 +16,6 @@ import org.eclipse.jetty.plus.jndi.EnvEntry;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.FilterHolder;
-import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.webapp.MetaData;
@@ -32,7 +31,6 @@ import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.security.token.support.core.configuration.IssuerProperties;
 import no.nav.security.token.support.core.configuration.MultiIssuerConfiguration;
 import no.nav.security.token.support.jaxrs.servlet.JaxrsJwtTokenValidationFilter;
-import no.nav.vedtak.sikkerhet.oidc.config.ConfigProvider;
 
 public class JettyServer {
 
@@ -118,7 +116,6 @@ public class JettyServer {
         ctx.addEventListener(new org.jboss.weld.environment.servlet.Listener());
         updateMetaData(ctx.getMetaData());
         ctx.setThrowUnavailableOnStartupException(true);
-        addFilters(ctx);
         addFiltersTokenSupport(ctx);
         return ctx;
     }
@@ -139,15 +136,6 @@ public class JettyServer {
 
     protected List<Class<?>> getWebInfClasses() {
         return List.of(ApplicationConfig.class, InternalApplication.class);
-    }
-
-    private static void addFilters(WebAppContext ctx) {
-        var dispatcherType = EnumSet.of(DispatcherType.REQUEST);
-
-        var corsFilter = ctx.addFilter(CrossOriginFilter.class,
-                "/*",
-                dispatcherType);
-        corsFilter.setInitParameter("allowedOrigins", "*");
     }
 
     private static void addFiltersTokenSupport(WebAppContext ctx) {

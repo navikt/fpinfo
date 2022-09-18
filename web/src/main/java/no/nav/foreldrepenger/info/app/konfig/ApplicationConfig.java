@@ -9,7 +9,6 @@ import javax.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.ServerProperties;
 
-import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 import io.swagger.v3.oas.integration.GenericOpenApiContextBuilder;
 import io.swagger.v3.oas.integration.OpenApiConfigurationException;
 import io.swagger.v3.oas.integration.SwaggerConfiguration;
@@ -58,7 +57,7 @@ public class ApplicationConfig extends Application {
                 JsonProcessingExceptionMapper.class,
                 JacksonJsonConfig.class,
                 GeneralRestExceptionMapper.class,
-                OpenApiResource.class);
+                SwaggerApiResource.class);
     }
 
     @Override
