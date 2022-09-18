@@ -38,7 +38,7 @@ public class ApplicationConfig extends Application {
                                         .version("1.0")
                                         .description("REST grensesnitt for FPInfo."))
                                 .addServersItem(new Server()
-                                        .url("/api")))
+                                        .url("/fpinfo")))
                         .prettyPrint(true)
                         .scannerClass("io.swagger.v3.jaxrs2.integration.JaxrsAnnotationScanner")
                         .resourcePackages(Set.of("no.nav")))
