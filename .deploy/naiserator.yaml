@@ -34,16 +34,16 @@ spec:
     periodSeconds: 10
     failureThreshold: 27
   replicas:
-    min: 3
-    max: 3
+    min: {{minReplicas}}
+    max: {{maxReplicas}}
     cpuThresholdPercentage: 80
   resources:
     limits:
-      cpu: 1000m
+      cpu: 1500m
       memory: 1024Mi
     requests:
-      cpu: 200m
-      memory: 256Mi
+      cpu: 1050m
+      memory: 512Mi
   vault:
     enabled: true
     paths:

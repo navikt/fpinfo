@@ -4,11 +4,14 @@
   "oraclecredskv": "/oracle/data/dev/creds/fpsak_q1-fpinfo",
   "oraclefpinfocredsskv": "/oracle/data/dev/creds/fpsak_q1-fpinfo_schema",
   "serviceuserkv": "/serviceuser/data/dev/srvfpinfo",
+  "minReplicas": "1",
+  "maxReplicas": "2",
   "ingresses": [
     "https://fpinfo.dev.intern.nav.no"
   ],
   "env": {
-    "APPDYNAMICS_AGENT_ACCOUNT_NAME": "NON-PROD"
+    "APPDYNAMICS_AGENT_ACCOUNT_NAME": "NON-PROD",
+    "APPD_ENABLED": "false"
   }
 }
 
