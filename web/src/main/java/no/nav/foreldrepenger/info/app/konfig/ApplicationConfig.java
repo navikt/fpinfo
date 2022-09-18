@@ -9,6 +9,13 @@ import javax.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.ServerProperties;
 
+import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
+import io.swagger.v3.oas.integration.GenericOpenApiContextBuilder;
+import io.swagger.v3.oas.integration.OpenApiConfigurationException;
+import io.swagger.v3.oas.integration.SwaggerConfiguration;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.servers.Server;
 import no.nav.foreldrepenger.info.app.exceptions.ConstraintViolationMapper;
 import no.nav.foreldrepenger.info.app.exceptions.GeneralRestExceptionMapper;
 import no.nav.foreldrepenger.info.app.exceptions.JsonProcessingExceptionMapper;
@@ -23,6 +30,23 @@ public class ApplicationConfig extends Application {
 
     public static final String API_URI = "/api";
 
+    public ApplicationConfig() throws OpenApiConfigurationException {
+        new GenericOpenApiContextBuilder<>()
+                .openApiConfiguration(new SwaggerConfiguration()
+                        .openAPI(new OpenAPI()
+                                .info(new Info()
+                                        .title("Vedtaksløsningen - FPInfo")
+                                        .version("1.0")
+                                        .description("REST grensesnitt for FPInfo."))
+                                .addServersItem(new Server()
+                                        .url("/api")))
+                        .prettyPrint(true)
+                        .scannerClass("io.swagger.v3.jaxrs2.integration.JaxrsAnnotationScanner")
+                        .resourcePackages(Set.of("no.nav")))
+                .buildContext(true)
+                .read();
+    }
+
     @Override
     public Set<Class<?>> getClasses() {
         return Set.of(
@@ -33,7 +57,8 @@ public class ApplicationConfig extends Application {
                 ConstraintViolationMapper.class,
                 JsonProcessingExceptionMapper.class,
                 JacksonJsonConfig.class,
-                GeneralRestExceptionMapper.class);
+                GeneralRestExceptionMapper.class,
+                OpenApiResource.class);
     }
 
     @Override

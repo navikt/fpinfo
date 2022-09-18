@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 
 import javax.ws.rs.ApplicationPath;
 
+import io.swagger.v3.oas.integration.OpenApiConfigurationException;
 import no.nav.foreldrepenger.info.v2.TestTjeneste;
 import no.nav.foreldrepenger.info.app.konfig.ApplicationConfig;
 import no.nav.foreldrepenger.konfig.Environment;
@@ -38,6 +39,10 @@ public class JettyDevServer extends JettyServer {
 
     @ApplicationPath(ApplicationConfig.API_URI)
     private static class LocalApplicationConfig extends ApplicationConfig {
+
+        public LocalApplicationConfig() throws OpenApiConfigurationException {
+            super();
+        }
 
         @Override
         public Set<Class<?>> getClasses() {
