@@ -7,7 +7,8 @@
   "minReplicas": "2",
   "maxReplicas": "3",
   "ingresses": [
-    "https://fpinfo.intern.nav.no"
+    "https://fpinfo.intern.nav.no",
+    "https://fpinfo.prod-fss-pub.nais.io"
   ],
   "env": {
     "APPDYNAMICS_AGENT_ACCOUNT_NAME": "PROD",
