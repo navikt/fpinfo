@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.info.app.tjenester;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -74,6 +75,7 @@ class BehandlingTjenesteTest {
         return List.of(dokumentBuilder()
                 .medBehandlingId(BEHANDLING_ID)
                 .medType(type)
+                .medMottattDato(LocalDate.now())
                 .build());
     }
 

@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.info.v2;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -78,10 +79,19 @@ class SakerTjeneste {
         var barn = barn(fpSak.saksnummer());
         //TODO er vel ikke riktig å bruke saksbehandlet versjon hvis saken ikke har vedtak
         var rettighetType = rettighetType(søknadsgrunnlag);
-        return Optional.of(new FpSak(fpSak.saksnummer, false, false, tilhørerMor,
+        var sisteSøknadMottattDato = sisteSøknadMottattDato(åpenBehandling.getBehandlingId());
+        return Optional.of(new FpSak(fpSak.saksnummer, false, sisteSøknadMottattDato.orElse(null), false, tilhørerMor,
                 false, nullSafeEquals(søknadsgrunnlag.søknadMorUfør()), nullSafeEquals(søknadsgrunnlag.søknadHarAnnenForelderTilsvarendeRettEØS()),
                 isØnskerJustertUttakVedFødsel(søknadsgrunnlag), rettighetType, annenPart, familiehendelse, null, map(åpenBehandling),
                 barn, dekningsgrad(søknadsgrunnlag), fpSak.opprettetTidspunkt()));
+    }
+
+    private Optional<LocalDate> sisteSøknadMottattDato(Long behandlingId) {
+        return repository.hentMottattDokument(behandlingId).stream()
+                .filter(MottattDokument::erSøknad)
+                .map(MottattDokument::getMottattDato)
+                .filter(Objects::nonNull)
+                .max(Comparator.naturalOrder());
     }
 
     private RettighetType rettighetType(SøknadsGrunnlag søknadsGrunnlag) {
@@ -100,13 +110,15 @@ class SakerTjeneste {
         var gjeldendeVedtak = new FpVedtak(vedtaksperioder);
         var sakAvsluttet = Objects.equals(fpSak.fagsakStatus(), "AVSLU");
         var kanSøkeOmEndring = gjeldendeVedtak.perioder().stream().anyMatch(p -> p.resultat().innvilget());
-        var åpenBehandling = åpenBehandling(fpSak);
+        var åpenBehandling = finnÅpenBehandling(fpSak.saksnummer());
         var annenPart = annenPart(fpSak).orElse(null);
         var barn = barn(fpSak.saksnummer());
-        return Optional.of(new FpSak(fpSak.saksnummer, sakAvsluttet, kanSøkeOmEndring, tilhørerMor, false,
+        var sisteBehandling = åpenBehandling.map(Behandling::getBehandlingId).orElse(gjeldendeVedtakBehandlingId);
+        var sisteSøknadMottattDato = sisteSøknadMottattDato(sisteBehandling);
+        return Optional.of(new FpSak(fpSak.saksnummer, sakAvsluttet, sisteSøknadMottattDato.orElse(null), kanSøkeOmEndring, tilhørerMor, false,
                 nullSafeEquals(søknadsgrunnlag.bekreftetMorUfør()), nullSafeEquals(søknadsgrunnlag.bekreftetHarAnnenForelderTilsvarendeRettEØS()),
                 isØnskerJustertUttakVedFødsel(søknadsgrunnlag), rettighetType(søknadsgrunnlag), annenPart,
-                familiehendelse, gjeldendeVedtak, åpenBehandling.orElse(null), barn, dekningsgrad(søknadsgrunnlag),
+                familiehendelse, gjeldendeVedtak, åpenBehandling.map(this::map).orElse(null), barn, dekningsgrad(søknadsgrunnlag),
                 fpSak.opprettetTidspunkt));
     }
 
@@ -139,10 +151,6 @@ class SakerTjeneste {
 
     private static boolean tilhørerSakMor(SøknadsGrunnlag søknadsgrunnlag) {
         return Objects.equals(søknadsgrunnlag.getBrukerRolle(), "MORA");
-    }
-
-    private Optional<FpÅpenBehandling> åpenBehandling(FpSakRef fpSak) {
-        return finnÅpenBehandling(fpSak.saksnummer()).map(this::map);
     }
 
     private FpÅpenBehandling map(Behandling behandling) {
@@ -304,9 +312,9 @@ class SakerTjeneste {
         return t -> seen.add(key.apply(t));
     }
 
-    private static record FpSakRef(no.nav.foreldrepenger.info.v2.Saksnummer saksnummer,
-                                   AktørId annenPart,
-                                   String fagsakStatus,
-                                   LocalDateTime opprettetTidspunkt) {
+    private record FpSakRef(no.nav.foreldrepenger.info.v2.Saksnummer saksnummer,
+                            AktørId annenPart,
+                            String fagsakStatus,
+                            LocalDateTime opprettetTidspunkt) {
     }
 }
