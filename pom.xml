@@ -28,7 +28,7 @@
         <sonar.projectKey>navikt_fpinfo</sonar.projectKey>
 
         <felles.version>4.2.3</felles.version>
-        <selvbetjening-felles.version>0.8.27</selvbetjening-felles.version>
+        <selvbetjening-felles.version>0.8.29</selvbetjening-felles.version>
     </properties>
 
     <dependencyManagement>
