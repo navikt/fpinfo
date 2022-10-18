@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.info;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -31,11 +32,15 @@ public class MottattDokument implements Serializable {
     @Column(name = "TYPE")
     private String type;
 
+    @Column(name = "mottatt_dato")
+    private LocalDate mottattDato;
+
     MottattDokument(MottattDokument mottattDokument) {
         this.behandlingId = mottattDokument.behandlingId;
         this.mottattDokumentId = mottattDokument.mottattDokumentId;
         this.journalpostId = mottattDokument.journalpostId;
         this.type = mottattDokument.type;
+        this.mottattDato = mottattDokument.mottattDato;
     }
 
     MottattDokument() {
@@ -57,7 +62,11 @@ public class MottattDokument implements Serializable {
         return type;
     }
 
-    public Boolean erSøknad() {
+    public LocalDate getMottattDato() {
+        return mottattDato;
+    }
+
+    public boolean erSøknad() {
         return DokumentTypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON.name().equalsIgnoreCase(type) ||
                 DokumentTypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL.name().equalsIgnoreCase(type) ||
                 DokumentTypeId.SØKNAD_FORELDREPENGER_ADOPSJON.name().equalsIgnoreCase(type) ||
@@ -100,6 +109,11 @@ public class MottattDokument implements Serializable {
 
         public Builder medType(DokumentTypeId dokumentTypeId) {
             mottattDokumentMal.type = dokumentTypeId.name();
+            return this;
+        }
+
+        public Builder medMottattDato(LocalDate mottattDato) {
+            mottattDokumentMal.mottattDato = mottattDato;
             return this;
         }
 

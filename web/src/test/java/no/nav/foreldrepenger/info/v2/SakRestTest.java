@@ -94,6 +94,8 @@ class SakRestTest {
                 .build();
         repository.lagre(behandlingId, søknadsGrunnlag);
 
+        var søknadMottattDato = LocalDate.now().minusWeeks(1);
+        lagreSøknad(repository, behandlingId, søknadMottattDato);
 
         var sakerTjeneste = new SakerTjeneste(repository);
         var sakRest = new SakRest(sakerTjeneste, new AnnenPartsVedtaksperioderTjeneste(sakerTjeneste));
@@ -115,6 +117,7 @@ class SakRestTest {
         assertThat(fpSak.familiehendelse().termindato()).isEqualTo(termindato);
         assertThat(fpSak.gjelderAdopsjon()).isFalse();
         assertThat(fpSak.gjeldendeVedtak()).isNotNull();
+        assertThat(fpSak.sisteSøknadMottattDato()).isEqualTo(søknadMottattDato);
         assertThat(fpSak.gjeldendeVedtak().perioder()).hasSize(1);
         assertThat(fpSak.dekningsgrad()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.Dekningsgrad.ÅTTI);
         var vedtakPeriode = fpSak.gjeldendeVedtak().perioder().get(0);
@@ -135,6 +138,15 @@ class SakRestTest {
         assertThat(vedtakPeriode.overføringÅrsak()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.OverføringÅrsak.SYKDOM_ANNEN_FORELDER);
         assertThat(vedtakPeriode.oppholdÅrsak()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.OppholdÅrsak.MØDREKVOTE_ANNEN_FORELDER);
 
+    }
+
+    private void lagreSøknad(InMemTestRepository repository, long behandlingId, LocalDate søknadMottattDato) {
+        var mottattDokument = new MottattDokument.Builder()
+                .medBehandlingId(behandlingId)
+                .medType(DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL)
+                .medMottattDato(søknadMottattDato)
+                .build();
+        repository.lagre(List.of(mottattDokument));
     }
 
     @Test
@@ -184,11 +196,10 @@ class SakRestTest {
         repository.lagre(behandlingId, søknadsGrunnlag);
 
         //Lagrer dokument for at behandlingen skal være relevant
-        var mottattDokument = new MottattDokument.Builder()
-                .medBehandlingId(behandlingId)
-                .medType(DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL)
-                .build();
-        repository.lagre(List.of(mottattDokument));
+        var sisteSøknadMottattDato = LocalDate.now().minusWeeks(1);
+        var førsteSøknadMottattDato = LocalDate.now().minusWeeks(4);
+        lagreSøknad(repository, behandlingId, sisteSøknadMottattDato);
+        lagreSøknad(repository, behandlingId, førsteSøknadMottattDato);
 
         var sakerTjeneste = new SakerTjeneste(repository);
         var sakRest = new SakRest(sakerTjeneste, new AnnenPartsVedtaksperioderTjeneste(sakerTjeneste));
@@ -209,6 +220,7 @@ class SakRestTest {
         assertThat(fpSak.familiehendelse().fødselsdato()).isEqualTo(fødselsdato);
         assertThat(fpSak.gjelderAdopsjon()).isFalse();
         assertThat(fpSak.gjeldendeVedtak()).isNull();
+        assertThat(fpSak.sisteSøknadMottattDato()).isEqualTo(sisteSøknadMottattDato);
         assertThat(fpSak.dekningsgrad()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.Dekningsgrad.HUNDRE);
     }
 
