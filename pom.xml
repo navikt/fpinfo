@@ -27,7 +27,7 @@
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
         <sonar.projectKey>navikt_fpinfo</sonar.projectKey>
 
-        <felles.version>4.2.3</felles.version>
+        <felles.version>4.2.5</felles.version>
 
         <selvbetjening-felles.version>0.8.29</selvbetjening-felles.version>
     </properties>
