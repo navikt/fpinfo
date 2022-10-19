@@ -3,13 +3,17 @@ package no.nav.foreldrepenger.info.v2;
 import static no.nav.foreldrepenger.info.abac.AppAbacAttributtType.ANNEN_PART;
 import static no.nav.foreldrepenger.info.server.JettyServer.ACR_LEVEL4;
 import static no.nav.foreldrepenger.info.server.JettyServer.TOKENX;
+import static no.nav.vedtak.log.util.LoggerUtils.mask;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
@@ -71,12 +75,14 @@ public class SakRest {
     @Path("/annenForeldersVedtaksperioder")
     @GET
     @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.UTTAKSPLAN)
-    public List<VedtakPeriode> annenPartsVedtaksperioder(@NotNull @QueryParam("sokersAktorId") @Parameter(name = "sokersAktorId") AktørIdDto søkersAktørId,
-                                                         @NotNull @QueryParam("annenPartAktorId") @Parameter(name = "annenPartAktorId") AktørAnnenPartDto annenPartAktørId,
-                                                         @NotNull @QueryParam("barnAktorId") @Parameter(name = "barnAktorId") AktørIdBarnDto barnAktorId) {
-        LOG.info("Henter annen parts vedtaksperioder");
-        var perioder = annenPartsVedtaksperioder.hentFor(map(søkersAktørId.aktørId()),
-                map(annenPartAktørId.aktørId), barnAktorId == null ? null : map(barnAktorId.aktørId()));
+    public List<VedtakPeriode> annenPartsVedtaksperioder(@Valid @NotNull AnnenPartVedtakRequest request) {
+        LOG.info("Henter annen parts vedtaksperioder. Parametere {}", request);
+        var perioder = annenPartsVedtaksperioder.hentFor(
+                Optional.ofNullable(request.aktørId).map(a -> map(a.aktørId)).orElse(null),
+                Optional.ofNullable(request.annenPartAktørId).map(a -> map(a.aktørId)).orElse(null),
+                Optional.ofNullable(request.barnAktørId).map(a -> map(a.aktørId)).orElse(null),
+                request.familiehendelse
+        );
         LOG.info("Returnerer annen parts vedtaksperioder. Antall perioder {}", perioder.size());
         return perioder.stream().map(no.nav.foreldrepenger.info.v2.VedtakPeriode::tilDto).toList();
     }
@@ -85,11 +91,23 @@ public class SakRest {
         return new AktørId(aktørId);
     }
 
+    public record AnnenPartVedtakRequest(@Valid @NotNull AktørIdDto aktørId,
+                                         @Valid AktørAnnenPartDto annenPartAktørId,
+                                         @Valid AktørIdBarnDto barnAktørId,
+                                         LocalDate familiehendelse) {
+
+    }
+
     public record AktørAnnenPartDto(@NotNull @Digits(integer = 19, fraction = 0) String aktørId) implements AbacDto {
 
         @Override
         public AbacDataAttributter abacAttributter() {
             return AbacDataAttributter.opprett().leggTil(ANNEN_PART, aktørId());
+        }
+
+        @Override
+        public String toString() {
+            return mask(aktørId);
         }
     }
 
@@ -99,6 +117,11 @@ public class SakRest {
         public AbacDataAttributter abacAttributter() {
             return AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.AKTØR_ID, aktørId);
         }
+
+        @Override
+        public String toString() {
+            return mask(aktørId);
+        }
     }
 
     public record AktørIdBarnDto(@NotNull @Digits(integer = 19, fraction = 0) String aktørId) implements AbacDto {
@@ -106,6 +129,11 @@ public class SakRest {
         @Override
         public AbacDataAttributter abacAttributter() {
             return AbacDataAttributter.opprett();
+        }
+
+        @Override
+        public String toString() {
+            return mask(aktørId);
         }
     }
 }

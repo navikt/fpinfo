@@ -1,10 +1,12 @@
 package no.nav.foreldrepenger.info.v2;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -27,7 +29,10 @@ class AnnenPartsVedtaksperioderTjeneste {
         //CDI
     }
 
-    List<VedtakPeriode> hentFor(AktørId søkersAktørId, AktørId annenPartAktørId, AktørId barn) {
+    List<VedtakPeriode> hentFor(AktørId søkersAktørId,
+                                @Nullable AktørId annenPartAktørId,
+                                @Nullable AktørId barn,
+                                @Nullable LocalDate familiehendelse) {
         var fpSaker = sakerTjeneste.hentFor(annenPartAktørId);
         if (fpSaker.isEmpty()) {
             LOG.info("Annen part har ingen saker om foreldrepenger");
