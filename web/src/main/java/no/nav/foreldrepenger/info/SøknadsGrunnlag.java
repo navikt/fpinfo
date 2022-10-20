@@ -107,6 +107,10 @@ public class SøknadsGrunnlag {
         return foreldreRettigheter.getAleneomsorg();
     }
 
+    public Boolean getAleneomsorgSøknad() {
+        return foreldreRettigheter.getSøknadAleneomsorg();
+    }
+
     public Boolean bekreftetMorUfør() {
         //left outer join her, så får et objekt der alle feltene er null
         var gjeldendeUføre = uføreGrunnlag.getGjeldende();
@@ -139,6 +143,10 @@ public class SøknadsGrunnlag {
 
     public Boolean getAnnenForelderRett() {
         return foreldreRettigheter.getAnnenForelderRett();
+    }
+
+    public Boolean getAnnenForelderRettSøknad() {
+        return foreldreRettigheter.getSøknadAnnenForelderRett();
     }
 
     public Boolean getAnnenForelderInformert() {

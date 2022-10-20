@@ -77,8 +77,7 @@ class SakerTjeneste {
         var familiehendelse = familiehendelse(søknadsgrunnlag);
 
         var barn = barn(fpSak.saksnummer());
-        //TODO er vel ikke riktig å bruke saksbehandlet versjon hvis saken ikke har vedtak
-        var rettighetType = rettighetType(søknadsgrunnlag);
+        var rettighetType = rettighetTypeFraSøknad(søknadsgrunnlag);
         var sisteSøknadMottattDato = sisteSøknadMottattDato(åpenBehandling.getBehandlingId());
         return Optional.of(new FpSak(fpSak.saksnummer, false, sisteSøknadMottattDato.orElse(null), false, tilhørerMor,
                 false, nullSafeEquals(søknadsgrunnlag.søknadMorUfør()), nullSafeEquals(søknadsgrunnlag.søknadHarAnnenForelderTilsvarendeRettEØS()),
@@ -99,6 +98,13 @@ class SakerTjeneste {
             return RettighetType.ALENEOMSORG;
         }
         return søknadsGrunnlag.getAnnenForelderRett() ? RettighetType.BEGGE_RETT : RettighetType.BARE_SØKER_RETT;
+    }
+
+    private RettighetType rettighetTypeFraSøknad(SøknadsGrunnlag søknadsGrunnlag) {
+        if (søknadsGrunnlag.getAleneomsorgSøknad()) {
+            return RettighetType.ALENEOMSORG;
+        }
+        return søknadsGrunnlag.getAnnenForelderRettSøknad() ? RettighetType.BEGGE_RETT : RettighetType.BARE_SØKER_RETT;
     }
 
     private Optional<FpSak> sakMedVedtak(FpSakRef fpSak, Long gjeldendeVedtakBehandlingId) {
@@ -154,7 +160,6 @@ class SakerTjeneste {
     }
 
     private FpÅpenBehandling map(Behandling behandling) {
-        //TODO palfi
         return new FpÅpenBehandling(BehandlingTilstand.UNDER_BEHANDLING, Set.of());
     }
 
@@ -187,10 +192,6 @@ class SakerTjeneste {
     }
 
     private boolean erRelevantRevurdering(Behandling behandling) {
-        //TODO palfi køet behandlinger. Sannsynligvis ikke køet endringssøknader som er riktig
-
-        //TODO palfi må også ha med revurderinger der det er sendt varsel til bruker.
-        // Kan sjekke tabellen BEHANDLING_DOKUMENT i databasen om det finnes et bestilt dokument
         return behandling.getÅrsaker()
                 .stream()
                 .anyMatch(å -> BehandlingÅrsakType.ENDRINGSSØKNAD.equals(å.getType()));
@@ -228,7 +229,6 @@ class SakerTjeneste {
         if (samtidigUttak == null && p.getGraderingInnvilget()) {
             var arbeidsgiver = utledArbeidsgiver(p);
             var aktivitetType = mapAktivitetType(p.getUttakArbeidType());
-            //TODO long til bigdecimal fra entitet
             gradering = new Gradering(BigDecimal.valueOf(p.getArbeidstidprosent()), new Aktivitet(aktivitetType,
                     arbeidsgiver));
         } else {

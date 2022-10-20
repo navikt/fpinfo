@@ -80,6 +80,14 @@ public class SøknadsGrunnlagRettigheter {
                 : søknadAleneomsorg;
     }
 
+    public Boolean getSøknadAnnenForelderRett() {
+        return søknadAnnenForelderRett;
+    }
+
+    public Boolean getSøknadAleneomsorg() {
+        return søknadAleneomsorg;
+    }
+
     public Boolean getSøknadUføretrygd() {
         return søknadUføretrygd;
     }

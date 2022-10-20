@@ -73,7 +73,6 @@ class AnnenPartsVedtaksperioderTjeneste {
                 .stream()
                 .filter(sak -> sak.annenPart() != null && sak.annenPart().aktørId().equals(søkersAktørId))
                 .filter(sak -> barn == null || sak.barn().contains(barn))
-                //TODO palfi, intervall i stedet for equals?
                 //Sjekker ikke familiehendelse hvis vi har aktørId på barnet
                 .filter(sak -> barn != null || familiehendelse == null || sak.familiehendelse().familiehendelse().equals(familiehendelse))
                 .toList();
