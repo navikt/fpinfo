@@ -30,7 +30,7 @@ class AnnenPartsVedtaksperioderTjeneste {
     }
 
     List<VedtakPeriode> hentFor(AktørId søkersAktørId,
-                                @Nullable AktørId annenPartAktørId,
+                                AktørId annenPartAktørId,
                                 @Nullable AktørId barn,
                                 @Nullable LocalDate familiehendelse) {
         var fpSaker = sakerTjeneste.hentFor(annenPartAktørId);
@@ -39,7 +39,7 @@ class AnnenPartsVedtaksperioderTjeneste {
             return List.of();
         }
 
-        var gjeldendeSakForAnnenPartOpt = gjeldendeSak(fpSaker, søkersAktørId, annenPartAktørId, barn);
+        var gjeldendeSakForAnnenPartOpt = gjeldendeSak(fpSaker, søkersAktørId, barn, familiehendelse);
         if (gjeldendeSakForAnnenPartOpt.isEmpty()) {
             LOG.info("Finner ingen sak som ikke er avsluttet der annen part har oppgitt søker");
             return List.of();
@@ -53,24 +53,29 @@ class AnnenPartsVedtaksperioderTjeneste {
         return gjeldendeSak.gjeldendeVedtak().perioder();
     }
 
-    private Optional<FpSak> gjeldendeSak(Set<FpSak> saker, AktørId søkersAktørId, AktørId annenPartAktørId, AktørId barn) {
-        var annenPartsSaker = sakerMedAnnenpartLikSøker(søkersAktørId, saker, barn);
+    private Optional<FpSak> gjeldendeSak(Set<FpSak> saker,
+                                         AktørId søkersAktørId,
+                                         AktørId barn,
+                                         LocalDate familiehendelse) {
+        var annenPartsSaker = sakerMedAnnenpartLikSøker(søkersAktørId, saker, barn, familiehendelse);
 
-        if (annenPartsSaker.size() > 1 && barn != null) {
+        if (annenPartsSaker.size() > 1) {
             var saksnummer = annenPartsSaker.stream().map(FpSak::saksnummer).collect(Collectors.toSet());
             LOG.warn("Fant flere enn 1 sak ved oppslag av annen parts vedtaksperioder."
-                            + " Velger sist opprettet. Søker {} AnnenPart {} Saksnummer {}.",
-                    søkersAktørId, annenPartAktørId, saksnummer);
+                            + " Velger sist opprettet. Saksnummer {}.", saksnummer);
         }
         return annenPartsSaker.stream()
                 .max((o1, o2) -> o2.opprettetTidspunkt().compareTo(o1.opprettetTidspunkt()));
     }
 
-    private List<FpSak> sakerMedAnnenpartLikSøker(AktørId søkersAktørId, Set<FpSak> saker, AktørId barn) {
+    private List<FpSak> sakerMedAnnenpartLikSøker(AktørId søkersAktørId, Set<FpSak> saker, AktørId barn, LocalDate familiehendelse) {
         return saker
                 .stream()
                 .filter(sak -> sak.annenPart() != null && sak.annenPart().aktørId().equals(søkersAktørId))
-                .filter(sak -> sak.barn().contains(barn))
+                .filter(sak -> barn == null || sak.barn().contains(barn))
+                //TODO palfi, intervall i stedet for equals?
+                //Sjekker ikke familiehendelse hvis vi har aktørId på barnet
+                .filter(sak -> barn != null || familiehendelse == null || sak.familiehendelse().familiehendelse().equals(familiehendelse))
                 .toList();
     }
 }

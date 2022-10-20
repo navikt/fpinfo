@@ -16,7 +16,9 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -73,12 +75,13 @@ public class SakRest {
     }
 
     @Path("/annenForeldersVedtaksperioder")
-    @GET
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.UTTAKSPLAN)
     public List<VedtakPeriode> annenPartsVedtaksperioder(@Valid @NotNull AnnenPartVedtakRequest request) {
         LOG.info("Henter annen parts vedtaksperioder. Parametere {}", request);
         var perioder = annenPartsVedtaksperioder.hentFor(
-                Optional.ofNullable(request.aktørId).map(a -> map(a.aktørId)).orElse(null),
+                map(request.aktørId.aktørId),
                 Optional.ofNullable(request.annenPartAktørId).map(a -> map(a.aktørId)).orElse(null),
                 Optional.ofNullable(request.barnAktørId).map(a -> map(a.aktørId)).orElse(null),
                 request.familiehendelse
