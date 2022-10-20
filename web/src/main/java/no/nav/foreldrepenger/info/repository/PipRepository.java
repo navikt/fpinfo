@@ -86,7 +86,7 @@ public class PipRepository {
     public Optional<String> finnSakenTilAnnenForelder(Set<String> bruker, Set<String> annenForelder) {
         Objects.requireNonNull(bruker, "bruker");
         Objects.requireNonNull(bruker, "annenForelder");
-        if ((bruker.size() != 1) || (annenForelder.size() != 1)) {
+        if (bruker.size() != 1 || annenForelder.size() != 1) {
             return Optional.empty();
         }
 
@@ -96,8 +96,8 @@ public class PipRepository {
                         where s.aktørId like :annenForelder and s.aktørIdAnnenPart like :bruker order by s.opprettetTidspunkt desc
                 """,
                 Sak.class)
-                .setParameter("annenForelder", annenForelder.stream().findFirst().get())
-                .setParameter("bruker", bruker.stream().findFirst().get()).getResultList().stream()
+                .setParameter("annenForelder", annenForelder.stream().findFirst().orElseThrow())
+                .setParameter("bruker", bruker.stream().findFirst().orElseThrow()).getResultList().stream()
                 .findFirst()
                 .map(Sak::getSaksnummer);
     }

@@ -21,8 +21,10 @@ public class DatabaseHealthCheck implements ReadinessAware {
     private final DataSource ds;
 
     public DatabaseHealthCheck() throws Exception {
-        ds = DataSource.class.cast(new InitialContext().lookup(JDBC_DEFAULT_DS));
-        jdbcURL = ds.getConnection().getMetaData().getURL();
+        ds = (DataSource) new InitialContext().lookup(JDBC_DEFAULT_DS);
+        try (var connection = ds.getConnection()) {
+            jdbcURL = connection.getMetaData().getURL();
+        }
     }
 
     public String getURL() {
