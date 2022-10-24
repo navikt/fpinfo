@@ -82,7 +82,7 @@ public class SakRest {
         LOG.info("Henter annen parts vedtaksperioder. Parametere {}", request);
         var perioder = annenPartsVedtaksperioder.hentFor(
                 map(request.aktørId.aktørId),
-                Optional.ofNullable(request.annenPartAktørId).map(a -> map(a.aktørId)).orElse(null),
+                map(request.annenPartAktørId.aktørId),
                 Optional.ofNullable(request.barnAktørId).map(a -> map(a.aktørId)).orElse(null),
                 request.familiehendelse
         );
@@ -95,7 +95,7 @@ public class SakRest {
     }
 
     public record AnnenPartVedtakRequest(@Valid @NotNull AktørIdDto aktørId,
-                                         @Valid AktørAnnenPartDto annenPartAktørId,
+                                         @Valid @NotNull AktørAnnenPartDto annenPartAktørId,
                                          @Valid AktørIdBarnDto barnAktørId,
                                          LocalDate familiehendelse) {
 
