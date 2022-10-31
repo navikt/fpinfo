@@ -25,9 +25,14 @@ import no.nav.foreldrepenger.info.datatyper.BehandlingType;
 import no.nav.foreldrepenger.info.datatyper.BehandlingÅrsakType;
 import no.nav.foreldrepenger.info.repository.Repository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @ApplicationScoped
 class SakerTjeneste {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SakerTjeneste.class);
 
     private Repository repository;
 
@@ -214,15 +219,21 @@ class SakerTjeneste {
                         ? o2.getArbeidstidprosent().compareTo(o1.getArbeidstidprosent()) : 0)
                 .filter(distinct(UttakPeriode::getFom))
                 .sorted(Comparator.comparing(UttakPeriode::getFom))
-                .map(this::map)
+                .map(p -> map(p, behandlingId))
                 .collect(Collectors.toList());
     }
 
-    private VedtakPeriode map(UttakPeriode p) {
+    private VedtakPeriode map(UttakPeriode p, Long behandlingId) {
         var trekkerMinsterett = !Set.of("2004", "2033").contains(p.getPeriodeResultatÅrsak());
         var resultat = new VedtakPeriodeResultat("INNVILGET".equals(p.getPeriodeResultatType()), trekkerMinsterett);
         var samtidigUttaksprosent = p.getSamtidigUttaksprosent();
         var samtidigUttak = map(samtidigUttaksprosent);
+        if (p.getSamtidigUttak() && samtidigUttaksprosent == null) {
+            LOG.warn("Samtidig uttak uten samtidig uttaksprosent. Behandling {}", behandlingId);
+        }
+        if (p.getSamtidigUttak() && samtidigUttaksprosent != null && p.getUtbetalingsprosent() != null && !p.getUtbetalingsprosent().equals(samtidigUttaksprosent)) {
+            LOG.warn("Samtidig uttak der prosent er ulik utbetalingsprosent. Behandling {}", behandlingId);
+        }
 
         //frontend vil ikke ha detaljer om gradering ved samtidigUttak
         final Gradering gradering;
