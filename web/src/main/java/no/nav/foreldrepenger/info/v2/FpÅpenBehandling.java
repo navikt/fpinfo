@@ -1,12 +1,11 @@
 package no.nav.foreldrepenger.info.v2;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
-record FpÅpenBehandling(BehandlingTilstand tilstand, Set<Søknadsperiode> søknadsperioder) {
+record FpÅpenBehandling(BehandlingTilstand tilstand, List<UttakPeriode> søknadsperioder) {
 
     no.nav.foreldrepenger.common.innsyn.v2.FpÅpenBehandling tilDto() {
-        var søknadsperioderDto = søknadsperioder.stream().map(Søknadsperiode::tilDto).collect(Collectors.toSet());
+        var søknadsperioderDto = søknadsperioder.stream().map(UttakPeriode::tilDto).toList();
         return new no.nav.foreldrepenger.common.innsyn.v2.FpÅpenBehandling(tilstand.tilDto(), søknadsperioderDto);
     }
 }

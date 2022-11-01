@@ -11,6 +11,8 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import no.nav.foreldrepenger.info.SøknadsperiodeEntitet;
+
 import org.hibernate.CacheMode;
 import org.hibernate.jpa.QueryHints;
 import org.hibernate.jpa.TypedParameterValue;
@@ -132,5 +134,11 @@ public class DbRepository implements Repository {
                         + "and aktørIdBarn is not null", String.class)
                 .setParameter("saksnummer", saksnummer.saksnummer());
         return query.getResultStream().collect(Collectors.toSet());
+    }
+
+    @Override
+    public List<SøknadsperiodeEntitet> hentSøknadsperioder(long behandlingId) {
+        return em.createQuery("from SoeknadPeriode where behandlingId=:b", SøknadsperiodeEntitet.class)
+                .setParameter("b", behandlingId).getResultList();
     }
 }

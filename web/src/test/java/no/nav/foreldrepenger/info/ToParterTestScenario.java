@@ -60,12 +60,12 @@ public class ToParterTestScenario {
     }
 
     public ToParterTestScenario uttak(List<UttakPeriode> uttak) {
-        repository.lagre(behandling.getBehandlingId(), uttak);
+        repository.lagreVedtaksperioder(behandling.getBehandlingId(), uttak);
         return this;
     }
 
     public ToParterTestScenario uttakAnnenpart(List<UttakPeriode> uttak) {
-        repository.lagre(behandlingAnnenpart.getBehandlingId(), uttak);
+        repository.lagreVedtaksperioder(behandlingAnnenpart.getBehandlingId(), uttak);
         return this;
     }
 
