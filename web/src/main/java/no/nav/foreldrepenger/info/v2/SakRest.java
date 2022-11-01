@@ -6,7 +6,6 @@ import static no.nav.foreldrepenger.info.server.JettyServer.TOKENX;
 import static no.nav.vedtak.log.util.LoggerUtils.mask;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,12 +23,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
+import no.nav.foreldrepenger.common.innsyn.v2.AnnenPartVedtak;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import no.nav.foreldrepenger.common.innsyn.v2.Saker;
-import no.nav.foreldrepenger.common.innsyn.v2.VedtakPeriode;
 import no.nav.security.token.support.core.api.ProtectedWithClaims;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
@@ -44,28 +46,29 @@ import no.nav.vedtak.sikkerhet.abac.beskyttet.ResourceType;
 @ProtectedWithClaims(issuer = TOKENX, claimMap = { ACR_LEVEL4 })
 public class SakRest {
 
-    final static String PATH = "/v2/saker";
+    final static String PATH = "/v2";
 
     private static final Logger LOG = LoggerFactory.getLogger(SakRest.class);
 
     private final SakerTjeneste sakerTjeneste;
-    private final AnnenPartsVedtaksperioderTjeneste annenPartsVedtaksperioder;
+    private final AnnenPartVedtakTjeneste annenPartVedtakTjeneste;
 
     @Inject
-    public SakRest(SakerTjeneste sakerTjeneste, AnnenPartsVedtaksperioderTjeneste annenPartsVedtaksperioder) {
+    public SakRest(SakerTjeneste sakerTjeneste, AnnenPartVedtakTjeneste annenPartVedtakTjeneste) {
         this.sakerTjeneste = sakerTjeneste;
-        this.annenPartsVedtaksperioder = annenPartsVedtaksperioder;
+        this.annenPartVedtakTjeneste = annenPartVedtakTjeneste;
     }
 
     SakRest() {
         this(null, null);
     }
 
+    @Path("/saker")
     @GET
     @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.FAGSAK)
     public Saker hentSaker(@NotNull @QueryParam("aktorId") @Parameter(name = "aktorId") AktørIdDto aktørId) {
         LOG.info("Henter saker for bruker");
-        var fpSaker = sakerTjeneste.hentFor(map(aktørId.aktørId()));
+        var fpSaker = sakerTjeneste.hentFor(map(aktørId.aktørId));
         var fpSakerDto = tilDto(fpSaker);
         return new Saker(fpSakerDto, Set.of(), Set.of());
     }
@@ -74,20 +77,25 @@ public class SakRest {
         return fpSaker.stream().map(FpSak::tilDto).collect(Collectors.toSet());
     }
 
-    @Path("/annenForeldersVedtaksperioder")
+    @Path("/annenPartVedtak")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.UTTAKSPLAN)
-    public List<VedtakPeriode> annenPartsVedtaksperioder(@Valid @NotNull AnnenPartVedtakRequest request) {
-        LOG.info("Henter annen parts vedtaksperioder. Parametere {}", request);
-        var perioder = annenPartsVedtaksperioder.hentFor(
+    public AnnenPartVedtak annenPartsVedtak(@Valid @NotNull AnnenPartVedtakRequest request) {
+        LOG.info("Henter annen parts vedtak. Parametere {}", request);
+        var vedtakOpt = annenPartVedtakTjeneste.hentFor(
                 map(request.aktørId.aktørId),
                 map(request.annenPartAktørId.aktørId),
                 Optional.ofNullable(request.barnAktørId).map(a -> map(a.aktørId)).orElse(null),
                 request.familiehendelse
         );
-        LOG.info("Returnerer annen parts vedtaksperioder. Antall perioder {}", perioder.size());
-        return perioder.stream().map(no.nav.foreldrepenger.info.v2.VedtakPeriode::tilDto).toList();
+        if (vedtakOpt.isEmpty()) {
+            return null;
+        }
+        var vedtak = vedtakOpt.get();
+        LOG.info("Returnerer annen parts vedtak. Antall perioder {}", vedtak.perioder().size());
+        var perioder = vedtak.perioder().stream().map(no.nav.foreldrepenger.info.v2.VedtakPeriode::tilDto).toList();
+        return new AnnenPartVedtak(perioder, vedtak.termindato(), vedtak.dekningsgrad().tilDto());
     }
 
     public static AktørId map(String aktørId) {
@@ -97,24 +105,24 @@ public class SakRest {
     public record AnnenPartVedtakRequest(@Valid @NotNull AktørIdDto aktørId,
                                          @Valid @NotNull AktørAnnenPartDto annenPartAktørId,
                                          @Valid AktørIdBarnDto barnAktørId,
-                                         LocalDate familiehendelse) {
-
-    }
-
-    public record AktørAnnenPartDto(@NotNull @Digits(integer = 19, fraction = 0) String aktørId) implements AbacDto {
+                                         LocalDate familiehendelse) implements AbacDto {
 
         @Override
         public AbacDataAttributter abacAttributter() {
-            return AbacDataAttributter.opprett().leggTil(ANNEN_PART, aktørId());
-        }
-
-        @Override
-        public String toString() {
-            return mask(aktørId);
+            var abacDataAttributter = aktørId.abacAttributter()
+                    .leggTil(annenPartAktørId.abacAttributter());
+            if (barnAktørId != null) {
+                abacDataAttributter = abacDataAttributter.leggTil(barnAktørId.abacAttributter());
+            }
+            return abacDataAttributter;
         }
     }
 
     public record AktørIdDto(@NotNull @Digits(integer = 19, fraction = 0) String aktørId) implements AbacDto {
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public AktørIdDto {
+        }
 
         @Override
         public AbacDataAttributter abacAttributter() {
@@ -126,8 +134,29 @@ public class SakRest {
             return mask(aktørId);
         }
     }
+    public record AktørAnnenPartDto(@NotNull @Digits(integer = 19, fraction = 0) String aktørId) implements AbacDto {
+
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public AktørAnnenPartDto {
+        }
+
+        @Override
+        public AbacDataAttributter abacAttributter() {
+            return AbacDataAttributter.opprett().leggTil(ANNEN_PART, aktørId());
+        }
+        @Override
+        public String toString() {
+            return mask(aktørId);
+        }
+
+    }
 
     public record AktørIdBarnDto(@NotNull @Digits(integer = 19, fraction = 0) String aktørId) implements AbacDto {
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        public AktørIdBarnDto {
+        }
 
         @Override
         public AbacDataAttributter abacAttributter() {

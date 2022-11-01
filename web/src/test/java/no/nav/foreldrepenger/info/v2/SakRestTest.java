@@ -98,7 +98,7 @@ class SakRestTest {
         lagreSøknad(repository, behandlingId, søknadMottattDato);
 
         var sakerTjeneste = new SakerTjeneste(repository);
-        var sakRest = new SakRest(sakerTjeneste, new AnnenPartsVedtaksperioderTjeneste(sakerTjeneste));
+        var sakRest = new SakRest(sakerTjeneste, new AnnenPartVedtakTjeneste(sakerTjeneste));
         var saker = sakRest.hentSaker(aktørId);
 
         assertThat(saker.foreldrepenger()).hasSize(1);
@@ -202,7 +202,7 @@ class SakRestTest {
         lagreSøknad(repository, behandlingId, førsteSøknadMottattDato);
 
         var sakerTjeneste = new SakerTjeneste(repository);
-        var sakRest = new SakRest(sakerTjeneste, new AnnenPartsVedtaksperioderTjeneste(sakerTjeneste));
+        var sakRest = new SakRest(sakerTjeneste, new AnnenPartVedtakTjeneste(sakerTjeneste));
         var saker = sakRest.hentSaker(aktørId);
 
         assertThat(saker.foreldrepenger()).hasSize(1);

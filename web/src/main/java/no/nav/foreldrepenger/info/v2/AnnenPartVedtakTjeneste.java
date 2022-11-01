@@ -14,43 +14,45 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
-class AnnenPartsVedtaksperioderTjeneste {
+class AnnenPartVedtakTjeneste {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AnnenPartsVedtaksperioderTjeneste.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AnnenPartVedtakTjeneste.class);
 
     private SakerTjeneste sakerTjeneste;
 
     @Inject
-    public AnnenPartsVedtaksperioderTjeneste(SakerTjeneste sakerTjeneste) {
+    public AnnenPartVedtakTjeneste(SakerTjeneste sakerTjeneste) {
         this.sakerTjeneste = sakerTjeneste;
     }
 
-    AnnenPartsVedtaksperioderTjeneste() {
+    AnnenPartVedtakTjeneste() {
         //CDI
     }
 
-    List<VedtakPeriode> hentFor(AktørId søkersAktørId,
-                                AktørId annenPartAktørId,
-                                @Nullable AktørId barn,
-                                @Nullable LocalDate familiehendelse) {
+    Optional<AnnenPartVedtak> hentFor(AktørId søkersAktørId,
+                                      AktørId annenPartAktørId,
+                                      @Nullable AktørId barn,
+                                      @Nullable LocalDate familiehendelse) {
         var fpSaker = sakerTjeneste.hentFor(annenPartAktørId);
         if (fpSaker.isEmpty()) {
             LOG.info("Annen part har ingen saker om foreldrepenger");
-            return List.of();
+            return Optional.empty();
         }
 
         var gjeldendeSakForAnnenPartOpt = gjeldendeSak(fpSaker, søkersAktørId, barn, familiehendelse);
         if (gjeldendeSakForAnnenPartOpt.isEmpty()) {
             LOG.info("Finner ingen sak som ikke er avsluttet der annen part har oppgitt søker");
-            return List.of();
+            return Optional.empty();
         }
         var gjeldendeSak = gjeldendeSakForAnnenPartOpt.get();
         LOG.info("Fant gjeldende sak for annen part. Saksnummer {}", gjeldendeSak.saksnummer());
         if (gjeldendeSak.gjeldendeVedtak() == null) {
             LOG.info("Annen parts gjeldende sak har ingen gjeldende vedtak. Saksnummer {}", gjeldendeSak.saksnummer());
-            return List.of();
+            return Optional.empty();
         }
-        return gjeldendeSak.gjeldendeVedtak().perioder();
+        var termindato = gjeldendeSak.familiehendelse().termindato();
+        var dekningsgrad = gjeldendeSak.dekningsgrad();
+        return Optional.of(new AnnenPartVedtak(gjeldendeSak.gjeldendeVedtak().perioder(), termindato, dekningsgrad));
     }
 
     private Optional<FpSak> gjeldendeSak(Set<FpSak> saker,
