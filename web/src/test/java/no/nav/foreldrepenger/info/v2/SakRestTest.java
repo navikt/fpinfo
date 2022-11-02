@@ -6,6 +6,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import no.nav.foreldrepenger.common.innsyn.v2.UtsettelseÅrsak;
+import no.nav.foreldrepenger.info.SøknadsperiodeEntitet;
+
+import no.nav.foreldrepenger.info.datatyper.MorsAktivitet;
+
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.common.innsyn.v2.Aktivitet;
@@ -78,7 +83,7 @@ class SakRestTest {
                 .withOverføringÅrsak("SYKDOM_ANNEN_FORELDER")
                 .withUttakUtsettelseType("INSTITUSJONSOPPHOLD_SØKER")
                 .build();
-        repository.lagre(behandlingId, List.of(uttakPeriode));
+        repository.lagreVedtaksperioder(behandlingId, List.of(uttakPeriode));
 
         var søknadsGrunnlag = new SøknadsGrunnlag.Builder()
                 .antallBarn(1)
@@ -121,7 +126,6 @@ class SakRestTest {
         assertThat(fpSak.gjeldendeVedtak().perioder()).hasSize(1);
         assertThat(fpSak.dekningsgrad()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.Dekningsgrad.ÅTTI);
         var vedtakPeriode = fpSak.gjeldendeVedtak().perioder().get(0);
-        assertThat(vedtakPeriode.flerbarnsdager()).isEqualTo(uttakPeriode.getFlerbarnsdager());
         assertThat(vedtakPeriode.fom()).isEqualTo(uttakPeriode.getFom());
         assertThat(vedtakPeriode.tom()).isEqualTo(uttakPeriode.getTom());
         assertThat(vedtakPeriode.kontoType()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.KontoType.valueOf(uttakPeriode.getTrekkonto()));
@@ -137,7 +141,6 @@ class SakRestTest {
         assertThat(vedtakPeriode.utsettelseÅrsak()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.UtsettelseÅrsak.SØKER_INNLAGT);
         assertThat(vedtakPeriode.overføringÅrsak()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.OverføringÅrsak.SYKDOM_ANNEN_FORELDER);
         assertThat(vedtakPeriode.oppholdÅrsak()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.OppholdÅrsak.MØDREKVOTE_ANNEN_FORELDER);
-
     }
 
     private void lagreSøknad(InMemTestRepository repository, long behandlingId, LocalDate søknadMottattDato) {
@@ -183,6 +186,18 @@ class SakRestTest {
                 .build();
         repository.lagre(behandling);
 
+        var søknadsperiode = new SøknadsperiodeEntitet.Builder()
+                .fom(LocalDate.now())
+                .tom(LocalDate.now().plusWeeks(10))
+                .gradering(30L, "123", null, Aktivitet.Type.ORDINÆRT_ARBEID)
+                .utsettelseÅrsak("INSTITUSJONSOPPHOLD_SØKER")
+                .arbeidsgiverOrgnr("123")
+                .trekkonto(KontoType.FELLESPERIODE.name())
+                .flerbarnsdager(false)
+                .morsAktivitet(MorsAktivitet.INNLAGT)
+                .build();
+        repository.lagreSøknadsperioder(behandlingId, List.of(søknadsperiode));
+
         var søknadsGrunnlag = new SøknadsGrunnlag.Builder()
                 .antallBarn(1)
                 .annenForelderInformert(true)
@@ -222,6 +237,23 @@ class SakRestTest {
         assertThat(fpSak.gjeldendeVedtak()).isNull();
         assertThat(fpSak.sisteSøknadMottattDato()).isEqualTo(sisteSøknadMottattDato);
         assertThat(fpSak.dekningsgrad()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.Dekningsgrad.HUNDRE);
+
+        assertThat(fpSak.åpenBehandling().søknadsperioder()).hasSize(1);
+        var søknadsperiodeRes = fpSak.åpenBehandling().søknadsperioder().get(0);
+        assertThat(søknadsperiodeRes.flerbarnsdager()).isEqualTo(søknadsperiode.isFlerbarnsdager());
+        assertThat(søknadsperiodeRes.fom()).isEqualTo(søknadsperiode.getFom());
+        assertThat(søknadsperiodeRes.tom()).isEqualTo(søknadsperiode.getTom());
+        assertThat(søknadsperiodeRes.kontoType()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.KontoType.valueOf(søknadsperiode.getTrekkonto().orElseThrow()));
+        assertThat(søknadsperiodeRes.gradering()).isEqualTo(new no.nav.foreldrepenger.common.innsyn.v2.Gradering(
+                BigDecimal.valueOf(søknadsperiode.getArbeidstidprosent()), new Aktivitet(Aktivitet.Type.ORDINÆRT_ARBEID,
+                new Arbeidsgiver(søknadsperiode.getArbeidsgiverOrgnr(), Arbeidsgiver.ArbeidsgiverType.ORGANISASJON))));
+        assertThat(søknadsperiodeRes.morsAktivitet().name()).isEqualTo(søknadsperiode.getMorsAktivitet().name());
+        assertThat(søknadsperiodeRes.samtidigUttak()).isNull();
+
+        //I praksis kan ikke alle disse være satt samtidig
+        assertThat(søknadsperiodeRes.utsettelseÅrsak()).isEqualTo(UtsettelseÅrsak.SØKER_INNLAGT);
+        assertThat(søknadsperiodeRes.overføringÅrsak()).isNull();
+        assertThat(søknadsperiodeRes.oppholdÅrsak()).isNull();
     }
 
 }

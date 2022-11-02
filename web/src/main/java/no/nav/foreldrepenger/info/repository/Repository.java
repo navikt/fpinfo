@@ -10,6 +10,7 @@ import no.nav.foreldrepenger.info.MottattDokument;
 import no.nav.foreldrepenger.info.Sak;
 import no.nav.foreldrepenger.info.Saksnummer;
 import no.nav.foreldrepenger.info.SøknadsGrunnlag;
+import no.nav.foreldrepenger.info.SøknadsperiodeEntitet;
 import no.nav.foreldrepenger.info.UttakPeriode;
 
 public interface Repository {
@@ -35,4 +36,6 @@ public interface Repository {
     List<MottattDokument> hentMottattDokument(Long behandlingId);
 
     Set<String> hentBarn(Saksnummer saksnummer);
+
+    List<SøknadsperiodeEntitet> hentSøknadsperioder(long behandlingId);
 }

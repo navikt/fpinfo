@@ -94,7 +94,7 @@ public class SakRest {
         }
         var vedtak = vedtakOpt.get();
         LOG.info("Returnerer annen parts vedtak. Antall perioder {}", vedtak.perioder().size());
-        var perioder = vedtak.perioder().stream().map(no.nav.foreldrepenger.info.v2.VedtakPeriode::tilDto).toList();
+        var perioder = vedtak.perioder().stream().map(UttakPeriode::tilDto).toList();
         return new AnnenPartVedtak(perioder, vedtak.termindato(), vedtak.dekningsgrad().tilDto());
     }
 

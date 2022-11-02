@@ -16,17 +16,17 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import no.nav.foreldrepenger.info.Behandling;
 import no.nav.foreldrepenger.info.MottattDokument;
 import no.nav.foreldrepenger.info.Saksnummer;
 import no.nav.foreldrepenger.info.SøknadsGrunnlag;
-import no.nav.foreldrepenger.info.UttakPeriode;
+import no.nav.foreldrepenger.info.SøknadsperiodeEntitet;
 import no.nav.foreldrepenger.info.datatyper.BehandlingType;
 import no.nav.foreldrepenger.info.datatyper.BehandlingÅrsakType;
 import no.nav.foreldrepenger.info.repository.Repository;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 @ApplicationScoped
@@ -165,7 +165,55 @@ class SakerTjeneste {
     }
 
     private FpÅpenBehandling map(Behandling behandling) {
-        return new FpÅpenBehandling(BehandlingTilstand.UNDER_BEHANDLING, Set.of());
+        var søknadsperioder = finnSøknadsperioder(behandling);
+        return new FpÅpenBehandling(BehandlingTilstand.UNDER_BEHANDLING, søknadsperioder);
+    }
+
+    private List<UttakPeriode> finnSøknadsperioder(Behandling behandling) {
+        if (behandling.getBehandlingType().equals(BehandlingType.FØRSTEGANGSBEHANDLING)) {
+            //Støtter bare førstegangsbehandlinger nå
+            return repository.hentSøknadsperioder(behandling.getBehandlingId())
+                    .stream().map(this::map)
+                    .toList();
+        }
+        return List.of();
+    }
+
+    private UttakPeriode map(SøknadsperiodeEntitet entitet) {
+        //PeriodeResultat alltid null på søknadsperiode
+        var kontoType = entitet.getTrekkonto().map(KontoType::valueOf).orElse(null);
+        var utsettelseÅrsak = mapUtsettelseÅrsak(entitet.getUtsettelseÅrsak());
+        var oppholdÅrsak = mapOppholdÅrsak(entitet.getOppholdÅrsak());
+        var overføringÅrsak = mapOverføringÅrsak(entitet.getOverføringÅrsak());
+        var samtidigUttak = map(entitet.getSamtidigUttaksprosent());
+        //frontend vil ikke ha detaljer om gradering ved samtidigUttak
+        var gradering = samtidigUttak == null ? mapGradering(entitet) : null;
+        return new UttakPeriode(entitet.getFom(), entitet.getTom(), kontoType, null,
+                utsettelseÅrsak, oppholdÅrsak, overføringÅrsak, gradering, mapMorsAktivitet(entitet.getMorsAktivitet()),
+                samtidigUttak, entitet.isFlerbarnsdager());
+    }
+
+    private Gradering mapGradering(SøknadsperiodeEntitet entitet) {
+        if (entitet.getArbeidstidprosent() == null || entitet.getArbeidstidprosent() <= 0) {
+            return null;
+        }
+        var arbeidstidprosent = new Gradering.Arbeidstidprosent(BigDecimal.valueOf(entitet.getArbeidstidprosent()));
+        var aktivitetType = mapAktivitetType(entitet);
+        var type = new Aktivitet(aktivitetType, utledArbeidsgiver(entitet.getArbeidsgiverOrgnr(), entitet.getArbeidsgiverAktørId()));
+        return new Gradering(arbeidstidprosent, type);
+    }
+
+    private Aktivitet.Type mapAktivitetType(SøknadsperiodeEntitet entitet) {
+        if (entitet.isArbeidstaker()) {
+            return Aktivitet.Type.ORDINÆRT_ARBEID;
+        }
+        if (entitet.isFrilanser()) {
+            return Aktivitet.Type.FRILANS;
+        }
+        if (entitet.isSelvstendig()) {
+            return Aktivitet.Type.SELVSTENDIG_NÆRINGSDRIVENDE;
+        }
+        throw new IllegalStateException("Ukjent aktivitettype for gradering");
     }
 
     private Optional<Long> gjeldendeVedtak(FpSakRef fpSak) {
@@ -209,7 +257,7 @@ class SakerTjeneste {
         return Optional.of(new AnnenPart(fpSak.annenPart()));
     }
 
-    private List<VedtakPeriode> hentVedtakPerioder(Long behandlingId) {
+    private List<UttakPeriode> hentVedtakPerioder(Long behandlingId) {
         return repository.hentUttakPerioder(behandlingId)
                 .stream()
                 // flere arbeidsforhold gir flere perioder med samme tidsperiode. Selvbetjening frontend støtter ikke flere
@@ -217,15 +265,15 @@ class SakerTjeneste {
                 // Dette kan gi feil i noen case der feks aktivitene har forskjellig trekkonto
                 .sorted((o1, o2) -> o1.getArbeidstidprosent() != null && o2.getArbeidstidprosent() != null
                         ? o2.getArbeidstidprosent().compareTo(o1.getArbeidstidprosent()) : 0)
-                .filter(distinct(UttakPeriode::getFom))
-                .sorted(Comparator.comparing(UttakPeriode::getFom))
+                .filter(distinct(no.nav.foreldrepenger.info.UttakPeriode::getFom))
+                .sorted(Comparator.comparing(no.nav.foreldrepenger.info.UttakPeriode::getFom))
                 .map(p -> map(p, behandlingId))
                 .collect(Collectors.toList());
     }
 
-    private VedtakPeriode map(UttakPeriode p, Long behandlingId) {
+    private UttakPeriode map(no.nav.foreldrepenger.info.UttakPeriode p, Long behandlingId) {
         var trekkerMinsterett = !Set.of("2004", "2033").contains(p.getPeriodeResultatÅrsak());
-        var resultat = new VedtakPeriodeResultat("INNVILGET".equals(p.getPeriodeResultatType()), trekkerMinsterett);
+        var resultat = new UttakPeriodeResultat("INNVILGET".equals(p.getPeriodeResultatType()), trekkerMinsterett);
         var samtidigUttaksprosent = p.getSamtidigUttaksprosent();
         var samtidigUttak = map(samtidigUttaksprosent);
         if (p.getSamtidigUttak() && samtidigUttaksprosent == null) {
@@ -245,7 +293,7 @@ class SakerTjeneste {
         } else {
             gradering = null;
         }
-        return new VedtakPeriode(p.getFom(), p.getTom(), mapKontotype(p), resultat, mapUtsettelseÅrsak(p.getUttakUtsettelseType()),
+        return new UttakPeriode(p.getFom(), p.getTom(), mapKontotype(p), resultat, mapUtsettelseÅrsak(p.getUttakUtsettelseType()),
                 mapOppholdÅrsak(p.getOppholdÅrsak()), mapOverføringÅrsak(p.getOverføringÅrsak()), gradering, mapMorsAktivitet(p.getMorsAktivitet()),
                 samtidigUttak, p.getFlerbarnsdager());
     }
@@ -257,16 +305,22 @@ class SakerTjeneste {
         return Aktivitet.Type.valueOf(type);
     }
 
-    private Arbeidsgiver utledArbeidsgiver(UttakPeriode p) {
-        if (p.getArbeidsgiverOrgnr() != null) {
-            return new Arbeidsgiver(p.getArbeidsgiverOrgnr(), Arbeidsgiver.ArbeidsgiverType.ORGANISASJON);
-        } else if (p.getArbeidsgiverAktørId() != null) {
-            return new Arbeidsgiver(p.getArbeidsgiverAktørId(), Arbeidsgiver.ArbeidsgiverType.PRIVAT);
+    private Arbeidsgiver utledArbeidsgiver(no.nav.foreldrepenger.info.UttakPeriode p) {
+        var orgnr = p.getArbeidsgiverOrgnr();
+        var arbeidsgiverAktørId = p.getArbeidsgiverAktørId();
+        return utledArbeidsgiver(orgnr, arbeidsgiverAktørId);
+    }
+
+    private static Arbeidsgiver utledArbeidsgiver(String orgnr, String arbeidsgiverAktørId) {
+        if (orgnr != null) {
+            return new Arbeidsgiver(orgnr, Arbeidsgiver.ArbeidsgiverType.ORGANISASJON);
+        } else if (arbeidsgiverAktørId != null) {
+            return new Arbeidsgiver(arbeidsgiverAktørId, Arbeidsgiver.ArbeidsgiverType.PRIVAT);
         }
         return null;
     }
 
-    private KontoType mapKontotype(UttakPeriode p) {
+    private KontoType mapKontotype(no.nav.foreldrepenger.info.UttakPeriode p) {
         var trekkonto = p.getTrekkonto();
         return trekkonto == null ? null : KontoType.valueOf(trekkonto);
     }
@@ -290,7 +344,7 @@ class SakerTjeneste {
         return switch (uttakUtsettelseType) {
             case "-" -> null;
             case "HV_OVELSE" -> UtsettelseÅrsak.HV_ØVELSE;
-            case "SYKDOM_SKADE" -> UtsettelseÅrsak.SØKER_SYKDOM;
+            case "SYKDOM_SKADE", "SYKDOM" -> UtsettelseÅrsak.SØKER_SYKDOM;
             case "INSTITUSJONSOPPHOLD_SØKER" -> UtsettelseÅrsak.SØKER_INNLAGT;
             case "INSTITUSJONSOPPHOLD_BARNET" -> UtsettelseÅrsak.BARN_INNLAGT;
             default -> UtsettelseÅrsak.valueOf(uttakUtsettelseType);
