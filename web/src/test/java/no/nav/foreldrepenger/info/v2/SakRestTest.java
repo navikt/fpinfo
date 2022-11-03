@@ -6,15 +6,12 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import no.nav.foreldrepenger.common.innsyn.v2.UtsettelseÅrsak;
-import no.nav.foreldrepenger.info.SøknadsperiodeEntitet;
-
-import no.nav.foreldrepenger.info.datatyper.MorsAktivitet;
-
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.common.innsyn.v2.Aktivitet;
 import no.nav.foreldrepenger.common.innsyn.v2.Arbeidsgiver;
+import no.nav.foreldrepenger.common.innsyn.v2.UtsettelseÅrsak;
+import no.nav.foreldrepenger.common.innsyn.v2.UttakPeriodeResultat;
 import no.nav.foreldrepenger.info.Behandling;
 import no.nav.foreldrepenger.info.FagsakRelasjon;
 import no.nav.foreldrepenger.info.InMemTestRepository;
@@ -22,12 +19,14 @@ import no.nav.foreldrepenger.info.MottattDokument;
 import no.nav.foreldrepenger.info.Sak;
 import no.nav.foreldrepenger.info.SøknadsGrunnlag;
 import no.nav.foreldrepenger.info.SøknadsGrunnlagRettigheter;
+import no.nav.foreldrepenger.info.SøknadsperiodeEntitet;
 import no.nav.foreldrepenger.info.UføreGrunnlag;
 import no.nav.foreldrepenger.info.UttakPeriode;
 import no.nav.foreldrepenger.info.datatyper.BehandlingType;
 import no.nav.foreldrepenger.info.datatyper.DokumentTypeId;
 import no.nav.foreldrepenger.info.datatyper.FagsakYtelseType;
 import no.nav.foreldrepenger.info.datatyper.FamilieHendelseType;
+import no.nav.foreldrepenger.info.datatyper.MorsAktivitet;
 
 class SakRestTest {
 
@@ -50,7 +49,6 @@ class SakRestTest {
                 .medFamilieHendelseType(FamilieHendelseType.FØDSEL.getVerdi())
                 .medFagsakYtelseType(FagsakYtelseType.FP.name())
                 .medAktørIdBarn(barnAktørId)
-
                 .medAktørIdAnnenPart(annenPartAktørId)
                 .build());
         var annenpartSaksnummer = "111";
@@ -71,7 +69,6 @@ class SakRestTest {
                 .withTom(LocalDate.now().plusWeeks(10))
                 .withArbeidstidprosent(30L)
                 .withGraderingInnvilget(true)
-                .withUttakUtsettelseType("-")
                 .withUttakArbeidType(Aktivitet.Type.ORDINÆRT_ARBEID.name())
                 .withArbeidsgiverOrgnr("123")
                 .withPeriodeResultatType("INNVILGET")
@@ -82,8 +79,22 @@ class SakRestTest {
                 .withOppholdÅrsak("UTTAK_MØDREKVOTE_ANNEN_FORELDER")
                 .withOverføringÅrsak("SYKDOM_ANNEN_FORELDER")
                 .withUttakUtsettelseType("INSTITUSJONSOPPHOLD_SØKER")
+                .withTrekkdager(BigDecimal.TEN)
                 .build();
-        repository.lagreVedtaksperioder(behandlingId, List.of(uttakPeriode));
+        var avslagHull = new UttakPeriode.Builder()
+                .withFom(uttakPeriode.getTom().plusDays(1))
+                .withTom(uttakPeriode.getTom().plusWeeks(1))
+                .withArbeidstidprosent(0L)
+                .withUttakUtsettelseType("-")
+                .withUttakArbeidType(Aktivitet.Type.ORDINÆRT_ARBEID.name())
+                .withArbeidsgiverOrgnr("123")
+                .withPeriodeResultatType("IKKE_OPPFYLT")
+                .withPeriodeResultatÅrsak("4005")
+                .withTrekkkonto(KontoType.FELLESPERIODE.name())
+                .withBehandlingId(behandlingId)
+                .withTrekkdager(BigDecimal.TEN)
+                .build();
+        repository.lagreVedtaksperioder(behandlingId, List.of(uttakPeriode, avslagHull));
 
         var søknadsGrunnlag = new SøknadsGrunnlag.Builder()
                 .antallBarn(1)
@@ -123,7 +134,7 @@ class SakRestTest {
         assertThat(fpSak.gjelderAdopsjon()).isFalse();
         assertThat(fpSak.gjeldendeVedtak()).isNotNull();
         assertThat(fpSak.sisteSøknadMottattDato()).isEqualTo(søknadMottattDato);
-        assertThat(fpSak.gjeldendeVedtak().perioder()).hasSize(1);
+        assertThat(fpSak.gjeldendeVedtak().perioder()).hasSize(2);
         assertThat(fpSak.dekningsgrad()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.Dekningsgrad.ÅTTI);
         var vedtakPeriode = fpSak.gjeldendeVedtak().perioder().get(0);
         assertThat(vedtakPeriode.fom()).isEqualTo(uttakPeriode.getFom());
@@ -136,11 +147,21 @@ class SakRestTest {
         assertThat(vedtakPeriode.morsAktivitet()).isNull();
         assertThat(vedtakPeriode.samtidigUttak()).isNull();
         assertThat(vedtakPeriode.flerbarnsdager()).isEqualTo(uttakPeriode.getFlerbarnsdager());
+        assertThat(vedtakPeriode.resultat().innvilget()).isTrue();
+        assertThat(vedtakPeriode.resultat().trekkerDager()).isTrue();
+        assertThat(vedtakPeriode.resultat().årsak()).isEqualTo(UttakPeriodeResultat.Årsak.ANNET);
 
         //I praksis kan ikke alle disse være satt samtidig
         assertThat(vedtakPeriode.utsettelseÅrsak()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.UtsettelseÅrsak.SØKER_INNLAGT);
         assertThat(vedtakPeriode.overføringÅrsak()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.OverføringÅrsak.SYKDOM_ANNEN_FORELDER);
         assertThat(vedtakPeriode.oppholdÅrsak()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.OppholdÅrsak.MØDREKVOTE_ANNEN_FORELDER);
+
+        var avslagsperiode = fpSak.gjeldendeVedtak().perioder().get(1);
+        assertThat(avslagsperiode.fom()).isEqualTo(avslagHull.getFom());
+        assertThat(avslagsperiode.tom()).isEqualTo(avslagHull.getTom());
+        assertThat(avslagsperiode.resultat().innvilget()).isFalse();
+        assertThat(avslagsperiode.resultat().trekkerDager()).isTrue();
+        assertThat(avslagsperiode.resultat().årsak()).isEqualTo(UttakPeriodeResultat.Årsak.AVSLAG_HULL_MELLOM_FORELDRENES_PERIODER);
     }
 
     private void lagreSøknad(InMemTestRepository repository, long behandlingId, LocalDate søknadMottattDato) {

@@ -273,7 +273,10 @@ class SakerTjeneste {
 
     private UttakPeriode map(no.nav.foreldrepenger.info.UttakPeriode p, Long behandlingId) {
         var trekkerMinsterett = !Set.of("2004", "2033").contains(p.getPeriodeResultatÅrsak());
-        var resultat = new UttakPeriodeResultat("INNVILGET".equals(p.getPeriodeResultatType()), trekkerMinsterett);
+        var trekkerDager = p.getTrekkdager() != null && p.getTrekkdager().compareTo(BigDecimal.ZERO) >= 1;
+        var årsak = mapÅrsak(p.getPeriodeResultatÅrsak());
+        var resultat = new UttakPeriodeResultat("INNVILGET".equals(p.getPeriodeResultatType()), trekkerMinsterett,
+                trekkerDager, årsak);
         var samtidigUttaksprosent = p.getSamtidigUttaksprosent();
         var samtidigUttak = map(samtidigUttaksprosent);
         if (p.getSamtidigUttak() && samtidigUttaksprosent == null) {
@@ -296,6 +299,13 @@ class SakerTjeneste {
         return new UttakPeriode(p.getFom(), p.getTom(), mapKontotype(p), resultat, mapUtsettelseÅrsak(p.getUttakUtsettelseType()),
                 mapOppholdÅrsak(p.getOppholdÅrsak()), mapOverføringÅrsak(p.getOverføringÅrsak()), gradering, mapMorsAktivitet(p.getMorsAktivitet()),
                 samtidigUttak, p.getFlerbarnsdager());
+    }
+
+    private UttakPeriodeResultat.Årsak mapÅrsak(String periodeResultatÅrsak) {
+        return switch (periodeResultatÅrsak) {
+            case "4005", "4102" -> UttakPeriodeResultat.Årsak.AVSLAG_HULL_MELLOM_FORELDRENES_PERIODER;
+            default -> UttakPeriodeResultat.Årsak.ANNET;
+        };
     }
 
     private Aktivitet.Type mapAktivitetType(String type) {

@@ -120,12 +120,12 @@ public class UttakPeriode {
         return uttakUtsettelseType;
     }
 
-    public Boolean getFlerbarnsdager() {
-        return flerbarnsdager;
+    public boolean getFlerbarnsdager() {
+        return Boolean.TRUE.equals(flerbarnsdager);
     }
 
-    public Boolean getGraderingInnvilget() {
-        return graderingInnvilget;
+    public boolean getGraderingInnvilget() {
+        return Boolean.TRUE.equals(graderingInnvilget);
     }
 
     public Boolean getManueltBehandlet() {
