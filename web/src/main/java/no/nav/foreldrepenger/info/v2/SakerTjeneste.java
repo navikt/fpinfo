@@ -181,7 +181,7 @@ class SakerTjeneste {
 
     private UttakPeriode map(SøknadsperiodeEntitet entitet) {
         //PeriodeResultat alltid null på søknadsperiode
-        var kontoType = entitet.getTrekkonto().map(KontoType::valueOf).orElse(null);
+        var kontoType = finnKontoType(entitet);
         var utsettelseÅrsak = mapUtsettelseÅrsak(entitet.getUtsettelseÅrsak());
         var oppholdÅrsak = mapOppholdÅrsak(entitet.getOppholdÅrsak());
         var overføringÅrsak = mapOverføringÅrsak(entitet.getOverføringÅrsak());
@@ -191,6 +191,15 @@ class SakerTjeneste {
         return new UttakPeriode(entitet.getFom(), entitet.getTom(), kontoType, null,
                 utsettelseÅrsak, oppholdÅrsak, overføringÅrsak, gradering, mapMorsAktivitet(entitet.getMorsAktivitet()),
                 samtidigUttak, entitet.isFlerbarnsdager());
+    }
+
+    private static KontoType finnKontoType(SøknadsperiodeEntitet entitet) {
+        return entitet.getTrekkonto().map(tk -> {
+            if (tk.equals("ANNET")) {
+                return null;
+            }
+            return KontoType.valueOf(tk);
+        }).orElse(null);
     }
 
     private Gradering mapGradering(SøknadsperiodeEntitet entitet) {
