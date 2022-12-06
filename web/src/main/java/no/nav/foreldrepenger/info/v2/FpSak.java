@@ -10,7 +10,6 @@ record FpSak(Saksnummer saksnummer,
              LocalDate sisteSøknadMottattDato,
              boolean kanSøkeOmEndring,
              boolean sakTilhørerMor,
-             boolean gjelderAdopsjon,
              boolean morUføretrygd,
              boolean harAnnenForelderTilsvarendeRettEØS,
              boolean ønskerJustertUttakVedFødsel,
@@ -28,6 +27,7 @@ record FpSak(Saksnummer saksnummer,
         var gjeldendeVedtakDto = gjeldendeVedtak == null ? null : gjeldendeVedtak.tilDto();
         var familiehendelseDto = familiehendelse == null ? null : familiehendelse.tilDto();
         var åpenBehandlingDto = åpenBehandling == null ? null : åpenBehandling.tilDto();
+        var gjelderAdopsjon = familiehendelse != null && familiehendelse.omsorgsovertakelse() != null;
         return new no.nav.foreldrepenger.common.innsyn.v2.FpSak(saksnummer.tilDto(), sakAvsluttet, sisteSøknadMottattDato,
                 kanSøkeOmEndring, sakTilhørerMor, gjelderAdopsjon, morUføretrygd,
                 harAnnenForelderTilsvarendeRettEØS, ønskerJustertUttakVedFødsel,

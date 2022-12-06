@@ -290,4 +290,61 @@ class SakRestTest {
         assertThat(oppholdsperiode.kontoType()).isNull();
     }
 
+    @Test
+    void henter_adopsjon() {
+        var repository = new InMemTestRepository();
+        var saksnummer = new no.nav.foreldrepenger.info.Saksnummer("123");
+        var barnAktørId = "barnId";
+        var annenPartAktørId = "annenpart";
+        var behandlingId = 345L;
+        var aktørId = new SakRest.AktørIdDto("000000000");
+        var omsorgsovertakelse = LocalDate.now();
+
+        repository.lagre(new Sak.Builder()
+                .medSaksnummer(saksnummer)
+                .medBehandlingId(String.valueOf(behandlingId))
+                .medFagsakStatus("OPPR")
+                .medAktørId(aktørId.aktørId())
+                .medFamilieHendelseType(FamilieHendelseType.ADOPSJON.getVerdi())
+                .medFagsakYtelseType(FagsakYtelseType.FP.name())
+                .medAktørIdBarn(barnAktørId)
+                .medAktørIdAnnenPart(annenPartAktørId)
+                .build());
+        var behandling = new Behandling.Builder()
+                .medBehandlingId(behandlingId)
+                .medBehandlingStatus("AVSLU")
+                .medFamilieHendelseType(FamilieHendelseType.ADOPSJON.getVerdi())
+                .medSaksnummer(saksnummer)
+                .medBehandlingType(BehandlingType.FØRSTEGANGSBEHANDLING)
+                .build();
+        repository.lagre(behandling);
+
+        var søknadsGrunnlag = new SøknadsGrunnlag.Builder()
+                .antallBarn(1)
+                .annenForelderInformert(true)
+                .familieHendelseType(behandling.getFamilieHendelseType())
+                .brukerRolle("MORA")
+                .dekningsgrad(100)
+                .behandlingId(behandlingId)
+                .omsorgsovertakelseDato(omsorgsovertakelse)
+                .fødselDato(omsorgsovertakelse)
+                .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false, true, true))
+                .uføreGrunnlag(new UføreGrunnlag(behandlingId, false, false))
+                .build();
+        repository.lagre(behandlingId, søknadsGrunnlag);
+
+        var sakerTjeneste = new SakerTjeneste(repository);
+        var sakRest = new SakRest(sakerTjeneste, new AnnenPartVedtakTjeneste(sakerTjeneste));
+        var saker = sakRest.hentSaker(aktørId);
+
+        assertThat(saker.foreldrepenger()).hasSize(1);
+
+        var fpSak = saker.foreldrepenger().stream().findFirst().orElseThrow();
+        assertThat(fpSak.saksnummer().value()).isEqualTo(saksnummer.saksnummer());
+        assertThat(fpSak.familiehendelse().omsorgsovertakelse()).isEqualTo(omsorgsovertakelse);
+        assertThat(fpSak.familiehendelse().fødselsdato()).isEqualTo(omsorgsovertakelse);
+        assertThat(fpSak.familiehendelse().termindato()).isNull();
+        assertThat(fpSak.gjelderAdopsjon()).isTrue();
+    }
+
 }

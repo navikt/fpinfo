@@ -84,7 +84,7 @@ class SakerTjeneste {
         var barn = barn(fpSak.saksnummer());
         var rettighetType = rettighetTypeFraSøknad(søknadsgrunnlag);
         var sisteSøknadMottattDato = sisteSøknadMottattDato(åpenBehandling.getBehandlingId());
-        return Optional.of(new FpSak(fpSak.saksnummer, false, sisteSøknadMottattDato.orElse(null), false, tilhørerMor,
+        return Optional.of(new FpSak(fpSak.saksnummer, false, sisteSøknadMottattDato.orElse(null), tilhørerMor,
                 false, nullSafeEquals(søknadsgrunnlag.søknadMorUfør()), nullSafeEquals(søknadsgrunnlag.søknadHarAnnenForelderTilsvarendeRettEØS()),
                 isØnskerJustertUttakVedFødsel(søknadsgrunnlag), rettighetType, annenPart, familiehendelse, null, map(åpenBehandling),
                 barn, dekningsgrad(søknadsgrunnlag), fpSak.opprettetTidspunkt()));
@@ -126,11 +126,15 @@ class SakerTjeneste {
         var barn = barn(fpSak.saksnummer());
         var sisteBehandling = åpenBehandling.map(Behandling::getBehandlingId).orElse(gjeldendeVedtakBehandlingId);
         var sisteSøknadMottattDato = sisteSøknadMottattDato(sisteBehandling);
-        return Optional.of(new FpSak(fpSak.saksnummer, sakAvsluttet, sisteSøknadMottattDato.orElse(null), kanSøkeOmEndring, tilhørerMor, false,
+        return Optional.of(new FpSak(fpSak.saksnummer, sakAvsluttet, sisteSøknadMottattDato.orElse(null), kanSøkeOmEndring, tilhørerMor,
                 nullSafeEquals(søknadsgrunnlag.bekreftetMorUfør()), nullSafeEquals(søknadsgrunnlag.bekreftetHarAnnenForelderTilsvarendeRettEØS()),
                 isØnskerJustertUttakVedFødsel(søknadsgrunnlag), rettighetType(søknadsgrunnlag), annenPart,
                 familiehendelse, gjeldendeVedtak, åpenBehandling.map(this::map).orElse(null), barn, dekningsgrad(søknadsgrunnlag),
                 fpSak.opprettetTidspunkt));
+    }
+
+    private static boolean gjelderAdopsjon() {
+        return false;
     }
 
     private boolean isØnskerJustertUttakVedFødsel(SøknadsGrunnlag søknadsgrunnlag) {
