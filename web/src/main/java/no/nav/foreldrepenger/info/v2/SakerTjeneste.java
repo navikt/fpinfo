@@ -133,10 +133,6 @@ class SakerTjeneste {
                 fpSak.opprettetTidspunkt));
     }
 
-    private static boolean gjelderAdopsjon() {
-        return false;
-    }
-
     private boolean isØnskerJustertUttakVedFødsel(SøknadsGrunnlag søknadsgrunnlag) {
         return nullSafeEquals(søknadsgrunnlag.ønskerJustertUttakVedFødsel());
     }
