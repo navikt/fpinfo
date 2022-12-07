@@ -84,8 +84,8 @@ class SakerTjeneste {
         var barn = barn(fpSak.saksnummer());
         var rettighetType = rettighetTypeFraSøknad(søknadsgrunnlag);
         var sisteSøknadMottattDato = sisteSøknadMottattDato(åpenBehandling.getBehandlingId());
-        return Optional.of(new FpSak(fpSak.saksnummer, false, sisteSøknadMottattDato.orElse(null), tilhørerMor,
-                false, nullSafeEquals(søknadsgrunnlag.søknadMorUfør()), nullSafeEquals(søknadsgrunnlag.søknadHarAnnenForelderTilsvarendeRettEØS()),
+        return Optional.of(new FpSak(fpSak.saksnummer, false, sisteSøknadMottattDato.orElse(null), false,
+                tilhørerMor, nullSafeEquals(søknadsgrunnlag.søknadMorUfør()), nullSafeEquals(søknadsgrunnlag.søknadHarAnnenForelderTilsvarendeRettEØS()),
                 isØnskerJustertUttakVedFødsel(søknadsgrunnlag), rettighetType, annenPart, familiehendelse, null, map(åpenBehandling),
                 barn, dekningsgrad(søknadsgrunnlag), fpSak.opprettetTidspunkt()));
     }
