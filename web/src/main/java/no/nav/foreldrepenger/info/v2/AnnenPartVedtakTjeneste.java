@@ -52,7 +52,17 @@ class AnnenPartVedtakTjeneste {
         }
         var termindato = gjeldendeSak.familiehendelse().termindato();
         var dekningsgrad = gjeldendeSak.dekningsgrad();
-        return Optional.of(new AnnenPartVedtak(gjeldendeSak.gjeldendeVedtak().perioder(), termindato, dekningsgrad));
+        return Optional.of(new AnnenPartVedtak(filterSensitive(gjeldendeSak), termindato, dekningsgrad));
+    }
+
+    private static List<UttakPeriode> filterSensitive(FpSak gjeldendeSak) {
+        //SKal ikke kunne se annen parts arbeidsgivere
+        return gjeldendeSak.gjeldendeVedtak().perioder().stream().map(p -> {
+            var gradering = p.gradering() == null ? null : new Gradering(p.gradering().arbeidstidprosent(), null);
+            return new UttakPeriode(p.fom(), p.tom(),
+                    p.kontoType(), p.resultat(), p.utsettelseÅrsak(), p.oppholdÅrsak(), p.overføringÅrsak(), gradering,
+                    p.morsAktivitet(), p.samtidigUttak(), p.flerbarnsdager());
+        }).toList();
     }
 
     private Optional<FpSak> gjeldendeSak(Set<FpSak> saker,
