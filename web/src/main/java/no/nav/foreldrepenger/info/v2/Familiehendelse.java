@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.info.v2;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 record Familiehendelse(LocalDate fødselsdato,
                        LocalDate termindato,
@@ -15,12 +15,12 @@ record Familiehendelse(LocalDate fødselsdato,
 
     @JsonIgnore
     public LocalDate familiehendelse() {
+        if (omsorgsovertakelse() != null) {
+            return omsorgsovertakelse();
+        }
         if (fødselsdato() != null) {
             return fødselsdato();
         }
-        if (termindato() != null) {
-            return termindato();
-        }
-        return omsorgsovertakelse();
+        return termindato();
     }
 }
