@@ -15,7 +15,6 @@ import no.nav.foreldrepenger.info.app.ResourceLink;
 import no.nav.foreldrepenger.info.app.tjenester.dto.BehandlingDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.SakDto;
 import no.nav.foreldrepenger.info.app.tjenester.dto.UttaksPeriodeDto;
-import no.nav.foreldrepenger.info.datatyper.BehandlingResultatType;
 import no.nav.foreldrepenger.info.datatyper.BehandlingStatus;
 import no.nav.foreldrepenger.info.datatyper.BehandlingTema;
 import no.nav.foreldrepenger.info.datatyper.FagsakYtelseType;
@@ -28,7 +27,6 @@ class DomeneTilDtoTransformasjonTest {
     private static final Saksnummer SAKSNUMMER = new Saksnummer("4567");
     private static final String BEHANDLENDE_ENHET = "4052";
     private static final String BEHANDLENDE_ENHET_NAVN = "NAV enhet";
-    private static final String RESULTAT_TYPE = BehandlingResultatType.IKKE_FASTSATT.name();
     private static final String BEHANDLING_STATUS = BehandlingStatus.UTREDES.getVerdi();
     private static final String FAGSAK_YTELSE_TYPE = FagsakYtelseType.FP.name();
     private static final String FAMILIEHENDELSE_TYPE = FamilieHendelseType.FØDSEL.getVerdi();
@@ -43,7 +41,7 @@ class DomeneTilDtoTransformasjonTest {
     void behandlingTilBehandlingDto() {
         var behandling = Behandling.builder()
                 .medBehandlingId(BEHANDLING_ID)
-                .medBehandlingResultatType(RESULTAT_TYPE)
+                .medBehandlingResultatType("IKKE_FASTSATT")
                 .medBehandlingStatus(BEHANDLING_STATUS)
                 .medBehandlendeEnhet(BEHANDLENDE_ENHET, BEHANDLENDE_ENHET_NAVN)
                 .medFagsakYtelseType(FAGSAK_YTELSE_TYPE)
