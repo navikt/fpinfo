@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.info;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -14,7 +13,6 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Immutable;
 
-import no.nav.foreldrepenger.info.datatyper.BehandlingResultatType;
 import no.nav.foreldrepenger.info.datatyper.BehandlingStatus;
 import no.nav.foreldrepenger.info.datatyper.BehandlingType;
 
@@ -22,11 +20,6 @@ import no.nav.foreldrepenger.info.datatyper.BehandlingType;
 @Table(name = "BEHANDLING")
 @Immutable
 public class Behandling {
-
-    private static final Set<String> INNVILGET_RESULTAT = Set.of(BehandlingResultatType.INNVILGET.name(),
-            BehandlingResultatType.FORELDREPENGER_ENDRET.name(),
-            BehandlingResultatType.FORELDREPENGER_SENERE.name(),
-            BehandlingResultatType.INGEN_ENDRING.name());
 
     @Id
     @Column(name = "BEHANDLING_ID")
@@ -56,9 +49,6 @@ public class Behandling {
 
     @Column(name = "BEHANDLENDE_ENHET_NAVN")
     private String behandlendeEnhetNavn;
-
-    @OneToMany(mappedBy = "behandlingId")
-    private List<Aksjonspunkt> aksjonspunkter = new ArrayList<>(1);
 
     @OneToMany(mappedBy = "behandlingId")
     private List<BehandlingÅrsak> årsaker = new ArrayList<>();
@@ -108,12 +98,6 @@ public class Behandling {
         return behandlendeEnhetNavn;
     }
 
-    public List<Aksjonspunkt> getÅpneAksjonspunkter() {
-        return this.aksjonspunkter.stream().filter(Aksjonspunkt::erÅpentAksjonspunkt).toList();
-    }
-
-
-
     public BehandlingType getBehandlingType() {
         return behandlingType;
     }
@@ -124,19 +108,6 @@ public class Behandling {
 
     public LocalDateTime getEndretTidspunkt() {
         return endretTidspunkt;
-    }
-
-    public boolean erMergetOgHenlagt() {
-        return getBehandlingResultatType().equals(BehandlingResultatType.MERGET_OG_HENLAGT.name());
-    }
-
-    public boolean erAvslått() {
-        return getBehandlingResultatType().equals(BehandlingResultatType.AVSLÅTT.name());
-    }
-
-    public boolean erInnvilget() {
-        var resultat = getBehandlingResultatType();
-        return INNVILGET_RESULTAT.contains(resultat);
     }
 
     public boolean erAvsluttet() {
@@ -191,11 +162,6 @@ public class Behandling {
             return this;
         }
 
-        public Builder medAksjonspunkter(List<Aksjonspunkt> aksjonspunkter) {
-            behandling.aksjonspunkter = aksjonspunkter;
-            return this;
-        }
-
         public Builder medBehandlingÅrsaker(List<BehandlingÅrsak> årsaker) {
             behandling.årsaker = årsaker;
             return this;
@@ -217,7 +183,7 @@ public class Behandling {
                 + ", behandlingResultatType="
                 + behandlingResultatType + ", behandlingType=" + behandlingType + ", fagsakYtelseType=" + fagsakYtelseType + ", saksnummer="
                 + saksnummer + ", familieHendelseType=" + familieHendelseType + ", behandlendeEnhet=" + behandlendeEnhet
-                + ", behandlendeEnhetNavn=" + behandlendeEnhetNavn + ", aksjonspunkter=" + aksjonspunkter + ", årsaker=" + årsaker
+                + ", behandlendeEnhetNavn=" + behandlendeEnhetNavn + ", årsaker=" + årsaker
                 + ", opprettetTidspunkt=" + opprettetTidspunkt + ", endretTidspunkt=" + endretTidspunkt + "]";
     }
 }
