@@ -366,6 +366,7 @@ class SakerTjeneste {
             case "SYKDOM_SKADE", "SYKDOM" -> UtsettelseÅrsak.SØKER_SYKDOM;
             case "INSTITUSJONSOPPHOLD_SØKER" -> UtsettelseÅrsak.SØKER_INNLAGT;
             case "INSTITUSJONSOPPHOLD_BARNET" -> UtsettelseÅrsak.BARN_INNLAGT;
+            case "FERIE" -> UtsettelseÅrsak.LOVBESTEMT_FERIE;
             default -> UtsettelseÅrsak.valueOf(uttakUtsettelseType);
         };
     }
