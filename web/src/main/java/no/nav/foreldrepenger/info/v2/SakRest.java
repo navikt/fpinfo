@@ -23,14 +23,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-
-import no.nav.foreldrepenger.common.innsyn.v2.AnnenPartVedtak;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import io.swagger.v3.oas.annotations.Parameter;
+import no.nav.foreldrepenger.common.innsyn.v2.AnnenPartVedtak;
 import no.nav.foreldrepenger.common.innsyn.v2.Saker;
 import no.nav.security.token.support.core.api.ProtectedWithClaims;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
@@ -70,6 +69,7 @@ public class SakRest {
         LOG.info("Henter saker for bruker");
         var fpSaker = sakerTjeneste.hentFor(map(aktørId.aktørId));
         var fpSakerDto = tilDto(fpSaker);
+        LOG.info("Returnerer {} saker for bruker", fpSakerDto.size());
         return new Saker(fpSakerDto, Set.of(), Set.of());
     }
 

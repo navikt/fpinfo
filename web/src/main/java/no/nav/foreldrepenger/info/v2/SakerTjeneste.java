@@ -65,8 +65,10 @@ class SakerTjeneste {
     }
 
     private Optional<FpSak> sakUtenVedtak(FpSakRef fpSak) {
+        LOG.info("Henter sak uten vedtak {}", fpSak);
         var åbOpt = finnÅpenBehandling(fpSak.saksnummer());
         if (åbOpt.isEmpty()) {
+            LOG.info("Sak har ingen åpen behandling. Returnerer empty");
             //Henlagte behandlinger
             return Optional.empty();
         }
@@ -74,6 +76,7 @@ class SakerTjeneste {
         var søknadsgrunnlagOpt = finnSøknadsgrunnlag(åpenBehandling.getBehandlingId());
         if (søknadsgrunnlagOpt.isEmpty()) {
             //Kommer hit hvis behandling uten søknad. Feks ved utsendelse av brev, eller papir punching
+            LOG.info("Behandling uten søknadsgrunnlag. Returnerer empty");
             return Optional.empty();
         }
         var søknadsgrunnlag = søknadsgrunnlagOpt.get();
@@ -113,6 +116,7 @@ class SakerTjeneste {
     }
 
     private Optional<FpSak> sakMedVedtak(FpSakRef fpSak, Long gjeldendeVedtakBehandlingId) {
+        LOG.info("Henter sak med vedtak id {} sak {}", gjeldendeVedtakBehandlingId, fpSak);
         var søknadsgrunnlag = finnSøknadsgrunnlag(gjeldendeVedtakBehandlingId)
                 .orElseThrow(() -> new IllegalStateException("Forventer søknadsgrunnlag på behandling"));
         var tilhørerMor = tilhørerSakMor(søknadsgrunnlag);
@@ -401,5 +405,10 @@ class SakerTjeneste {
                             AktørId annenPart,
                             String fagsakStatus,
                             LocalDateTime opprettetTidspunkt) {
+
+        @Override
+        public String toString() {
+            return "FpSakRef{" + "saksnummer=" + saksnummer + ", fagsakStatus='" + fagsakStatus + '\'' + ", opprettetTidspunkt=" + opprettetTidspunkt + '}';
+        }
     }
 }
