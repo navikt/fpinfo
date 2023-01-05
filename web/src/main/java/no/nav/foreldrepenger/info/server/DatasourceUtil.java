@@ -26,10 +26,6 @@ public class DatasourceUtil {
 
         Properties dsProperties = new Properties();
         config.setDataSourceProperties(dsProperties);
-
-        HikariDataSource hikariDataSource = new HikariDataSource(config);
-        Runtime.getRuntime().addShutdownHook(new Thread(hikariDataSource::close));
-
-        return hikariDataSource;
+        return new HikariDataSource(config);
     }
 }
