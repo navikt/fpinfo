@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.info.Behandling;
 import no.nav.foreldrepenger.info.MottattDokument;
+import no.nav.foreldrepenger.info.Prosent;
 import no.nav.foreldrepenger.info.Saksnummer;
 import no.nav.foreldrepenger.info.SøknadsGrunnlag;
 import no.nav.foreldrepenger.info.SøknadsperiodeEntitet;
@@ -207,10 +208,10 @@ class SakerTjeneste {
     }
 
     private Gradering mapGradering(SøknadsperiodeEntitet entitet) {
-        if (entitet.getArbeidstidprosent() == null || entitet.getArbeidstidprosent() <= 0) {
+        if (entitet.getArbeidstidprosent() == null || entitet.getArbeidstidprosent().compareTo(Prosent.ZERO) <= 0) {
             return null;
         }
-        var arbeidstidprosent = new Gradering.Arbeidstidprosent(BigDecimal.valueOf(entitet.getArbeidstidprosent()));
+        var arbeidstidprosent = entitet.getArbeidstidprosent();
         var aktivitetType = mapAktivitetType(entitet);
         var type = new Aktivitet(aktivitetType, utledArbeidsgiver(entitet.getArbeidsgiverOrgnr(), entitet.getArbeidsgiverAktørId()));
         return new Gradering(arbeidstidprosent, type);
@@ -304,8 +305,7 @@ class SakerTjeneste {
         if (samtidigUttak == null && p.getGraderingInnvilget()) {
             var arbeidsgiver = utledArbeidsgiver(p);
             var aktivitetType = mapAktivitetType(p.getUttakArbeidType());
-            gradering = new Gradering(BigDecimal.valueOf(p.getArbeidstidprosent()), new Aktivitet(aktivitetType,
-                    arbeidsgiver));
+            gradering = new Gradering(p.getArbeidstidprosent(), new Aktivitet(aktivitetType, arbeidsgiver));
         } else {
             gradering = null;
         }
@@ -314,9 +314,10 @@ class SakerTjeneste {
                 samtidigUttak, p.getFlerbarnsdager());
     }
 
-    private static boolean samtidigUttaksprosentMerEnnUtbetaling(no.nav.foreldrepenger.info.UttakPeriode p, Long samtidigUttaksprosent) {
+    private static boolean samtidigUttaksprosentMerEnnUtbetaling(no.nav.foreldrepenger.info.UttakPeriode p, Prosent samtidigUttaksprosent) {
         var utbetalingsprosent = p.getUtbetalingsprosent();
-        return p.getSamtidigUttak() && samtidigUttaksprosent != null && utbetalingsprosent != null && utbetalingsprosent.compareTo(0L) >= 1 && !utbetalingsprosent.equals(samtidigUttaksprosent);
+        return p.getSamtidigUttak() && samtidigUttaksprosent != null && utbetalingsprosent != null
+                && utbetalingsprosent.compareTo(Prosent.ZERO) >= 1 && utbetalingsprosent.compareTo(samtidigUttaksprosent) == 0;
     }
 
     private UttakPeriodeResultat.Årsak mapÅrsak(String periodeResultatÅrsak) {
@@ -353,9 +354,9 @@ class SakerTjeneste {
         return trekkonto == null ? null : KontoType.valueOf(trekkonto);
     }
 
-    private SamtidigUttak map(Long samtidigUttaksprosent) {
+    private SamtidigUttak map(Prosent samtidigUttaksprosent) {
         return samtidigUttaksprosent != null
-                && samtidigUttaksprosent.compareTo(0L) > 0 ? new SamtidigUttak(BigDecimal.valueOf(samtidigUttaksprosent)) : null;
+                && samtidigUttaksprosent.compareTo(Prosent.ZERO) > 0 ? new SamtidigUttak(samtidigUttaksprosent) : null;
     }
 
     private MorsAktivitet mapMorsAktivitet(no.nav.foreldrepenger.info.datatyper.MorsAktivitet morsAktivitet) {

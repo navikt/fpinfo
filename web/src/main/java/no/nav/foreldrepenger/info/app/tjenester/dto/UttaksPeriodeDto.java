@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import no.nav.foreldrepenger.info.Prosent;
 import no.nav.foreldrepenger.info.Saksnummer;
 import no.nav.foreldrepenger.info.UttakPeriode;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
@@ -69,15 +70,15 @@ public class UttaksPeriodeDto implements AbacDto {
         dto.tom = uttakPeriode.getTom();
         dto.trekkonto = uttakPeriode.getTrekkonto();
         dto.trekkdager = uttakPeriode.getTrekkdager();
-        dto.utbetalingsprosent = uttakPeriode.getUtbetalingsprosent();
+        dto.utbetalingsprosent = toLongValue(uttakPeriode.getUtbetalingsprosent());
         dto.utsettelsePeriodeType = dash2null(uttakPeriode.getUttakUtsettelseType());
         dto.flerbarnsdager = uttakPeriode.getFlerbarnsdager();
         dto.manueltBehandlet = uttakPeriode.getManueltBehandlet();
         dto.samtidigUttak = uttakPeriode.getSamtidigUttak();
-        dto.samtidigUttaksprosent = uttakPeriode.getSamtidigUttaksprosent();
+        dto.samtidigUttaksprosent = toLongValue(uttakPeriode.getSamtidigUttaksprosent());
         if (!uttakPeriode.getSamtidigUttak()) { // frontend vil ikke ha detaljer om gradering ved samtidigUttak
             dto.graderingInnvilget = uttakPeriode.getGraderingInnvilget();
-            dto.arbeidstidprosent = uttakPeriode.getArbeidstidprosent();
+            dto.arbeidstidprosent = toLongValue(uttakPeriode.getArbeidstidprosent());
             dto.graderingAvslagAarsak = uttakPeriode.getGraderingAvslagAarsak();
         }
         dto.arbeidsgiverAktoerId = uttakPeriode.getArbeidsgiverAktørId();
@@ -88,6 +89,10 @@ public class UttaksPeriodeDto implements AbacDto {
         dto.morsAktivitet = uttakPeriode.getMorsAktivitet() == null ? null : uttakPeriode.getMorsAktivitet().name();
         dto.periodeResultatÅrsak = dash2null(uttakPeriode.getPeriodeResultatÅrsak());
         return dto;
+    }
+
+    private static Long toLongValue(Prosent prosent) {
+        return prosent == null ? null : prosent.longValue();
     }
 
     public static String dash2null(String domeneString) {

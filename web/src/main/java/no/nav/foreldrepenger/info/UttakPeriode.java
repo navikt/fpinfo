@@ -73,13 +73,13 @@ public class UttakPeriode {
     private BigDecimal trekkdager;
 
     @Column(name = "ARBEIDSTIDSPROSENT")
-    private Long arbeidstidprosent;
+    private BigDecimal arbeidstidprosent;
 
     @Column(name = "UTBETALINGSPROSENT")
-    private Long utbetalingsprosent;
+    private BigDecimal utbetalingsprosent;
 
     @Column(name = "SAMTIDIG_UTTAKSPROSENT")
-    private Long samtidigUttaksprosent;
+    private BigDecimal samtidigUttaksprosent;
 
     @Column(name = "OPPHOLD_AARSAK")
     private String oppholdÅrsak;
@@ -152,16 +152,16 @@ public class UttakPeriode {
         return trekkdager;
     }
 
-    public Long getArbeidstidprosent() {
-        return arbeidstidprosent;
+    public Prosent getArbeidstidprosent() {
+        return arbeidstidprosent == null ? null : new Prosent(arbeidstidprosent);
     }
 
-    public Long getUtbetalingsprosent() {
-        return utbetalingsprosent;
+    public Prosent getUtbetalingsprosent() {
+        return utbetalingsprosent == null ? null : new Prosent(utbetalingsprosent);
     }
 
-    public Long getSamtidigUttaksprosent() {
-        return samtidigUttaksprosent;
+    public Prosent getSamtidigUttaksprosent() {
+        return samtidigUttaksprosent == null ? null : new Prosent(samtidigUttaksprosent);
     }
 
     public String getOppholdÅrsak() {
@@ -281,17 +281,17 @@ public class UttakPeriode {
             return this;
         }
 
-        public Builder withArbeidstidprosent(Long arbeidstidprosent) {
+        public Builder withArbeidstidprosent(BigDecimal arbeidstidprosent) {
             uttakPeriode.arbeidstidprosent = arbeidstidprosent;
             return this;
         }
 
-        public Builder withUtbetalingsprosent(Long utbetalingsprosent) {
+        public Builder withUtbetalingsprosent(BigDecimal utbetalingsprosent) {
             uttakPeriode.utbetalingsprosent = utbetalingsprosent;
             return this;
         }
 
-        public Builder withSamtidigUttaksprosent(Long samtidigUttaksprosent) {
+        public Builder withSamtidigUttaksprosent(BigDecimal samtidigUttaksprosent) {
             uttakPeriode.samtidigUttaksprosent = samtidigUttaksprosent;
             return this;
         }

@@ -1,18 +1,13 @@
 package no.nav.foreldrepenger.info.v2;
 
-import java.math.BigDecimal;
-
 import no.nav.foreldrepenger.common.innsyn.v2.Arbeidsgiver;
+import no.nav.foreldrepenger.info.Prosent;
 
 
-record Gradering(Arbeidstidprosent arbeidstidprosent, Aktivitet aktivitet) {
-
-    Gradering(BigDecimal arbeidstidprosent, Aktivitet aktivitet) {
-        this(new Arbeidstidprosent(arbeidstidprosent), aktivitet);
-    }
+record Gradering(Prosent arbeidstidprosent, Aktivitet aktivitet) {
 
     no.nav.foreldrepenger.common.innsyn.v2.Gradering tilDto() {
-        return new no.nav.foreldrepenger.common.innsyn.v2.Gradering(arbeidstidprosent.value, map(aktivitet));
+        return new no.nav.foreldrepenger.common.innsyn.v2.Gradering(arbeidstidprosent.decimalValue(), map(aktivitet));
     }
 
     private no.nav.foreldrepenger.common.innsyn.v2.Aktivitet map(Aktivitet aktivitet) {
@@ -29,9 +24,5 @@ record Gradering(Arbeidstidprosent arbeidstidprosent, Aktivitet aktivitet) {
             return null;
         }
         return new Arbeidsgiver(arbeidsgiver.id(), Arbeidsgiver.ArbeidsgiverType.valueOf(arbeidsgiver.type().name()));
-    }
-
-    record Arbeidstidprosent(BigDecimal value) {
-
     }
 }

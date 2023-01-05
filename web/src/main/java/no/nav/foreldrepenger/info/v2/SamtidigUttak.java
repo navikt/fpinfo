@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.info.v2;
 
-import java.math.BigDecimal;
+import no.nav.foreldrepenger.info.Prosent;
 
-record SamtidigUttak(BigDecimal value) {
+record SamtidigUttak(Prosent value) {
     no.nav.foreldrepenger.common.innsyn.v2.SamtidigUttak tilDto() {
-        return new no.nav.foreldrepenger.common.innsyn.v2.SamtidigUttak(value);
+        return new no.nav.foreldrepenger.common.innsyn.v2.SamtidigUttak(value.decimalValue());
     }
 }
