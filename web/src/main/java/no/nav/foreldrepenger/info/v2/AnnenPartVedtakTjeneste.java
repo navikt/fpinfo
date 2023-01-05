@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -31,8 +30,8 @@ class AnnenPartVedtakTjeneste {
 
     Optional<AnnenPartVedtak> hentFor(AktørId søkersAktørId,
                                       AktørId annenPartAktørId,
-                                      @Nullable AktørId barn,
-                                      @Nullable LocalDate familiehendelse) {
+                                      AktørId barn,
+                                      LocalDate familiehendelse) {
         var fpSaker = sakerTjeneste.hentFor(annenPartAktørId);
         if (fpSaker.isEmpty()) {
             LOG.info("Annen part har ingen saker om foreldrepenger");
