@@ -68,7 +68,7 @@ class SakRestTest {
         var uttakPeriode = new UttakPeriode.Builder()
                 .withFom(LocalDate.now())
                 .withTom(LocalDate.now().plusWeeks(10))
-                .withArbeidstidprosent(30L)
+                .withArbeidstidprosent(BigDecimal.valueOf(30))
                 .withGraderingInnvilget(true)
                 .withUttakArbeidType(Aktivitet.Type.ORDINÆRT_ARBEID.name())
                 .withArbeidsgiverOrgnr("123")
@@ -85,7 +85,7 @@ class SakRestTest {
         var avslagHull = new UttakPeriode.Builder()
                 .withFom(uttakPeriode.getTom().plusDays(1))
                 .withTom(uttakPeriode.getTom().plusWeeks(1))
-                .withArbeidstidprosent(0L)
+                .withArbeidstidprosent(BigDecimal.ZERO)
                 .withUttakUtsettelseType("-")
                 .withUttakArbeidType(Aktivitet.Type.ORDINÆRT_ARBEID.name())
                 .withArbeidsgiverOrgnr("123")
@@ -143,7 +143,7 @@ class SakRestTest {
         assertThat(vedtakPeriode.kontoType()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.KontoType.valueOf(uttakPeriode.getTrekkonto()));
         assertThat(vedtakPeriode.resultat().innvilget()).isTrue();
         assertThat(vedtakPeriode.gradering()).isEqualTo(new no.nav.foreldrepenger.common.innsyn.v2.Gradering(
-                BigDecimal.valueOf(uttakPeriode.getArbeidstidprosent()), new Aktivitet(Aktivitet.Type.ORDINÆRT_ARBEID,
+                uttakPeriode.getArbeidstidprosent().decimalValue(), new Aktivitet(Aktivitet.Type.ORDINÆRT_ARBEID,
                 new Arbeidsgiver(uttakPeriode.getArbeidsgiverOrgnr(), Arbeidsgiver.ArbeidsgiverType.ORGANISASJON))));
         assertThat(vedtakPeriode.morsAktivitet()).isNull();
         assertThat(vedtakPeriode.samtidigUttak()).isNull();
@@ -211,7 +211,7 @@ class SakRestTest {
         var søknadsperiode = new SøknadsperiodeEntitet.Builder()
                 .fom(LocalDate.now())
                 .tom(LocalDate.now().plusWeeks(10).minusDays(1))
-                .gradering(30L, "123", null, Aktivitet.Type.ORDINÆRT_ARBEID)
+                .gradering(BigDecimal.valueOf(30), "123", null, Aktivitet.Type.ORDINÆRT_ARBEID)
                 .utsettelseÅrsak("INSTITUSJONSOPPHOLD_SØKER")
                 .arbeidsgiverOrgnr("123")
                 .trekkonto(KontoType.FELLESPERIODE.name())
@@ -273,7 +273,7 @@ class SakRestTest {
         assertThat(søknadsperiode1.tom()).isEqualTo(søknadsperiode.getTom());
         assertThat(søknadsperiode1.kontoType()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.KontoType.valueOf(søknadsperiode.getTrekkonto().orElseThrow()));
         assertThat(søknadsperiode1.gradering()).isEqualTo(new no.nav.foreldrepenger.common.innsyn.v2.Gradering(
-                BigDecimal.valueOf(søknadsperiode.getArbeidstidprosent()), new Aktivitet(Aktivitet.Type.ORDINÆRT_ARBEID,
+                søknadsperiode.getArbeidstidprosent().decimalValue(), new Aktivitet(Aktivitet.Type.ORDINÆRT_ARBEID,
                 new Arbeidsgiver(søknadsperiode.getArbeidsgiverOrgnr(), Arbeidsgiver.ArbeidsgiverType.ORGANISASJON))));
         assertThat(søknadsperiode1.morsAktivitet().name()).isEqualTo(søknadsperiode.getMorsAktivitet().name());
         assertThat(søknadsperiode1.samtidigUttak()).isNull();

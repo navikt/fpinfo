@@ -1,11 +1,11 @@
 package no.nav.foreldrepenger.info;
 
-import no.nav.foreldrepenger.common.innsyn.v2.Aktivitet;
-import no.nav.foreldrepenger.info.converters.StringToMorsAktivitetConverter;
-import no.nav.foreldrepenger.info.datatyper.MorsAktivitet;
-import no.nav.vedtak.felles.jpa.converters.BooleanToStringConverter;
+import static no.nav.foreldrepenger.info.app.tjenester.dto.UttaksPeriodeDto.dash2null;
 
-import org.hibernate.annotations.Immutable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Objects;
+import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -13,11 +13,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import java.time.LocalDate;
-import java.util.Objects;
-import java.util.Optional;
+import org.hibernate.annotations.Immutable;
 
-import static no.nav.foreldrepenger.info.app.tjenester.dto.UttaksPeriodeDto.dash2null;
+import no.nav.foreldrepenger.common.innsyn.v2.Aktivitet;
+import no.nav.foreldrepenger.info.converters.StringToMorsAktivitetConverter;
+import no.nav.foreldrepenger.info.datatyper.MorsAktivitet;
+import no.nav.vedtak.felles.jpa.converters.BooleanToStringConverter;
 
 @Entity(name = "SoeknadPeriode")
 @Table(name = "SOEKNAD_PERIODE")
@@ -45,10 +46,9 @@ public class SøknadsperiodeEntitet {
     private String trekkonto;
 
     @Column(name = "ARBEIDSTIDPROSENT")
-    //TODO bigdecimal -> valueobject. Samme med UttakPeriode.arbeidstidprosent
-    private Long arbeidstidprosent;
+    private BigDecimal arbeidstidprosent;
     @Column(name = "SAMTIDIG_UTTAKSPROSENT")
-    private Long samtidigUttaksprosent;
+    private BigDecimal samtidigUttaksprosent;
 
     @Column(name = "AARSAK")
     private String årsak;
@@ -98,8 +98,8 @@ public class SøknadsperiodeEntitet {
         return Optional.ofNullable(dash2null(trekkonto));
     }
 
-    public Long getArbeidstidprosent() {
-        return arbeidstidprosent;
+    public Prosent getArbeidstidprosent() {
+        return arbeidstidprosent == null ? null : new Prosent(arbeidstidprosent);
     }
 
     public String getUtsettelseÅrsak() {
@@ -142,8 +142,8 @@ public class SøknadsperiodeEntitet {
         return morsAktivitet;
     }
 
-    public Long getSamtidigUttaksprosent() {
-        return samtidigUttaksprosent;
+    public Prosent getSamtidigUttaksprosent() {
+        return samtidigUttaksprosent == null ? null : new Prosent(samtidigUttaksprosent);
     }
 
     @Override
@@ -177,7 +177,7 @@ public class SøknadsperiodeEntitet {
             return this;
         }
 
-        public Builder gradering(Long arbeidstidprosent, String arbeidsgiverOrgnr, String arbeidsgiverAktørId, Aktivitet.Type aktivitet) {
+        public Builder gradering(BigDecimal arbeidstidprosent, String arbeidsgiverOrgnr, String arbeidsgiverAktørId, Aktivitet.Type aktivitet) {
             kladd.arbeidstidprosent = arbeidstidprosent;
             kladd.arbeidsgiverOrgnr = arbeidsgiverOrgnr;
             kladd.arbeidsgiverAktørId = arbeidsgiverAktørId;
@@ -215,7 +215,7 @@ public class SøknadsperiodeEntitet {
             return this;
         }
 
-        public Builder samtidigUttaksprosent(Long samtidigUttaksprosent) {
+        public Builder samtidigUttaksprosent(BigDecimal samtidigUttaksprosent) {
             kladd.samtidigUttaksprosent = samtidigUttaksprosent;
             return this;
         }
