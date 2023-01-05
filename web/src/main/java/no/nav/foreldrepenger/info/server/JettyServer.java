@@ -10,11 +10,16 @@ import java.util.Map;
 
 import javax.naming.NamingException;
 import javax.servlet.DispatcherType;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
 import org.eclipse.jetty.plus.jndi.EnvEntry;
+import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
@@ -24,6 +29,7 @@ import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.FlywayException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import no.nav.foreldrepenger.info.app.konfig.ApplicationConfig;
 import no.nav.foreldrepenger.info.app.konfig.InternalApplication;
@@ -42,6 +48,17 @@ public class JettyServer {
 
     static {
         System.setProperty(NAIS_CLUSTER_NAME, ENV.clusterName());
+    }
+
+    /**
+     * Legges først slik at alltid resetter context før prosesserer nye requests.
+     * Kjøres først så ikke risikerer andre har satt Request#setHandled(true).
+     */
+    static final class ResetLogContextHandler extends AbstractHandler {
+        @Override
+        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) {
+            MDC.clear();
+        }
     }
 
     private final int serverPort;
@@ -97,9 +114,8 @@ public class JettyServer {
         var server = new Server(getServerPort());
         var connector = new ServerConnector(server);
         server.addConnector(connector);
-        var ctx = createContext();
-        server.setHandler(ctx);
-
+        var handlers = new HandlerList(new ResetLogContextHandler(), createContext());
+        server.setHandler(handlers);
         server.start();
         server.join();
         LOG.info("Jetty startet on port: " + getServerPort());
