@@ -296,9 +296,6 @@ class SakerTjeneste {
         if (p.getSamtidigUttak() && samtidigUttaksprosent == null) {
             LOG.warn("Samtidig uttak uten samtidig uttaksprosent. Behandling {}", behandlingId);
         }
-        if (samtidigUttaksprosentUlikUtbetaling(p, samtidigUttaksprosent)) {
-            LOG.warn("Samtidig uttak der prosent er ulik utbetalingsprosent. Behandling {}", behandlingId);
-        }
 
         //frontend vil ikke ha detaljer om gradering ved samtidigUttak
         final Gradering gradering;
@@ -312,12 +309,6 @@ class SakerTjeneste {
         return new UttakPeriode(p.getFom(), p.getTom(), mapKontotype(p), resultat, mapUtsettelseÅrsak(p.getUttakUtsettelseType()),
                 mapOppholdÅrsak(p.getOppholdÅrsak()), mapOverføringÅrsak(p.getOverføringÅrsak()), gradering, mapMorsAktivitet(p.getMorsAktivitet()),
                 samtidigUttak, p.getFlerbarnsdager());
-    }
-
-    private static boolean samtidigUttaksprosentUlikUtbetaling(no.nav.foreldrepenger.info.UttakPeriode p, Prosent samtidigUttaksprosent) {
-        var utbetalingsprosent = p.getUtbetalingsprosent();
-        return p.getSamtidigUttak() && samtidigUttaksprosent != null && utbetalingsprosent != null
-                && utbetalingsprosent.compareTo(Prosent.ZERO) > 0 && utbetalingsprosent.compareTo(samtidigUttaksprosent) != 0;
     }
 
     private UttakPeriodeResultat.Årsak mapÅrsak(String periodeResultatÅrsak) {
