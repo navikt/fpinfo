@@ -404,6 +404,19 @@ class SakerTjeneste {
                             LocalDateTime opprettetTidspunkt) {
 
         @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            var fpSakRef = (FpSakRef) o;
+            return saksnummer.equals(fpSakRef.saksnummer);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(saksnummer);
+        }
+
+        @Override
         public String toString() {
             return "FpSakRef{" + "saksnummer=" + saksnummer + ", fagsakStatus='" + fagsakStatus + '\'' + ", opprettetTidspunkt=" + opprettetTidspunkt + '}';
         }

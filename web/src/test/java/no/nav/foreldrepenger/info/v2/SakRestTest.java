@@ -347,4 +347,75 @@ class SakRestTest {
         assertThat(fpSak.gjelderAdopsjon()).isTrue();
     }
 
+    @Test
+    void ikke_hente_dobbelt_opp_hvis_klage() {
+        var repository = new InMemTestRepository();
+        var saksnummer = new no.nav.foreldrepenger.info.Saksnummer("123");
+        var barnAktørId = "barnId";
+        var annenPartAktørId = "annenpart";
+        var behandlingId1 = 345L;
+        var aktørId = new SakRest.AktørIdDto("000000000");
+        var omsorgsovertakelse = LocalDate.now();
+
+        repository.lagre(new Sak.Builder()
+                .medSaksnummer(saksnummer)
+                .medBehandlingId(String.valueOf(behandlingId1))
+                .medFagsakStatus("OPPR")
+                .medAktørId(aktørId.aktørId())
+                .medFamilieHendelseType(FamilieHendelseType.FØDSEL.getVerdi())
+                .medFagsakYtelseType(FagsakYtelseType.FP.name())
+                .medAktørIdBarn(barnAktørId)
+                .medAktørIdAnnenPart(annenPartAktørId)
+                .build());
+        var behandling = new Behandling.Builder()
+                .medBehandlingId(behandlingId1)
+                .medBehandlingStatus("AVSLU")
+                .medFamilieHendelseType(FamilieHendelseType.FØDSEL.getVerdi())
+                .medSaksnummer(saksnummer)
+                .medBehandlingType(BehandlingType.FØRSTEGANGSBEHANDLING)
+                .build();
+        repository.lagre(behandling);
+
+        var behandlingId2 = 999L;
+        repository.lagre(new Sak.Builder()
+                .medSaksnummer(saksnummer)
+                .medBehandlingId(String.valueOf(behandlingId2))
+                .medFagsakStatus("OPPR")
+                .medAktørId(aktørId.aktørId())
+                .medFamilieHendelseType(FamilieHendelseType.FØDSEL.getVerdi())
+                .medFagsakYtelseType(FagsakYtelseType.FP.name())
+                .medAktørIdBarn(barnAktørId)
+                .medAktørIdAnnenPart(null)
+                .build());
+        var behandling2 = new Behandling.Builder()
+                .medBehandlingId(behandlingId2)
+                .medBehandlingType(BehandlingType.ANNET)
+                .medBehandlingStatus("AVSLU")
+                .medFamilieHendelseType(FamilieHendelseType.FØDSEL.getVerdi())
+                .medSaksnummer(saksnummer)
+                .build();
+        repository.lagre(behandling2);
+
+        var søknadsGrunnlag = new SøknadsGrunnlag.Builder()
+                .antallBarn(1)
+                .annenForelderInformert(true)
+                .familieHendelseType(behandling.getFamilieHendelseType())
+                .brukerRolle("MORA")
+                .dekningsgrad(100)
+                .behandlingId(behandlingId1)
+                .omsorgsovertakelseDato(omsorgsovertakelse)
+                .fødselDato(omsorgsovertakelse)
+                .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false, true, true))
+                .uføreGrunnlag(new UføreGrunnlag(behandlingId1, false, false))
+                .build();
+        repository.lagre(behandlingId1, søknadsGrunnlag);
+        repository.lagre(behandlingId2, søknadsGrunnlag);
+
+        var sakerTjeneste = new SakerTjeneste(repository);
+        var sakRest = new SakRest(sakerTjeneste, new AnnenPartVedtakTjeneste(sakerTjeneste));
+        var saker = sakRest.hentSaker(aktørId);
+
+        assertThat(saker.foreldrepenger()).hasSize(1);
+    }
+
 }
