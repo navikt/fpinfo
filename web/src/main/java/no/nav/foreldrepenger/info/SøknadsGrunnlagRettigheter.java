@@ -21,7 +21,7 @@ public class SøknadsGrunnlagRettigheter {
     private Long gryfId;
 
     @Convert(converter = BooleanToStringConverter.class)
-    @Column(name = "SAKSB_ANNEN_FORELDER_HAR_RETT")
+    @Column(name = "SB_ANNEN_FORELDER_RETT")
     private Boolean saksbehandlerAnnenForelderRett;
 
     @Convert(converter = BooleanToStringConverter.class)
@@ -29,7 +29,7 @@ public class SøknadsGrunnlagRettigheter {
     private Boolean søknadAnnenForelderRett;
 
     @Convert(converter = BooleanToStringConverter.class)
-    @Column(name = "SAKSB_ALENEOMSORG")
+    @Column(name = "SB_ALENEOMSORG")
     private Boolean saksbehandlerAleneomsorg;
 
     @Convert(converter = BooleanToStringConverter.class)
@@ -37,7 +37,7 @@ public class SøknadsGrunnlagRettigheter {
     private Boolean søknadAleneomsorg;
 
     @Convert(converter = BooleanToStringConverter.class)
-    @Column(name = "SAKSB_UFORETRYGD")
+    @Column(name = "SB_UFORETRYGD")
     private Boolean saksbehandlerUføretrygd;
 
     @Convert(converter = BooleanToStringConverter.class)
@@ -49,7 +49,7 @@ public class SøknadsGrunnlagRettigheter {
     private Boolean søknadHarAnnenForelderTilsvarendeRettEØS;
 
     @Convert(converter = BooleanToStringConverter.class)
-    @Column(name = "SAKSB_ANNEN_FORELDER_RETT_EOS")
+    @Column(name = "SB_ANNEN_FORELDER_RETT_EOS")
     private Boolean saksbehandlerHarAnnenForelderTilsvarendeRettEØS;
 
     public SøknadsGrunnlagRettigheter(Long gryfId,
