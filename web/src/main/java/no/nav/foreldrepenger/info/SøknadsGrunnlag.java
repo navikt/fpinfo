@@ -112,12 +112,16 @@ public class SøknadsGrunnlag {
     }
 
     public Boolean bekreftetMorUfør() {
-        //left outer join her, så får et objekt der alle feltene er null
-        var gjeldendeUføre = uføreGrunnlag.getGjeldende();
-        if (gjeldendeUføre == null) {
-            return søknadMorUfør();
+        var overstyrtUføre = foreldreRettigheter.getSaksbehandlerUføretrygd();
+        if (overstyrtUføre != null) {
+            return overstyrtUføre;
         }
-        return gjeldendeUføre;
+        //left outer join her, så får et objekt der alle feltene er null
+        var registerUføre = uføreGrunnlag.getRegister();
+        if (registerUføre != null) {
+            return registerUføre;
+        }
+        return søknadMorUfør();
     }
 
     public Boolean søknadMorUfør() {
