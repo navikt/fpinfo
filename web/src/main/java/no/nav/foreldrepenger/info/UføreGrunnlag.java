@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.info;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -26,16 +25,10 @@ public class UføreGrunnlag {
     @Column(name = "REGISTER_UFORE")
     private Boolean register;
 
-    @Convert(converter = BooleanToStringConverter.class)
-    @Column(name = "OVERSTYRT_UFORE")
-    private Boolean overstyrt;
-
     public UføreGrunnlag(Long behandlingId,
-                         Boolean register,
-                         Boolean overstyrt) {
+                         Boolean register) {
         this.behandlingId = behandlingId;
         this.register = register;
-        this.overstyrt = overstyrt;
     }
 
     UføreGrunnlag() {
@@ -43,14 +36,6 @@ public class UføreGrunnlag {
 
     public Boolean getRegister() {
         return register;
-    }
-
-    public Boolean getOverstyrt() {
-        return overstyrt;
-    }
-
-    public Boolean getGjeldende() {
-        return Optional.ofNullable(getOverstyrt()).orElse(getRegister());
     }
 
     @Override
@@ -62,12 +47,11 @@ public class UføreGrunnlag {
             return false;
         }
         UføreGrunnlag that = (UføreGrunnlag) o;
-        return behandlingId.equals(that.behandlingId) && Objects.equals(register, that.register) && Objects.equals(
-                overstyrt, that.overstyrt);
+        return behandlingId.equals(that.behandlingId) && Objects.equals(register, that.register);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(behandlingId, register, overstyrt);
+        return Objects.hash(behandlingId, register);
     }
 }

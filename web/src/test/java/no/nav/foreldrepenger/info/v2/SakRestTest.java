@@ -106,8 +106,8 @@ class SakRestTest {
                 .behandlingId(behandlingId)
                 .fødselDato(fødselsdato)
                 .termindato(termindato)
-                .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false, true, true))
-                .uføreGrunnlag(new UføreGrunnlag(behandlingId, true, false))
+                .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false, false, true, true))
+                .uføreGrunnlag(new UføreGrunnlag(behandlingId, true))
                 .build();
         repository.lagre(behandlingId, søknadsGrunnlag);
 
@@ -234,7 +234,7 @@ class SakRestTest {
                 .dekningsgrad(100)
                 .behandlingId(behandlingId)
                 .fødselDato(fødselsdato)
-                .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false, false, false))
+                .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false, false, false, false))
                 .build();
         repository.lagre(behandlingId, søknadsGrunnlag);
 
@@ -328,8 +328,8 @@ class SakRestTest {
                 .behandlingId(behandlingId)
                 .omsorgsovertakelseDato(omsorgsovertakelse)
                 .fødselDato(omsorgsovertakelse)
-                .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false, true, true))
-                .uføreGrunnlag(new UføreGrunnlag(behandlingId, false, false))
+                .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false, false, true, true))
+                .uføreGrunnlag(new UføreGrunnlag(behandlingId, false))
                 .build();
         repository.lagre(behandlingId, søknadsGrunnlag);
 
@@ -405,8 +405,8 @@ class SakRestTest {
                 .behandlingId(behandlingId1)
                 .omsorgsovertakelseDato(omsorgsovertakelse)
                 .fødselDato(omsorgsovertakelse)
-                .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false, true, true))
-                .uføreGrunnlag(new UføreGrunnlag(behandlingId1, false, false))
+                .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false, false, true, true))
+                .uføreGrunnlag(new UføreGrunnlag(behandlingId1, false))
                 .build();
         repository.lagre(behandlingId1, søknadsGrunnlag);
         repository.lagre(behandlingId2, søknadsGrunnlag);

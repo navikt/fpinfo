@@ -21,7 +21,7 @@ public class SøknadsGrunnlagRettigheter {
     private Long gryfId;
 
     @Convert(converter = BooleanToStringConverter.class)
-    @Column(name = "SAKSB_ANNEN_FORELDER_HAR_RETT")
+    @Column(name = "SB_ANNEN_FORELDER_RETT")
     private Boolean saksbehandlerAnnenForelderRett;
 
     @Convert(converter = BooleanToStringConverter.class)
@@ -29,12 +29,16 @@ public class SøknadsGrunnlagRettigheter {
     private Boolean søknadAnnenForelderRett;
 
     @Convert(converter = BooleanToStringConverter.class)
-    @Column(name = "SAKSB_ALENEOMSORG")
+    @Column(name = "SB_ALENEOMSORG")
     private Boolean saksbehandlerAleneomsorg;
 
     @Convert(converter = BooleanToStringConverter.class)
     @Column(name = "SO_ALENEOMSORG")
     private Boolean søknadAleneomsorg;
+
+    @Convert(converter = BooleanToStringConverter.class)
+    @Column(name = "SB_UFORETRYGD")
+    private Boolean saksbehandlerUføretrygd;
 
     @Convert(converter = BooleanToStringConverter.class)
     @Column(name = "SO_UFORETRYGD")
@@ -45,7 +49,7 @@ public class SøknadsGrunnlagRettigheter {
     private Boolean søknadHarAnnenForelderTilsvarendeRettEØS;
 
     @Convert(converter = BooleanToStringConverter.class)
-    @Column(name = "SAKSB_ANNEN_FORELDER_RETT_EOS")
+    @Column(name = "SB_ANNEN_FORELDER_RETT_EOS")
     private Boolean saksbehandlerHarAnnenForelderTilsvarendeRettEØS;
 
     public SøknadsGrunnlagRettigheter(Long gryfId,
@@ -53,13 +57,14 @@ public class SøknadsGrunnlagRettigheter {
                                       Boolean søknadAnnenForelderRett,
                                       Boolean saksbehandlerAleneomsorg,
                                       Boolean søknadAleneomsorg,
-                                      Boolean søknadUføretrygd,
+                                      Boolean saksbehandlerUføretrygd, Boolean søknadUføretrygd,
                                       Boolean søknadHarAnnenForelderTilsvarendeRettEØS) {
         this.gryfId = gryfId;
         this.saksbehandlerAnnenForelderRett = saksbehandlerAnnenForelderRett;
         this.søknadAnnenForelderRett = søknadAnnenForelderRett;
         this.saksbehandlerAleneomsorg = saksbehandlerAleneomsorg;
         this.søknadAleneomsorg = søknadAleneomsorg;
+        this.saksbehandlerUføretrygd = saksbehandlerUføretrygd;
         this.søknadUføretrygd = søknadUføretrygd;
         this.søknadHarAnnenForelderTilsvarendeRettEØS = søknadHarAnnenForelderTilsvarendeRettEØS;
     }
@@ -88,6 +93,10 @@ public class SøknadsGrunnlagRettigheter {
         return søknadAleneomsorg;
     }
 
+    public Boolean getSaksbehandlerUføretrygd() {
+        return saksbehandlerUføretrygd;
+    }
+
     public Boolean getSøknadUføretrygd() {
         return søknadUføretrygd;
     }
@@ -104,8 +113,8 @@ public class SøknadsGrunnlagRettigheter {
     public String toString() {
         return "SøknadsGrunnlagRettigheter{" + "saksbehandlerAnnenForelderRett=" + saksbehandlerAnnenForelderRett
                 + ", søknadAnnenForelderRett=" + søknadAnnenForelderRett + ", saksbehandlerAleneomsorg="
-                + saksbehandlerAleneomsorg + ", søknadAleneomsorg=" + søknadAleneomsorg + ", søknadUføretrygd="
-                + søknadUføretrygd + ", søknadHarAnnenForelderTilsvarendeRettEØS="
+                + saksbehandlerAleneomsorg + ", søknadAleneomsorg=" + søknadAleneomsorg + ", saksbehandlerUføretrygd="
+                + saksbehandlerUføretrygd + ", søknadUføretrygd=" + søknadUføretrygd + ", søknadHarAnnenForelderTilsvarendeRettEØS="
                 + søknadHarAnnenForelderTilsvarendeRettEØS + ", saksbehandlerHarAnnenForelderTilsvarendeRettEØS="
                 + saksbehandlerHarAnnenForelderTilsvarendeRettEØS + '}';
     }
