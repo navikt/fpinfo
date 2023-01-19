@@ -22,7 +22,6 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.util.resource.Resource;
-import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.webapp.MetaData;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.flywaydb.core.Flyway;
@@ -124,7 +123,7 @@ public class JettyServer {
     private WebAppContext createContext() {
         var ctx = new WebAppContext();
         ctx.setParentLoaderPriority(true);
-        ctx.setBaseResource(createResourceCollection());
+        ctx.setResourceBase(".");
         ctx.setContextPath(CONTEXT_PATH);
         ctx.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
         ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*jersey-.*.jar$|^.*felles-.*.jar$");
@@ -134,12 +133,6 @@ public class JettyServer {
         ctx.setThrowUnavailableOnStartupException(true);
         addFiltersTokenSupport(ctx);
         return ctx;
-    }
-
-    private static Resource createResourceCollection() {
-        return new ResourceCollection(
-                Resource.newClassPathResource("/META-INF/resources/webjars/"),
-                Resource.newClassPathResource("/web"));
     }
 
     private void updateMetaData(MetaData metaData) {
