@@ -3,13 +3,16 @@ package no.nav.foreldrepenger.info.app.konfig;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
+import no.nav.vedtak.exception.TekniskException;
+
 import org.glassfish.jersey.server.ServerProperties;
 
-import io.swagger.v3.oas.integration.GenericOpenApiContextBuilder;
+import io.swagger.v3.jaxrs2.integration.JaxrsOpenApiContextBuilder;
 import io.swagger.v3.oas.integration.OpenApiConfigurationException;
 import io.swagger.v3.oas.integration.SwaggerConfiguration;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -22,28 +25,39 @@ import no.nav.foreldrepenger.info.app.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.info.app.tjenester.DokumentforsendelseTjeneste;
 import no.nav.foreldrepenger.info.server.TimingFilter;
 import no.nav.foreldrepenger.info.v2.SakRest;
+import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.security.token.support.jaxrs.JwtTokenContainerRequestFilter;
 
-@ApplicationPath(ApplicationConfig.API_URI)
-public class ApplicationConfig extends Application {
+@ApplicationPath(ApiConfig.API_URI)
+public class ApiConfig extends Application {
 
+    private static final Environment ENV = Environment.current();
     public static final String API_URI = "/api";
 
-    public ApplicationConfig() throws OpenApiConfigurationException {
-        new GenericOpenApiContextBuilder<>()
-                .openApiConfiguration(new SwaggerConfiguration()
-                        .openAPI(new OpenAPI()
-                                .info(new Info()
-                                        .title("Vedtaksløsningen - FPInfo")
-                                        .version("1.0")
-                                        .description("REST grensesnitt for FPInfo."))
-                                .addServersItem(new Server()
-                                        .url("/fpinfo")))
-                        .prettyPrint(true)
-                        .scannerClass("io.swagger.v3.jaxrs2.integration.JaxrsAnnotationScanner")
-                        .resourcePackages(Set.of("no.nav")))
-                .buildContext(true)
-                .read();
+    public ApiConfig() {
+        OpenAPI oas = new OpenAPI();
+        Info info = new Info()
+                .title("Vedtaksløsningen - Info")
+                .version("1.0")
+                .description("REST grensesnitt for fp-info.");
+
+        oas.info(info)
+                .addServersItem(new Server()
+                        .url(ENV.getProperty("context.path", "/fpinfo")));
+
+        SwaggerConfiguration oasConfig = new SwaggerConfiguration()
+                .openAPI(oas)
+                .prettyPrint(true)
+                .resourceClasses(getClasses().stream().map(Class::getName).collect(Collectors.toSet()));
+
+        try {
+            new JaxrsOpenApiContextBuilder<>()
+                    .openApiConfiguration(oasConfig)
+                    .buildContext(true)
+                    .read();
+        } catch (OpenApiConfigurationException e) {
+            throw new TekniskException("OPEN-API", e.getMessage(), e);
+        }
     }
 
     @Override

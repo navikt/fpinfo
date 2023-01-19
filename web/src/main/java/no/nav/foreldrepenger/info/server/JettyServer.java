@@ -30,8 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import no.nav.foreldrepenger.info.app.konfig.ApplicationConfig;
-import no.nav.foreldrepenger.info.app.konfig.InternalApplication;
+import no.nav.foreldrepenger.info.app.konfig.ApiConfig;
+import no.nav.foreldrepenger.info.app.konfig.InternalApiConfig;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.security.token.support.core.configuration.IssuerProperties;
 import no.nav.security.token.support.core.configuration.MultiIssuerConfiguration;
@@ -144,7 +144,7 @@ public class JettyServer {
     }
 
     protected List<Class<?>> getWebInfClasses() {
-        return List.of(ApplicationConfig.class, InternalApplication.class);
+        return List.of(ApiConfig.class, InternalApiConfig.class);
     }
 
     private static void addFiltersTokenSupport(WebAppContext ctx) {

@@ -17,7 +17,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import no.nav.security.token.support.core.api.Unprotected;
 
 @Unprotected
-@Path("/openapi.{type:json|yaml}")
+@Path("/openapi.{type:json}")
 public class SwaggerApiResource extends OpenApiResource {
 
     @Context
