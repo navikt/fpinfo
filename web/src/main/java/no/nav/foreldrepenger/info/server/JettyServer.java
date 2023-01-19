@@ -22,7 +22,6 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.util.resource.Resource;
-import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.webapp.MetaData;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.flywaydb.core.Flyway;
@@ -31,8 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import no.nav.foreldrepenger.info.app.konfig.ApplicationConfig;
-import no.nav.foreldrepenger.info.app.konfig.InternalApplication;
+import no.nav.foreldrepenger.info.app.konfig.ApiConfig;
+import no.nav.foreldrepenger.info.app.konfig.InternalApiConfig;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.security.token.support.core.configuration.IssuerProperties;
 import no.nav.security.token.support.core.configuration.MultiIssuerConfiguration;
@@ -124,7 +123,7 @@ public class JettyServer {
     private WebAppContext createContext() {
         var ctx = new WebAppContext();
         ctx.setParentLoaderPriority(true);
-        ctx.setBaseResource(createResourceCollection());
+        ctx.setResourceBase(".");
         ctx.setContextPath(CONTEXT_PATH);
         ctx.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
         ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*jersey-.*.jar$|^.*felles-.*.jar$");
@@ -136,12 +135,6 @@ public class JettyServer {
         return ctx;
     }
 
-    private static Resource createResourceCollection() {
-        return new ResourceCollection(
-                Resource.newClassPathResource("/META-INF/resources/webjars/"),
-                Resource.newClassPathResource("/web"));
-    }
-
     private void updateMetaData(MetaData metaData) {
         // Find path to class-files while starting jetty from development environment.
         metaData.setWebInfClassesResources(getWebInfClasses().stream()
@@ -151,7 +144,7 @@ public class JettyServer {
     }
 
     protected List<Class<?>> getWebInfClasses() {
-        return List.of(ApplicationConfig.class, InternalApplication.class);
+        return List.of(ApiConfig.class, InternalApiConfig.class);
     }
 
     private static void addFiltersTokenSupport(WebAppContext ctx) {
