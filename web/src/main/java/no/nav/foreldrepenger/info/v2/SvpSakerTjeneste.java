@@ -49,14 +49,20 @@ class SvpSakerTjeneste {
     private Optional<SvpSak> hentSvpSak(SvpSakRef svpSak) {
         var åpenBehandling = finnÅpenBehandling(svpSak.saksnummer);
 
-        var behandlingId = åpenBehandling.map(åb -> {
+        var behandlingIdOpt = åpenBehandling.map(åb -> {
                     LOG.info("Fant åpen behandling {} for sak {}", åb.getBehandlingId(), svpSak.saksnummer);
-                    return åb.getBehandlingId();
+                    return Optional.of(åb.getBehandlingId());
                 })
                 .orElseGet(() -> {
                     LOG.info("Fant ingen åpen behandling på sak {}. Henter gjeldende behandling", svpSak.saksnummer);
-                    return repository.hentGjeldendeBehandling(new Saksnummer(svpSak.saksnummer.value())).orElseThrow();
+                    return repository.hentGjeldendeBehandling(new Saksnummer(svpSak.saksnummer.value()));
                 });
+        if (behandlingIdOpt.isEmpty()) {
+            //Henleggelser
+            LOG.info("Sak uten åpen behandling eller vedtak {}", svpSak.saksnummer);
+            return Optional.empty();
+        }
+        var behandlingId = behandlingIdOpt.get();
         LOG.info("Henter sak med behandling id {} sak {}", behandlingId, svpSak);
         var fh = repository.hentFamilieHendelse(behandlingId).orElseThrow();
         if (fh.getOmsorgsovertakelseDato() != null) {

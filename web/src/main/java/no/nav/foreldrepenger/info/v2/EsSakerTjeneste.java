@@ -48,14 +48,20 @@ class EsSakerTjeneste {
     private Optional<EsSak> hentEsSak(EsSakerTjeneste.EsSakRef esSak) {
         var åpenBehandling = finnÅpenBehandling(esSak.saksnummer);
 
-        var behandlingId = åpenBehandling.map(åb -> {
+        var behandlingIdOpt = åpenBehandling.map(åb -> {
                     LOG.info("Fant åpen behandling {} for sak {}", åb.getBehandlingId(), esSak.saksnummer);
-                    return åb.getBehandlingId();
+                    return Optional.of(åb.getBehandlingId());
                 })
                 .orElseGet(() -> {
                     LOG.info("Fant ingen åpen behandling på sak {}. Henter gjeldende behandling", esSak.saksnummer);
-                    return repository.hentGjeldendeBehandling(new no.nav.foreldrepenger.info.Saksnummer(esSak.saksnummer.value())).orElseThrow();
+                    return repository.hentGjeldendeBehandling(new no.nav.foreldrepenger.info.Saksnummer(esSak.saksnummer.value()));
                 });
+        if (behandlingIdOpt.isEmpty()) {
+            //Henleggelser
+            LOG.info("Sak uten åpen behandling eller vedtak {}", esSak.saksnummer);
+            return Optional.empty();
+        }
+        var behandlingId = behandlingIdOpt.get();
         LOG.info("Henter sak med behandling id {} sak {}", behandlingId, esSak);
         var fh = repository.hentFamilieHendelse(behandlingId).orElseThrow();
         var familiehendelse = new Familiehendelse(fh.getFødselsdato(), fh.getTermindato(), fh.getAntallBarn(), fh.getOmsorgsovertakelseDato());
