@@ -14,58 +14,53 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.info.Behandling;
 import no.nav.foreldrepenger.info.MottattDokument;
-import no.nav.foreldrepenger.info.Saksnummer;
 import no.nav.foreldrepenger.info.datatyper.FagsakYtelseType;
 import no.nav.foreldrepenger.info.repository.Repository;
 
 
 @ApplicationScoped
-class SvpSakerTjeneste {
+class EsSakerTjeneste {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SvpSakerTjeneste.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EsSakerTjeneste.class);
 
     private Repository repository;
 
     @Inject
-    public SvpSakerTjeneste(Repository repository) {
+    public EsSakerTjeneste(Repository repository) {
         this.repository = repository;
     }
 
-    SvpSakerTjeneste() {
+    EsSakerTjeneste() {
         //CDI
     }
 
-    public Set<SvpSak> hentFor(AktørId aktørId) {
+    public Set<EsSak> hentFor(AktørId aktørId) {
         var sakList = repository.hentSak(aktørId.value());
         return sakList.stream()
-                .filter(s -> s.getFagsakYtelseType().equals(FagsakYtelseType.SVP.name()))
-                .map(s -> new SvpSakRef(new no.nav.foreldrepenger.info.v2.Saksnummer(s.getSaksnummer()), s.getFagsakStatus()))
+                .filter(s -> s.getFagsakYtelseType().equals(FagsakYtelseType.ES.name()))
+                .map(s -> new EsSakerTjeneste.EsSakRef(new no.nav.foreldrepenger.info.v2.Saksnummer(s.getSaksnummer()), s.getFagsakStatus()))
                 //Får en sak per behandling fra repo
                 .distinct()
-                .flatMap(s -> hentSvpSak(s).stream())
+                .flatMap(s -> hentEsSak(s).stream())
                 .collect(Collectors.toSet());
     }
 
-    private Optional<SvpSak> hentSvpSak(SvpSakRef svpSak) {
-        var åpenBehandling = finnÅpenBehandling(svpSak.saksnummer);
+    private Optional<EsSak> hentEsSak(EsSakerTjeneste.EsSakRef esSak) {
+        var åpenBehandling = finnÅpenBehandling(esSak.saksnummer);
 
         var behandlingId = åpenBehandling.map(åb -> {
-                    LOG.info("Fant åpen behandling {} for sak {}", åb.getBehandlingId(), svpSak.saksnummer);
+                    LOG.info("Fant åpen behandling {} for sak {}", åb.getBehandlingId(), esSak.saksnummer);
                     return åb.getBehandlingId();
                 })
                 .orElseGet(() -> {
-                    LOG.info("Fant ingen åpen behandling på sak {}. Henter gjeldende behandling", svpSak.saksnummer);
-                    return repository.hentGjeldendeBehandling(new Saksnummer(svpSak.saksnummer.value())).orElseThrow();
+                    LOG.info("Fant ingen åpen behandling på sak {}. Henter gjeldende behandling", esSak.saksnummer);
+                    return repository.hentGjeldendeBehandling(new no.nav.foreldrepenger.info.Saksnummer(esSak.saksnummer.value())).orElseThrow();
                 });
-        LOG.info("Henter sak med behandling id {} sak {}", behandlingId, svpSak);
+        LOG.info("Henter sak med behandling id {} sak {}", behandlingId, esSak);
         var fh = repository.hentFamilieHendelse(behandlingId).orElseThrow();
-        if (fh.getOmsorgsovertakelseDato() != null) {
-            LOG.warn("Forventer ikke svp sak med omsorgsovertakelse. Returnerer null." +
-                    " Sak {} Behandling {}", svpSak.saksnummer, behandlingId);
-        }
-        var familiehendelse = new Familiehendelse(fh.getFødselsdato(), fh.getTermindato(), fh.getAntallBarn(), null);
-        var sakAvsluttet = Objects.equals(svpSak.fagsakStatus(), "AVSLU");
-        return Optional.of(new SvpSak(svpSak.saksnummer, familiehendelse, sakAvsluttet, åpenBehandling.map(b -> map(b)).orElse(null)));
+        var familiehendelse = new Familiehendelse(fh.getFødselsdato(), fh.getTermindato(), fh.getAntallBarn(), fh.getOmsorgsovertakelseDato());
+        var sakAvsluttet = Objects.equals(esSak.fagsakStatus(), "AVSLU");
+        return Optional.of(new EsSak(esSak.saksnummer, familiehendelse, sakAvsluttet, åpenBehandling.map(b -> map(b)).orElse(null)));
     }
 
     private Optional<Behandling> finnÅpenBehandling(no.nav.foreldrepenger.info.v2.Saksnummer saksnummer) {
@@ -82,20 +77,20 @@ class SvpSakerTjeneste {
         return dokumenter.stream().anyMatch(MottattDokument::erSøknad);
     }
 
-    private SvpÅpenBehandling map(Behandling behandling) {
+    private EsÅpenBehandling map(Behandling behandling) {
         //TODO
-        return new SvpÅpenBehandling(BehandlingTilstand.UNDER_BEHANDLING);
+        return new EsÅpenBehandling(BehandlingTilstand.UNDER_BEHANDLING);
     }
 
-    private record SvpSakRef(no.nav.foreldrepenger.info.v2.Saksnummer saksnummer,
-                             String fagsakStatus) {
+    private record EsSakRef(no.nav.foreldrepenger.info.v2.Saksnummer saksnummer,
+                            String fagsakStatus) {
 
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            var svpSakRef = (SvpSakRef) o;
-            return saksnummer.equals(svpSakRef.saksnummer);
+            var esSakRef = (EsSakerTjeneste.EsSakRef) o;
+            return saksnummer.equals(esSakRef.saksnummer);
         }
 
         @Override
@@ -105,7 +100,7 @@ class SvpSakerTjeneste {
 
         @Override
         public String toString() {
-            return "SvpSakRef{" + "saksnummer=" + saksnummer + ", fagsakStatus='" + fagsakStatus + '\'' + '}';
+            return "EsSakRef{" + "saksnummer=" + saksnummer + ", fagsakStatus='" + fagsakStatus + '\'' + '}';
         }
     }
 }
