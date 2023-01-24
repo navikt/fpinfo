@@ -1,8 +1,7 @@
 package no.nav.foreldrepenger.info.datatyper;
 
-import static no.nav.vedtak.util.EnumUtil.match;
-
-import java.util.Optional;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 public enum MorsAktivitet {
 
@@ -17,8 +16,6 @@ public enum MorsAktivitet {
     IKKE_OPPGITT;
 
     public static MorsAktivitet get(String verdi) {
-        return Optional.ofNullable(verdi)
-                .map(v -> match(MorsAktivitet.class, (e) -> e.name().equals(v), null))
-                .orElse(null);
+        return Stream.of(values()).filter(ev -> Objects.equals(ev.name(), verdi)).findFirst().orElse(null);
     }
 }
