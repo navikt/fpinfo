@@ -31,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.v3.oas.annotations.Parameter;
 import no.nav.foreldrepenger.common.innsyn.v2.AnnenPartVedtak;
 import no.nav.foreldrepenger.common.innsyn.v2.Saker;
+import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.security.token.support.core.api.ProtectedWithClaims;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
@@ -48,18 +49,21 @@ public class SakRest {
     final static String PATH = "/v2";
 
     private static final Logger LOG = LoggerFactory.getLogger(SakRest.class);
+    private static final Environment ENV = Environment.current();
 
-    private final SakerTjeneste sakerTjeneste;
+    private final FpSakerTjeneste fpSakerTjeneste;
+    private final SvpSakerTjeneste svpSakerTjeneste;
     private final AnnenPartVedtakTjeneste annenPartVedtakTjeneste;
 
     @Inject
-    public SakRest(SakerTjeneste sakerTjeneste, AnnenPartVedtakTjeneste annenPartVedtakTjeneste) {
-        this.sakerTjeneste = sakerTjeneste;
+    public SakRest(FpSakerTjeneste fpSakerTjeneste, SvpSakerTjeneste svpSakerTjeneste, AnnenPartVedtakTjeneste annenPartVedtakTjeneste) {
+        this.fpSakerTjeneste = fpSakerTjeneste;
+        this.svpSakerTjeneste = svpSakerTjeneste;
         this.annenPartVedtakTjeneste = annenPartVedtakTjeneste;
     }
 
     SakRest() {
-        this(null, null);
+        this(null, null, null);
     }
 
     @Path("/saker")
@@ -67,14 +71,38 @@ public class SakRest {
     @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.FAGSAK)
     public Saker hentSaker(@NotNull @QueryParam("aktorId") @Parameter(name = "aktorId") AktørIdDto aktørId) {
         LOG.info("Henter saker for bruker");
-        var fpSaker = sakerTjeneste.hentFor(map(aktørId.aktørId));
-        var fpSakerDto = tilDto(fpSaker);
-        LOG.info("Returnerer {} saker for bruker", fpSakerDto.size());
-        return new Saker(fpSakerDto, Set.of(), Set.of());
+        var fpSakerDto = hentFpSaker(aktørId);
+        var svpSakerDto = hentSvpSaker(aktørId);
+        LOG.info("Returnerer {} fp saker, {} svp saker for bruker", fpSakerDto.size(), svpSakerDto);
+        return new Saker(fpSakerDto, Set.of(), svpSakerDto);
     }
 
-    public static Set<no.nav.foreldrepenger.common.innsyn.v2.FpSak> tilDto(Set<FpSak> fpSaker) {
+    private Set<no.nav.foreldrepenger.common.innsyn.v2.SvpSak> hentSvpSaker(AktørIdDto aktørId) {
+        if (ENV.isProd()) {
+            //TODO
+            try {
+                var svpSaker = svpSakerTjeneste.hentFor(map(aktørId.aktørId));
+                tilSvpSakerDto(svpSaker);
+            } catch (Exception e) {
+                LOG.warn("Feil ved henting av svp saker", e);
+            }
+            return Set.of();
+        }
+        var svpSaker = svpSakerTjeneste.hentFor(map(aktørId.aktørId));
+        return tilSvpSakerDto(svpSaker);
+    }
+
+    private Set<no.nav.foreldrepenger.common.innsyn.v2.FpSak> hentFpSaker(AktørIdDto aktørId) {
+        var fpSaker = fpSakerTjeneste.hentFor(map(aktørId.aktørId));
+        return tilFpSakerDto(fpSaker);
+    }
+
+    public static Set<no.nav.foreldrepenger.common.innsyn.v2.FpSak> tilFpSakerDto(Set<FpSak> fpSaker) {
         return fpSaker.stream().map(FpSak::tilDto).collect(Collectors.toSet());
+    }
+
+    public static Set<no.nav.foreldrepenger.common.innsyn.v2.SvpSak> tilSvpSakerDto(Set<SvpSak> svpSaker) {
+        return svpSaker.stream().map(SvpSak::tilDto).collect(Collectors.toSet());
     }
 
     @Path("/annenPartVedtak")

@@ -6,6 +6,7 @@ import java.util.Set;
 
 import no.nav.foreldrepenger.info.Behandling;
 import no.nav.foreldrepenger.info.FagsakRelasjon;
+import no.nav.foreldrepenger.info.FamilieHendelse;
 import no.nav.foreldrepenger.info.MottattDokument;
 import no.nav.foreldrepenger.info.Sak;
 import no.nav.foreldrepenger.info.Saksnummer;
@@ -38,4 +39,6 @@ public interface Repository {
     Set<String> hentBarn(Saksnummer saksnummer);
 
     List<SøknadsperiodeEntitet> hentSøknadsperioder(long behandlingId);
+
+    Optional<FamilieHendelse> hentFamilieHendelse(long behandlingId);
 }

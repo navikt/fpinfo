@@ -11,8 +11,6 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import no.nav.foreldrepenger.info.SøknadsperiodeEntitet;
-
 import org.hibernate.CacheMode;
 import org.hibernate.jpa.QueryHints;
 import org.hibernate.jpa.TypedParameterValue;
@@ -22,10 +20,12 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.info.Behandling;
 import no.nav.foreldrepenger.info.FagsakRelasjon;
+import no.nav.foreldrepenger.info.FamilieHendelse;
 import no.nav.foreldrepenger.info.MottattDokument;
 import no.nav.foreldrepenger.info.Sak;
 import no.nav.foreldrepenger.info.Saksnummer;
 import no.nav.foreldrepenger.info.SøknadsGrunnlag;
+import no.nav.foreldrepenger.info.SøknadsperiodeEntitet;
 import no.nav.foreldrepenger.info.UttakPeriode;
 import no.nav.foreldrepenger.info.datatyper.DokumentTypeId;
 import no.nav.foreldrepenger.info.datatyper.FagsakYtelseType;
@@ -140,5 +140,11 @@ public class DbRepository implements Repository {
     public List<SøknadsperiodeEntitet> hentSøknadsperioder(long behandlingId) {
         return em.createQuery("from SoeknadPeriode where behandlingId=:b", SøknadsperiodeEntitet.class)
                 .setParameter("b", behandlingId).getResultList();
+    }
+
+    @Override
+    public Optional<FamilieHendelse> hentFamilieHendelse(long behandlingId) {
+        return em.createQuery("from FamilieHendelse where behandlingId=:behandlingId", FamilieHendelse.class)
+                .setParameter("behandlingId", behandlingId).getResultList().stream().findFirst();
     }
 }

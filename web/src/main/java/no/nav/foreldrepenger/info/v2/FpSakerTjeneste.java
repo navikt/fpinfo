@@ -31,18 +31,18 @@ import no.nav.foreldrepenger.info.repository.Repository;
 
 
 @ApplicationScoped
-class SakerTjeneste {
+class FpSakerTjeneste {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SakerTjeneste.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FpSakerTjeneste.class);
 
     private Repository repository;
 
     @Inject
-    public SakerTjeneste(Repository repository) {
+    public FpSakerTjeneste(Repository repository) {
         this.repository = repository;
     }
 
-    SakerTjeneste() {
+    FpSakerTjeneste() {
         //CDI
     }
 
@@ -83,6 +83,7 @@ class SakerTjeneste {
         var søknadsgrunnlag = søknadsgrunnlagOpt.get();
         var tilhørerMor = tilhørerSakMor(søknadsgrunnlag);
         var annenPart = annenPart(fpSak).orElse(null);
+        //TODO erstatte med nytt familiehendelse view. Likt svp
         var familiehendelse = familiehendelse(søknadsgrunnlag);
 
         var barn = barn(fpSak.saksnummer());

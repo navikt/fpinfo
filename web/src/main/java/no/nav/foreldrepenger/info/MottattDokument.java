@@ -70,7 +70,9 @@ public class MottattDokument implements Serializable {
         return DokumentTypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON.name().equalsIgnoreCase(type) ||
                 DokumentTypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL.name().equalsIgnoreCase(type) ||
                 DokumentTypeId.SØKNAD_FORELDREPENGER_ADOPSJON.name().equalsIgnoreCase(type) ||
-                DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL.name().equalsIgnoreCase(type);
+                DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL.name().equalsIgnoreCase(type) ||
+                DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD.name().equalsIgnoreCase(type) ||
+                DokumentTypeId.SØKNAD_SVANGERSKAPSPENGER.name().equalsIgnoreCase(type);
     }
 
     public static Builder builder() {
