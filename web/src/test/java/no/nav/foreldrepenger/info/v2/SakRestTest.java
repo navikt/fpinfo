@@ -114,8 +114,8 @@ class SakRestTest {
         var søknadMottattDato = LocalDate.now().minusWeeks(1);
         lagreSøknad(repository, behandlingId, søknadMottattDato);
 
-        var sakerTjeneste = new SakerTjeneste(repository);
-        var sakRest = new SakRest(sakerTjeneste, new AnnenPartVedtakTjeneste(sakerTjeneste));
+        var sakerTjeneste = new FpSakerTjeneste(repository);
+        var sakRest = new SakRest(sakerTjeneste, new SvpSakerTjeneste(repository), new AnnenPartVedtakTjeneste(sakerTjeneste));
         var saker = sakRest.hentSaker(aktørId);
 
         assertThat(saker.foreldrepenger()).hasSize(1);
@@ -244,8 +244,8 @@ class SakRestTest {
         lagreSøknad(repository, behandlingId, sisteSøknadMottattDato);
         lagreSøknad(repository, behandlingId, førsteSøknadMottattDato);
 
-        var sakerTjeneste = new SakerTjeneste(repository);
-        var sakRest = new SakRest(sakerTjeneste, new AnnenPartVedtakTjeneste(sakerTjeneste));
+        var sakerTjeneste = new FpSakerTjeneste(repository);
+        var sakRest = new SakRest(sakerTjeneste, new SvpSakerTjeneste(repository), new AnnenPartVedtakTjeneste(sakerTjeneste));
         var saker = sakRest.hentSaker(aktørId);
 
         assertThat(saker.foreldrepenger()).hasSize(1);
@@ -333,8 +333,8 @@ class SakRestTest {
                 .build();
         repository.lagre(behandlingId, søknadsGrunnlag);
 
-        var sakerTjeneste = new SakerTjeneste(repository);
-        var sakRest = new SakRest(sakerTjeneste, new AnnenPartVedtakTjeneste(sakerTjeneste));
+        var sakerTjeneste = new FpSakerTjeneste(repository);
+        var sakRest = new SakRest(sakerTjeneste, new SvpSakerTjeneste(repository), new AnnenPartVedtakTjeneste(sakerTjeneste));
         var saker = sakRest.hentSaker(aktørId);
 
         assertThat(saker.foreldrepenger()).hasSize(1);
@@ -411,8 +411,8 @@ class SakRestTest {
         repository.lagre(behandlingId1, søknadsGrunnlag);
         repository.lagre(behandlingId2, søknadsGrunnlag);
 
-        var sakerTjeneste = new SakerTjeneste(repository);
-        var sakRest = new SakRest(sakerTjeneste, new AnnenPartVedtakTjeneste(sakerTjeneste));
+        var sakerTjeneste = new FpSakerTjeneste(repository);
+        var sakRest = new SakRest(sakerTjeneste, new SvpSakerTjeneste(repository), new AnnenPartVedtakTjeneste(sakerTjeneste));
         var saker = sakRest.hentSaker(aktørId);
 
         assertThat(saker.foreldrepenger()).hasSize(1);

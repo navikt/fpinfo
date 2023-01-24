@@ -25,6 +25,7 @@ public class InMemTestRepository implements Repository {
     private final List<FagsakRelasjon> fagsakRelasjoner = new ArrayList<>();
     private final List<MottattDokument> mottattDokumenter = new ArrayList<>();
     private final Map<Long, List<SøknadsperiodeEntitet>> søknadsperioder = new HashMap<>();
+    private final List<FamilieHendelse> familieHendelser = new ArrayList<>();
 
     @Override
     public List<Sak> hentSak(String aktørId) {
@@ -107,6 +108,11 @@ public class InMemTestRepository implements Repository {
         return p == null ? List.of() : List.copyOf(p);
     }
 
+    @Override
+    public Optional<FamilieHendelse> hentFamilieHendelse(long behandlingId) {
+        return familieHendelser.stream().filter(fh -> fh.getBehandlingId() == behandlingId).findFirst();
+    }
+
     public void lagre(Sak sak) {
         saker.add(sak);
     }
@@ -133,5 +139,9 @@ public class InMemTestRepository implements Repository {
 
     public void lagreSøknadsperioder(Long behandlingId, List<SøknadsperiodeEntitet> perioder) {
         this.søknadsperioder.put(behandlingId, perioder);
+    }
+
+    public void lagre(FamilieHendelse familieHendelse) {
+        familieHendelser.add(familieHendelse);
     }
 }

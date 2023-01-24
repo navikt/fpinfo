@@ -17,11 +17,11 @@ class AnnenPartVedtakTjeneste {
 
     private static final Logger LOG = LoggerFactory.getLogger(AnnenPartVedtakTjeneste.class);
 
-    private SakerTjeneste sakerTjeneste;
+    private FpSakerTjeneste fpSakerTjeneste;
 
     @Inject
-    public AnnenPartVedtakTjeneste(SakerTjeneste sakerTjeneste) {
-        this.sakerTjeneste = sakerTjeneste;
+    public AnnenPartVedtakTjeneste(FpSakerTjeneste fpSakerTjeneste) {
+        this.fpSakerTjeneste = fpSakerTjeneste;
     }
 
     AnnenPartVedtakTjeneste() {
@@ -32,7 +32,7 @@ class AnnenPartVedtakTjeneste {
                                       AktørId annenPartAktørId,
                                       AktørId barn,
                                       LocalDate familiehendelse) {
-        var fpSaker = sakerTjeneste.hentFor(annenPartAktørId);
+        var fpSaker = fpSakerTjeneste.hentFor(annenPartAktørId);
         if (fpSaker.isEmpty()) {
             LOG.info("Annen part har ingen saker om foreldrepenger");
             return Optional.empty();

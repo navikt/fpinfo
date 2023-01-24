@@ -3,7 +3,8 @@ package no.nav.foreldrepenger.info.v2;
 import static javax.ws.rs.core.Response.noContent;
 import static javax.ws.rs.core.Response.ok;
 import static no.nav.foreldrepenger.info.v2.SakRest.map;
-import static no.nav.foreldrepenger.info.v2.SakRest.tilDto;
+import static no.nav.foreldrepenger.info.v2.SakRest.tilFpSakerDto;
+import static no.nav.foreldrepenger.info.v2.SakRest.tilSvpSakerDto;
 
 import java.util.Set;
 
@@ -37,7 +38,8 @@ public class TestTjeneste {
     private static final Environment ENV = Environment.current();
 
     private SøknadsGrunnlagTjeneste grunnlag;
-    private SakerTjeneste sakerTjeneste;
+    private FpSakerTjeneste fpSakerTjeneste;
+    private SvpSakerTjeneste svpSakerTjeneste;
 
     static {
         if (!ENV.isLocal()) {
@@ -46,10 +48,10 @@ public class TestTjeneste {
     }
 
     @Inject
-    public TestTjeneste(SøknadsGrunnlagTjeneste grunnlag, SakerTjeneste sakerTjeneste) {
+    public TestTjeneste(SøknadsGrunnlagTjeneste grunnlag, FpSakerTjeneste fpSakerTjeneste, SvpSakerTjeneste svpSakerTjeneste) {
         this.grunnlag = grunnlag;
-        this.sakerTjeneste = sakerTjeneste;
-
+        this.fpSakerTjeneste = fpSakerTjeneste;
+        this.svpSakerTjeneste = svpSakerTjeneste;
     }
 
     TestTjeneste() {
@@ -66,8 +68,10 @@ public class TestTjeneste {
     @GET
     @Path("v2")
     public Saker v2(@NotNull @QueryParam("aktørId") @Parameter(name = "aktørId") @Valid SakRest.AktørIdDto aktørIdDto) {
-        var fpSaker = sakerTjeneste.hentFor(map(aktørIdDto.aktørId()));
-        var fpSakerDto = tilDto(fpSaker);
-        return new Saker(fpSakerDto, Set.of(), Set.of());
+        var fpSaker = fpSakerTjeneste.hentFor(map(aktørIdDto.aktørId()));
+        var svpSaker = svpSakerTjeneste.hentFor(map(aktørIdDto.aktørId()));
+        var fpSakerDto = tilFpSakerDto(fpSaker);
+        var svpSakerDto = tilSvpSakerDto(svpSaker);
+        return new Saker(fpSakerDto, Set.of(), svpSakerDto);
     }
 }
