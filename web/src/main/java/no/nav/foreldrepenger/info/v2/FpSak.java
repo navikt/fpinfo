@@ -27,7 +27,7 @@ record FpSak(Saksnummer saksnummer,
         var gjeldendeVedtakDto = gjeldendeVedtak == null ? null : gjeldendeVedtak.tilDto();
         var familiehendelseDto = familiehendelse == null ? null : familiehendelse.tilDto();
         var åpenBehandlingDto = åpenBehandling == null ? null : åpenBehandling.tilDto();
-        var gjelderAdopsjon = familiehendelse != null && familiehendelse.omsorgsovertakelse() != null;
+        var gjelderAdopsjon = familiehendelse != null && familiehendelse.gjelderAdopsjon();
         return new no.nav.foreldrepenger.common.innsyn.v2.FpSak(saksnummer.tilDto(), sakAvsluttet, sisteSøknadMottattDato,
                 kanSøkeOmEndring, sakTilhørerMor, gjelderAdopsjon, morUføretrygd,
                 harAnnenForelderTilsvarendeRettEØS, ønskerJustertUttakVedFødsel,

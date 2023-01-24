@@ -27,6 +27,7 @@ import no.nav.foreldrepenger.info.SøknadsGrunnlag;
 import no.nav.foreldrepenger.info.SøknadsperiodeEntitet;
 import no.nav.foreldrepenger.info.datatyper.BehandlingType;
 import no.nav.foreldrepenger.info.datatyper.BehandlingÅrsakType;
+import no.nav.foreldrepenger.info.datatyper.FagsakYtelseType;
 import no.nav.foreldrepenger.info.repository.Repository;
 
 
@@ -49,7 +50,7 @@ class FpSakerTjeneste {
     public Set<FpSak> hentFor(AktørId aktørId) {
         var sakList = repository.hentSak(aktørId.value());
         return sakList.stream()
-                .filter(s -> s.getFagsakYtelseType().equals("FP"))
+                .filter(s -> s.getFagsakYtelseType().equals(FagsakYtelseType.FP.name()))
                 .map(s -> new FpSakRef(new no.nav.foreldrepenger.info.v2.Saksnummer(s.getSaksnummer()),
                         s.getAktørIdAnnenPart() == null ? null : new AktørId(s.getAktørIdAnnenPart()),
                         s.getFagsakStatus(), s.getOpprettetTidspunkt()))

@@ -23,4 +23,8 @@ record Familiehendelse(LocalDate fødselsdato,
         }
         return termindato();
     }
+
+    public boolean gjelderAdopsjon() {
+        return omsorgsovertakelse != null;
+    }
 }

@@ -43,7 +43,7 @@ import no.nav.vedtak.sikkerhet.abac.beskyttet.ResourceType;
 @Path(SakRest.PATH)
 @Produces(MediaType.APPLICATION_JSON)
 @ApplicationScoped
-@ProtectedWithClaims(issuer = TOKENX, claimMap = { ACR_LEVEL4 })
+@ProtectedWithClaims(issuer = TOKENX, claimMap = {ACR_LEVEL4})
 public class SakRest {
 
     final static String PATH = "/v2";
@@ -53,17 +53,19 @@ public class SakRest {
 
     private final FpSakerTjeneste fpSakerTjeneste;
     private final SvpSakerTjeneste svpSakerTjeneste;
+    private final EsSakerTjeneste esSakerTjeneste;
     private final AnnenPartVedtakTjeneste annenPartVedtakTjeneste;
 
     @Inject
-    public SakRest(FpSakerTjeneste fpSakerTjeneste, SvpSakerTjeneste svpSakerTjeneste, AnnenPartVedtakTjeneste annenPartVedtakTjeneste) {
+    public SakRest(FpSakerTjeneste fpSakerTjeneste, SvpSakerTjeneste svpSakerTjeneste, EsSakerTjeneste esSakerTjeneste, AnnenPartVedtakTjeneste annenPartVedtakTjeneste) {
         this.fpSakerTjeneste = fpSakerTjeneste;
         this.svpSakerTjeneste = svpSakerTjeneste;
+        this.esSakerTjeneste = esSakerTjeneste;
         this.annenPartVedtakTjeneste = annenPartVedtakTjeneste;
     }
 
     SakRest() {
-        this(null, null, null);
+        this(null, null, null, null);
     }
 
     @Path("/saker")
@@ -72,9 +74,26 @@ public class SakRest {
     public Saker hentSaker(@NotNull @QueryParam("aktorId") @Parameter(name = "aktorId") AktørIdDto aktørId) {
         LOG.info("Henter saker for bruker");
         var fpSakerDto = hentFpSaker(aktørId);
+        var esSakerDto = hentEsSaker(aktørId);
         var svpSakerDto = hentSvpSaker(aktørId);
-        LOG.info("Returnerer {} fp saker, {} svp saker for bruker", fpSakerDto.size(), svpSakerDto);
-        return new Saker(fpSakerDto, Set.of(), svpSakerDto);
+        LOG.info("Returnerer {} fp saker, {} es saker, {} svp saker for bruker", fpSakerDto.size(), esSakerDto.size(),
+                svpSakerDto.size());
+        return new Saker(fpSakerDto, esSakerDto, svpSakerDto);
+    }
+
+    private Set<no.nav.foreldrepenger.common.innsyn.v2.EsSak> hentEsSaker(AktørIdDto aktørId) {
+        if (ENV.isProd()) {
+            //TODO
+            try {
+                var esSaker = esSakerTjeneste.hentFor(map(aktørId.aktørId));
+                tilEsSakerDto(esSaker);
+            } catch (Exception e) {
+                LOG.warn("Feil ved henting av es saker", e);
+            }
+            return Set.of();
+        }
+        var esSaker = esSakerTjeneste.hentFor(map(aktørId.aktørId));
+        return tilEsSakerDto(esSaker);
     }
 
     private Set<no.nav.foreldrepenger.common.innsyn.v2.SvpSak> hentSvpSaker(AktørIdDto aktørId) {
@@ -99,6 +118,10 @@ public class SakRest {
 
     public static Set<no.nav.foreldrepenger.common.innsyn.v2.FpSak> tilFpSakerDto(Set<FpSak> fpSaker) {
         return fpSaker.stream().map(FpSak::tilDto).collect(Collectors.toSet());
+    }
+
+    public static Set<no.nav.foreldrepenger.common.innsyn.v2.EsSak> tilEsSakerDto(Set<EsSak> esSaker) {
+        return esSaker.stream().map(EsSak::tilDto).collect(Collectors.toSet());
     }
 
     public static Set<no.nav.foreldrepenger.common.innsyn.v2.SvpSak> tilSvpSakerDto(Set<SvpSak> svpSaker) {
@@ -162,6 +185,7 @@ public class SakRest {
             return mask(aktørId);
         }
     }
+
     public record AktørAnnenPartDto(@NotNull @Digits(integer = 19, fraction = 0) String aktørId) implements AbacDto {
 
 
@@ -173,6 +197,7 @@ public class SakRest {
         public AbacDataAttributter abacAttributter() {
             return AbacDataAttributter.opprett().leggTil(ANNEN_PART, aktørId());
         }
+
         @Override
         public String toString() {
             return mask(aktørId);

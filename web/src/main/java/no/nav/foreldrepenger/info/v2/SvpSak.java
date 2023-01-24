@@ -6,7 +6,9 @@ record SvpSak(no.nav.foreldrepenger.info.v2.Saksnummer saksnummer,
               SvpÅpenBehandling åpenBehandling)  {
 
     no.nav.foreldrepenger.common.innsyn.v2.SvpSak tilDto() {
+        var familiehendelseDto = familiehendelse == null ? null : familiehendelse.tilDto();
+        var åpenBehandlingDto = åpenBehandling == null ? null : åpenBehandling.tilDto();
         return new no.nav.foreldrepenger.common.innsyn.v2.SvpSak(saksnummer.tilDto(),
-                familiehendelse.tilDto(), sakAvsluttet, åpenBehandling == null ? null : åpenBehandling.tilDto());
+                familiehendelseDto, sakAvsluttet, åpenBehandlingDto);
     }
 }
