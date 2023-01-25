@@ -146,7 +146,7 @@ public class SakRest {
         var vedtak = vedtakOpt.get();
         LOG.info("Returnerer annen parts vedtak. Antall perioder {}", vedtak.perioder().size());
         var perioder = vedtak.perioder().stream().map(UttakPeriode::tilDto).toList();
-        return new AnnenPartVedtak(perioder, vedtak.termindato(), vedtak.dekningsgrad().tilDto());
+        return new AnnenPartVedtak(perioder, vedtak.termindato(), vedtak.dekningsgrad().tilDto(), vedtak.antallBarn());
     }
 
     public static AktørId map(String aktørId) {
