@@ -5,5 +5,6 @@ import java.util.List;
 
 record AnnenPartVedtak(List<UttakPeriode> perioder,
                        LocalDate termindato,
-                       Dekningsgrad dekningsgrad) {
+                       Dekningsgrad dekningsgrad,
+                       int antallBarn) {
 }

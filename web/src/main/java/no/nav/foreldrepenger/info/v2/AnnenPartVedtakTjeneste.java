@@ -50,8 +50,9 @@ class AnnenPartVedtakTjeneste {
             return Optional.empty();
         }
         var termindato = gjeldendeSak.familiehendelse().termindato();
+        var antallBarn = gjeldendeSak.familiehendelse().antallBarn();
         var dekningsgrad = gjeldendeSak.dekningsgrad();
-        return Optional.of(new AnnenPartVedtak(filterSensitive(gjeldendeSak), termindato, dekningsgrad));
+        return Optional.of(new AnnenPartVedtak(filterSensitive(gjeldendeSak), termindato, dekningsgrad, antallBarn));
     }
 
     private static List<UttakPeriode> filterSensitive(FpSak gjeldendeSak) {
