@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.info.v2;
 
+import static no.nav.foreldrepenger.info.v2.SakerFelles.finnBehandlingTilstand;
+
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
@@ -38,27 +40,27 @@ class EsSakerTjeneste {
         var sakList = repository.hentSak(aktørId.value());
         return sakList.stream()
                 .filter(s -> s.getFagsakYtelseType().equals(FagsakYtelseType.ES.name()))
-                .map(s -> new EsSakerTjeneste.EsSakRef(new no.nav.foreldrepenger.info.v2.Saksnummer(s.getSaksnummer()), s.getFagsakStatus()))
+                .map(s -> new SakRef(new no.nav.foreldrepenger.info.v2.Saksnummer(s.getSaksnummer()), s.getFagsakStatus()))
                 //Får en sak per behandling fra repo
                 .distinct()
                 .flatMap(s -> hentEsSak(s).stream())
                 .collect(Collectors.toSet());
     }
 
-    private Optional<EsSak> hentEsSak(EsSakerTjeneste.EsSakRef esSak) {
-        var åpenBehandling = finnÅpenBehandling(esSak.saksnummer);
+    private Optional<EsSak> hentEsSak(SakRef esSak) {
+        var åpenBehandling = finnÅpenBehandling(esSak.saksnummer());
 
         var behandlingIdOpt = åpenBehandling.map(åb -> {
-                    LOG.info("Fant åpen behandling {} for sak {}", åb.getBehandlingId(), esSak.saksnummer);
+                    LOG.info("Fant åpen behandling {} for sak {}", åb.getBehandlingId(), esSak.saksnummer());
                     return Optional.of(åb.getBehandlingId());
                 })
                 .orElseGet(() -> {
-                    LOG.info("Fant ingen åpen behandling på sak {}. Henter gjeldende behandling", esSak.saksnummer);
-                    return repository.hentGjeldendeBehandling(new no.nav.foreldrepenger.info.Saksnummer(esSak.saksnummer.value()));
+                    LOG.info("Fant ingen åpen behandling på sak {}. Henter gjeldende behandling", esSak.saksnummer());
+                    return repository.hentGjeldendeBehandling(new no.nav.foreldrepenger.info.Saksnummer(esSak.saksnummer().value()));
                 });
         if (behandlingIdOpt.isEmpty()) {
             //Henleggelser
-            LOG.info("Sak uten åpen behandling eller vedtak {}", esSak.saksnummer);
+            LOG.info("Sak uten åpen behandling eller vedtak {}", esSak.saksnummer());
             return Optional.empty();
         }
         var behandlingId = behandlingIdOpt.get();
@@ -66,7 +68,7 @@ class EsSakerTjeneste {
         var fh = repository.hentFamilieHendelse(behandlingId).orElseThrow();
         var familiehendelse = new Familiehendelse(fh.getFødselsdato(), fh.getTermindato(), fh.getAntallBarn(), fh.getOmsorgsovertakelseDato());
         var sakAvsluttet = Objects.equals(esSak.fagsakStatus(), "AVSLU");
-        return Optional.of(new EsSak(esSak.saksnummer, familiehendelse, sakAvsluttet, åpenBehandling.map(b -> map(b)).orElse(null)));
+        return Optional.of(new EsSak(esSak.saksnummer(), familiehendelse, sakAvsluttet, åpenBehandling.map(b -> map(b)).orElse(null)));
     }
 
     private Optional<Behandling> finnÅpenBehandling(no.nav.foreldrepenger.info.v2.Saksnummer saksnummer) {
@@ -84,29 +86,8 @@ class EsSakerTjeneste {
     }
 
     private EsÅpenBehandling map(Behandling behandling) {
-        //TODO
-        return new EsÅpenBehandling(BehandlingTilstand.UNDER_BEHANDLING);
-    }
-
-    private record EsSakRef(no.nav.foreldrepenger.info.v2.Saksnummer saksnummer,
-                            String fagsakStatus) {
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            var esSakRef = (EsSakerTjeneste.EsSakRef) o;
-            return saksnummer.equals(esSakRef.saksnummer);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(saksnummer);
-        }
-
-        @Override
-        public String toString() {
-            return "EsSakRef{" + "saksnummer=" + saksnummer + ", fagsakStatus='" + fagsakStatus + '\'' + '}';
-        }
+        var aksjonspunkter = repository.hentAksjonspunkt(behandling.getBehandlingId());
+        var tilstand = finnBehandlingTilstand(aksjonspunkter);
+        return new EsÅpenBehandling(tilstand);
     }
 }

@@ -8,11 +8,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.common.innsyn.v2.Aktivitet;
-import no.nav.foreldrepenger.common.innsyn.v2.Arbeidsgiver;
-import no.nav.foreldrepenger.common.innsyn.v2.OppholdÅrsak;
-import no.nav.foreldrepenger.common.innsyn.v2.UtsettelseÅrsak;
-import no.nav.foreldrepenger.common.innsyn.v2.UttakPeriodeResultat;
 import no.nav.foreldrepenger.info.Behandling;
 import no.nav.foreldrepenger.info.FagsakRelasjon;
 import no.nav.foreldrepenger.info.InMemTestRepository;
@@ -29,7 +24,7 @@ import no.nav.foreldrepenger.info.datatyper.FagsakYtelseType;
 import no.nav.foreldrepenger.info.datatyper.FamilieHendelseType;
 import no.nav.foreldrepenger.info.datatyper.MorsAktivitet;
 
-class SakRestTest {
+class FpSakerTjenesteTest {
 
     @Test
     void henter_fp_sak_med_vedtak() {
@@ -38,7 +33,7 @@ class SakRestTest {
         var barnAktørId = "barnId";
         var annenPartAktørId = "annenpart";
         var behandlingId = 345L;
-        var aktørId = new SakRest.AktørIdDto("000000000");
+        var aktørId = new AktørId("000");
         var fødselsdato = LocalDate.now();
         var termindato = LocalDate.now().minusDays(2);
 
@@ -46,7 +41,7 @@ class SakRestTest {
                 .medSaksnummer(saksnummer)
                 .medBehandlingId(String.valueOf(behandlingId))
                 .medFagsakStatus("OPPR")
-                .medAktørId(aktørId.aktørId())
+                .medAktørId(aktørId.value())
                 .medFamilieHendelseType(FamilieHendelseType.FØDSEL.getVerdi())
                 .medFagsakYtelseType(FagsakYtelseType.FP.name())
                 .medAktørIdBarn(barnAktørId)
@@ -114,16 +109,16 @@ class SakRestTest {
         var søknadMottattDato = LocalDate.now().minusWeeks(1);
         lagreSøknad(repository, behandlingId, søknadMottattDato);
 
-        var sakRest = tjeneste(repository);
-        var saker = sakRest.hentSaker(aktørId);
+        var tjeneste = tjeneste(repository);
+        var saker = tjeneste.hentFor(aktørId);
 
-        assertThat(saker.foreldrepenger()).hasSize(1);
+        assertThat(saker).hasSize(1);
 
-        var fpSak = saker.foreldrepenger().stream().findFirst().orElseThrow();
+        var fpSak = saker.stream().findFirst().orElseThrow();
         assertThat(fpSak.saksnummer().value()).isEqualTo(saksnummer.saksnummer());
-        assertThat(fpSak.annenPart().personDetaljer()).isEqualTo(new no.nav.foreldrepenger.common.innsyn.v2.persondetaljer.AktørId(annenPartAktørId));
+        assertThat(fpSak.annenPart().aktørId().value()).isEqualTo(annenPartAktørId);
         assertThat(fpSak.barn()).hasSize(1);
-        assertThat(fpSak.barn().stream().findFirst().orElseThrow()).isEqualTo(new no.nav.foreldrepenger.common.innsyn.v2.persondetaljer.AktørId(barnAktørId));
+        assertThat(fpSak.barn().stream().findFirst().orElseThrow().value()).isEqualTo(barnAktørId);
         assertThat(fpSak.sakAvsluttet()).isFalse();
         assertThat(fpSak.kanSøkeOmEndring()).isTrue();
         assertThat(fpSak.sakTilhørerMor()).isTrue();
@@ -131,18 +126,16 @@ class SakRestTest {
         assertThat(fpSak.harAnnenForelderTilsvarendeRettEØS()).isTrue();
         assertThat(fpSak.familiehendelse().fødselsdato()).isEqualTo(fødselsdato);
         assertThat(fpSak.familiehendelse().termindato()).isEqualTo(termindato);
-        assertThat(fpSak.gjelderAdopsjon()).isFalse();
         assertThat(fpSak.gjeldendeVedtak()).isNotNull();
         assertThat(fpSak.sisteSøknadMottattDato()).isEqualTo(søknadMottattDato);
         assertThat(fpSak.gjeldendeVedtak().perioder()).hasSize(2);
-        assertThat(fpSak.dekningsgrad()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.Dekningsgrad.ÅTTI);
+        assertThat(fpSak.dekningsgrad()).isEqualTo(Dekningsgrad.ÅTTI);
         var vedtakPeriode = fpSak.gjeldendeVedtak().perioder().get(0);
         assertThat(vedtakPeriode.fom()).isEqualTo(uttakPeriode.getFom());
         assertThat(vedtakPeriode.tom()).isEqualTo(uttakPeriode.getTom());
-        assertThat(vedtakPeriode.kontoType()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.KontoType.valueOf(uttakPeriode.getTrekkonto()));
+        assertThat(vedtakPeriode.kontoType()).isEqualTo(KontoType.valueOf(uttakPeriode.getTrekkonto()));
         assertThat(vedtakPeriode.resultat().innvilget()).isTrue();
-        assertThat(vedtakPeriode.gradering()).isEqualTo(new no.nav.foreldrepenger.common.innsyn.v2.Gradering(
-                uttakPeriode.getArbeidstidprosent().decimalValue(), new Aktivitet(Aktivitet.Type.ORDINÆRT_ARBEID,
+        assertThat(vedtakPeriode.gradering()).isEqualTo(new Gradering(uttakPeriode.getArbeidstidprosent(), new Aktivitet(Aktivitet.Type.ORDINÆRT_ARBEID,
                 new Arbeidsgiver(uttakPeriode.getArbeidsgiverOrgnr(), Arbeidsgiver.ArbeidsgiverType.ORGANISASJON))));
         assertThat(vedtakPeriode.morsAktivitet()).isNull();
         assertThat(vedtakPeriode.samtidigUttak()).isNull();
@@ -152,9 +145,9 @@ class SakRestTest {
         assertThat(vedtakPeriode.resultat().årsak()).isEqualTo(UttakPeriodeResultat.Årsak.ANNET);
 
         //I praksis kan ikke alle disse være satt samtidig
-        assertThat(vedtakPeriode.utsettelseÅrsak()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.UtsettelseÅrsak.SØKER_INNLAGT);
-        assertThat(vedtakPeriode.overføringÅrsak()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.OverføringÅrsak.SYKDOM_ANNEN_FORELDER);
-        assertThat(vedtakPeriode.oppholdÅrsak()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.OppholdÅrsak.MØDREKVOTE_ANNEN_FORELDER);
+        assertThat(vedtakPeriode.utsettelseÅrsak()).isEqualTo(UtsettelseÅrsak.SØKER_INNLAGT);
+        assertThat(vedtakPeriode.overføringÅrsak()).isEqualTo(OverføringÅrsak.SYKDOM_ANNEN_FORELDER);
+        assertThat(vedtakPeriode.oppholdÅrsak()).isEqualTo(OppholdÅrsak.MØDREKVOTE_ANNEN_FORELDER);
 
         var avslagsperiode = fpSak.gjeldendeVedtak().perioder().get(1);
         assertThat(avslagsperiode.fom()).isEqualTo(avslagHull.getFom());
@@ -164,11 +157,8 @@ class SakRestTest {
         assertThat(avslagsperiode.resultat().årsak()).isEqualTo(UttakPeriodeResultat.Årsak.AVSLAG_HULL_MELLOM_FORELDRENES_PERIODER);
     }
 
-    private static SakRest tjeneste(InMemTestRepository repository) {
-        var sakerTjeneste = new FpSakerTjeneste(repository);
-        var svpSakerTjeneste = new SvpSakerTjeneste(repository);
-        return new SakRest(sakerTjeneste, svpSakerTjeneste,
-                new EsSakerTjeneste(repository), new AnnenPartVedtakTjeneste(sakerTjeneste));
+    private static FpSakerTjeneste tjeneste(InMemTestRepository repository) {
+        return new FpSakerTjeneste(repository);
     }
 
     private void lagreSøknad(InMemTestRepository repository, long behandlingId, LocalDate søknadMottattDato) {
@@ -187,14 +177,14 @@ class SakRestTest {
         var barnAktørId = "barnId";
         var annenPartAktørId = "annenpart";
         var behandlingId = 345L;
-        var aktørId = new SakRest.AktørIdDto("000000000");
+        var aktørId = new AktørId("000");
         var fødselsdato = LocalDate.now();
 
         repository.lagre(new Sak.Builder()
                 .medSaksnummer(saksnummer)
                 .medBehandlingId(String.valueOf(behandlingId))
                 .medFagsakStatus("OPPR")
-                .medAktørId(aktørId.aktørId())
+                .medAktørId(aktørId.value())
                 .medFamilieHendelseType(FamilieHendelseType.FØDSEL.getVerdi())
                 .medFagsakYtelseType(FagsakYtelseType.FP.name())
                 .medAktørIdBarn(barnAktørId)
@@ -217,7 +207,7 @@ class SakRestTest {
         var søknadsperiode = new SøknadsperiodeEntitet.Builder()
                 .fom(LocalDate.now())
                 .tom(LocalDate.now().plusWeeks(10).minusDays(1))
-                .gradering(BigDecimal.valueOf(30), "123", null, Aktivitet.Type.ORDINÆRT_ARBEID)
+                .gradering(BigDecimal.valueOf(30), "123", null, no.nav.foreldrepenger.common.innsyn.v2.Aktivitet.Type.ORDINÆRT_ARBEID)
                 .utsettelseÅrsak("INSTITUSJONSOPPHOLD_SØKER")
                 .arbeidsgiverOrgnr("123")
                 .trekkonto(KontoType.FELLESPERIODE.name())
@@ -250,35 +240,34 @@ class SakRestTest {
         lagreSøknad(repository, behandlingId, sisteSøknadMottattDato);
         lagreSøknad(repository, behandlingId, førsteSøknadMottattDato);
 
-        var sakRest = tjeneste(repository);
-        var saker = sakRest.hentSaker(aktørId);
+        var tjeneste = tjeneste(repository);
+        var saker = tjeneste.hentFor(aktørId);
 
-        assertThat(saker.foreldrepenger()).hasSize(1);
+        assertThat(saker).hasSize(1);
 
-        var fpSak = saker.foreldrepenger().stream().findFirst().orElseThrow();
+        var fpSak = saker.stream().findFirst().orElseThrow();
         assertThat(fpSak.saksnummer().value()).isEqualTo(saksnummer.saksnummer());
-        assertThat(fpSak.annenPart().personDetaljer()).isEqualTo(new no.nav.foreldrepenger.common.innsyn.v2.persondetaljer.AktørId(annenPartAktørId));
+        assertThat(fpSak.annenPart().aktørId().value()).isEqualTo(annenPartAktørId);
         assertThat(fpSak.barn()).hasSize(1);
-        assertThat(fpSak.barn().stream().findFirst().orElseThrow()).isEqualTo(new no.nav.foreldrepenger.common.innsyn.v2.persondetaljer.AktørId(barnAktørId));
+        assertThat(fpSak.barn().stream().findFirst().orElseThrow().value()).isEqualTo(barnAktørId);
         assertThat(fpSak.sakAvsluttet()).isFalse();
         assertThat(fpSak.kanSøkeOmEndring()).isFalse();
         assertThat(fpSak.sakTilhørerMor()).isFalse();
         assertThat(fpSak.morUføretrygd()).isFalse();
         assertThat(fpSak.harAnnenForelderTilsvarendeRettEØS()).isFalse();
         assertThat(fpSak.familiehendelse().fødselsdato()).isEqualTo(fødselsdato);
-        assertThat(fpSak.gjelderAdopsjon()).isFalse();
         assertThat(fpSak.gjeldendeVedtak()).isNull();
         assertThat(fpSak.sisteSøknadMottattDato()).isEqualTo(sisteSøknadMottattDato);
-        assertThat(fpSak.dekningsgrad()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.Dekningsgrad.HUNDRE);
+        assertThat(fpSak.dekningsgrad()).isEqualTo(Dekningsgrad.HUNDRE);
 
         assertThat(fpSak.åpenBehandling().søknadsperioder()).hasSize(2);
         var søknadsperiode1 = fpSak.åpenBehandling().søknadsperioder().get(0);
         assertThat(søknadsperiode1.flerbarnsdager()).isEqualTo(søknadsperiode.isFlerbarnsdager());
         assertThat(søknadsperiode1.fom()).isEqualTo(søknadsperiode.getFom());
         assertThat(søknadsperiode1.tom()).isEqualTo(søknadsperiode.getTom());
-        assertThat(søknadsperiode1.kontoType()).isEqualTo(no.nav.foreldrepenger.common.innsyn.v2.KontoType.valueOf(søknadsperiode.getTrekkonto().orElseThrow()));
-        assertThat(søknadsperiode1.gradering()).isEqualTo(new no.nav.foreldrepenger.common.innsyn.v2.Gradering(
-                søknadsperiode.getArbeidstidprosent().decimalValue(), new Aktivitet(Aktivitet.Type.ORDINÆRT_ARBEID,
+        assertThat(søknadsperiode1.kontoType()).isEqualTo(KontoType.valueOf(søknadsperiode.getTrekkonto().orElseThrow()));
+        assertThat(søknadsperiode1.gradering()).isEqualTo(new Gradering(
+                søknadsperiode.getArbeidstidprosent(), new Aktivitet(Aktivitet.Type.ORDINÆRT_ARBEID,
                 new Arbeidsgiver(søknadsperiode.getArbeidsgiverOrgnr(), Arbeidsgiver.ArbeidsgiverType.ORGANISASJON))));
         assertThat(søknadsperiode1.morsAktivitet().name()).isEqualTo(søknadsperiode.getMorsAktivitet().name());
         assertThat(søknadsperiode1.samtidigUttak()).isNull();
@@ -302,14 +291,14 @@ class SakRestTest {
         var barnAktørId = "barnId";
         var annenPartAktørId = "annenpart";
         var behandlingId = 345L;
-        var aktørId = new SakRest.AktørIdDto("000000000");
+        var aktørId = new AktørId("000");
         var omsorgsovertakelse = LocalDate.now();
 
         repository.lagre(new Sak.Builder()
                 .medSaksnummer(saksnummer)
                 .medBehandlingId(String.valueOf(behandlingId))
                 .medFagsakStatus("OPPR")
-                .medAktørId(aktørId.aktørId())
+                .medAktørId(aktørId.value())
                 .medFamilieHendelseType(FamilieHendelseType.ADOPSJON.getVerdi())
                 .medFagsakYtelseType(FagsakYtelseType.FP.name())
                 .medAktørIdBarn(barnAktørId)
@@ -338,17 +327,16 @@ class SakRestTest {
                 .build();
         repository.lagre(behandlingId, søknadsGrunnlag);
 
-        var sakRest = tjeneste(repository);
-        var saker = sakRest.hentSaker(aktørId);
+        var tjeneste = tjeneste(repository);
+        var saker = tjeneste.hentFor(aktørId);
 
-        assertThat(saker.foreldrepenger()).hasSize(1);
+        assertThat(saker).hasSize(1);
 
-        var fpSak = saker.foreldrepenger().stream().findFirst().orElseThrow();
+        var fpSak = saker.stream().findFirst().orElseThrow();
         assertThat(fpSak.saksnummer().value()).isEqualTo(saksnummer.saksnummer());
         assertThat(fpSak.familiehendelse().omsorgsovertakelse()).isEqualTo(omsorgsovertakelse);
         assertThat(fpSak.familiehendelse().fødselsdato()).isEqualTo(omsorgsovertakelse);
         assertThat(fpSak.familiehendelse().termindato()).isNull();
-        assertThat(fpSak.gjelderAdopsjon()).isTrue();
     }
 
     @Test
@@ -358,14 +346,14 @@ class SakRestTest {
         var barnAktørId = "barnId";
         var annenPartAktørId = "annenpart";
         var behandlingId1 = 345L;
-        var aktørId = new SakRest.AktørIdDto("000000000");
+        var aktørId = new AktørId("000");
         var omsorgsovertakelse = LocalDate.now();
 
         repository.lagre(new Sak.Builder()
                 .medSaksnummer(saksnummer)
                 .medBehandlingId(String.valueOf(behandlingId1))
                 .medFagsakStatus("OPPR")
-                .medAktørId(aktørId.aktørId())
+                .medAktørId(aktørId.value())
                 .medFamilieHendelseType(FamilieHendelseType.FØDSEL.getVerdi())
                 .medFagsakYtelseType(FagsakYtelseType.FP.name())
                 .medAktørIdBarn(barnAktørId)
@@ -385,7 +373,7 @@ class SakRestTest {
                 .medSaksnummer(saksnummer)
                 .medBehandlingId(String.valueOf(behandlingId2))
                 .medFagsakStatus("OPPR")
-                .medAktørId(aktørId.aktørId())
+                .medAktørId(aktørId.value())
                 .medFamilieHendelseType(FamilieHendelseType.FØDSEL.getVerdi())
                 .medFagsakYtelseType(FagsakYtelseType.FP.name())
                 .medAktørIdBarn(barnAktørId)
@@ -415,10 +403,10 @@ class SakRestTest {
         repository.lagre(behandlingId1, søknadsGrunnlag);
         repository.lagre(behandlingId2, søknadsGrunnlag);
 
-        var sakRest = tjeneste(repository);
-        var saker = sakRest.hentSaker(aktørId);
+        var tjeneste = tjeneste(repository);
+        var saker = tjeneste.hentFor(aktørId);
 
-        assertThat(saker.foreldrepenger()).hasSize(1);
+        assertThat(saker).hasSize(1);
     }
 
 }

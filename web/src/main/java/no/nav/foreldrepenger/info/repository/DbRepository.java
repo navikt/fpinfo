@@ -18,6 +18,7 @@ import org.hibernate.type.StringType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import no.nav.foreldrepenger.info.Aksjonspunkt;
 import no.nav.foreldrepenger.info.Behandling;
 import no.nav.foreldrepenger.info.FagsakRelasjon;
 import no.nav.foreldrepenger.info.FamilieHendelse;
@@ -60,7 +61,7 @@ public class DbRepository implements Repository {
     public Optional<SøknadsGrunnlag> hentSøknadsGrunnlag(Long behandlingId) {
         return em.createQuery("from SøknadsGrunnlag where behandlingId=:behandlingId", SøknadsGrunnlag.class)
                 .setParameter("behandlingId", behandlingId)
-                .getResultList().stream()
+                .getResultStream()
                 .reduce((first, second) -> second);
     }
 
@@ -83,7 +84,7 @@ public class DbRepository implements Repository {
                 Sak.class)
                 .setParameter("aktørId", aktørIdBruker)
                 .setParameter("ytelseType", FagsakYtelseType.FP.name())
-                .setParameter("annenPartAktørId", annenPartAktørId).getResultList().stream()
+                .setParameter("annenPartAktørId", annenPartAktørId).getResultStream()
                 .findFirst();
     }
 
@@ -145,6 +146,12 @@ public class DbRepository implements Repository {
     @Override
     public Optional<FamilieHendelse> hentFamilieHendelse(long behandlingId) {
         return em.createQuery("from FamilieHendelse where behandlingId=:behandlingId", FamilieHendelse.class)
-                .setParameter("behandlingId", behandlingId).getResultList().stream().findFirst();
+                .setParameter("behandlingId", behandlingId).getResultStream().findFirst();
+    }
+
+    @Override
+    public Set<Aksjonspunkt> hentAksjonspunkt(long behandlingId) {
+        return em.createQuery("from Aksjonspunkt where behandlingId=:behandlingId", Aksjonspunkt.class)
+                .setParameter("behandlingId", behandlingId).getResultStream().collect(Collectors.toSet());
     }
 }
