@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import no.nav.foreldrepenger.info.Aksjonspunkt;
 import no.nav.foreldrepenger.info.Behandling;
 import no.nav.foreldrepenger.info.MottattDokument;
 import no.nav.foreldrepenger.info.Prosent;
@@ -29,6 +30,8 @@ import no.nav.foreldrepenger.info.datatyper.BehandlingType;
 import no.nav.foreldrepenger.info.datatyper.BehandlingÅrsakType;
 import no.nav.foreldrepenger.info.datatyper.FagsakYtelseType;
 import no.nav.foreldrepenger.info.repository.Repository;
+
+import static no.nav.foreldrepenger.info.v2.SakerFelles.finnBehandlingTilstand;
 
 
 @ApplicationScoped
@@ -153,7 +156,6 @@ class FpSakerTjeneste {
                 .stream().map(AktørId::new)
                 .collect(Collectors.toSet());
     }
-
     private Optional<SøknadsGrunnlag> finnSøknadsgrunnlag(Long behandlingId) {
         return repository.hentSøknadsGrunnlag(behandlingId);
     }
@@ -173,7 +175,9 @@ class FpSakerTjeneste {
 
     private FpÅpenBehandling map(Behandling behandling) {
         var søknadsperioder = finnSøknadsperioder(behandling);
-        return new FpÅpenBehandling(BehandlingTilstand.UNDER_BEHANDLING, søknadsperioder);
+        var aksjonspunkter = repository.hentAksjonspunkt(behandling.getBehandlingId());
+        var tilstand = finnBehandlingTilstand(aksjonspunkter);
+        return new FpÅpenBehandling(tilstand, søknadsperioder);
     }
 
     private List<UttakPeriode> finnSøknadsperioder(Behandling behandling) {

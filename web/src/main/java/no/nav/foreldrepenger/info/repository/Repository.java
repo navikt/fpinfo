@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import no.nav.foreldrepenger.info.Aksjonspunkt;
 import no.nav.foreldrepenger.info.Behandling;
 import no.nav.foreldrepenger.info.FagsakRelasjon;
 import no.nav.foreldrepenger.info.FamilieHendelse;
@@ -41,4 +42,6 @@ public interface Repository {
     List<SøknadsperiodeEntitet> hentSøknadsperioder(long behandlingId);
 
     Optional<FamilieHendelse> hentFamilieHendelse(long behandlingId);
+
+    Set<Aksjonspunkt> hentAksjonspunkt(long behandlingId);
 }

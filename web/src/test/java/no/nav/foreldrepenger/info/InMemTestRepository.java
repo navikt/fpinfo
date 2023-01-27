@@ -6,6 +6,7 @@ import static no.nav.foreldrepenger.info.datatyper.BehandlingType.REVURDERING;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -26,6 +27,7 @@ public class InMemTestRepository implements Repository {
     private final List<MottattDokument> mottattDokumenter = new ArrayList<>();
     private final Map<Long, List<SøknadsperiodeEntitet>> søknadsperioder = new HashMap<>();
     private final List<FamilieHendelse> familieHendelser = new ArrayList<>();
+    private final Set<Aksjonspunkt> aksjonspunkter = new HashSet<>();
 
     @Override
     public List<Sak> hentSak(String aktørId) {
@@ -113,6 +115,11 @@ public class InMemTestRepository implements Repository {
         return familieHendelser.stream().filter(fh -> fh.getBehandlingId() == behandlingId).findFirst();
     }
 
+    @Override
+    public Set<Aksjonspunkt> hentAksjonspunkt(long behandlingId) {
+        return aksjonspunkter.stream().filter(a -> a.getBehandlingId() == behandlingId).collect(Collectors.toSet());
+    }
+
     public void lagre(Sak sak) {
         saker.add(sak);
     }
@@ -143,5 +150,9 @@ public class InMemTestRepository implements Repository {
 
     public void lagre(FamilieHendelse familieHendelse) {
         familieHendelser.add(familieHendelse);
+    }
+
+    public void lagre(Aksjonspunkt aksjonspunkt) {
+        aksjonspunkter.add(aksjonspunkt);
     }
 }
