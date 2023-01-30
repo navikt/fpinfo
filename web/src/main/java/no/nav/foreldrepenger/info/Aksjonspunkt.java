@@ -33,6 +33,10 @@ public class Aksjonspunkt {
     @Column(name = "DEFINISJON")
     private Definisjon definisjon;
 
+    @Convert(converter = Venteårsak.KodeverdiConverter.class)
+    @Column(name = "vent_aarsak")
+    private Venteårsak venteårsak;
+
     protected Aksjonspunkt() {
     }
 
@@ -46,6 +50,10 @@ public class Aksjonspunkt {
 
     public long getBehandlingId() {
         return behandlingId;
+    }
+
+    public Venteårsak getVenteårsak() {
+        return venteårsak;
     }
 
     public static class Builder {
@@ -64,8 +72,14 @@ public class Aksjonspunkt {
             aksjonspunkt.status = status;
             return this;
         }
+
         public Builder medDefinisjon(Definisjon definisjon) {
             aksjonspunkt.definisjon = definisjon;
+            return this;
+        }
+
+        public Builder medVenteårsak(Venteårsak venteårsak) {
+            aksjonspunkt.venteårsak = venteårsak;
             return this;
         }
 
@@ -94,6 +108,7 @@ public class Aksjonspunkt {
 
     public enum Definisjon {
 
+        VENT_PÅ_KOMPLETT_SØKNAD("7003"),
         VENT_PGA_FOR_TIDLIG_SØKNAD("7008"),
         VENT_PÅ_SISTE_AAP_ELLER_DP_MELDEKORT("7020"),
         ANNET(null),
@@ -144,6 +159,26 @@ public class Aksjonspunkt {
 
             @Override
             public String convertToDatabaseColumn(Status status) {
+                //Støtter bare en les fra db
+                throw new IllegalStateException();
+            }
+        }
+    }
+
+    public enum Venteårsak {
+        AVV_DOK
+        ;
+
+        @Converter(autoApply = true)
+        public static class KodeverdiConverter implements AttributeConverter<Venteårsak, String> {
+
+            @Override
+            public Venteårsak convertToEntityAttribute(String dbData) {
+                return Stream.of(Venteårsak.values()).filter(d -> Objects.equals(d.name(), dbData)).findFirst().orElse(null);
+            }
+
+            @Override
+            public String convertToDatabaseColumn(Venteårsak status) {
                 //Støtter bare en les fra db
                 throw new IllegalStateException();
             }

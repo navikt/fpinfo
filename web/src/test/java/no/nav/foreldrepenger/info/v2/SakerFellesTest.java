@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.info.v2;
 
 import static no.nav.foreldrepenger.info.Aksjonspunkt.Definisjon.*;
 import static no.nav.foreldrepenger.info.Aksjonspunkt.Status.*;
+import static no.nav.foreldrepenger.info.Aksjonspunkt.Venteårsak.*;
 import static no.nav.foreldrepenger.info.v2.BehandlingTilstand.*;
 import static no.nav.foreldrepenger.info.v2.SakerFelles.finnBehandlingTilstand;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,11 +46,27 @@ class SakerFellesTest {
     @Test
     void vent_på_meldekort_opprettet_ap_gir_tilstand_vent_på_meldekort() {
         var tilstand = finnBehandlingTilstand(Set.of(aksjonspunkt(VENT_PÅ_SISTE_AAP_ELLER_DP_MELDEKORT, OPPRETTET)));
-        assertThat(tilstand).isEqualTo(VENT_PÅ_MELDEKORT);
+        assertThat(tilstand).isEqualTo(VENT_MELDEKORT);
+    }
+
+    @Test
+    void vent_på_komplett_søknad_med_årsak_dok_gir_vent_på_dok_tilstand() {
+        var tilstand = finnBehandlingTilstand(Set.of(aksjonspunkt(VENT_PÅ_KOMPLETT_SØKNAD, OPPRETTET, AVV_DOK)));
+        assertThat(tilstand).isEqualTo(VENT_DOKUMENTASJON);
+    }
+
+    @Test
+    void vent_på_komplett_søknad_med_årsak_null_gir_under_behandling_tilstand() {
+        var tilstand = finnBehandlingTilstand(Set.of(aksjonspunkt(VENT_PÅ_KOMPLETT_SØKNAD, OPPRETTET, null)));
+        assertThat(tilstand).isEqualTo(UNDER_BEHANDLING);
     }
 
     private Aksjonspunkt aksjonspunkt(Aksjonspunkt.Definisjon definisjon, Aksjonspunkt.Status status) {
-        return new Aksjonspunkt.Builder().medDefinisjon(definisjon).medStatus(status).build();
+        return aksjonspunkt(definisjon, status, null);
+    }
+
+    private Aksjonspunkt aksjonspunkt(Aksjonspunkt.Definisjon definisjon, Aksjonspunkt.Status status, Aksjonspunkt.Venteårsak venteårsak) {
+        return new Aksjonspunkt.Builder().medDefinisjon(definisjon).medStatus(status).medVenteårsak(venteårsak).build();
     }
 
 }
