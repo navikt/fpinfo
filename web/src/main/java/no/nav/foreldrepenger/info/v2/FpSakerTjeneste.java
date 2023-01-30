@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.info.v2;
 
+import static no.nav.foreldrepenger.info.v2.SakerFelles.finnBehandlingTilstand;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,7 +21,6 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.foreldrepenger.info.Aksjonspunkt;
 import no.nav.foreldrepenger.info.Behandling;
 import no.nav.foreldrepenger.info.MottattDokument;
 import no.nav.foreldrepenger.info.Prosent;
@@ -30,8 +31,6 @@ import no.nav.foreldrepenger.info.datatyper.BehandlingType;
 import no.nav.foreldrepenger.info.datatyper.BehandlingÅrsakType;
 import no.nav.foreldrepenger.info.datatyper.FagsakYtelseType;
 import no.nav.foreldrepenger.info.repository.Repository;
-
-import static no.nav.foreldrepenger.info.v2.SakerFelles.finnBehandlingTilstand;
 
 
 @ApplicationScoped
@@ -283,12 +282,15 @@ class FpSakerTjeneste {
                 // flere arbeidsforhold gir flere perioder med samme tidsperiode. Selvbetjening frontend støtter ikke flere
                 // arbeidsforhold per periode, så her velger vi den med høyest arbeidstidsprosent (for at gradering skal bli riktig).
                 // Dette kan gi feil i noen case der feks aktivitene har forskjellig trekkonto
-                .sorted((o1, o2) -> o1.getArbeidstidprosent() != null && o2.getArbeidstidprosent() != null
-                        ? o2.getArbeidstidprosent().compareTo(o1.getArbeidstidprosent()) : 0)
+                .sorted((o1, o2) -> nullSafe(o2.getArbeidstidprosent()).compareTo(nullSafe(o1.getArbeidstidprosent())))
                 .filter(distinct(no.nav.foreldrepenger.info.UttakPeriode::getFom))
                 .sorted(Comparator.comparing(no.nav.foreldrepenger.info.UttakPeriode::getFom))
                 .map(p -> map(p, behandlingId))
                 .collect(Collectors.toList());
+    }
+
+    private static Prosent nullSafe(Prosent prosent) {
+        return prosent == null ? Prosent.ZERO : prosent;
     }
 
     private UttakPeriode map(no.nav.foreldrepenger.info.UttakPeriode p, Long behandlingId) {
