@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.info.v2;
 
-import static no.nav.foreldrepenger.info.v2.SakerFelles.finnBehandlingTilstand;
+import static no.nav.foreldrepenger.info.v2.BehandlingTilstandUtleder.utled;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -175,7 +175,7 @@ class FpSakerTjeneste {
     private FpÅpenBehandling map(Behandling behandling) {
         var søknadsperioder = finnSøknadsperioder(behandling);
         var aksjonspunkter = repository.hentAksjonspunkt(behandling.getBehandlingId());
-        var tilstand = finnBehandlingTilstand(aksjonspunkter);
+        var tilstand = utled(aksjonspunkter);
         return new FpÅpenBehandling(tilstand, søknadsperioder);
     }
 

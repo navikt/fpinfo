@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.info.v2;
 
-import static no.nav.foreldrepenger.info.v2.SakerFelles.finnBehandlingTilstand;
+import static no.nav.foreldrepenger.info.v2.BehandlingTilstandUtleder.utled;
 
 import java.util.Comparator;
 import java.util.Objects;
@@ -93,7 +93,7 @@ class SvpSakerTjeneste {
 
     private SvpÅpenBehandling map(Behandling behandling) {
         var aksjonspunkter = repository.hentAksjonspunkt(behandling.getBehandlingId());
-        var tilstand = finnBehandlingTilstand(aksjonspunkter);
+        var tilstand = utled(aksjonspunkter);
         return new SvpÅpenBehandling(tilstand);
     }
 }
