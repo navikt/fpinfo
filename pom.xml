@@ -29,7 +29,7 @@
 
         <felles.version>4.2.19</felles.version>
 
-        <selvbetjening-felles.version>0.8.41</selvbetjening-felles.version>
+        <selvbetjening-felles.version>0.8.42</selvbetjening-felles.version>
     </properties>
 
     <dependencyManagement>

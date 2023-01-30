@@ -21,6 +21,9 @@ final class SakerFelles {
         if (opprettetAksjonspunkt.contains(Aksjonspunkt.Definisjon.VENT_PGA_FOR_TIDLIG_SØKNAD)) {
             return BehandlingTilstand.VENT_TIDLIG_SØKNAD;
         }
+        if (opprettetAksjonspunkt.contains(Aksjonspunkt.Definisjon.VENT_PÅ_SISTE_AAP_ELLER_DP_MELDEKORT)) {
+            return BehandlingTilstand.VENT_PÅ_MELDEKORT;
+        }
 
         return BehandlingTilstand.UNDER_BEHANDLING;
     }

@@ -95,6 +95,7 @@ public class Aksjonspunkt {
     public enum Definisjon {
 
         VENT_PGA_FOR_TIDLIG_SØKNAD("7008"),
+        VENT_PÅ_SISTE_AAP_ELLER_DP_MELDEKORT("7020"),
         ANNET(null),
         ;
 
