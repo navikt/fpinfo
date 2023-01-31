@@ -57,7 +57,10 @@ public class SakRest {
     private final AnnenPartVedtakTjeneste annenPartVedtakTjeneste;
 
     @Inject
-    public SakRest(FpSakerTjeneste fpSakerTjeneste, SvpSakerTjeneste svpSakerTjeneste, EsSakerTjeneste esSakerTjeneste, AnnenPartVedtakTjeneste annenPartVedtakTjeneste) {
+    public SakRest(FpSakerTjeneste fpSakerTjeneste,
+                   SvpSakerTjeneste svpSakerTjeneste,
+                   EsSakerTjeneste esSakerTjeneste,
+                   AnnenPartVedtakTjeneste annenPartVedtakTjeneste) {
         this.fpSakerTjeneste = fpSakerTjeneste;
         this.svpSakerTjeneste = svpSakerTjeneste;
         this.esSakerTjeneste = esSakerTjeneste;
@@ -82,31 +85,11 @@ public class SakRest {
     }
 
     private Set<no.nav.foreldrepenger.common.innsyn.v2.EsSak> hentEsSaker(AktørIdDto aktørId) {
-        if (ENV.isProd()) {
-            //TODO
-            try {
-                var esSaker = esSakerTjeneste.hentFor(map(aktørId.aktørId));
-                tilEsSakerDto(esSaker);
-            } catch (Exception e) {
-                LOG.warn("Feil ved henting av es saker", e);
-            }
-            return Set.of();
-        }
         var esSaker = esSakerTjeneste.hentFor(map(aktørId.aktørId));
         return tilEsSakerDto(esSaker);
     }
 
     private Set<no.nav.foreldrepenger.common.innsyn.v2.SvpSak> hentSvpSaker(AktørIdDto aktørId) {
-        if (ENV.isProd()) {
-            //TODO
-            try {
-                var svpSaker = svpSakerTjeneste.hentFor(map(aktørId.aktørId));
-                tilSvpSakerDto(svpSaker);
-            } catch (Exception e) {
-                LOG.warn("Feil ved henting av svp saker", e);
-            }
-            return Set.of();
-        }
         var svpSaker = svpSakerTjeneste.hentFor(map(aktørId.aktørId));
         return tilSvpSakerDto(svpSaker);
     }
