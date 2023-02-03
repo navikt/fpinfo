@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.info.server;
 
-import static no.nav.foreldrepenger.konfig.Cluster.NAIS_CLUSTER_NAME;
 import static org.eclipse.jetty.webapp.MetaInfConfiguration.WEBINF_JAR_PATTERN;
 
 import java.net.URL;
@@ -45,11 +44,7 @@ public class JettyServer {
     private static final Environment ENV = Environment.current();
     private static final String CONTEXT_PATH = ENV.getProperty("context.path","/fpinfo");
 
-    static {
-        System.setProperty(NAIS_CLUSTER_NAME, ENV.clusterName());
-    }
-
-    /**
+        /**
      * Legges først slik at alltid resetter context før prosesserer nye requests.
      * Kjøres først så ikke risikerer andre har satt Request#setHandled(true).
      */
