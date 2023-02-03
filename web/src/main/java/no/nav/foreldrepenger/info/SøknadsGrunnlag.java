@@ -112,7 +112,7 @@ public class SøknadsGrunnlag {
     }
 
     public Boolean bekreftetMorUfør() {
-        var overstyrtUføre = foreldreRettigheter.pom.getSaksbehandlerUføretrygd();
+        var overstyrtUføre = foreldreRettigheter.getSaksbehandlerUføretrygd();
         if (overstyrtUføre != null) {
             return overstyrtUføre;
         }
