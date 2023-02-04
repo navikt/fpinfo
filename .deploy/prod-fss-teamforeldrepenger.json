@@ -11,9 +11,11 @@
     "https://fpinfo.prod-fss-pub.nais.io"
   ],
   "env": {
-    "APPDYNAMICS_AGENT_ACCOUNT_NAME": "PROD",
     "APPD_ENABLED": "true"
   },
+  "groups": [
+    "0d226374-4748-4367-a38a-062dcad70034"
+  ],
   "AZURE_IAC_RULES": [
     {
       "app": "fp-swagger",
