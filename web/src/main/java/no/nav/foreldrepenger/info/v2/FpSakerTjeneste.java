@@ -86,7 +86,7 @@ class FpSakerTjeneste {
         var søknadsgrunnlag = søknadsgrunnlagOpt.get();
         var tilhørerMor = tilhørerSakMor(søknadsgrunnlag);
         var annenPart = annenPart(fpSak).orElse(null);
-        var familiehendelse = familiehendelse(søknadsgrunnlag, åpenBehandling.getBehandlingId());
+        var familiehendelse = familiehendelse(åpenBehandling.getBehandlingId());
 
         var barn = barn(fpSak.saksnummer());
         var rettighetType = rettighetTypeFraSøknad(søknadsgrunnlag);
@@ -124,7 +124,7 @@ class FpSakerTjeneste {
         var søknadsgrunnlag = finnSøknadsgrunnlag(gjeldendeVedtakBehandlingId)
                 .orElseThrow(() -> new IllegalStateException("Forventer søknadsgrunnlag på behandling"));
         var tilhørerMor = tilhørerSakMor(søknadsgrunnlag);
-        var familiehendelse = familiehendelse(søknadsgrunnlag, gjeldendeVedtakBehandlingId);
+        var familiehendelse = familiehendelse(gjeldendeVedtakBehandlingId);
         var vedtaksperioder = hentVedtakPerioder(gjeldendeVedtakBehandlingId);
         var gjeldendeVedtak = new FpVedtak(vedtaksperioder);
         var sakAvsluttet = Objects.equals(fpSak.fagsakStatus(), "AVSLU");
@@ -158,20 +158,9 @@ class FpSakerTjeneste {
         return repository.hentSøknadsGrunnlag(behandlingId);
     }
 
-    private Familiehendelse familiehendelse(SøknadsGrunnlag søknadsgrunnlag, Long behandlingId) {
-        //TODO erstatte med nytt familiehendelse view
-        var familiehendelse = new Familiehendelse(søknadsgrunnlag.getFødselDato(), søknadsgrunnlag.getTermindato(),
-                søknadsgrunnlag.getAntallBarn(), søknadsgrunnlag.getOmsorgsovertakelseDato());
-        try {
-            var fh = repository.hentFamilieHendelse(behandlingId).orElseThrow();
-            var familiehendelse2 = new Familiehendelse(fh.getFødselsdato(), fh.getTermindato(), fh.getAntallBarn(), fh.getOmsorgsovertakelseDato());
-            if (!familiehendelse.equals(familiehendelse2)) {
-                LOG.info("Familiehendelser matcher ikke {}", behandlingId);
-            }
-        } catch (Exception e) {
-            LOG.info("Feil ved henting av familiehendelse fra nytt view {}", behandlingId, e);
-        }
-        return familiehendelse;
+    private Familiehendelse familiehendelse(Long behandlingId) {
+        var fh = repository.hentFamilieHendelse(behandlingId).orElseThrow();
+        return new Familiehendelse(fh.getFødselsdato(), fh.getTermindato(), fh.getAntallBarn(), fh.getOmsorgsovertakelseDato());
     }
 
     private static Dekningsgrad dekningsgrad(SøknadsGrunnlag søknadsgrunnlag) {

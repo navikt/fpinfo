@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import no.nav.foreldrepenger.info.FamilieHendelse;
+
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.info.Behandling;
@@ -105,6 +107,8 @@ class FpSakerTjenesteTest {
                 .uføreGrunnlag(new UføreGrunnlag(behandlingId, true))
                 .build();
         repository.lagre(behandlingId, søknadsGrunnlag);
+        repository.lagre(new FamilieHendelse(behandlingId, 1, FamilieHendelseType.FØDSEL, termindato,
+                fødselsdato, null));
 
         var søknadMottattDato = LocalDate.now().minusWeeks(1);
         lagreSøknad(repository, behandlingId, søknadMottattDato);
@@ -233,6 +237,8 @@ class FpSakerTjenesteTest {
                 .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false, false, false, false))
                 .build();
         repository.lagre(behandlingId, søknadsGrunnlag);
+        repository.lagre(new FamilieHendelse(behandlingId, 1, FamilieHendelseType.FØDSEL, null,
+                fødselsdato, null));
 
         //Lagrer dokument for at behandlingen skal være relevant
         var sisteSøknadMottattDato = LocalDate.now().minusWeeks(1);
@@ -326,6 +332,8 @@ class FpSakerTjenesteTest {
                 .uføreGrunnlag(new UføreGrunnlag(behandlingId, false))
                 .build();
         repository.lagre(behandlingId, søknadsGrunnlag);
+        repository.lagre(new FamilieHendelse(behandlingId, 1, FamilieHendelseType.ADOPSJON, null,
+                omsorgsovertakelse, omsorgsovertakelse));
 
         var tjeneste = tjeneste(repository);
         var saker = tjeneste.hentFor(aktørId);
@@ -402,6 +410,11 @@ class FpSakerTjenesteTest {
                 .build();
         repository.lagre(behandlingId1, søknadsGrunnlag);
         repository.lagre(behandlingId2, søknadsGrunnlag);
+
+        repository.lagre(new FamilieHendelse(behandlingId1, 1, FamilieHendelseType.ADOPSJON, null,
+                omsorgsovertakelse, omsorgsovertakelse));
+        repository.lagre(new FamilieHendelse(behandlingId2, 1, FamilieHendelseType.ADOPSJON, null,
+                omsorgsovertakelse, omsorgsovertakelse));
 
         var tjeneste = tjeneste(repository);
         var saker = tjeneste.hentFor(aktørId);
