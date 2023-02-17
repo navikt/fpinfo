@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.info.server;
 
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -29,11 +28,6 @@ public class JettyDevServer extends JettyServer {
 
     private JettyDevServer(int serverPort) {
         super(serverPort);
-    }
-
-    @Override
-    protected List<Class<?>> getWebInfClasses() {
-        return List.of(LocalApplicationConfig.class);
     }
 
     @ApplicationPath(ApiConfig.API_URI)
