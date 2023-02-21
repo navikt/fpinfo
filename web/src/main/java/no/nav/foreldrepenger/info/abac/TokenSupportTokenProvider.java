@@ -11,7 +11,6 @@ import no.nav.security.token.support.core.jwt.JwtToken;
 import no.nav.security.token.support.core.jwt.JwtTokenClaims;
 import no.nav.security.token.support.jaxrs.JaxrsTokenValidationContextHolder;
 import no.nav.vedtak.sikkerhet.abac.TokenProvider;
-import no.nav.vedtak.sikkerhet.context.containers.SluttBruker;
 import no.nav.vedtak.sikkerhet.kontekst.IdentType;
 import no.nav.vedtak.sikkerhet.oidc.config.ConfigProvider;
 import no.nav.vedtak.sikkerhet.oidc.config.OpenIDConfiguration;
@@ -32,8 +31,8 @@ public class TokenSupportTokenProvider implements TokenProvider {
     }
 
     @Override
-    public SluttBruker getSluttBruker() {
-        return new SluttBruker(getUid(), IdentType.EksternBruker);
+    public IdentType getIdentType() {
+        return IdentType.EksternBruker;
     }
 
     @Override
