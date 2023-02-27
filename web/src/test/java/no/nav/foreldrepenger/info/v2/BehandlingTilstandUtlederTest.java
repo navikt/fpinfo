@@ -50,6 +50,18 @@ class BehandlingTilstandUtlederTest {
     }
 
     @Test
+    void vent_på_meldekort_manuelt_opprettet_ap_gir_tilstand_vent_på_meldekort() {
+        var tilstand = utled(Set.of(aksjonspunkt(MANUELT_SATT_PÅ_VENT, OPPRETTET, VENT_PÅ_SISTE_AAP_MELDEKORT)));
+        assertThat(tilstand).isEqualTo(VENT_MELDEKORT);
+    }
+
+    @Test
+    void vent_på_meldekort_manuelt_opprettet_ap_uten_ventårsak_gir_under_behandling_tilstand() {
+        var tilstand = utled(Set.of(aksjonspunkt(MANUELT_SATT_PÅ_VENT, OPPRETTET, AVV_DOK)));
+        assertThat(tilstand).isEqualTo(UNDER_BEHANDLING);
+    }
+
+    @Test
     void vent_på_komplett_søknad_med_årsak_dok_gir_vent_på_dok_tilstand() {
         var tilstand = utled(Set.of(aksjonspunkt(VENT_PÅ_KOMPLETT_SØKNAD, OPPRETTET, AVV_DOK)));
         assertThat(tilstand).isEqualTo(VENT_DOKUMENTASJON);

@@ -108,6 +108,7 @@ public class Aksjonspunkt {
 
     public enum Definisjon {
 
+        MANUELT_SATT_PÅ_VENT("7001"),
         VENT_PÅ_KOMPLETT_SØKNAD("7003"),
         VENT_PGA_FOR_TIDLIG_SØKNAD("7008"),
         VENT_PÅ_SISTE_AAP_ELLER_DP_MELDEKORT("7020"),
@@ -167,7 +168,7 @@ public class Aksjonspunkt {
     }
 
     public enum Venteårsak {
-        AVV_DOK, VENT_OPDT_INNTEKTSMELDING
+        AVV_DOK, VENT_OPDT_INNTEKTSMELDING, VENT_PÅ_SISTE_AAP_MELDEKORT
         ;
 
         @Converter(autoApply = true)

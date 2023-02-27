@@ -30,7 +30,7 @@ final class BehandlingTilstandUtleder {
         if (contains(opprettetAksjonspunkt, Aksjonspunkt.Definisjon.VENT_PGA_FOR_TIDLIG_SØKNAD)) {
             return BehandlingTilstand.VENT_TIDLIG_SØKNAD;
         }
-        if (contains(opprettetAksjonspunkt, Aksjonspunkt.Definisjon.VENT_PÅ_SISTE_AAP_ELLER_DP_MELDEKORT)) {
+        if (venterPåMeldekort(opprettetAksjonspunkt)) {
             return BehandlingTilstand.VENT_MELDEKORT;
         }
         if (contains(opprettetAksjonspunkt, Aksjonspunkt.Definisjon.VENT_PÅ_KOMPLETT_SØKNAD, Aksjonspunkt.Venteårsak.AVV_DOK)) {
@@ -40,6 +40,11 @@ final class BehandlingTilstandUtleder {
             return BehandlingTilstand.VENT_INNTEKTSMELDING;
         }
         return BehandlingTilstand.UNDER_BEHANDLING;
+    }
+
+    private static boolean venterPåMeldekort(Set<Aksjonspunkt> opprettetAksjonspunkt) {
+        return contains(opprettetAksjonspunkt, Aksjonspunkt.Definisjon.VENT_PÅ_SISTE_AAP_ELLER_DP_MELDEKORT)
+            || contains(opprettetAksjonspunkt, Aksjonspunkt.Definisjon.MANUELT_SATT_PÅ_VENT, Aksjonspunkt.Venteårsak.VENT_PÅ_SISTE_AAP_MELDEKORT);
     }
 
     private static boolean venterPåInntektsmelding(Set<Aksjonspunkt> opprettetAksjonspunkt) {
