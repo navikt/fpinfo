@@ -91,6 +91,12 @@ class BehandlingTilstandUtlederTest {
         assertThat(tilstand).isEqualTo(VENT_INNTEKTSMELDING);
     }
 
+    @Test
+    void vent_på_inntektsmelding_manuelt_opprettet_ap_gir_tilstand_vent_på_im() {
+        var tilstand = utled(Set.of(aksjonspunkt(MANUELT_SATT_PÅ_VENT, OPPRETTET, VENT_OPDT_INNTEKTSMELDING)));
+        assertThat(tilstand).isEqualTo(VENT_INNTEKTSMELDING);
+    }
+
     private Aksjonspunkt aksjonspunkt(Aksjonspunkt.Definisjon definisjon, Aksjonspunkt.Status status) {
         return aksjonspunkt(definisjon, status, null);
     }

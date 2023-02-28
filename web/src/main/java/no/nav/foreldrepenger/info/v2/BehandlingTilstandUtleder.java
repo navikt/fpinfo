@@ -49,7 +49,8 @@ final class BehandlingTilstandUtleder {
 
     private static boolean venterPåInntektsmelding(Set<Aksjonspunkt> opprettetAksjonspunkt) {
         return contains(opprettetAksjonspunkt, Aksjonspunkt.Definisjon.VENT_PÅ_KOMPLETT_SØKNAD, Aksjonspunkt.Venteårsak.VENT_OPDT_INNTEKTSMELDING)
-                || contains(opprettetAksjonspunkt, Aksjonspunkt.Definisjon.VENT_ETTERLYST_INNTEKTSMELDING);
+            || contains(opprettetAksjonspunkt, Aksjonspunkt.Definisjon.VENT_ETTERLYST_INNTEKTSMELDING)
+            || contains(opprettetAksjonspunkt, Aksjonspunkt.Definisjon.MANUELT_SATT_PÅ_VENT, Aksjonspunkt.Venteårsak.VENT_OPDT_INNTEKTSMELDING);
     }
 
     private static boolean contains(Set<Aksjonspunkt> opprettetAksjonspunkt, Aksjonspunkt.Definisjon def) {
