@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Set;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -57,7 +58,7 @@ class BehandlingTilstandUtlederTest {
 
     @Test
     void vent_på_meldekort_manuelt_opprettet_ap_uten_ventårsak_gir_under_behandling_tilstand() {
-        var tilstand = utled(Set.of(aksjonspunkt(MANUELT_SATT_PÅ_VENT, OPPRETTET, AVV_DOK)));
+        var tilstand = utled(Set.of(aksjonspunkt(MANUELT_SATT_PÅ_VENT, OPPRETTET, null)));
         assertThat(tilstand).isEqualTo(UNDER_BEHANDLING);
     }
 
@@ -89,6 +90,19 @@ class BehandlingTilstandUtlederTest {
     void vent_på_etterlyst_im_med_årsak_null_gir_vent_på_im_tilstand() {
         var tilstand = utled(Set.of(aksjonspunkt(VENT_ETTERLYST_INNTEKTSMELDING, OPPRETTET, null)));
         assertThat(tilstand).isEqualTo(VENT_INNTEKTSMELDING);
+    }
+
+    @Test
+    void vent_på_inntektsmelding_manuelt_opprettet_ap_gir_tilstand_vent_på_im() {
+        var tilstand = utled(Set.of(aksjonspunkt(MANUELT_SATT_PÅ_VENT, OPPRETTET, VENT_OPDT_INNTEKTSMELDING)));
+        assertThat(tilstand).isEqualTo(VENT_INNTEKTSMELDING);
+    }
+
+    @Disabled("https://nav-it.slack.com/archives/C02UJ2CC736/p1677572546122959")
+    @Test
+    void vent_på_dok_manuelt_opprettet_ap_gir_tilstand_vent_på_dok() {
+        var tilstand = utled(Set.of(aksjonspunkt(MANUELT_SATT_PÅ_VENT, OPPRETTET, AVV_DOK)));
+        assertThat(tilstand).isEqualTo(VENT_DOKUMENTASJON);
     }
 
     private Aksjonspunkt aksjonspunkt(Aksjonspunkt.Definisjon definisjon, Aksjonspunkt.Status status) {
