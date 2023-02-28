@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Set;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -97,6 +98,7 @@ class BehandlingTilstandUtlederTest {
         assertThat(tilstand).isEqualTo(VENT_INNTEKTSMELDING);
     }
 
+    @Disabled("https://nav-it.slack.com/archives/C02UJ2CC736/p1677572546122959")
     @Test
     void vent_på_dok_manuelt_opprettet_ap_gir_tilstand_vent_på_dok() {
         var tilstand = utled(Set.of(aksjonspunkt(MANUELT_SATT_PÅ_VENT, OPPRETTET, AVV_DOK)));

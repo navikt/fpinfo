@@ -44,7 +44,8 @@ final class BehandlingTilstandUtleder {
 
     private static boolean venterPåDokumentasjonFraBruker(Set<Aksjonspunkt> opprettetAksjonspunkt) {
         return contains(opprettetAksjonspunkt, Aksjonspunkt.Definisjon.VENT_PÅ_KOMPLETT_SØKNAD, Aksjonspunkt.Venteårsak.AVV_DOK)
-            || contains(opprettetAksjonspunkt, Aksjonspunkt.Definisjon.MANUELT_SATT_PÅ_VENT, Aksjonspunkt.Venteårsak.AVV_DOK);
+//            || contains(opprettetAksjonspunkt, Aksjonspunkt.Definisjon.MANUELT_SATT_PÅ_VENT, Aksjonspunkt.Venteårsak.AVV_DOK)
+            ;
     }
 
     private static boolean venterPåMeldekort(Set<Aksjonspunkt> opprettetAksjonspunkt) {
