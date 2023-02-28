@@ -57,7 +57,7 @@ class BehandlingTilstandUtlederTest {
 
     @Test
     void vent_på_meldekort_manuelt_opprettet_ap_uten_ventårsak_gir_under_behandling_tilstand() {
-        var tilstand = utled(Set.of(aksjonspunkt(MANUELT_SATT_PÅ_VENT, OPPRETTET, AVV_DOK)));
+        var tilstand = utled(Set.of(aksjonspunkt(MANUELT_SATT_PÅ_VENT, OPPRETTET, null)));
         assertThat(tilstand).isEqualTo(UNDER_BEHANDLING);
     }
 
@@ -95,6 +95,12 @@ class BehandlingTilstandUtlederTest {
     void vent_på_inntektsmelding_manuelt_opprettet_ap_gir_tilstand_vent_på_im() {
         var tilstand = utled(Set.of(aksjonspunkt(MANUELT_SATT_PÅ_VENT, OPPRETTET, VENT_OPDT_INNTEKTSMELDING)));
         assertThat(tilstand).isEqualTo(VENT_INNTEKTSMELDING);
+    }
+
+    @Test
+    void vent_på_dok_manuelt_opprettet_ap_gir_tilstand_vent_på_dok() {
+        var tilstand = utled(Set.of(aksjonspunkt(MANUELT_SATT_PÅ_VENT, OPPRETTET, AVV_DOK)));
+        assertThat(tilstand).isEqualTo(VENT_DOKUMENTASJON);
     }
 
     private Aksjonspunkt aksjonspunkt(Aksjonspunkt.Definisjon definisjon, Aksjonspunkt.Status status) {
