@@ -28,27 +28,12 @@ public class Behandling {
     @Column(name = "BEHANDLING_STATUS")
     private String behandlingStatus;
 
-    @Column(name = "BEHANDLING_RESULTAT_TYPE")
-    private String behandlingResultatType;
-
     @Column(name = "BEHANDLING_TYPE")
     @Convert(converter = BehandlingType.KodeverdiConverter.class)
     private BehandlingType behandlingType;
 
-    @Column(name = "FAGSAK_YTELSE_TYPE")
-    private String fagsakYtelseType;
-
     @Column(name = "SAKSNUMMER")
     private String saksnummer;
-
-    @Column(name = "FAMILIE_HENDELSE_TYPE")
-    private String familieHendelseType;
-
-    @Column(name = "BEHANDLENDE_ENHET")
-    private String behandlendeEnhet;
-
-    @Column(name = "BEHANDLENDE_ENHET_NAVN")
-    private String behandlendeEnhetNavn;
 
     @OneToMany(mappedBy = "behandlingId")
     private List<BehandlingÅrsak> årsaker = new ArrayList<>();
@@ -70,32 +55,12 @@ public class Behandling {
         return behandlingStatus;
     }
 
-    public String getBehandlingResultatType() {
-        return behandlingResultatType;
-    }
-
-    public String getFagsakYtelseType() {
-        return fagsakYtelseType;
-    }
-
     public String getSaksnummer() {
         return saksnummer;
     }
 
-    public String getFamilieHendelseType() {
-        return familieHendelseType;
-    }
-
     public List<BehandlingÅrsak> getÅrsaker() {
         return årsaker;
-    }
-
-    public String getBehandlendeEnhet() {
-        return behandlendeEnhet;
-    }
-
-    public String getBehandlendeEnhetNavn() {
-        return behandlendeEnhetNavn;
     }
 
     public BehandlingType getBehandlingType() {
@@ -104,10 +69,6 @@ public class Behandling {
 
     public LocalDateTime getOpprettetTidspunkt() {
         return opprettetTidspunkt;
-    }
-
-    public LocalDateTime getEndretTidspunkt() {
-        return endretTidspunkt;
     }
 
     public boolean erAvsluttet() {
@@ -136,29 +97,8 @@ public class Behandling {
             return this;
         }
 
-        public Builder medBehandlingResultatType(String behandlingResultatType) {
-            behandling.behandlingResultatType = behandlingResultatType;
-            return this;
-        }
-
-        public Builder medFagsakYtelseType(String fagsakYtelseType) {
-            behandling.fagsakYtelseType = fagsakYtelseType;
-            return this;
-        }
-
         public Builder medSaksnummer(Saksnummer saksnummer) {
             behandling.saksnummer = saksnummer == null ? null : saksnummer.saksnummer();
-            return this;
-        }
-
-        public Builder medFamilieHendelseType(String familieHendelseType) {
-            behandling.familieHendelseType = familieHendelseType;
-            return this;
-        }
-
-        public Builder medBehandlendeEnhet(String enhetKode, String enhetNavn) {
-            behandling.behandlendeEnhet = enhetKode;
-            behandling.behandlendeEnhetNavn = enhetNavn;
             return this;
         }
 
@@ -179,11 +119,8 @@ public class Behandling {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + " [behandlingId=" + behandlingId + ", behandlingStatus=" + behandlingStatus
-                + ", behandlingResultatType="
-                + behandlingResultatType + ", behandlingType=" + behandlingType + ", fagsakYtelseType=" + fagsakYtelseType + ", saksnummer="
-                + saksnummer + ", familieHendelseType=" + familieHendelseType + ", behandlendeEnhet=" + behandlendeEnhet
-                + ", behandlendeEnhetNavn=" + behandlendeEnhetNavn + ", årsaker=" + årsaker
-                + ", opprettetTidspunkt=" + opprettetTidspunkt + ", endretTidspunkt=" + endretTidspunkt + "]";
+        return "Behandling{" + "behandlingId=" + behandlingId + ", behandlingStatus='" + behandlingStatus + '\'' + ", behandlingType="
+            + behandlingType + ", saksnummer='" + saksnummer + '\'' + ", årsaker=" + årsaker
+            + ", opprettetTidspunkt=" + opprettetTidspunkt + ", endretTidspunkt=" + endretTidspunkt + '}';
     }
 }

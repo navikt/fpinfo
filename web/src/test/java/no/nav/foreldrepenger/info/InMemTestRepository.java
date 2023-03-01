@@ -14,7 +14,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import no.nav.foreldrepenger.info.datatyper.DokumentTypeId;
 import no.nav.foreldrepenger.info.repository.Repository;
 
 public class InMemTestRepository implements Repository {
@@ -23,7 +22,6 @@ public class InMemTestRepository implements Repository {
     private final Map<Long, List<UttakPeriode>> uttak = new HashMap<>();
     private final Map<Long, SøknadsGrunnlag> søknadsGrunnlag = new HashMap<>();
     private final List<Behandling> behandlinger = new ArrayList<>();
-    private final List<FagsakRelasjon> fagsakRelasjoner = new ArrayList<>();
     private final List<MottattDokument> mottattDokumenter = new ArrayList<>();
     private final Map<Long, List<SøknadsperiodeEntitet>> søknadsperioder = new HashMap<>();
     private final List<FamilieHendelse> familieHendelser = new ArrayList<>();
@@ -61,32 +59,8 @@ public class InMemTestRepository implements Repository {
     }
 
     @Override
-    public Optional<Sak> finnNyesteSakForAnnenPart(String aktørIdBruker, String annenPartAktørId) {
-        return saker.stream()
-                .filter(sak -> sak.getAktørId().equals(annenPartAktørId) && sak.getAktørIdAnnenPart().equals(aktørIdBruker))
-                .max(Comparator.comparing(Sak::getOpprettetTidspunkt));
-    }
-
-    @Override
-    public Optional<FagsakRelasjon> hentFagsakRelasjon(String saksnummer) {
-        return fagsakRelasjoner.stream().filter(fr -> Objects.equals(fr.getSaksnummer().saksnummer(), saksnummer)).findFirst();
-    }
-
-    @Override
-    public Behandling hentBehandling(Long behandlingId) {
-        return behandlinger.stream().filter(b -> b.getBehandlingId().equals(behandlingId)).findFirst().orElseThrow();
-    }
-
-    @Override
     public List<Behandling> hentTilknyttedeBehandlinger(String saksnummer) {
         return behandlinger.stream().filter(b -> b.getSaksnummer().equals(saksnummer)).toList();
-    }
-
-    @Override
-    public List<MottattDokument> hentInntektsmeldinger(Long behandlingId) {
-        return hentMottattDokument(behandlingId).stream()
-                .filter(md -> md.getType().equals(DokumentTypeId.INNTEKTSMELDING.name()))
-                .toList();
     }
 
     @Override
@@ -130,10 +104,6 @@ public class InMemTestRepository implements Repository {
 
     public void lagreVedtaksperioder(Long behandlingId, List<UttakPeriode> uttak) {
         this.uttak.put(behandlingId, List.copyOf(uttak));
-    }
-
-    public void lagre(FagsakRelasjon fagsakRelasjon) {
-        fagsakRelasjoner.add(fagsakRelasjon);
     }
 
     public void lagre(List<MottattDokument> dokumenter) {

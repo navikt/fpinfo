@@ -5,9 +5,7 @@ import no.nav.vedtak.sikkerhet.abac.AbacAttributtType;
 
 public enum AppAbacAttributtType implements AbacAttributtType {
 
-    FORSENDELSE_UUID,
-    ANNEN_PART,
-    OPPGITT_ALENEOMSORG;
+    ANNEN_PART;
 
     @Override
     public boolean getMaskerOutput() {

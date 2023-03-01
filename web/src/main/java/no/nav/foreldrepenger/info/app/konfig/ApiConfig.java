@@ -8,8 +8,6 @@ import java.util.stream.Collectors;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-import no.nav.vedtak.exception.TekniskException;
-
 import org.glassfish.jersey.server.ServerProperties;
 
 import io.swagger.v3.jaxrs2.integration.JaxrsOpenApiContextBuilder;
@@ -22,11 +20,11 @@ import no.nav.foreldrepenger.info.app.exceptions.ConstraintViolationMapper;
 import no.nav.foreldrepenger.info.app.exceptions.GeneralRestExceptionMapper;
 import no.nav.foreldrepenger.info.app.exceptions.JsonProcessingExceptionMapper;
 import no.nav.foreldrepenger.info.app.jackson.JacksonJsonConfig;
-import no.nav.foreldrepenger.info.app.tjenester.DokumentforsendelseTjeneste;
 import no.nav.foreldrepenger.info.server.TimingFilter;
 import no.nav.foreldrepenger.info.v2.SakRest;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.security.token.support.jaxrs.JwtTokenContainerRequestFilter;
+import no.nav.vedtak.exception.TekniskException;
 
 @ApplicationPath(ApiConfig.API_URI)
 public class ApiConfig extends Application {
@@ -65,7 +63,6 @@ public class ApiConfig extends Application {
         return Set.of(
                 TimingFilter.class,
                 JwtTokenContainerRequestFilter.class,
-                DokumentforsendelseTjeneste.class,
                 SakRest.class,
                 ConstraintViolationMapper.class,
                 JsonProcessingExceptionMapper.class,

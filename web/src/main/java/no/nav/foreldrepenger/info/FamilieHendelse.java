@@ -10,8 +10,6 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Immutable;
 
-import no.nav.foreldrepenger.info.datatyper.FamilieHendelseType;
-
 @Entity(name = "FamilieHendelse")
 @Table(name = "FAMILIE_HENDELSE")
 @Immutable
@@ -24,9 +22,6 @@ public class FamilieHendelse {
     @Column(name = "ANTALL_BARN")
     private int antallBarn;
 
-    @Column(name = "FAMILIE_HENDELSE_TYPE")
-    private String familieHendelseType;
-
     @Column(name = "OMSORGSOVERTAKELSE_DATO")
     private LocalDate omsorgsovertakelseDato;
 
@@ -38,13 +33,11 @@ public class FamilieHendelse {
 
     public FamilieHendelse(long behandlingId,
                            int antallBarn,
-                           FamilieHendelseType familieHendelseType,
                            LocalDate termindato,
                            LocalDate fødselsdato,
                            LocalDate omsorgsovertakelseDato) {
         this.behandlingId = behandlingId;
         this.antallBarn = antallBarn;
-        this.familieHendelseType = familieHendelseType.getVerdi();
         this.omsorgsovertakelseDato = omsorgsovertakelseDato;
         this.termindato = termindato;
         this.fødselsdato = fødselsdato;
@@ -56,10 +49,6 @@ public class FamilieHendelse {
 
     public long getBehandlingId() {
         return behandlingId;
-    }
-
-    public String getFamilieHendelseType() {
-        return familieHendelseType;
     }
 
     public LocalDate getOmsorgsovertakelseDato() {
@@ -91,9 +80,10 @@ public class FamilieHendelse {
         return Objects.hash(behandlingId);
     }
 
+
     @Override
     public String toString() {
-        return "FamilieHendelse{" + "behandlingId=" + behandlingId + ", familieHendelseType='" + familieHendelseType
-                + '\'' + ", omsorgsovertakelseDato=" + omsorgsovertakelseDato + ", termindato=" + termindato + ", fødselsdato=" + fødselsdato + '}';
+        return "FamilieHendelse{" + "behandlingId=" + behandlingId + ", antallBarn=" + antallBarn + ", omsorgsovertakelseDato="
+            + omsorgsovertakelseDato + ", termindato=" + termindato + ", fødselsdato=" + fødselsdato + '}';
     }
 }

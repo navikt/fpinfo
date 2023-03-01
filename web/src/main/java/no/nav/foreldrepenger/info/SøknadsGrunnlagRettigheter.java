@@ -58,7 +58,8 @@ public class SøknadsGrunnlagRettigheter {
                                       Boolean saksbehandlerAleneomsorg,
                                       Boolean søknadAleneomsorg,
                                       Boolean saksbehandlerUføretrygd, Boolean søknadUføretrygd,
-                                      Boolean søknadHarAnnenForelderTilsvarendeRettEØS) {
+                                      Boolean søknadHarAnnenForelderTilsvarendeRettEØS,
+                                      Boolean saksbehandlerHarAnnenForelderTilsvarendeRettEØS) {
         this.gryfId = gryfId;
         this.saksbehandlerAnnenForelderRett = saksbehandlerAnnenForelderRett;
         this.søknadAnnenForelderRett = søknadAnnenForelderRett;
@@ -67,9 +68,10 @@ public class SøknadsGrunnlagRettigheter {
         this.saksbehandlerUføretrygd = saksbehandlerUføretrygd;
         this.søknadUføretrygd = søknadUføretrygd;
         this.søknadHarAnnenForelderTilsvarendeRettEØS = søknadHarAnnenForelderTilsvarendeRettEØS;
+        this.saksbehandlerHarAnnenForelderTilsvarendeRettEØS = saksbehandlerHarAnnenForelderTilsvarendeRettEØS;
     }
 
-    SøknadsGrunnlagRettigheter() {
+    protected SøknadsGrunnlagRettigheter() {
 
     }
 

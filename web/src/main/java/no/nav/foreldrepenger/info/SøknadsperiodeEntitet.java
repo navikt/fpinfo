@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.info;
 
-import static no.nav.foreldrepenger.info.app.tjenester.dto.UttaksPeriodeDto.dash2null;
+import static no.nav.foreldrepenger.info.UttakPeriode.dash2null;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

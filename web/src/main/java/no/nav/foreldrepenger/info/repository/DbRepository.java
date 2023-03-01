@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.info.repository;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -15,12 +14,9 @@ import org.hibernate.CacheMode;
 import org.hibernate.jpa.QueryHints;
 import org.hibernate.jpa.TypedParameterValue;
 import org.hibernate.type.StringType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.info.Aksjonspunkt;
 import no.nav.foreldrepenger.info.Behandling;
-import no.nav.foreldrepenger.info.FagsakRelasjon;
 import no.nav.foreldrepenger.info.FamilieHendelse;
 import no.nav.foreldrepenger.info.MottattDokument;
 import no.nav.foreldrepenger.info.Sak;
@@ -28,14 +24,9 @@ import no.nav.foreldrepenger.info.Saksnummer;
 import no.nav.foreldrepenger.info.SøknadsGrunnlag;
 import no.nav.foreldrepenger.info.SøknadsperiodeEntitet;
 import no.nav.foreldrepenger.info.UttakPeriode;
-import no.nav.foreldrepenger.info.datatyper.DokumentTypeId;
-import no.nav.foreldrepenger.info.datatyper.FagsakYtelseType;
-import no.nav.vedtak.exception.TekniskException;
 
 @Dependent
 public class DbRepository implements Repository {
-
-    private static final Logger LOG = LoggerFactory.getLogger(DbRepository.class);
 
     private final EntityManager em;
 
@@ -77,49 +68,12 @@ public class DbRepository implements Repository {
         return Optional.of(((BigDecimal) query.getSingleResult()).longValue());
     }
 
-    @Override
-    public Optional<Sak> finnNyesteSakForAnnenPart(String aktørIdBruker, String annenPartAktørId) {
-        return em.createQuery(
-                "from SakStatus where aktørId=:annenPartAktørId and aktørIdAnnenPart=:aktørId and fagsakYtelseType=:ytelseType order by opprettetTidspunkt desc",
-                Sak.class)
-                .setParameter("aktørId", aktørIdBruker)
-                .setParameter("ytelseType", FagsakYtelseType.FP.name())
-                .setParameter("annenPartAktørId", annenPartAktørId).getResultStream()
-                .findFirst();
-    }
-
-    @Override
-    public Optional<FagsakRelasjon> hentFagsakRelasjon(String saksnummer) {
-        return em.createQuery("from FagsakRelasjon where saksnummer=:saksnummer", FagsakRelasjon.class)
-                .setParameter("saksnummer",
-                        new TypedParameterValue(StringType.INSTANCE, saksnummer))
-                .getResultList()
-                .stream()
-                .max(Comparator.comparing(FagsakRelasjon::getEndretTidspunkt));
-    }
-
-    @Override
-    public Behandling hentBehandling(Long behandlingId) {
-        var resultList = em.createQuery("from Behandling where behandling_id=:behandlingId", Behandling.class)
-                .setParameter("behandlingId", behandlingId).getResultList();
-        if (resultList.size() > 1) {
-            LOG.info("Hent behandling med id {} returnerte {} behandlinger", behandlingId, resultList.size());
-        }
-        return resultList.stream().findFirst()
-                .orElseThrow(() -> new TekniskException("FP-741456", String.format("Fant ingen behandling med behandlingId: %s", behandlingId)));
-    }
 
     @Override
     public List<Behandling> hentTilknyttedeBehandlinger(String saksnummer) {
         return em.createQuery("from Behandling where saksnummer=:saksnummer", Behandling.class)
-                .setParameter("saksnummer", new TypedParameterValue(StringType.INSTANCE, saksnummer)).getResultList();
-    }
-
-    @Override
-    public List<MottattDokument> hentInntektsmeldinger(Long behandlingId) {
-        return hentMottattDokument(behandlingId).stream()
-                .filter(o -> DokumentTypeId.INNTEKTSMELDING.name().equals(o.getType()))
-                .toList();
+            .setParameter("saksnummer", new TypedParameterValue(StringType.INSTANCE, saksnummer))
+            .getResultList();
     }
 
     @Override

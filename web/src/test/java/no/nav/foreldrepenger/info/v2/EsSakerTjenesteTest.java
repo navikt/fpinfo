@@ -15,7 +15,6 @@ import no.nav.foreldrepenger.info.Sak;
 import no.nav.foreldrepenger.info.datatyper.BehandlingType;
 import no.nav.foreldrepenger.info.datatyper.DokumentTypeId;
 import no.nav.foreldrepenger.info.datatyper.FagsakYtelseType;
-import no.nav.foreldrepenger.info.datatyper.FamilieHendelseType;
 
 class EsSakerTjenesteTest {
 
@@ -39,10 +38,9 @@ class EsSakerTjenesteTest {
         var omsorgsovertakelseDato = LocalDate.of(2023, 1, 24);
         var fødselsdato = omsorgsovertakelseDato.minusWeeks(1);
 
-        var familiehendelseType = FamilieHendelseType.ADOPSJON;
-        repository.lagre(opprettetSak(aktørId, saksnummer, behandlingId, familiehendelseType));
-        repository.lagre(åpenFørstegangsbehandling(saksnummer, behandlingId, familiehendelseType));
-        repository.lagre(new FamilieHendelse(behandlingId, 1, familiehendelseType, null, fødselsdato, omsorgsovertakelseDato));
+        repository.lagre(opprettetSak(aktørId, saksnummer, behandlingId));
+        repository.lagre(åpenFørstegangsbehandling(saksnummer, behandlingId));
+        repository.lagre(new FamilieHendelse(behandlingId, 1, null, fødselsdato, omsorgsovertakelseDato));
         repository.lagre(søknad(behandlingId, DokumentTypeId.SØKNAD_ENGANGSSTØNAD_ADOPSJON));
 
         var resultat = tjeneste.hentFor(new AktørId(aktørId));
@@ -66,10 +64,9 @@ class EsSakerTjenesteTest {
         var termindato = LocalDate.of(2023, 1, 24);
         var fødselsdato = termindato.minusWeeks(1);
 
-        var familiehendelseType = FamilieHendelseType.FØDSEL;
-        repository.lagre(opprettetSak(aktørId, saksnummer, behandlingId, familiehendelseType));
-        repository.lagre(åpenFørstegangsbehandling(saksnummer, behandlingId, familiehendelseType));
-        repository.lagre(new FamilieHendelse(behandlingId, 2, familiehendelseType, termindato, fødselsdato, null));
+        repository.lagre(opprettetSak(aktørId, saksnummer, behandlingId));
+        repository.lagre(åpenFørstegangsbehandling(saksnummer, behandlingId));
+        repository.lagre(new FamilieHendelse(behandlingId, 2, termindato, fødselsdato, null));
         repository.lagre(søknad(behandlingId, DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL));
 
         var resultat = tjeneste.hentFor(new AktørId(aktørId));
@@ -89,26 +86,22 @@ class EsSakerTjenesteTest {
     }
 
     private static Behandling åpenFørstegangsbehandling(no.nav.foreldrepenger.info.Saksnummer saksnummer,
-                                                        long behandlingId,
-                                                        FamilieHendelseType familiehendelseType) {
+                                                        long behandlingId) {
         return new Behandling.Builder()
                 .medBehandlingId(behandlingId)
                 .medBehandlingStatus("OPPR")
-                .medFamilieHendelseType(familiehendelseType.getVerdi())
                 .medSaksnummer(saksnummer)
                 .medBehandlingType(BehandlingType.FØRSTEGANGSBEHANDLING)
                 .build();
     }
 
     private static Sak opprettetSak(String aktørId, no.nav.foreldrepenger.info.Saksnummer saksnummer,
-                                    long behandlingId,
-                                    FamilieHendelseType familiehendelseType) {
+                                    long behandlingId) {
         return new Sak.Builder()
                 .medSaksnummer(saksnummer)
                 .medBehandlingId(String.valueOf(behandlingId))
                 .medFagsakStatus("OPPR")
                 .medAktørId(aktørId)
-                .medFamilieHendelseType(familiehendelseType.getVerdi())
                 .medFagsakYtelseType(FagsakYtelseType.ES.name())
                 .build();
     }

@@ -9,8 +9,6 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Immutable;
 
-import no.nav.foreldrepenger.info.datatyper.BehandlingTema;
-
 @Entity(name = "SakStatus")
 @Table(name = "SAK_STATUS")
 @Immutable
@@ -41,20 +39,10 @@ public class Sak {
     @Column(name = "BARN_AKTOER_ID")
     private String aktørIdBarn;
 
-    @Column(name = "familie_hendelse_type")
-    private String familieHendelseType;
-
     @Column(name = "fagsak_opprettet_tid", nullable = false)
     private LocalDateTime opprettetTidspunkt;
 
-    @Column(name = "endret_tid")
-    private LocalDateTime endretTidspunkt;
-
     Sak() {
-    }
-
-    public String getBehandlingstema() {
-        return BehandlingTema.fraYtelse(fagsakYtelseType, familieHendelseType);
     }
 
     public String getFagsakYtelseType() {
@@ -89,17 +77,11 @@ public class Sak {
         return opprettetTidspunkt;
     }
 
-    public LocalDateTime getEndretTidspunkt() {
-        return endretTidspunkt;
-    }
-
     @Override
     public String toString() {
-        return getClass().getSimpleName() + " [randomId=" + randomId + ", saksnummer=" + saksnummer + ", fagsakStatus=" + fagsakStatus
-                + ", behandlingId="
-                + behandlingId + ", fagsakYtelseType=" + fagsakYtelseType + ", aktørId=" + aktørId + ", aktørIdAnnenPart="
-                + aktørIdAnnenPart + ", aktørIdBarn=" + aktørIdBarn + ", familieHendelseType=" + familieHendelseType
-                + ", opprettetTidspunkt=" + opprettetTidspunkt + ", endretTidspunkt=" + endretTidspunkt + "]";
+        return "Sak{" + "saksnummer='" + saksnummer + '\'' + ", fagsakStatus='" + fagsakStatus + '\'' + ", behandlingId='" + behandlingId + '\''
+            + ", fagsakYtelseType='" + fagsakYtelseType + '\'' + ", aktørId='" + aktørId + '\'' + ", aktørIdAnnenPart='" + aktørIdAnnenPart + '\''
+            + ", aktørIdBarn='" + aktørIdBarn + '\'' + ", opprettetTidspunkt=" + opprettetTidspunkt + '}';
     }
 
     public static Builder builder() {
@@ -145,11 +127,6 @@ public class Sak {
 
         public Builder medAktørIdBarn(String aktørId) {
             sak.aktørIdBarn = aktørId;
-            return this;
-        }
-
-        public Builder medFamilieHendelseType(String familiehendelseType) {
-            sak.familieHendelseType = familiehendelseType;
             return this;
         }
 
