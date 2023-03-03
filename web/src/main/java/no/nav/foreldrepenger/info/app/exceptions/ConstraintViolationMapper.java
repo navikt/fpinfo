@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.info.app.exceptions;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolationException;
 import javax.validation.Path;
@@ -27,7 +26,7 @@ public class ConstraintViolationMapper implements ExceptionMapper<ConstraintViol
             String feltNavn = getFeltNavn(constraintViolation.getPropertyPath());
             feilene.add(new FeltFeilDto(feltNavn, constraintViolation.getMessage()));
         }
-        var feltNavn = feilene.stream().map(FeltFeilDto::navn).collect(Collectors.toList());
+        var feltNavn = feilene.stream().map(FeltFeilDto::navn).toList();
 
         var feil = FeltValideringFeil.feltverdiKanIkkeValideres(feltNavn);
         LOG.warn(feil.getMessage(), feil);
@@ -39,7 +38,7 @@ public class ConstraintViolationMapper implements ExceptionMapper<ConstraintViol
     }
 
     private static String getFeltNavn(Path propertyPath) {
-        return propertyPath instanceof PathImpl ? ((PathImpl) propertyPath).getLeafNode().toString() : null;
+        return propertyPath instanceof PathImpl path ? path.getLeafNode().toString() : null;
     }
 
 }

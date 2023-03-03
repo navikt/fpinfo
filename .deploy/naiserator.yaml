@@ -9,26 +9,29 @@ spec:
   tokenx:
     enabled: true
   image: {{image}}
+  port: 8080
   ingresses:
 {{#each ingresses as |url|}}
     - {{url}}
 {{/each}}
-  port: 8080
   liveness:
     path: /fpinfo/internal/health/isAlive
-    initialDelay: 30
-    timeout: 5
+    initialDelay: 10
     periodSeconds: 10
-    failureThreshold: 27
+    failureThreshold: 20
+    timeout: 3
+  readiness:
+    path: /fpinfo/internal/health/isReady
+    initialDelay: 10
+    periodSeconds: 10
+    failureThreshold: 20
+    timeout: 3
+  preStopHook:
+    http:
+      path: /fpinfo/internal/health/preStop
   prometheus:
     enabled: true
     path: /fpinfo/internal/metrics/prometheus
-  readiness:
-    path: /fpinfo/internal/health/isReady
-    initialDelay: 30
-    timeout: 5
-    periodSeconds: 10
-    failureThreshold: 27
   replicas:
     min: {{minReplicas}}
     max: {{maxReplicas}}

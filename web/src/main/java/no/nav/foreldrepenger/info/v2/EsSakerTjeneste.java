@@ -68,7 +68,7 @@ class EsSakerTjeneste {
         var fh = repository.hentFamilieHendelse(behandlingId).orElseThrow();
         var familiehendelse = new Familiehendelse(fh.getFødselsdato(), fh.getTermindato(), fh.getAntallBarn(), fh.getOmsorgsovertakelseDato());
         var sakAvsluttet = Objects.equals(esSak.fagsakStatus(), "AVSLU");
-        return Optional.of(new EsSak(esSak.saksnummer(), familiehendelse, sakAvsluttet, åpenBehandling.map(b -> map(b)).orElse(null)));
+        return Optional.of(new EsSak(esSak.saksnummer(), familiehendelse, sakAvsluttet, åpenBehandling.map(this::map).orElse(null)));
     }
 
     private Optional<Behandling> finnÅpenBehandling(no.nav.foreldrepenger.info.v2.Saksnummer saksnummer) {
@@ -76,7 +76,7 @@ class EsSakerTjeneste {
         return repository.hentTilknyttedeBehandlinger(saksnummer.value())
                 .stream()
                 .filter(b -> !b.erAvsluttet())
-                .filter(b -> erRelevant(b))
+                .filter(this::erRelevant)
                 .max(Comparator.comparing(Behandling::getOpprettetTidspunkt));
     }
 

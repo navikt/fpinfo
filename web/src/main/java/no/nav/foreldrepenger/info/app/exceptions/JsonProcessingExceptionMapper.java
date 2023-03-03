@@ -13,7 +13,7 @@ import no.nav.vedtak.exception.TekniskException;
 
 public class JsonProcessingExceptionMapper implements ExceptionMapper<JsonProcessingException> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JsonProcessingException.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JsonProcessingExceptionMapper.class);
 
     @Override
     public Response toResponse(JsonProcessingException ex) {

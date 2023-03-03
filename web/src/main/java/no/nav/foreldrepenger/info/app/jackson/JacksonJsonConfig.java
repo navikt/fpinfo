@@ -8,7 +8,6 @@ import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.core.Version;
-import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -25,14 +24,6 @@ public class JacksonJsonConfig implements ContextResolver<ObjectMapper> {
     public JacksonJsonConfig() {
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(SER_DESER);
-    }
-
-    public ObjectMapper getObjectMapper() {
-        return objectMapper;
-    }
-
-    public static Module defaultModule() {
-        return SER_DESER;
     }
 
     private static SimpleModule createModule() {

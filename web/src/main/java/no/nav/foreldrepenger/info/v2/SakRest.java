@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.info.v2;
 
-import static no.nav.foreldrepenger.info.abac.AppAbacAttributtType.ANNEN_PART;
 import static no.nav.foreldrepenger.info.server.JettyServer.ACR_LEVEL4;
 import static no.nav.foreldrepenger.info.server.JettyServer.TOKENX;
+import static no.nav.foreldrepenger.info.server.abac.AppAbacAttributtType.ANNEN_PART;
 import static no.nav.vedtak.log.util.LoggerUtils.mask;
 
 import java.time.LocalDate;
@@ -31,7 +31,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.v3.oas.annotations.Parameter;
 import no.nav.foreldrepenger.common.innsyn.AnnenPartVedtak;
 import no.nav.foreldrepenger.common.innsyn.Saker;
-import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.security.token.support.core.api.ProtectedWithClaims;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
@@ -46,11 +45,9 @@ import no.nav.vedtak.sikkerhet.abac.beskyttet.ResourceType;
 @ProtectedWithClaims(issuer = TOKENX, claimMap = {ACR_LEVEL4})
 public class SakRest {
 
-    final static String PATH = "/v2";
+    static final String PATH = "/v2";
 
     private static final Logger LOG = LoggerFactory.getLogger(SakRest.class);
-    private static final Environment ENV = Environment.current();
-
     private final FpSakerTjeneste fpSakerTjeneste;
     private final SvpSakerTjeneste svpSakerTjeneste;
     private final EsSakerTjeneste esSakerTjeneste;
@@ -156,6 +153,7 @@ public class SakRest {
 
         @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
         public AktørIdDto {
+            // Jackson
         }
 
         @Override
@@ -174,6 +172,7 @@ public class SakRest {
 
         @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
         public AktørAnnenPartDto {
+            // Jackson
         }
 
         @Override
@@ -192,6 +191,7 @@ public class SakRest {
 
         @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
         public AktørIdBarnDto {
+            // Jackson
         }
 
         @Override

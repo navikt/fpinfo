@@ -73,7 +73,7 @@ class SvpSakerTjeneste {
         }
         var familiehendelse = new Familiehendelse(fh.getFødselsdato(), fh.getTermindato(), fh.getAntallBarn(), null);
         var sakAvsluttet = Objects.equals(svpSak.fagsakStatus(), "AVSLU");
-        return Optional.of(new SvpSak(svpSak.saksnummer(), familiehendelse, sakAvsluttet, åpenBehandling.map(b -> map(b)).orElse(null)));
+        return Optional.of(new SvpSak(svpSak.saksnummer(), familiehendelse, sakAvsluttet, åpenBehandling.map(this::map).orElse(null)));
     }
 
     private Optional<Behandling> finnÅpenBehandling(no.nav.foreldrepenger.info.v2.Saksnummer saksnummer) {
@@ -82,7 +82,7 @@ class SvpSakerTjeneste {
         return behandlinger
                 .stream()
                 .filter(b -> !b.erAvsluttet())
-                .filter(b -> erRelevant(b))
+                .filter(this::erRelevant)
                 .max(Comparator.comparing(Behandling::getOpprettetTidspunkt));
     }
 

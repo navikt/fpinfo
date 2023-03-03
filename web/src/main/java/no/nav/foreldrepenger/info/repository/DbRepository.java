@@ -28,6 +28,9 @@ import no.nav.foreldrepenger.info.UttakPeriode;
 @Dependent
 public class DbRepository implements Repository {
 
+    private static final String BEHANDLING_ID = "behandlingId";
+    private static final String SAKSNUMMER = "saksnummer";
+
     private final EntityManager em;
 
     @Inject
@@ -44,14 +47,14 @@ public class DbRepository implements Repository {
     @Override
     public List<UttakPeriode> hentUttakPerioder(Long behandlingId) {
         return em.createQuery("from UttakPeriode where behandlingId=:behandlingId", UttakPeriode.class)
-                .setParameter("behandlingId", behandlingId)
+                .setParameter(BEHANDLING_ID, behandlingId)
                 .getResultList();
     }
 
     @Override
     public Optional<SøknadsGrunnlag> hentSøknadsGrunnlag(Long behandlingId) {
         return em.createQuery("from SøknadsGrunnlag where behandlingId=:behandlingId", SøknadsGrunnlag.class)
-                .setParameter("behandlingId", behandlingId)
+                .setParameter(BEHANDLING_ID, behandlingId)
                 .getResultStream()
                 .reduce((first, second) -> second);
     }
@@ -72,14 +75,14 @@ public class DbRepository implements Repository {
     @Override
     public List<Behandling> hentTilknyttedeBehandlinger(String saksnummer) {
         return em.createQuery("from Behandling where saksnummer=:saksnummer", Behandling.class)
-            .setParameter("saksnummer", new TypedParameterValue(StringType.INSTANCE, saksnummer))
+            .setParameter(SAKSNUMMER, new TypedParameterValue(StringType.INSTANCE, saksnummer))
             .getResultList();
     }
 
     @Override
     public List<MottattDokument> hentMottattDokument(Long behandlingId) {
         return em.createQuery("from MottattDokument where behandling_id=:behandlingId", MottattDokument.class)
-                .setParameter("behandlingId", behandlingId).getResultList();
+                .setParameter(BEHANDLING_ID, behandlingId).getResultList();
     }
 
     @Override
@@ -87,7 +90,7 @@ public class DbRepository implements Repository {
         var query = em.createQuery("select distinct aktørIdBarn from SakStatus "
                         + "where saksnummer=:saksnummer "
                         + "and aktørIdBarn is not null", String.class)
-                .setParameter("saksnummer", saksnummer.saksnummer());
+                .setParameter(SAKSNUMMER, saksnummer.saksnummer());
         return query.getResultStream().collect(Collectors.toSet());
     }
 
@@ -100,12 +103,12 @@ public class DbRepository implements Repository {
     @Override
     public Optional<FamilieHendelse> hentFamilieHendelse(long behandlingId) {
         return em.createQuery("from FamilieHendelse where behandlingId=:behandlingId", FamilieHendelse.class)
-                .setParameter("behandlingId", behandlingId).getResultStream().findFirst();
+                .setParameter(BEHANDLING_ID, behandlingId).getResultStream().findFirst();
     }
 
     @Override
     public Set<Aksjonspunkt> hentAksjonspunkt(long behandlingId) {
         return em.createQuery("from Aksjonspunkt where behandlingId=:behandlingId", Aksjonspunkt.class)
-                .setParameter("behandlingId", behandlingId).getResultStream().collect(Collectors.toSet());
+                .setParameter(BEHANDLING_ID, behandlingId).getResultStream().collect(Collectors.toSet());
     }
 }
