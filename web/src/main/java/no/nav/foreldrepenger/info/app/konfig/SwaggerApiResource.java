@@ -21,14 +21,15 @@ import no.nav.security.token.support.core.api.Unprotected;
 public class SwaggerApiResource extends OpenApiResource {
 
     @Context
-    ServletConfig config;
+    ServletConfig config; //NOSONAR
 
     @Context
-    Application app;
+    Application app; //NOSONAR
 
     @GET
     @Produces({MediaType.APPLICATION_JSON, "application/yaml"})
     @Operation(hidden = true)
+    @Override
     public Response getOpenApi(@Context HttpHeaders headers,
                                @Context UriInfo uriInfo,
                                @PathParam("type") String type) throws Exception {

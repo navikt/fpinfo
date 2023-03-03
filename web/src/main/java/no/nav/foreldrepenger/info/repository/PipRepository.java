@@ -15,6 +15,7 @@ import no.nav.foreldrepenger.info.SøknadsGrunnlag;
 @Dependent
 public class PipRepository {
 
+    private static final String SAKSNUMMER = "saksnummer";
     private final EntityManager entityManager;
 
     @Inject
@@ -46,19 +47,19 @@ public class PipRepository {
     }
 
     public Optional<String> hentAnnenPartForSaksnummer(String saksnummer) {
-        Objects.requireNonNull(saksnummer, "saksnummer");
+        Objects.requireNonNull(saksnummer, SAKSNUMMER);
         return entityManager.createQuery("from SakStatus where saksnummer like :saksnummer",
                 Sak.class)
-                .setParameter("saksnummer", saksnummer).getResultList()
+                .setParameter(SAKSNUMMER, saksnummer).getResultList()
                 .stream().findFirst()
                 .map(Sak::getAktørIdAnnenPart);
     }
 
     public Optional<Boolean> hentOppgittAleneomsorgForSaksnummer(String saksnummer) {
-        Objects.requireNonNull(saksnummer, "saksnummer"); // NOSONAR
+        Objects.requireNonNull(saksnummer, SAKSNUMMER); // NOSONAR
         return entityManager
                 .createQuery("from SøknadsGrunnlag where saksnummer like :saksnummer", SøknadsGrunnlag.class)
-                .setParameter("saksnummer", saksnummer).getResultList()
+                .setParameter(SAKSNUMMER, saksnummer).getResultList()
                 .stream()
                 .reduce((first, second) -> second)
                 .map(SøknadsGrunnlag::getAleneomsorg);

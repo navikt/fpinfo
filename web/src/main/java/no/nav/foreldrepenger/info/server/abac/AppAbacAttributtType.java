@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.info.abac;
+package no.nav.foreldrepenger.info.server.abac;
 
 
 import no.nav.vedtak.sikkerhet.abac.AbacAttributtType;

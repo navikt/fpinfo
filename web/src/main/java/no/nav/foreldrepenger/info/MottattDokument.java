@@ -98,10 +98,10 @@ public class MottattDokument implements Serializable {
 
     @Override
     public boolean equals(Object arg0) {
-        return ((arg0 instanceof MottattDokument) &&
+        return ((arg0 instanceof MottattDokument dokument) &&
                 (this.mottattDokumentId != null) && (this.behandlingId != null) &&
-                this.mottattDokumentId.equals(((MottattDokument) arg0).getMottattDokumentId()) &&
-                this.behandlingId.equals(((MottattDokument) arg0).getBehandlingId()));
+                this.mottattDokumentId.equals(dokument.getMottattDokumentId()) &&
+                this.behandlingId.equals(dokument.getBehandlingId()));
     }
 
     @Override

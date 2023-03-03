@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.info.abac;
+package no.nav.foreldrepenger.info.server.abac;
 
 
 import java.util.Collections;

@@ -10,7 +10,7 @@ import javax.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.ServerProperties;
 
-import io.swagger.v3.jaxrs2.integration.JaxrsOpenApiContextBuilder;
+import io.swagger.v3.oas.integration.GenericOpenApiContextBuilder;
 import io.swagger.v3.oas.integration.OpenApiConfigurationException;
 import io.swagger.v3.oas.integration.SwaggerConfiguration;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -33,8 +33,8 @@ public class ApiConfig extends Application {
     public static final String API_URI = "/api";
 
     public ApiConfig() {
-        OpenAPI oas = new OpenAPI();
-        Info info = new Info()
+        var oas = new OpenAPI();
+        var info = new Info()
                 .title("Vedtaksløsningen - Info")
                 .version("1.0")
                 .description("REST grensesnitt for fp-info.");
@@ -43,13 +43,13 @@ public class ApiConfig extends Application {
                 .addServersItem(new Server()
                         .url(ENV.getProperty("context.path", "/fpinfo")));
 
-        SwaggerConfiguration oasConfig = new SwaggerConfiguration()
+        var oasConfig = new SwaggerConfiguration()
                 .openAPI(oas)
                 .prettyPrint(true)
                 .resourceClasses(getClasses().stream().map(Class::getName).collect(Collectors.toSet()));
 
         try {
-            new JaxrsOpenApiContextBuilder<>()
+            new GenericOpenApiContextBuilder<>()
                     .openApiConfiguration(oasConfig)
                     .buildContext(true)
                     .read();

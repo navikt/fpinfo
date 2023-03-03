@@ -106,17 +106,17 @@ class FpSakerTjeneste {
     }
 
     private RettighetType rettighetType(SøknadsGrunnlag søknadsGrunnlag) {
-        if (søknadsGrunnlag.getAleneomsorg()) {
+        if (Boolean.TRUE.equals(søknadsGrunnlag.getAleneomsorg())) {
             return RettighetType.ALENEOMSORG;
         }
-        return søknadsGrunnlag.getAnnenForelderRett() ? RettighetType.BEGGE_RETT : RettighetType.BARE_SØKER_RETT;
+        return Boolean.TRUE.equals(søknadsGrunnlag.getAnnenForelderRett()) ? RettighetType.BEGGE_RETT : RettighetType.BARE_SØKER_RETT;
     }
 
     private RettighetType rettighetTypeFraSøknad(SøknadsGrunnlag søknadsGrunnlag) {
-        if (søknadsGrunnlag.getAleneomsorgSøknad()) {
+        if (Boolean.TRUE.equals(søknadsGrunnlag.getAleneomsorgSøknad())) {
             return RettighetType.ALENEOMSORG;
         }
-        return søknadsGrunnlag.getAnnenForelderRettSøknad() ? RettighetType.BEGGE_RETT : RettighetType.BARE_SØKER_RETT;
+        return Boolean.TRUE.equals(søknadsGrunnlag.getAnnenForelderRettSøknad()) ? RettighetType.BEGGE_RETT : RettighetType.BARE_SØKER_RETT;
     }
 
     private Optional<FpSak> sakMedVedtak(FpSakRef fpSak, Long gjeldendeVedtakBehandlingId) {
@@ -242,7 +242,7 @@ class FpSakerTjeneste {
         return repository.hentTilknyttedeBehandlinger(saksnummer.value())
                 .stream()
                 .filter(b -> !b.erAvsluttet())
-                .filter(b -> erRelevant(b))
+                .filter(this::erRelevant)
                 .max(Comparator.comparing(Behandling::getOpprettetTidspunkt));
     }
 
@@ -285,7 +285,7 @@ class FpSakerTjeneste {
                 .filter(distinct(no.nav.foreldrepenger.info.UttakPeriode::getFom))
                 .sorted(Comparator.comparing(no.nav.foreldrepenger.info.UttakPeriode::getFom))
                 .map(p -> map(p, behandlingId))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static Prosent nullSafe(Prosent prosent) {

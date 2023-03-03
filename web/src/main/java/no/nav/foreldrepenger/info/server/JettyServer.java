@@ -87,7 +87,7 @@ public class JettyServer {
                     .load()
                     .migrate();
         } catch (FlywayException e) {
-            LOG.error("Feil under migrering av databasen.", e);
+            LOG.error("Feil under migrering av databasen.");
             throw e;
         }
     }
@@ -100,7 +100,7 @@ public class JettyServer {
         server.setHandler(handlers);
         server.start();
         server.join();
-        LOG.info("Jetty startet on port: " + getServerPort());
+        LOG.info("Jetty startet on port: {}", getServerPort());
     }
 
     private ContextHandler createContext() {
@@ -110,6 +110,7 @@ public class JettyServer {
         ctx.setResourceBase(".");
         ctx.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
         ctx.setAttribute(CONTAINER_JAR_PATTERN, String.format("%s%s", ENV.isLocal() ? JETTY_LOCAL_CLASSES : "", JETTY_SCAN_LOCATIONS));
+
         ctx.addEventListener(new org.jboss.weld.environment.servlet.Listener());
         ctx.addEventListener(new org.jboss.weld.environment.servlet.BeanManagerResourceBindingListener());
 
@@ -132,11 +133,12 @@ public class JettyServer {
 
     private static MultiIssuerConfiguration config() {
         return new MultiIssuerConfiguration(
-                Map.of(TOKENX, issuerProperties("token.x.well.known.url", "token.x.client.id")));
+                Map.of(TOKENX, issuerProperties()));
     }
 
-    private static IssuerProperties issuerProperties(String wellKnownUrl, String clientId) {
-        return new IssuerProperties(ENV.getRequiredProperty(wellKnownUrl, URL.class), List.of(ENV.getRequiredProperty(clientId)));
+    private static IssuerProperties issuerProperties() {
+        return new IssuerProperties(ENV.getRequiredProperty("token.x.well.known.url", URL.class),
+            List.of(ENV.getRequiredProperty("token.x.client.id")));
     }
 
     private int getServerPort() {
