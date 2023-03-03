@@ -23,7 +23,7 @@ public class ConstraintViolationMapper implements ExceptionMapper<ConstraintViol
 
         var constraintViolations = exception.getConstraintViolations();
         for (var constraintViolation : constraintViolations) {
-            String feltNavn = getFeltNavn(constraintViolation.getPropertyPath());
+            var feltNavn = getFeltNavn(constraintViolation.getPropertyPath());
             feilene.add(new FeltFeilDto(feltNavn, constraintViolation.getMessage()));
         }
         var feltNavn = feilene.stream().map(FeltFeilDto::navn).toList();
