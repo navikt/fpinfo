@@ -1,8 +1,12 @@
 package no.nav.foreldrepenger.info.app.healthcheck;
 
-import no.nav.foreldrepenger.info.app.tjenester.ApplicationServiceStarter;
-import no.nav.vedtak.log.metrics.LivenessAware;
-import no.nav.vedtak.log.metrics.ReadinessAware;
+import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
+import static javax.ws.rs.core.Response.Status.OK;
+import static javax.ws.rs.core.Response.Status.SERVICE_UNAVAILABLE;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,19 +14,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-
-import static javax.ws.rs.core.Response.Status.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import no.nav.vedtak.log.metrics.LivenessAware;
+import no.nav.vedtak.log.metrics.ReadinessAware;
 
 @ExtendWith(MockitoExtension.class)
 class HealthCheckRestServiceTest {
 
     private HealthCheckRestService sjekk;
-
-    @Mock
-    private ApplicationServiceStarter starter;
 
     @Mock
     private LivenessAware kafka;
@@ -31,7 +29,7 @@ class HealthCheckRestServiceTest {
 
     @BeforeEach
     void setup() {
-        sjekk = new HealthCheckRestService(starter, List.of(kafka), List.of(db));
+        sjekk = new HealthCheckRestService(List.of(kafka), List.of(db));
     }
 
     @Test

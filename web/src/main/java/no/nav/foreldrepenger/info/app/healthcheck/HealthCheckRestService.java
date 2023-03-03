@@ -1,12 +1,8 @@
 package no.nav.foreldrepenger.info.app.healthcheck;
 
-import io.swagger.v3.oas.annotations.Operation;
-import no.nav.foreldrepenger.info.app.tjenester.ApplicationServiceStarter;
-import no.nav.vedtak.log.metrics.LivenessAware;
-import no.nav.vedtak.log.metrics.ReadinessAware;
+import static javax.ws.rs.core.Response.Status.SERVICE_UNAVAILABLE;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Any;
@@ -17,9 +13,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Response;
 
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static javax.ws.rs.core.Response.Status.SERVICE_UNAVAILABLE;
+import io.swagger.v3.oas.annotations.Operation;
+import no.nav.vedtak.log.metrics.LivenessAware;
+import no.nav.vedtak.log.metrics.ReadinessAware;
 
 @Path("/health")
 @ApplicationScoped
@@ -31,21 +30,18 @@ public class HealthCheckRestService {
 
     private List<LivenessAware> live;
     private List<ReadinessAware> ready;
-    private ApplicationServiceStarter starter;
 
     HealthCheckRestService() {
         // CDI
     }
 
     @Inject
-    public HealthCheckRestService(ApplicationServiceStarter starter,
-                                  @Any Instance<LivenessAware> livenessAware,
+    public HealthCheckRestService(@Any Instance<LivenessAware> livenessAware,
                                   @Any Instance<ReadinessAware> readinessAware) {
-        this(starter, livenessAware.stream().toList(), readinessAware.stream().toList());
+        this(livenessAware.stream().toList(), readinessAware.stream().toList());
     }
 
-    public HealthCheckRestService(ApplicationServiceStarter starter, List<LivenessAware> live, List<ReadinessAware> ready) {
-        this.starter = starter;
+    public HealthCheckRestService(List<LivenessAware> live, List<ReadinessAware> ready) {
         this.live = live;
         this.ready = ready;
     }
@@ -78,14 +74,5 @@ public class HealthCheckRestService {
         }
         LOG.info("/isReady NOK.");
         return Response.status(SERVICE_UNAVAILABLE).cacheControl(CC).build();
-    }
-
-    @GET
-    @Path("/preStop")
-    @Operation(description = "Kalles på før stopp", tags = "nais", hidden = true)
-    public Response preStop() {
-        LOG.info("/preStop endepunkt kalt.");
-        starter.stopServices();
-        return Response.ok(RESPONSE_OK).build();
     }
 }
