@@ -6,12 +6,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import no.nav.foreldrepenger.info.FamilieHendelse;
-
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.info.Behandling;
-import no.nav.foreldrepenger.info.FagsakRelasjon;
+import no.nav.foreldrepenger.info.FamilieHendelse;
 import no.nav.foreldrepenger.info.InMemTestRepository;
 import no.nav.foreldrepenger.info.MottattDokument;
 import no.nav.foreldrepenger.info.Sak;
@@ -23,7 +21,6 @@ import no.nav.foreldrepenger.info.UttakPeriode;
 import no.nav.foreldrepenger.info.datatyper.BehandlingType;
 import no.nav.foreldrepenger.info.datatyper.DokumentTypeId;
 import no.nav.foreldrepenger.info.datatyper.FagsakYtelseType;
-import no.nav.foreldrepenger.info.datatyper.FamilieHendelseType;
 import no.nav.foreldrepenger.info.datatyper.MorsAktivitet;
 
 class FpSakerTjenesteTest {
@@ -44,71 +41,58 @@ class FpSakerTjenesteTest {
                 .medBehandlingId(String.valueOf(behandlingId))
                 .medFagsakStatus("OPPR")
                 .medAktørId(aktørId.value())
-                .medFamilieHendelseType(FamilieHendelseType.FØDSEL.getVerdi())
                 .medFagsakYtelseType(FagsakYtelseType.FP.name())
                 .medAktørIdBarn(barnAktørId)
                 .medAktørIdAnnenPart(annenPartAktørId)
                 .build());
-        var annenpartSaksnummer = "111";
-        repository.lagre(new FagsakRelasjon.Builder()
-                .saksnummerEn(saksnummer.saksnummer())
-                .saksnummerTo(annenpartSaksnummer)
-                .build());
         var behandling = new Behandling.Builder()
                 .medBehandlingId(behandlingId)
                 .medBehandlingStatus("AVSLU")
-                .medFamilieHendelseType(FamilieHendelseType.FØDSEL.getVerdi())
                 .medSaksnummer(saksnummer)
                 .medBehandlingType(BehandlingType.FØRSTEGANGSBEHANDLING)
                 .build();
         repository.lagre(behandling);
         var uttakPeriode = new UttakPeriode.Builder()
-                .withFom(LocalDate.now())
-                .withTom(LocalDate.now().plusWeeks(10))
-                .withArbeidstidprosent(BigDecimal.valueOf(30))
-                .withGraderingInnvilget(true)
-                .withUttakArbeidType(Aktivitet.Type.ORDINÆRT_ARBEID.name())
-                .withArbeidsgiverOrgnr("123")
-                .withPeriodeResultatType("INNVILGET")
-                .withPeriodeResultatÅrsak("2003")
-                .withTrekkkonto(KontoType.MØDREKVOTE.name())
-                .withBehandlingId(behandlingId)
-                .withFlerbarnsdager(false)
-                .withOppholdÅrsak("UTTAK_MØDREKVOTE_ANNEN_FORELDER")
-                .withOverføringÅrsak("SYKDOM_ANNEN_FORELDER")
-                .withUttakUtsettelseType("INSTITUSJONSOPPHOLD_SØKER")
-                .withTrekkdager(BigDecimal.TEN)
+                .fom(LocalDate.now())
+                .tom(LocalDate.now().plusWeeks(10))
+                .arbeidstidprosent(BigDecimal.valueOf(30))
+                .graderingInnvilget(true)
+                .uttakArbeidType(Aktivitet.Type.ORDINÆRT_ARBEID.name())
+                .arbeidsgiverOrgnr("123")
+                .periodeResultatType("INNVILGET")
+                .periodeResultatÅrsak("2003")
+                .trekkkonto(KontoType.MØDREKVOTE.name())
+                .behandlingId(behandlingId)
+                .flerbarnsdager(false)
+                .oppholdÅrsak("UTTAK_MØDREKVOTE_ANNEN_FORELDER")
+                .overføringÅrsak("SYKDOM_ANNEN_FORELDER")
+                .uttakUtsettelseType("INSTITUSJONSOPPHOLD_SØKER")
+                .trekkdager(BigDecimal.TEN)
                 .build();
         var avslagHull = new UttakPeriode.Builder()
-                .withFom(uttakPeriode.getTom().plusDays(1))
-                .withTom(uttakPeriode.getTom().plusWeeks(1))
-                .withArbeidstidprosent(BigDecimal.ZERO)
-                .withUttakUtsettelseType("-")
-                .withUttakArbeidType(Aktivitet.Type.ORDINÆRT_ARBEID.name())
-                .withArbeidsgiverOrgnr("123")
-                .withPeriodeResultatType("IKKE_OPPFYLT")
-                .withPeriodeResultatÅrsak("4005")
-                .withTrekkkonto(KontoType.FELLESPERIODE.name())
-                .withBehandlingId(behandlingId)
-                .withTrekkdager(BigDecimal.TEN)
+                .fom(uttakPeriode.getTom().plusDays(1))
+                .tom(uttakPeriode.getTom().plusWeeks(1))
+                .arbeidstidprosent(BigDecimal.ZERO)
+                .uttakUtsettelseType("-")
+                .uttakArbeidType(Aktivitet.Type.ORDINÆRT_ARBEID.name())
+                .arbeidsgiverOrgnr("123")
+                .periodeResultatType("IKKE_OPPFYLT")
+                .periodeResultatÅrsak("4005")
+                .trekkkonto(KontoType.FELLESPERIODE.name())
+                .behandlingId(behandlingId)
+                .trekkdager(BigDecimal.TEN)
                 .build();
         repository.lagreVedtaksperioder(behandlingId, List.of(uttakPeriode, avslagHull));
 
         var søknadsGrunnlag = new SøknadsGrunnlag.Builder()
-                .antallBarn(1)
-                .annenForelderInformert(true)
-                .familieHendelseType(behandling.getFamilieHendelseType())
                 .brukerRolle("MORA")
                 .dekningsgrad(80)
                 .behandlingId(behandlingId)
-                .fødselDato(fødselsdato)
-                .termindato(termindato)
-                .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false, false, true, true))
+                .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false, false, true, true, true))
                 .uføreGrunnlag(new UføreGrunnlag(behandlingId, true))
                 .build();
         repository.lagre(behandlingId, søknadsGrunnlag);
-        repository.lagre(new FamilieHendelse(behandlingId, 1, FamilieHendelseType.FØDSEL, termindato,
-                fødselsdato, null));
+        repository.lagre(new FamilieHendelse(behandlingId, 1, termindato, fødselsdato, null));
 
         var søknadMottattDato = LocalDate.now().minusWeeks(1);
         lagreSøknad(repository, behandlingId, søknadMottattDato);
@@ -189,20 +173,13 @@ class FpSakerTjenesteTest {
                 .medBehandlingId(String.valueOf(behandlingId))
                 .medFagsakStatus("OPPR")
                 .medAktørId(aktørId.value())
-                .medFamilieHendelseType(FamilieHendelseType.FØDSEL.getVerdi())
                 .medFagsakYtelseType(FagsakYtelseType.FP.name())
                 .medAktørIdBarn(barnAktørId)
                 .medAktørIdAnnenPart(annenPartAktørId)
                 .build());
-        var annenpartSaksnummer = "111";
-        repository.lagre(new FagsakRelasjon.Builder()
-                .saksnummerEn(saksnummer.saksnummer())
-                .saksnummerTo(annenpartSaksnummer)
-                .build());
         var behandling = new Behandling.Builder()
                 .medBehandlingId(behandlingId)
                 .medBehandlingStatus("OPPR")
-                .medFamilieHendelseType(FamilieHendelseType.FØDSEL.getVerdi())
                 .medSaksnummer(saksnummer)
                 .medBehandlingType(BehandlingType.FØRSTEGANGSBEHANDLING)
                 .build();
@@ -211,7 +188,7 @@ class FpSakerTjenesteTest {
         var søknadsperiode = new SøknadsperiodeEntitet.Builder()
                 .fom(LocalDate.now())
                 .tom(LocalDate.now().plusWeeks(10).minusDays(1))
-                .gradering(BigDecimal.valueOf(30), "123", null, no.nav.foreldrepenger.common.innsyn.v2.Aktivitet.Type.ORDINÆRT_ARBEID)
+                .gradering(BigDecimal.valueOf(30), "123", null, no.nav.foreldrepenger.common.innsyn.Aktivitet.Type.ORDINÆRT_ARBEID)
                 .utsettelseÅrsak("INSTITUSJONSOPPHOLD_SØKER")
                 .arbeidsgiverOrgnr("123")
                 .trekkonto(KontoType.FELLESPERIODE.name())
@@ -227,18 +204,13 @@ class FpSakerTjenesteTest {
         repository.lagreSøknadsperioder(behandlingId, List.of(søknadsperiode, opphold));
 
         var søknadsGrunnlag = new SøknadsGrunnlag.Builder()
-                .antallBarn(1)
-                .annenForelderInformert(true)
-                .familieHendelseType(behandling.getFamilieHendelseType())
                 .brukerRolle("FARA")
                 .dekningsgrad(100)
                 .behandlingId(behandlingId)
-                .fødselDato(fødselsdato)
-                .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false, false, false, false))
+                .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false, false, false, false, false))
                 .build();
         repository.lagre(behandlingId, søknadsGrunnlag);
-        repository.lagre(new FamilieHendelse(behandlingId, 1, FamilieHendelseType.FØDSEL, null,
-                fødselsdato, null));
+        repository.lagre(new FamilieHendelse(behandlingId, 1, null, fødselsdato, null));
 
         //Lagrer dokument for at behandlingen skal være relevant
         var sisteSøknadMottattDato = LocalDate.now().minusWeeks(1);
@@ -305,7 +277,6 @@ class FpSakerTjenesteTest {
                 .medBehandlingId(String.valueOf(behandlingId))
                 .medFagsakStatus("OPPR")
                 .medAktørId(aktørId.value())
-                .medFamilieHendelseType(FamilieHendelseType.ADOPSJON.getVerdi())
                 .medFagsakYtelseType(FagsakYtelseType.FP.name())
                 .medAktørIdBarn(barnAktørId)
                 .medAktørIdAnnenPart(annenPartAktørId)
@@ -313,27 +284,20 @@ class FpSakerTjenesteTest {
         var behandling = new Behandling.Builder()
                 .medBehandlingId(behandlingId)
                 .medBehandlingStatus("AVSLU")
-                .medFamilieHendelseType(FamilieHendelseType.ADOPSJON.getVerdi())
                 .medSaksnummer(saksnummer)
                 .medBehandlingType(BehandlingType.FØRSTEGANGSBEHANDLING)
                 .build();
         repository.lagre(behandling);
 
         var søknadsGrunnlag = new SøknadsGrunnlag.Builder()
-                .antallBarn(1)
-                .annenForelderInformert(true)
-                .familieHendelseType(behandling.getFamilieHendelseType())
                 .brukerRolle("MORA")
                 .dekningsgrad(100)
                 .behandlingId(behandlingId)
-                .omsorgsovertakelseDato(omsorgsovertakelse)
-                .fødselDato(omsorgsovertakelse)
-                .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false, false, true, true))
+                .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false, false, true, true, true))
                 .uføreGrunnlag(new UføreGrunnlag(behandlingId, false))
                 .build();
         repository.lagre(behandlingId, søknadsGrunnlag);
-        repository.lagre(new FamilieHendelse(behandlingId, 1, FamilieHendelseType.ADOPSJON, null,
-                omsorgsovertakelse, omsorgsovertakelse));
+        repository.lagre(new FamilieHendelse(behandlingId, 1, null, omsorgsovertakelse, omsorgsovertakelse));
 
         var tjeneste = tjeneste(repository);
         var saker = tjeneste.hentFor(aktørId);
@@ -362,7 +326,6 @@ class FpSakerTjenesteTest {
                 .medBehandlingId(String.valueOf(behandlingId1))
                 .medFagsakStatus("OPPR")
                 .medAktørId(aktørId.value())
-                .medFamilieHendelseType(FamilieHendelseType.FØDSEL.getVerdi())
                 .medFagsakYtelseType(FagsakYtelseType.FP.name())
                 .medAktørIdBarn(barnAktørId)
                 .medAktørIdAnnenPart(annenPartAktørId)
@@ -370,7 +333,6 @@ class FpSakerTjenesteTest {
         var behandling = new Behandling.Builder()
                 .medBehandlingId(behandlingId1)
                 .medBehandlingStatus("AVSLU")
-                .medFamilieHendelseType(FamilieHendelseType.FØDSEL.getVerdi())
                 .medSaksnummer(saksnummer)
                 .medBehandlingType(BehandlingType.FØRSTEGANGSBEHANDLING)
                 .build();
@@ -382,7 +344,6 @@ class FpSakerTjenesteTest {
                 .medBehandlingId(String.valueOf(behandlingId2))
                 .medFagsakStatus("OPPR")
                 .medAktørId(aktørId.value())
-                .medFamilieHendelseType(FamilieHendelseType.FØDSEL.getVerdi())
                 .medFagsakYtelseType(FagsakYtelseType.FP.name())
                 .medAktørIdBarn(barnAktørId)
                 .medAktørIdAnnenPart(null)
@@ -391,30 +352,22 @@ class FpSakerTjenesteTest {
                 .medBehandlingId(behandlingId2)
                 .medBehandlingType(BehandlingType.ANNET)
                 .medBehandlingStatus("AVSLU")
-                .medFamilieHendelseType(FamilieHendelseType.FØDSEL.getVerdi())
                 .medSaksnummer(saksnummer)
                 .build();
         repository.lagre(behandling2);
 
         var søknadsGrunnlag = new SøknadsGrunnlag.Builder()
-                .antallBarn(1)
-                .annenForelderInformert(true)
-                .familieHendelseType(behandling.getFamilieHendelseType())
                 .brukerRolle("MORA")
                 .dekningsgrad(100)
                 .behandlingId(behandlingId1)
-                .omsorgsovertakelseDato(omsorgsovertakelse)
-                .fødselDato(omsorgsovertakelse)
-                .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false, false, true, true))
+                .foreldreRettigheter(new SøknadsGrunnlagRettigheter(1L, null, true, null, false, false, true, true, true))
                 .uføreGrunnlag(new UføreGrunnlag(behandlingId1, false))
                 .build();
         repository.lagre(behandlingId1, søknadsGrunnlag);
         repository.lagre(behandlingId2, søknadsGrunnlag);
 
-        repository.lagre(new FamilieHendelse(behandlingId1, 1, FamilieHendelseType.ADOPSJON, null,
-                omsorgsovertakelse, omsorgsovertakelse));
-        repository.lagre(new FamilieHendelse(behandlingId2, 1, FamilieHendelseType.ADOPSJON, null,
-                omsorgsovertakelse, omsorgsovertakelse));
+        repository.lagre(new FamilieHendelse(behandlingId1, 1, null, omsorgsovertakelse, omsorgsovertakelse));
+        repository.lagre(new FamilieHendelse(behandlingId2, 1, null, omsorgsovertakelse, omsorgsovertakelse));
 
         var tjeneste = tjeneste(repository);
         var saker = tjeneste.hentFor(aktørId);

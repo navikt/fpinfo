@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -63,24 +62,6 @@ public class PipRepository {
                 .stream()
                 .reduce((first, second) -> second)
                 .map(SøknadsGrunnlag::getAleneomsorg);
-    }
-
-    public List<String> hentAktørIdForForsendelseIder(Set<UUID> dokumentforsendelseIder) {
-        Objects.requireNonNull(dokumentforsendelseIder, "dokumentforsendelseIder"); // NOSONAR
-        if (dokumentforsendelseIder.isEmpty()) {
-            return List.of();
-        }
-
-        return entityManager.createQuery(
-                """
-                select s from SakStatus s
-                        left join MottattDokument m on s.saksnummer = m.saksnummer
-                        where m.forsendelseId in :dokumentforsendelseIder
-                """,
-                Sak.class)
-                .setParameter("dokumentforsendelseIder", dokumentforsendelseIder).getResultList()
-                .stream()
-                .map(Sak::getAktørId).toList();
     }
 
     public Optional<String> finnSakenTilAnnenForelder(Set<String> bruker, Set<String> annenForelder) {

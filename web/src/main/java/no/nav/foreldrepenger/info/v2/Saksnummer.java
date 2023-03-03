@@ -8,7 +8,7 @@ record Saksnummer(String value) {
         Objects.requireNonNull(value, "saksnummer kan ikke være null");
     }
 
-    no.nav.foreldrepenger.common.innsyn.v2.Saksnummer tilDto() {
-        return new no.nav.foreldrepenger.common.innsyn.v2.Saksnummer(value);
+    no.nav.foreldrepenger.common.innsyn.Saksnummer tilDto() {
+        return new no.nav.foreldrepenger.common.innsyn.Saksnummer(value);
     }
 }

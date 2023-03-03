@@ -26,22 +26,11 @@ public class MottattDokument implements Serializable {
     @Column(name = "BEHANDLING_ID")
     private Long behandlingId;
 
-    @Column(name = "JOURNALPOST_ID")
-    private String journalpostId;
-
     @Column(name = "TYPE")
     private String type;
 
     @Column(name = "mottatt_dato")
     private LocalDate mottattDato;
-
-    MottattDokument(MottattDokument mottattDokument) {
-        this.behandlingId = mottattDokument.behandlingId;
-        this.mottattDokumentId = mottattDokument.mottattDokumentId;
-        this.journalpostId = mottattDokument.journalpostId;
-        this.type = mottattDokument.type;
-        this.mottattDato = mottattDokument.mottattDato;
-    }
 
     MottattDokument() {
     }
@@ -52,10 +41,6 @@ public class MottattDokument implements Serializable {
 
     public String getMottattDokumentId() {
         return mottattDokumentId;
-    }
-
-    public String getJournalpostId() {
-        return journalpostId;
     }
 
     public String getType() {
@@ -86,14 +71,6 @@ public class MottattDokument implements Serializable {
             mottattDokumentMal = new MottattDokument();
         }
 
-        public Builder(MottattDokument mottattDokument) {
-            if (mottattDokument != null) {
-                mottattDokumentMal = new MottattDokument(mottattDokument);
-            } else {
-                mottattDokumentMal = new MottattDokument();
-            }
-        }
-
         public Builder medBehandlingId(Long behandlingId) {
             mottattDokumentMal.behandlingId = behandlingId;
             return this;
@@ -101,11 +78,6 @@ public class MottattDokument implements Serializable {
 
         public Builder medMottattDokumentId(String mottattDokumentId) {
             mottattDokumentMal.mottattDokumentId = mottattDokumentId;
-            return this;
-        }
-
-        public Builder medJournalpostId(String journalpostId) {
-            mottattDokumentMal.journalpostId = journalpostId;
             return this;
         }
 
@@ -139,7 +111,7 @@ public class MottattDokument implements Serializable {
 
     @Override
     public String toString() {
-        return "MottattDokument{" + "mottattDokumentId='" + mottattDokumentId + '\'' + ", behandlingId=" + behandlingId
-                + ", journalpostId='" + journalpostId + '\'' + ", type='" + type + '\'' + '}';
+        return "MottattDokument{" + "mottattDokumentId='" + mottattDokumentId + '\'' + ", behandlingId=" + behandlingId + ", type='" + type + '\''
+            + ", mottattDato=" + mottattDato + '}';
     }
 }

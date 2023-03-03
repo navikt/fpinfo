@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.info.app.tjenester;
+package no.nav.foreldrepenger.info.app.selftest;
 
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 
@@ -10,7 +10,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import io.swagger.v3.oas.annotations.Operation;
-import no.nav.foreldrepenger.info.app.selftest.Selftests;
 
 @Path("/health")
 @Produces(TEXT_PLAIN)

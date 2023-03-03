@@ -15,7 +15,6 @@ import no.nav.foreldrepenger.info.Sak;
 import no.nav.foreldrepenger.info.datatyper.BehandlingType;
 import no.nav.foreldrepenger.info.datatyper.DokumentTypeId;
 import no.nav.foreldrepenger.info.datatyper.FagsakYtelseType;
-import no.nav.foreldrepenger.info.datatyper.FamilieHendelseType;
 
 class SvpSakerTjenesteTest {
 
@@ -38,10 +37,9 @@ class SvpSakerTjenesteTest {
         var behandlingId = 345L;
         var termindato = LocalDate.of(2023, 1, 24);
 
-        var familiehendelseType = FamilieHendelseType.TERMIN;
-        repository.lagre(opprettetSak(aktørId, saksnummer, behandlingId, familiehendelseType));
-        repository.lagre(åpenFørstegangsbehandling(saksnummer, behandlingId, familiehendelseType));
-        repository.lagre(familieHendelse(behandlingId, termindato, familiehendelseType));
+        repository.lagre(opprettetSak(aktørId, saksnummer, behandlingId));
+        repository.lagre(åpenFørstegangsbehandling(saksnummer, behandlingId));
+        repository.lagre(familieHendelse(behandlingId, termindato));
         repository.lagre(søknad(behandlingId));
 
         var resultat = tjeneste.hentFor(new AktørId(aktørId));
@@ -53,8 +51,8 @@ class SvpSakerTjenesteTest {
         assertThat(svpSak.åpenBehandling().tilstand()).isEqualTo(BehandlingTilstand.UNDER_BEHANDLING);
     }
 
-    private static FamilieHendelse familieHendelse(long behandlingId, LocalDate termindato, FamilieHendelseType familiehendelseType) {
-        return new FamilieHendelse(behandlingId, 0, familiehendelseType, termindato, null, null);
+    private static FamilieHendelse familieHendelse(long behandlingId, LocalDate termindato) {
+        return new FamilieHendelse(behandlingId, 0, termindato, null, null);
     }
 
     private static List<MottattDokument> søknad(long behandlingId) {
@@ -65,26 +63,22 @@ class SvpSakerTjenesteTest {
     }
 
     private static Behandling åpenFørstegangsbehandling(no.nav.foreldrepenger.info.Saksnummer saksnummer,
-                                                        long behandlingId,
-                                                        FamilieHendelseType familiehendelseType) {
+                                                        long behandlingId) {
         return new Behandling.Builder()
                 .medBehandlingId(behandlingId)
                 .medBehandlingStatus("OPPR")
-                .medFamilieHendelseType(familiehendelseType.getVerdi())
                 .medSaksnummer(saksnummer)
                 .medBehandlingType(BehandlingType.FØRSTEGANGSBEHANDLING)
                 .build();
     }
 
     private static Sak opprettetSak(String aktørId, no.nav.foreldrepenger.info.Saksnummer saksnummer,
-                                    long behandlingId,
-                                    FamilieHendelseType familiehendelseType) {
+                                    long behandlingId) {
         return new Sak.Builder()
                 .medSaksnummer(saksnummer)
                 .medBehandlingId(String.valueOf(behandlingId))
                 .medFagsakStatus("OPPR")
                 .medAktørId(aktørId)
-                .medFamilieHendelseType(familiehendelseType.getVerdi())
                 .medFagsakYtelseType(FagsakYtelseType.SVP.name())
                 .build();
     }

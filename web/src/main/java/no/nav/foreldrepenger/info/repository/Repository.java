@@ -6,7 +6,6 @@ import java.util.Set;
 
 import no.nav.foreldrepenger.info.Aksjonspunkt;
 import no.nav.foreldrepenger.info.Behandling;
-import no.nav.foreldrepenger.info.FagsakRelasjon;
 import no.nav.foreldrepenger.info.FamilieHendelse;
 import no.nav.foreldrepenger.info.MottattDokument;
 import no.nav.foreldrepenger.info.Sak;
@@ -25,15 +24,7 @@ public interface Repository {
 
     Optional<Long> hentGjeldendeBehandling(Saksnummer saksnummer);
 
-    Optional<Sak> finnNyesteSakForAnnenPart(String aktørIdBruker, String annenPartAktørId);
-
-    Optional<FagsakRelasjon> hentFagsakRelasjon(String saksnummer);
-
-    Behandling hentBehandling(Long behandlingId);
-
     List<Behandling> hentTilknyttedeBehandlinger(String saksnummer);
-
-    List<MottattDokument> hentInntektsmeldinger(Long behandlingId);
 
     List<MottattDokument> hentMottattDokument(Long behandlingId);
 

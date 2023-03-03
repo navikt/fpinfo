@@ -54,7 +54,6 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
         } else {
             builder.leggTilAktørIdSet(pipRepository.hentAktørIdForSaksnummer(dataAttributter.getVerdier(StandardAbacAttributtType.SAKSNUMMER)));
             builder.leggTilAktørIdSet(pipRepository.hentAktørIdForBehandling(dataAttributter.getVerdier(StandardAbacAttributtType.BEHANDLING_ID)));
-            builder.leggTilAktørIdSet(pipRepository.hentAktørIdForForsendelseIder(dataAttributter.getVerdier(AppAbacAttributtType.FORSENDELSE_UUID)));
         }
         var appRessursData = builder.build();
         LOG.trace("Laget PDP app ressursdata OK {}", appRessursData);

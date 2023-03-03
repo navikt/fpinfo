@@ -28,7 +28,7 @@
 
         <felles.version>4.2.30</felles.version>
 
-        <selvbetjening-felles.version>0.8.51</selvbetjening-felles.version>
+        <selvbetjening-felles.version>1.0.0</selvbetjening-felles.version>
     </properties>
 
     <dependencyManagement>
@@ -59,18 +59,6 @@
                 <version>${felles.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
-                <artifactId>felles-integrasjon-pom</artifactId>
-                <version>${felles.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.felles</groupId>
-                <artifactId>felles-db</artifactId>
-                <version>${felles.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger</groupId>

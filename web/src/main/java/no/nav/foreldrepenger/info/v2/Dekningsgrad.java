@@ -16,10 +16,10 @@ enum Dekningsgrad {
         throw new IllegalArgumentException("Ukjent dekningsgrad " + value);
     }
 
-    no.nav.foreldrepenger.common.innsyn.v2.Dekningsgrad tilDto() {
+    no.nav.foreldrepenger.common.innsyn.Dekningsgrad tilDto() {
         return switch (this) {
-            case ÅTTI -> no.nav.foreldrepenger.common.innsyn.v2.Dekningsgrad.ÅTTI;
-            case HUNDRE -> no.nav.foreldrepenger.common.innsyn.v2.Dekningsgrad.HUNDRE;
+            case ÅTTI -> no.nav.foreldrepenger.common.innsyn.Dekningsgrad.ÅTTI;
+            case HUNDRE -> no.nav.foreldrepenger.common.innsyn.Dekningsgrad.HUNDRE;
         };
     }
 }

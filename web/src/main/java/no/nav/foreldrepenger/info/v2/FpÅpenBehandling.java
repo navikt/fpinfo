@@ -4,8 +4,8 @@ import java.util.List;
 
 record FpÅpenBehandling(BehandlingTilstand tilstand, List<UttakPeriode> søknadsperioder) {
 
-    no.nav.foreldrepenger.common.innsyn.v2.FpÅpenBehandling tilDto() {
+    no.nav.foreldrepenger.common.innsyn.FpÅpenBehandling tilDto() {
         var søknadsperioderDto = søknadsperioder.stream().map(UttakPeriode::tilDto).toList();
-        return new no.nav.foreldrepenger.common.innsyn.v2.FpÅpenBehandling(tilstand.tilDto(), søknadsperioderDto);
+        return new no.nav.foreldrepenger.common.innsyn.FpÅpenBehandling(tilstand.tilDto(), søknadsperioderDto);
     }
 }

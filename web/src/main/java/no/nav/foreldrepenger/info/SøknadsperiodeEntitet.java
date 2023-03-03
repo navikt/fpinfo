@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.info;
 
-import static no.nav.foreldrepenger.info.app.tjenester.dto.UttaksPeriodeDto.dash2null;
+import static no.nav.foreldrepenger.info.UttakPeriode.dash2null;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,7 +15,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Immutable;
 
-import no.nav.foreldrepenger.common.innsyn.v2.Aktivitet;
+import no.nav.foreldrepenger.common.innsyn.Aktivitet;
 import no.nav.foreldrepenger.info.converters.StringToMorsAktivitetConverter;
 import no.nav.foreldrepenger.info.datatyper.MorsAktivitet;
 import no.nav.vedtak.felles.jpa.converters.BooleanToStringConverter;

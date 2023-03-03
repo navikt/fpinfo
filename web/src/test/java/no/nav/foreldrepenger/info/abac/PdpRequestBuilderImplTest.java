@@ -63,18 +63,6 @@ class PdpRequestBuilderImplTest {
     }
 
     @Test
-    void skal_utlede_aktørid_fra_forsendelseId() {
-        attributter
-                .leggTil(AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.FORSENDELSE_UUID, FORSENDELSE_ID));
-
-        when(pip.hentAktørIdForForsendelseIder(Collections.singleton(FORSENDELSE_ID)))
-                .thenReturn(Collections.singletonList(AKTØRID));
-
-        var request = requestBuilder.lagAppRessursData(attributter);
-        assertThat(request.getAktørIdSet()).containsOnly(AKTØRID);
-    }
-
-    @Test
     void skal_legge_til_omsorg_og_annen_part() {
         attributter.leggTil(AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.ANNEN_PART, ANNEN_PART_ID));
         attributter.leggTil(AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.AKTØR_ID, AKTØRID));
