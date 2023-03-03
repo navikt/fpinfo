@@ -188,7 +188,7 @@ class FpSakerTjenesteTest {
         var søknadsperiode = new SøknadsperiodeEntitet.Builder()
                 .fom(LocalDate.now())
                 .tom(LocalDate.now().plusWeeks(10).minusDays(1))
-                .gradering(BigDecimal.valueOf(30), "123", null, no.nav.foreldrepenger.common.innsyn.v2.Aktivitet.Type.ORDINÆRT_ARBEID)
+                .gradering(BigDecimal.valueOf(30), "123", null, no.nav.foreldrepenger.common.innsyn.Aktivitet.Type.ORDINÆRT_ARBEID)
                 .utsettelseÅrsak("INSTITUSJONSOPPHOLD_SØKER")
                 .arbeidsgiverOrgnr("123")
                 .trekkonto(KontoType.FELLESPERIODE.name())

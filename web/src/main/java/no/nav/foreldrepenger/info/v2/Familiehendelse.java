@@ -9,8 +9,8 @@ record Familiehendelse(LocalDate fødselsdato,
                        int antallBarn,
                        LocalDate omsorgsovertakelse) {
 
-    no.nav.foreldrepenger.common.innsyn.v2.Familiehendelse tilDto() {
-        return new no.nav.foreldrepenger.common.innsyn.v2.Familiehendelse(fødselsdato, termindato, antallBarn, omsorgsovertakelse);
+    no.nav.foreldrepenger.common.innsyn.Familiehendelse tilDto() {
+        return new no.nav.foreldrepenger.common.innsyn.Familiehendelse(fødselsdato, termindato, antallBarn, omsorgsovertakelse);
     }
 
     @JsonIgnore

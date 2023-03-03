@@ -13,7 +13,7 @@ record AktørId(String value) {
         return "***";
     }
 
-    no.nav.foreldrepenger.common.innsyn.v2.persondetaljer.AktørId tilDto() {
-        return new no.nav.foreldrepenger.common.innsyn.v2.persondetaljer.AktørId(value);
+    no.nav.foreldrepenger.common.innsyn.persondetaljer.AktørId tilDto() {
+        return new no.nav.foreldrepenger.common.innsyn.persondetaljer.AktørId(value);
     }
 }

@@ -5,11 +5,11 @@ record EsSak(Saksnummer saksnummer,
              boolean sakAvsluttet,
              EsÅpenBehandling åpenBehandling)  {
 
-    no.nav.foreldrepenger.common.innsyn.v2.EsSak tilDto() {
+    no.nav.foreldrepenger.common.innsyn.EsSak tilDto() {
         var åpenBehandlingDto = åpenBehandling == null ? null : åpenBehandling.tilDto();
         var familiehendelseDto = familiehendelse == null ? null : familiehendelse.tilDto();
         var gjelderAdopsjon = familiehendelse != null && familiehendelse.gjelderAdopsjon();
-        return new no.nav.foreldrepenger.common.innsyn.v2.EsSak(saksnummer.tilDto(),
+        return new no.nav.foreldrepenger.common.innsyn.EsSak(saksnummer.tilDto(),
                 familiehendelseDto, sakAvsluttet, åpenBehandlingDto, gjelderAdopsjon);
     }
 }

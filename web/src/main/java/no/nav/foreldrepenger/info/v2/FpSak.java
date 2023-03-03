@@ -22,13 +22,13 @@ record FpSak(Saksnummer saksnummer,
              Dekningsgrad dekningsgrad,
              LocalDateTime opprettetTidspunkt)  {
 
-    no.nav.foreldrepenger.common.innsyn.v2.FpSak tilDto() {
+    no.nav.foreldrepenger.common.innsyn.FpSak tilDto() {
         var annenPartDto = annenPart == null ? null : annenPart.tilDto();
         var gjeldendeVedtakDto = gjeldendeVedtak == null ? null : gjeldendeVedtak.tilDto();
         var familiehendelseDto = familiehendelse == null ? null : familiehendelse.tilDto();
         var åpenBehandlingDto = åpenBehandling == null ? null : åpenBehandling.tilDto();
         var gjelderAdopsjon = familiehendelse != null && familiehendelse.gjelderAdopsjon();
-        return new no.nav.foreldrepenger.common.innsyn.v2.FpSak(saksnummer.tilDto(), sakAvsluttet, sisteSøknadMottattDato,
+        return new no.nav.foreldrepenger.common.innsyn.FpSak(saksnummer.tilDto(), sakAvsluttet, sisteSøknadMottattDato,
                 kanSøkeOmEndring, sakTilhørerMor, gjelderAdopsjon, morUføretrygd,
                 harAnnenForelderTilsvarendeRettEØS, ønskerJustertUttakVedFødsel,
                 rettighetType.tilDto(), annenPartDto, familiehendelseDto, gjeldendeVedtakDto,

@@ -29,8 +29,8 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 import io.swagger.v3.oas.annotations.Parameter;
-import no.nav.foreldrepenger.common.innsyn.v2.AnnenPartVedtak;
-import no.nav.foreldrepenger.common.innsyn.v2.Saker;
+import no.nav.foreldrepenger.common.innsyn.AnnenPartVedtak;
+import no.nav.foreldrepenger.common.innsyn.Saker;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.security.token.support.core.api.ProtectedWithClaims;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
@@ -84,30 +84,30 @@ public class SakRest {
         return new Saker(fpSakerDto, esSakerDto, svpSakerDto);
     }
 
-    private Set<no.nav.foreldrepenger.common.innsyn.v2.EsSak> hentEsSaker(AktørIdDto aktørId) {
+    private Set<no.nav.foreldrepenger.common.innsyn.EsSak> hentEsSaker(AktørIdDto aktørId) {
         var esSaker = esSakerTjeneste.hentFor(map(aktørId.aktørId));
         return tilEsSakerDto(esSaker);
     }
 
-    private Set<no.nav.foreldrepenger.common.innsyn.v2.SvpSak> hentSvpSaker(AktørIdDto aktørId) {
+    private Set<no.nav.foreldrepenger.common.innsyn.SvpSak> hentSvpSaker(AktørIdDto aktørId) {
         var svpSaker = svpSakerTjeneste.hentFor(map(aktørId.aktørId));
         return tilSvpSakerDto(svpSaker);
     }
 
-    private Set<no.nav.foreldrepenger.common.innsyn.v2.FpSak> hentFpSaker(AktørIdDto aktørId) {
+    private Set<no.nav.foreldrepenger.common.innsyn.FpSak> hentFpSaker(AktørIdDto aktørId) {
         var fpSaker = fpSakerTjeneste.hentFor(map(aktørId.aktørId));
         return tilFpSakerDto(fpSaker);
     }
 
-    public static Set<no.nav.foreldrepenger.common.innsyn.v2.FpSak> tilFpSakerDto(Set<FpSak> fpSaker) {
+    public static Set<no.nav.foreldrepenger.common.innsyn.FpSak> tilFpSakerDto(Set<FpSak> fpSaker) {
         return fpSaker.stream().map(FpSak::tilDto).collect(Collectors.toSet());
     }
 
-    public static Set<no.nav.foreldrepenger.common.innsyn.v2.EsSak> tilEsSakerDto(Set<EsSak> esSaker) {
+    public static Set<no.nav.foreldrepenger.common.innsyn.EsSak> tilEsSakerDto(Set<EsSak> esSaker) {
         return esSaker.stream().map(EsSak::tilDto).collect(Collectors.toSet());
     }
 
-    public static Set<no.nav.foreldrepenger.common.innsyn.v2.SvpSak> tilSvpSakerDto(Set<SvpSak> svpSaker) {
+    public static Set<no.nav.foreldrepenger.common.innsyn.SvpSak> tilSvpSakerDto(Set<SvpSak> svpSaker) {
         return svpSaker.stream().map(SvpSak::tilDto).collect(Collectors.toSet());
     }
 
