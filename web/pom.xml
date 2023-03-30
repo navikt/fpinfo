@@ -115,7 +115,6 @@
             </exclusions>
         </dependency>
 
-
         <!-- Database håndtering -->
         <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
