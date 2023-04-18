@@ -66,14 +66,23 @@ class SvpSakerTjeneste {
         }
         var behandlingId = behandlingIdOpt.get();
         LOG.info("Henter sak med behandling id {} sak {}", behandlingId, svpSak);
-        var fh = repository.hentFamilieHendelse(behandlingId).orElseThrow();
+        var familiehendelse = familiehendelse(svpSak, behandlingId);
+        var sakAvsluttet = Objects.equals(svpSak.fagsakStatus(), "AVSLU");
+        return Optional.of(new SvpSak(svpSak.saksnummer(), familiehendelse.orElse(null), sakAvsluttet, åpenBehandling.map(this::map).orElse(null)));
+    }
+
+    private Optional<Familiehendelse> familiehendelse(SakRef svpSak, Long behandlingId) {
+        var fhOpt = repository.hentFamilieHendelse(behandlingId);
+        if (fhOpt.isEmpty()) {
+            LOG.info("Sak uten familiehendelse {} {}", svpSak.saksnummer(), behandlingId);
+            return Optional.empty();
+        }
+        var fh = fhOpt.get();
         if (fh.getOmsorgsovertakelseDato() != null) {
             LOG.warn("Forventer ikke svp sak med omsorgsovertakelse. Returnerer null." +
-                    " Sak {} Behandling {}", svpSak.saksnummer(), behandlingId);
+                " Sak {} Behandling {}", svpSak.saksnummer(), behandlingId);
         }
-        var familiehendelse = new Familiehendelse(fh.getFødselsdato(), fh.getTermindato(), fh.getAntallBarn(), null);
-        var sakAvsluttet = Objects.equals(svpSak.fagsakStatus(), "AVSLU");
-        return Optional.of(new SvpSak(svpSak.saksnummer(), familiehendelse, sakAvsluttet, åpenBehandling.map(this::map).orElse(null)));
+        return Optional.of(new Familiehendelse(fh.getFødselsdato(), fh.getTermindato(), fh.getAntallBarn(), null));
     }
 
     private Optional<Behandling> finnÅpenBehandling(no.nav.foreldrepenger.info.v2.Saksnummer saksnummer) {
