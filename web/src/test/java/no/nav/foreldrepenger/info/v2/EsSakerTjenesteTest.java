@@ -78,6 +78,29 @@ class EsSakerTjenesteTest {
         assertThat(esSak.åpenBehandling().tilstand()).isEqualTo(BehandlingTilstand.UNDER_BEHANDLING);
     }
 
+    @Test
+    void hent_es_uten_familiehendelse() {
+        var repository = new InMemTestRepository();
+        var tjeneste = new EsSakerTjeneste(repository);
+
+        var aktørId = "000";
+
+        var saksnummer = new no.nav.foreldrepenger.info.Saksnummer("123");
+        var behandlingId = 345L;
+
+        repository.lagre(sakBuilder(aktørId, saksnummer, behandlingId).medFagsakStatus("AVSLU").build());
+        repository.lagre(behandlingBuilder(saksnummer, behandlingId).medBehandlingStatus("AVSLU").build());
+        repository.lagre(søknad(behandlingId, DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL));
+
+        var resultat = tjeneste.hentFor(new AktørId(aktørId));
+
+        assertThat(resultat).hasSize(1);
+        var esSak = resultat.stream().findFirst().orElseThrow();
+        assertThat(esSak.sakAvsluttet()).isTrue();
+        assertThat(esSak.familiehendelse()).isNull();
+        assertThat(esSak.åpenBehandling()).isNull();
+    }
+
     private static List<MottattDokument> søknad(long behandlingId, DokumentTypeId dokumentTypeId) {
         return List.of(new MottattDokument.Builder()
                 .medBehandlingId(behandlingId)
@@ -87,22 +110,28 @@ class EsSakerTjenesteTest {
 
     private static Behandling åpenFørstegangsbehandling(no.nav.foreldrepenger.info.Saksnummer saksnummer,
                                                         long behandlingId) {
-        return new Behandling.Builder()
-                .medBehandlingId(behandlingId)
-                .medBehandlingStatus("OPPR")
-                .medSaksnummer(saksnummer)
-                .medBehandlingType(BehandlingType.FØRSTEGANGSBEHANDLING)
+        return behandlingBuilder(saksnummer, behandlingId)
                 .build();
+    }
+
+    private static Behandling.Builder behandlingBuilder(no.nav.foreldrepenger.info.Saksnummer saksnummer, long behandlingId) {
+        return new Behandling.Builder().medBehandlingId(behandlingId)
+            .medBehandlingStatus("OPPR")
+            .medSaksnummer(saksnummer)
+            .medBehandlingType(BehandlingType.FØRSTEGANGSBEHANDLING);
     }
 
     private static Sak opprettetSak(String aktørId, no.nav.foreldrepenger.info.Saksnummer saksnummer,
                                     long behandlingId) {
-        return new Sak.Builder()
-                .medSaksnummer(saksnummer)
-                .medBehandlingId(String.valueOf(behandlingId))
-                .medFagsakStatus("OPPR")
-                .medAktørId(aktørId)
-                .medFagsakYtelseType(FagsakYtelseType.ES.name())
+        return sakBuilder(aktørId, saksnummer, behandlingId)
                 .build();
+    }
+
+    private static Sak.Builder sakBuilder(String aktørId, no.nav.foreldrepenger.info.Saksnummer saksnummer, long behandlingId) {
+        return new Sak.Builder().medSaksnummer(saksnummer)
+            .medBehandlingId(String.valueOf(behandlingId))
+            .medFagsakStatus("OPPR")
+            .medAktørId(aktørId)
+            .medFagsakYtelseType(FagsakYtelseType.ES.name());
     }
 }
