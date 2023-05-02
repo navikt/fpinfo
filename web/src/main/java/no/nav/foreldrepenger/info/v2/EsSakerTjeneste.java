@@ -65,10 +65,19 @@ class EsSakerTjeneste {
         }
         var behandlingId = behandlingIdOpt.get();
         LOG.info("Henter sak med behandling id {} sak {}", behandlingId, esSak);
-        var fh = repository.hentFamilieHendelse(behandlingId).orElseThrow();
-        var familiehendelse = new Familiehendelse(fh.getFødselsdato(), fh.getTermindato(), fh.getAntallBarn(), fh.getOmsorgsovertakelseDato());
+        var fh = familieHendelse(esSak, behandlingId);
         var sakAvsluttet = Objects.equals(esSak.fagsakStatus(), "AVSLU");
-        return Optional.of(new EsSak(esSak.saksnummer(), familiehendelse, sakAvsluttet, åpenBehandling.map(this::map).orElse(null)));
+        return Optional.of(new EsSak(esSak.saksnummer(), fh.orElse(null), sakAvsluttet, åpenBehandling.map(this::map).orElse(null)));
+    }
+
+    private Optional<Familiehendelse> familieHendelse(SakRef sak, Long behandlingId) {
+        var fhOpt = repository.hentFamilieHendelse(behandlingId);
+        if (fhOpt.isEmpty()) {
+            LOG.info("Sak uten familiehendelse {} {}", sak.saksnummer(), behandlingId);
+            return Optional.empty();
+        }
+        var fh = fhOpt.get();
+        return Optional.of(new Familiehendelse(fh.getFødselsdato(), fh.getTermindato(), fh.getAntallBarn(), fh.getOmsorgsovertakelseDato()));
     }
 
     private Optional<Behandling> finnÅpenBehandling(no.nav.foreldrepenger.info.v2.Saksnummer saksnummer) {
