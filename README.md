@@ -1,7 +1,6 @@
 FP-INFO
 ===============
 [![Bygg og deploy](https://github.com/navikt/fpinfo/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/navikt/fpinfo/actions/workflows/build.yml)
-[![Promote](https://github.com/navikt/fpinfo/actions/workflows/promote.yml/badge.svg?branch=master)](https://github.com/navikt/fpinfo/actions/workflows/promote.yml)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=navikt_fpinfo&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=navikt_fpinfo)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=navikt_fpinfo&metric=coverage)](https://sonarcloud.io/summary/new_code?id=navikt_fpinfo)
 
